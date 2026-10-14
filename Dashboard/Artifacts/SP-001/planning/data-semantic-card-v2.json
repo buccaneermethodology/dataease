@@ -1,0 +1,82 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-SEMANTIC-data-V2",
+  "session_id": "DE-EXEC-S012",
+  "lane": "semantic-data",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/object-contract-v1.md",
+      "sha256": "8b9ee134e1fa5e2ca917fc170534de553efc643f9c7349340276b65778f6ca95"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/capability-denominator-v1.json",
+      "sha256": "bf444a606fb83feeef947b9d50337c0126b1ce9d147930e6e480c0329a83eb80"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/data/read-log.json",
+      "sha256": "6047bd328b58b9e8fc20244f51cd29fcea6c7465b76a50e5782e8f4920f5450e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/data/gaps.json",
+      "sha256": "9d8409306a106e33994a115bea9a77ee56d8b5f51ed1d6364a5d4398f50eb9d0"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v2/data.json",
+      "sha256": "2bf767cf3ccd1a07eb81aac4d9bddc4782095e11b7617c6a0ac518587af29256"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/semantic-repairs-v1.json",
+      "sha256": "b0c14a99f9a26835362fcaf3b663096a30fc9ca7fedbb05992af05af4c5aef07"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/reviews/data-semantic-v1.md",
+      "sha256": "086041fcd3a6ce8149fa18a369b84b51795304151b7b5814d6b8d00fd3eb6b5e"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-data-candidate-review-v2",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/reviews/data-semantic-v2.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/reviews/data-semantic-v2.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "独立静态语义复核，不等同全KB/运行验收",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-PRE-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "复验上一轮所有必须修正项与整合差异；本轮修正在integrated-v2而非原候选。核对实际源码和关系，确认无未批准范围缩减，给出该域可进入正式静态知识的结论与限制。只写指定报告。"
+}

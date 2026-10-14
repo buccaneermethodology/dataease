@@ -1,0 +1,151 @@
+{
+  "goal": "DE-KB-001",
+  "claim": "交付与证据索引；最终验收由独立报告和Stop Gate确定",
+  "acceptance": [
+    {
+      "id": "AC01",
+      "requirement": "基线与全仓盘点完整，读取/排除/不可访问分开",
+      "required": true,
+      "evidence": [
+        "baseline/manifest.json",
+        "evidence/source-inventory-v2.json",
+        "evidence/coverage-v2.json",
+        "evidence/source-baseline-check-v2.json"
+      ]
+    },
+    {
+      "id": "AC02",
+      "requirement": "K00-K11及F01-F18逐项对账；新增能力不漏",
+      "required": true,
+      "evidence": [
+        "planning/capability-denominator-v1.json",
+        "evidence/coverage-v2.json",
+        "evidence/gap-register-v2.json"
+      ]
+    },
+    {
+      "id": "AC03",
+      "requirement": "全部核心能力的语义、异常、权限、数据链证据",
+      "required": true,
+      "evidence": [
+        "extraction/integrated-v7/data.json",
+        "extraction/integrated-v7/chart.json",
+        "extraction/integrated-v7/access.json",
+        "reviews/data-semantic-v2.md",
+        "reviews/chart-semantic-v2.md",
+        "reviews/access-semantic-v2.md"
+      ]
+    },
+    {
+      "id": "AC04",
+      "requirement": "JSON合同与正式事实准入；不混执行面和未证实片段",
+      "required": true,
+      "evidence": [
+        "planning/object-contract-v1.md",
+        "evidence/kb-tool-tests-formal.json",
+        "evidence/formal-package-checks.json"
+      ]
+    },
+    {
+      "id": "AC05",
+      "requirement": "确定性生成、引用检查、失效检测、影响关系",
+      "required": true,
+      "evidence": [
+        "evidence/formal-package-checks.json",
+        "evidence/impact-example.json",
+        "reviews/relations-review-v2.md"
+      ]
+    },
+    {
+      "id": "AC06",
+      "requirement": "独立核心逐项及非核心逐域语义复核",
+      "required": true,
+      "evidence": [
+        "reviews/data-semantic-v2.md",
+        "reviews/chart-semantic-v2.md",
+        "reviews/access-semantic-v2.md",
+        "reviews/base-semantic-v3.md",
+        "reviews/relations-review-v2.md"
+      ]
+    },
+    {
+      "id": "AC07",
+      "requirement": "目录分离、无产品修改/秘密/专有实现",
+      "required": true,
+      "evidence": [
+        "evidence/source-baseline-check-v2.json",
+        "evidence/document-disposition-v1.json",
+        "evidence/reconciliation.json"
+      ]
+    },
+    {
+      "id": "AC08",
+      "requirement": "原始目标完整性、最终diff/状态绑定与收尾",
+      "required": true,
+      "evidence": [
+        "goal.md",
+        "stage-plan.md",
+        "evidence/scope-delta-audit.json",
+        "evidence/candidate-manifest.json",
+        "closeout.md",
+        "reviews/final-review.md"
+      ]
+    }
+  ],
+  "original_goal_obligations": [
+    {
+      "item": "输入基线与全仓盘点",
+      "evidence": [
+        "AC01"
+      ]
+    },
+    {
+      "item": "K00–K11及核心6类/F01–F18和新增F19–F23",
+      "evidence": [
+        "AC02",
+        "AC03"
+      ]
+    },
+    {
+      "item": "能力/UI/API/服务/数据/测试跨层关系",
+      "evidence": [
+        "AC03",
+        "AC05"
+      ]
+    },
+    {
+      "item": "JSON真源及确定性Markdown/图谱",
+      "evidence": [
+        "AC04",
+        "AC05"
+      ]
+    },
+    {
+      "item": "核心逐项与非核心逐域独立复核",
+      "evidence": [
+        "AC06"
+      ]
+    },
+    {
+      "item": "冲突/缺口仅SP，Dashboard仅执行面，全景仅参考",
+      "evidence": [
+        "AC02",
+        "AC07"
+      ]
+    },
+    {
+      "item": "本地最终包、来源/覆盖/维护/收尾",
+      "evidence": [
+        "AC08"
+      ]
+    }
+  ],
+  "required_work_units": [
+    "SP-001-P0",
+    "SP-001-P1",
+    "SP-001-P2",
+    "SP-001-P3",
+    "SP-001-P4",
+    "SP-001-FINAL"
+  ]
+}

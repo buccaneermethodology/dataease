@@ -1,0 +1,163 @@
+{
+  "scope": "不进入KB的未证实/范围外知识",
+  "items": [
+    {
+      "source_lane": "base",
+      "id": "BASE-G01",
+      "question": "根POM3.2.0、前端3.0.0及workflow dev-v2默认的版本策略是什么？",
+      "disposition": "配置事实分别保留；不自行统一或修改",
+      "blocking_canonical": "不得声称实际安装版/支持矩阵已确认"
+    },
+    {
+      "source_lane": "base",
+      "id": "BASE-G02",
+      "question": "电子表格/填报/同步/报表的版本授权矩阵及专有运行实现",
+      "disposition": "仅公共契约导航；XPack为范围外",
+      "blocking_canonical": "不得声称功能全版本可用"
+    },
+    {
+      "source_lane": "base",
+      "id": "BASE-G03",
+      "question": "测试README历史运行结果是否仍适用于冻结基线",
+      "disposition": "不复用历史PASS；仅记录源码测试资产",
+      "blocking_canonical": "不得标tested"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G01",
+      "uncertainty": "已建立内置类型、Factory及8类引擎静态差异清单；运行期方言与外部插件仍未验证。",
+      "next_action": "需要隔离数据库与方言回归，插件实现按专有边界另审。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G02",
+      "uncertainty": "完整鉴权切面及XPack权限实现不在本lane深读范围。",
+      "next_action": "与access lane拼接静态调用证据；实际身份矩阵需运行验证。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G03",
+      "uncertainty": "迁移只核实调度器成功/失败/重试状态，未逐个证明SqlBlock幂等。",
+      "next_action": "按实际历史版本和目标数据库建立隔离升级验证。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G04",
+      "uncertainty": "已补读CSV/Excel主要解析边界、远程文件预算、API参数入口与HTTP执行器控制；真实FTP/SMB及全部参数组合运行表现未验证。",
+      "next_action": "仅运行范围保留：隔离网络及文件夹具执行既有回归。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G05",
+      "uncertainty": "已亲读并关联三项文件/API回归源码；本轮未运行，因此不能给出通过率。",
+      "next_action": "独立验证按产品核心场景补充静态复核或隔离测试证据。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G06",
+      "uncertainty": "静态调用链已补读：主仓库搜索未见数据集表/字段缓存显式删除；Ehcache预建缓存expiry none与默认put八小时存在不同层语义。运行配置/并发和刷新时效未验证。",
+      "next_action": "针对实际启用缓存配置验证更新后的可见性，必要时另立修复任务。"
+    },
+    {
+      "source_lane": "data",
+      "id": "DATA-G07",
+      "uncertainty": "元数据事务与引擎DDL/文件写入跨资源原子性不由@Transactional自动证明。",
+      "next_action": "用失败注入核实部分接入失败时回滚/补偿行为。"
+    },
+    {
+      "source_lane": "chart",
+      "id": "CHART-G01",
+      "scope": "F04",
+      "gap": "未逐种图表穷举全部 Handler 与 Provider 方言；仅主链与代表性差异",
+      "needed": "按后续变更选取对应 Handler、数据库与权限身份运行验证"
+    },
+    {
+      "source_lane": "chart",
+      "id": "CHART-G02",
+      "scope": "F05/F06",
+      "gap": "静态 contentId 检查与保存为分离请求，未证明并发写原子性或所有发布异常的回滚",
+      "needed": "隔离环境并发/故障注入与保存发布重开测试"
+    },
+    {
+      "source_lane": "chart",
+      "id": "CHART-G03",
+      "scope": "F05/F06",
+      "gap": "本轮未读取完整编辑保存消费的端到端测试资产；未做实际 UI 验证",
+      "needed": "核实测试入口，覆盖撤销重做、发布前后、布局和移动端"
+    },
+    {
+      "source_lane": "chart",
+      "id": "CHART-G04",
+      "scope": "F07/F18",
+      "gap": "模板/地图/AI 仅导航契约与核心调用；外部服务和专有扩展未验证",
+      "needed": "后续任务明确授权且必要时在有访问权限环境验证"
+    },
+    {
+      "source_lane": "chart",
+      "id": "CHART-G05",
+      "scope": "F04",
+      "gap": "权限服务实现与 Provider 由其他领域负责；当前仅证明调用及 SQLMeta 注入，未证明全部身份场景",
+      "needed": "整合权限领域证据并保留运行未验证边界"
+    },
+    {
+      "source_lane": "access",
+      "id": "ACCESS-G01",
+      "capabilities": [
+        "F09",
+        "F15"
+      ],
+      "gap": "嵌入签发/域名/注销及企业用户组织持久化实现未核实",
+      "reason": "已读SDK契约与前端/core调用，无可引用实现证据",
+      "next": "具备合法访问后由独立审阅补核；不公开专有实现"
+    },
+    {
+      "source_lane": "access",
+      "id": "ACCESS-G02",
+      "capabilities": [
+        "F08",
+        "F09",
+        "F10",
+        "F15"
+      ],
+      "gap": "无本次运行与测试通过证据",
+      "reason": "只读提取；现存测试仅记录为资产",
+      "next": "独立静态验证；如需运行结论在隔离环境另行测试"
+    },
+    {
+      "source_lane": "access",
+      "id": "ACCESS-G03",
+      "capabilities": [
+        "F10"
+      ],
+      "gap": "PNG/PDF浏览器效果、并发下载消费及符号链接运行行为未验证",
+      "reason": "已补齐前端调用与路径源码，不以静态normalize证明全部文件系统安全",
+      "next": "按实际环境进行反例测试"
+    },
+    {
+      "source_lane": "access",
+      "id": "ACCESS-G04",
+      "capabilities": [
+        "F15"
+      ],
+      "gap": "V3UserUtil/TokenUtils/通用DePermit切面定义未在可访问sdk/core源码定位",
+      "reason": "可见core imports与调用、分享专用切面；不能据此把定义归因某专有模块",
+      "next": "提供合法源定义或保持依赖接口边界"
+    },
+    {
+      "source_lane": "access",
+      "id": "ACCESS-G05",
+      "capabilities": [
+        "F10"
+      ],
+      "gap": "分页末页与单页sheet分支的实际输出条数/偏移未运行验证",
+      "reason": "已静态核实392–510，记录具体分支，不把totalCount截断等同输出绝对上界",
+      "next": "如需运行保证，在隔离环境验证非整页限额及跨sheet场景"
+    }
+  ],
+  "core_semantic_blockers": "以独立review及修正复验为准；不得由本登记自行关闭",
+  "product_questions": [
+    "版本声明3.2.0/3.0.0及Desktop workflow dev-v2默认的维护意图",
+    "完整授权版本矩阵与外部SQLBot/扩展运行条件"
+  ],
+  "runtime_boundary": "已确认首版不要求运行；所有运行结论均不准入"
+}

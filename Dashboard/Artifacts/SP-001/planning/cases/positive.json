@@ -1,0 +1,75 @@
+{
+  "doc_id": "sample",
+  "doc_type": "static_knowledge",
+  "title": "图表取数切片",
+  "version": "0.1",
+  "status": "static_verified",
+  "output_path": "kb/generated/sample.md",
+  "metadata": {
+    "owner": "DataEase维护者",
+    "updated_at": "2026-10-14T02:18:29.977356+00:00",
+    "source_repo": "https://github.com/buccaneermethodology/dataease",
+    "source_revision": "24ffb4c08a7532af26e8cd3966e5e42726a40af4",
+    "source_scope": "ChartDataServer.getData静态分支",
+    "depends_on_docs": []
+  },
+  "domains": [
+    "K03"
+  ],
+  "facts": [
+    {
+      "id": "SAMPLE-001",
+      "statement": "getData在dataFrom为TEMPLATE时调用模板数据管理；否则先解码，调用calcData，再对返回字段与数据编码。",
+      "kind": "implemented",
+      "scope": "ChartDataServer.getData",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 89,
+          "end_line": 103,
+          "symbol": "getData",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "SAMPLE-C01",
+      "name": "图表取数路由切片",
+      "depth": "navigation",
+      "summary": "区分模板数据与计算分支",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "SAMPLE-001"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "仅getData路由分支，不代表全图表能力验收"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "SAMPLE-R01",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "SAMPLE-C01",
+      "to": "SAMPLE-001",
+      "evidence_fact_ids": [
+        "SAMPLE-001"
+      ]
+    }
+  ]
+}

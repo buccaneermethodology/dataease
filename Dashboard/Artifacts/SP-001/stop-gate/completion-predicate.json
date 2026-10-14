@@ -1,0 +1,65 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "DE-KB-001-COMPLETE",
+  "source_completion_rule_id": "DE-KB-001-RULE",
+  "source_completion_rule_ref": "Dashboard/Artifacts/SP-001/stop-gate/completion-rule.md",
+  "source_completion_rule_sha256": "172eccfe62109023772983c02798ea69abb2eb22e19cb8ebd4981f15f617f76f",
+  "issued_by_authority_ref": "Dashboard/Artifacts/SP-001/stop-gate/goal-authority.json",
+  "issued_by_authority_sha256": "427ebcfe91d56ec2ec21045a6298cf7b4fa1ff0952e64ed5b0a0ffe4c93c0526",
+  "issued_by_authority_id": "DE-KB-001-USER",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "SP-001-P0",
+            "SP-001-P1",
+            "SP-001-P2",
+            "SP-001-P3",
+            "SP-001-P4",
+            "SP-001-FINAL"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "human_decisions",
+          "operator": "none_pending_admissible"
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "goal",
+            "completion_rule",
+            "obligation_inventory",
+            "final_diff",
+            "independent_validation",
+            "closeout",
+            "dashboard_state",
+            "kb_disposition",
+            "original_plan_coverage",
+            "scope_delta_audit",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

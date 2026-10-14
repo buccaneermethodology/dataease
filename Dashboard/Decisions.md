@@ -9,3 +9,5 @@
 | DE-EXEC-D005 | 在没有项目级 registry 工具时，手工维护 Big Ideas、Sessions、Decisions 页面，不声明 reconcile/validate 已通过 | done | Dashboard Governance 允许 minimal profile；项目当前没有注册表工具，避免把人工维护说成程序化校验 |
 | DE-EXEC-D006 | 本地 SGE 增强写前字节保全、候选包冻结与单向收尾；review 保留 as-of 状态，当前 Goal 终态读取有效 receipt | done | 依据本轮用户授权及分析报告；不放宽 Gate、不推广 reviewer 豁免、不更新全局或其他仓库副本；见 DE-EXEC-S007 |
 | DE-EXEC-D007 | SGE 收益评估每5个任务一轮，统计原分母、质量与采集成本；不把诊断案例当可比基线 | done | 用户明确指定报告节奏；长期观察状态不因 setup 完成而关闭；修改 Skill 需单独任务 |
+
+| DE-EXEC-D008 | 初始KB位于根目录kb/；全部SP-001执行中间件留Artifacts/SP-001；产品全景Dashboard仅References | done | 用户明确目录更正；不得把执行状态、审查、临时推断放入正式知识；不改变既有全景文档 |

@@ -4,7 +4,8 @@
 
 ## 当前快照
 
-- **当前活动：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
+- **KB 建设：**`SP-001` 本地交付候选已落地，[知识库](../kb/README.md)与Dashboard平行；[最终验收与终态入口](Artifacts/SP-001/README.md)。
+- **持续观察：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
 - **观察状态：**[当前计数与结论](Artifacts/Goal-DE-GOV-003/data/state.json)；样本不足时明确保持证据不足。
 - **入口：**[观察 Goal 与采集协议](Artifacts/Goal-DE-GOV-003/README.md)。建立机制不代表已经证明效率收益。
 - **历史：**SGE 安装见 DE-EXEC-S006，本地优化见 DE-EXEC-S007；各自历史快照保留。

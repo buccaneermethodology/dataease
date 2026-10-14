@@ -1,0 +1,68 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-DATA",
+  "session_id": "DE-EXEC-S011",
+  "lane": "data",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/contract-v1.json",
+      "sha256": "cb3eea857eb3edad0bd2aa0b005d93be2ce86d592b46878fbad4c80bfa87cb69"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/extraction-format.md",
+      "sha256": "8ea1df2e2cb2d06c6e8ec642cb77f12a48982410c499c9ac783d54f910c905c1"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/capability-denominator-v1.json",
+      "sha256": "bf444a606fb83feeef947b9d50337c0126b1ce9d147930e6e480c0329a83eb80"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-candidate-v1",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/extraction/data/**"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/extraction/data/candidate.json",
+    "Dashboard/Artifacts/SP-001/extraction/data/read-log.json",
+    "Dashboard/Artifacts/SP-001/extraction/data/gaps.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "已读源码候选知识，未经独立复核不得作为正式完成",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-DATA",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "核实数据源/数据集/持久化，负责['F01', 'F02', 'F03']。事实ID前缀DATA。数据源配置/验证/连接、数据集建模字段预览查询、权限调用、元数据实体、JPA更新/迁移/缓存。深读frontend api到sdk server manage/provider/repository；Provider差异索引、迁移状态与失败处理；不要泄露真实连接配置。 按extraction-format生成candidate.json，逐条证据sha/符号/行号；read-log记录真实读取范围；gaps独立。允许脚本辅助定位和生成但每条语义须亲读源码。不要改其他lane文件或正式kb；不启动子agent。"
+}

@@ -10,3 +10,5 @@
 此索引不授予权限、不替代 Goal authority，也不证明独立验证或任务完成。
 
 | Goal `DE-GOV-002` | 仅优化本地 SGE 写前保全与收尾流程 | [Goal-DE-GOV-002](Goal-DE-GOV-002/README.md) |
+
+| Stage Plan `SP-001` | DataEase V3 初始KB，全仓盘点＋核心深挖 | [SP-001](SP-001/README.md) |

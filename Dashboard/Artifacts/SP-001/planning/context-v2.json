@@ -1,0 +1,139 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "SP-001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "为了在后续基于当前仓库能力的基础上进一步开发，现在需要创建本仓库的初稿kb，这个是具体的kb要求：Dashboard/Artifacts/temp docs/DataEase_Initial_KB_Goal.md，请基于当前仓库所有的”文档+代码“以及第一版Dashboard（**docs/Dashboard**）的内容，并使用 [$doc-system-kb-builder](/Users/xiaomei/.codex/skills/doc-system-kb-builder/SKILL.md) 来创建这个kb，我有一个非常重要的要求：要确保这个kb中存放的是与代码匹配的真源，而不是一些过时的、不确定的临时的文档碎片内容，接下来请先根据这些内容设计一个Goal，有疑问可以和我澄清，包括为了创建准备的kb你发现的有关产品知识的疑问，我也可以澄清，最终给出一个修正后的Goal\n我看你的Goal里有”- `Dashboard/Artifacts/`：执行状态、验收与审查材料。“，我再次明确一下，Dashboard属于执行面信息，不需要放到kb中；Project全景图Dashboard也只是作为References。\n好，接下来请把Goal入库，设计新的Stage Plan，并且以SP编号新增一个单独的目录，在Dashboard/Artifacts下面进行跟踪，存在所有本SP批次执行过程中产生的中间件，kb需要单独建立一个与Dashboard平行的目录\n然后开始goal的执行\n",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "全仓盘点、核心深挖，建立静态证实KB；执行面留SP-001",
+    "authority_role": "projection",
+    "assumptions": [
+      "无产品运行验收",
+      "XPack未检出仅核公共契约"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "kb/**",
+      "Dashboard/Artifacts/SP-001/**",
+      "Dashboard/README.md",
+      "Dashboard/Big_Ideas.md",
+      "Dashboard/Sessions.md",
+      "Dashboard/Decisions.md",
+      "Dashboard/Artifacts/README.md",
+      "Dashboard/Artifacts/Goal-DE-GOV-003/data/tasks/SP-001/**"
+    ],
+    "forbidden_actions": [
+      "产品代码修改",
+      "安装依赖",
+      "启动构建产品",
+      "数据库访问",
+      "获取XPack",
+      "提交推送部署"
+    ],
+    "maximum_claim": "绑定源码的静态知识"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "sha256:fc0788f39203a2c936cde26bb43e66176456501ed8a9093428edc2a624fe617d",
+      "applicability": "required",
+      "reason": "任务依据与边界",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "sha256:c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+      "applicability": "required",
+      "reason": "任务依据与边界",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/goal.md",
+      "revision": "sha256:9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a",
+      "applicability": "required",
+      "reason": "任务依据与边界",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/stage-plan.md",
+      "revision": "sha256:9e544ac164d3934fa037cfbb95755d43ab07a7af1910442fc79b854ef312c195",
+      "applicability": "required",
+      "reason": "任务依据与边界",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "C-01",
+      "condition": "若新增项目级 Dashboard registry 或 canonical KB",
+      "action": "读取本SP冻结KB合同，源代码逐域扩读",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "C-02",
+      "condition": "若发生范围外行为、authority 或执行拓扑变化",
+      "action": "重新构造 Context Bootstrap 并触发 full rebaseline",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "governance"
+    ],
+    "preservation_statement": "覆盖K00-K11、核心6类和全仓发现能力；无法证实不提升claim",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": true,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": true,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design -> independent semantic pre-review -> domain builders -> independent validation -> closure",
+    "reason": "全仓KB分域候选提取；root设计与整合；独立agent复核核心逐项及最终包；正式准入前冻结对象合同与反例。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}
