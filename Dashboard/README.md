@@ -4,11 +4,11 @@
 
 ## 当前快照
 
-- **定位：**记录 DataEase Repo 的项目任务、决定、执行证据与下一步。
-- **活动 Session：**无；最近完成 `DE-EXEC-S006` — 安装 SGE 项目级 Skill 并完善 Dashboard 维护入口。
-- **当前状态：**交付和独立审阅已完成；SGE Stop Gate 最终 receipt 生成前不扩大完成声明，记录见 [Sessions](Sessions.md) 和 Goal 收尾材料。
-- **下一步：**后续有明确任务时再登记；当前没有需要立即新建的候选 Session。
-- **治理能力边界：**目前没有 Session registry、reconcile 或 validate 工具；本次文件结构不构成程序化注册表。
+- **当前批次：**`DE-EXEC-S007` — 本地 SGE 写前保全与收尾流程优化；文件交付已落地。
+- **验收与 Goal 状态：**[本轮结果入口](Artifacts/Goal-DE-GOV-002/README.md) 指向冻结快照、独立审阅和当前 Stop Gate receipt；交付状态不替代 Goal 终态。
+- **历史批次：**`DE-EXEC-S006` 安装结果按原记录保留；之后的本地优化不回写原安装快照。
+- **下一步：**当前无强制后续 Session；后续任务按项目 Skill 执行。
+- **能力边界：**没有 Session registry/reconcile/validate 工具，手工台账不构成程序化校验。
 
 ## 定位与边界
 

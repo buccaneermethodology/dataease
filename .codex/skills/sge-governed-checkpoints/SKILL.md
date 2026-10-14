@@ -40,6 +40,8 @@ G01-G12 的文档路由不自动授权副作用。任何 Builder、install、upg
 
 ## 不可违反的 execution invariants
 
+持久写入前与最终审阅前，按 [写前保全与收尾冻结](references/baseline-and-closeout.md) 完成对应检查。复用已有材料，先齐备再冻结；审阅时点与后续 receipt 终态分别记录，避免为状态推进重写历史证据。
+
 1. 每个请求先做 proportional Intake，再构造 profile-specific Context Bootstrap；digest 未变化也要 refresh objective、authority、claim ceiling 与 critical dependencies。
 2. Context Optimization 只减少重复读取，不得缩小完成任务所需的 epistemic search space。required domain 缺失时扩读或报告 evidence gap。
 3. 高语义风险 Goal 在 Builder 前冻结 machine-readable Contract/Cases、axes、predicates、invariants、counterexamples、forbidden collapses、oracle、write exclusions 与 claim ceiling。

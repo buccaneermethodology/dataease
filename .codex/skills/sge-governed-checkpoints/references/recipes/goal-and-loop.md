@@ -11,7 +11,7 @@ Goal Patch、OPCM、duplication 或 snapshot 细则扩读 `../context-efficient-
 
 ## Stop Gate 执行合同
 
-输入遵守 `schemas/loop_state_v1.schema.json`；输出遵守 `schemas/stop_gate_receipt_v1.schema.json`。调用方管理 Goal authority root，显式传入 root 路径、source root 和预先固定的 SHA-256。state producer 不能自行替换可信 root。helper 只委托核心，不能保留平行终态判断。
+输入遵守 `schemas/loop_state_v1.schema.json`；输出遵守 `schemas/stop_gate_receipt_v1.schema.json`。调用方管理 Goal authority root，显式传入 root 路径、source root 和预先固定的 SHA-256。调用前按 [路径预检](../baseline-and-closeout.md#路径预检与能力边界) 核对解析后的绝对路径和授权 root；预检不替代 Gate。state producer 不能自行替换可信 root。helper 只委托核心，不能保留平行终态判断。
 
 - `CONTINUE`：一行进度，执行 DISPATCH_NEXT_WORK、MATERIALIZE_NEXT_ENTRY、REPAIR、RETRY_RECOVERY 或 COMPLETE_FINAL_EVIDENCE；不得发送最终答复。
 - `PAUSE_ALLOWED`：只请求真正的人类决策或报告已达恢复阈值的阻断；已授权事项不重复询问。

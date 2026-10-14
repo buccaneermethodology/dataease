@@ -1,6 +1,7 @@
 # Intake 与首任务 recipe
 
 1. 保存 Raw User Intent authority；判断目标、source authority、repo/KB/Dashboard 边界、风险、缺失信息与执行路线。
+   持久写入前按 [写前保全](../baseline-and-closeout.md#写前保全) 保存原文、完整状态清单和受影响未跟踪文件原始字节；admission 引用输入只增新版本，不覆盖旧版本。
 2. 使用 `first_task_router.py` 区分 trivial read-only、governed implementation/validation 与 Goal missing/existing/conflict。
 3. 构造 read_only、implementation 或 validation Context Bootstrap，验证 required/conditional reads、semantic refresh、epistemic domains、impact 与 topology。
 4. Goal missing 时先冻结 Goal；conflict 时请求人类 authority；只有 Goal existing 且合同 ready 才进入相应 lane。

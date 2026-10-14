@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-10-14T00:32:46.626896+00:00",
+  "checks": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/xiaomei/.codex/skills/.system/skill-creator/scripts/quick_validate.py",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints"
+      ],
+      "exit_code": 0,
+      "output": "Skill is valid!\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/context_bootstrap.py",
+        "validate",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-002/context-v1.json"
+      ],
+      "exit_code": 0,
+      "output": "{\n  \"boundaries\": {\n    \"forbidden_actions\": [\n      \"修改运行时代码\",\n      \"安装依赖\",\n      \"构建或启动 DataEase\",\n      \"数据库写入\",\n      \"提交或推送\",\n      \"发布或部署\"\n    ],\n    \"maximum_claim\": \"流程规则优化和本轮限定场景审阅；无产品 runtime、宿主自动强制、通用图运行时、节省时长或外部同步声明。\",\n    \"write_scope\": [\n      \".codex/skills/sge-governed-checkpoints/**\",\n      \"Dashboard/Artifacts/Goal-DE-GOV-002/**\",\n      \"Dashboard/README.md\",\n      \"Dashboard/Sessions.md\",\n      \"Dashboard/Decisions.md\",\n      \"Dashboard/Artifacts/README.md\"\n    ]\n  },\n  \"change_impact\": {\n    \"contract_or_acceptance\": true,\n    \"dashboard_state\": true,\n    \"external_side_effect\": false,\n    \"kb_truth\": false,\n    \"runtime_or_schema\": false,\n    \"semantic_risk\": \"medium\",\n    \"write_conflict\": false\n  },\n  \"conditional_read_set\": [\n    {\n      \"action\": \"先读取对应工具/KB contract 并扩展 AC 与验证范围\",\n      \"can_suppress_deterministic\": false,\n      \"condition\": \"若新增项目级 Dashboard registry 或 canonical KB\",\n      \"mode\": \"deterministic\",\n      \"trigger_id\": \"C-01\"\n    },\n    {\n      \"action\": \"重新构造 Context Bootstrap 并触发 full rebaseline\",\n      \"can_suppress_deterministic\": false,\n      \"condition\": \"若发生范围外行为、authority 或执行拓扑变化\",\n      \"mode\": \"evidence_backed_agent_evaluated\",\n      \"trigger_id\": \"C-02\"\n    }\n  ],\n  \"epistemic_search_space\": {\n    \"missing_evidence_action\": \"expand_or_report_evidence_gap\",\n    \"preservation_statement\": \"检查足以覆盖本次项目级安装、原 Dashboard 状态保留、入口可发现性和证据声明边界的信息；缺失任一必要域时扩读或报告证据缺口。\",\n    \"required_domains\": [\n      \"authority\",\n      \"scope\",\n      \"governance\"\n    ]\n  },\n  \"intake_projection\": {\n    \"assumptions\": [\n      \"项目 Dashboard 记录本次 Goal，其他仓库和全局 Skill 只读\"\n    ],\n    \"authority_role\": \"projection\",\n    \"summary\": \"仅优化本地 SGE 流程指引，按分析五项建议验收\"\n  },\n  \"raw_user_intent\": {\n    \"authority_role\": \"authority\",\n    \"text\": \"鉴于你在安装本skill的时候的表现，我发现这个skill自身需要优化一下，请参考”/Users/xiaomei/.codex/worktrees/sge-closeout-efficiency/sge-governance-skill/Dashboard/Artifacts/Goal-SGE-CLOSEOUT-EFFICIENCY/AnalysisOnlyOutcome.md“，设立一个skill优化的goal并实施该Goal，目标：仅优化本地的skill，不要动其他库的skill，也不要动本机全局的skill\"\n  },\n  \"required_read_set\": [\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"AGENTS.md\",\n      \"reason\": \"原始意图、指引与当前执行状态\",\n      \"revision\": \"baseline\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \".codex/skills/sge-governed-checkpoints/SKILL.md\",\n      \"reason\": \"原始意图、指引与当前执行状态\",\n      \"revision\": \"baseline\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"/Users/xiaomei/.codex/worktrees/sge-closeout-efficiency/sge-governance-skill/Dashboard/Artifacts/Goal-SGE-CLOSEOUT-EFFICIENCY/AnalysisOnlyOutcome.md\",\n      \"reason\": \"原始意图、指引与当前执行状态\",\n      \"revision\": \"baseline\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"Dashboard/README.md\",\n      \"reason\": \"原始意图、指引与当前执行状态\",\n      \"revision\": \"baseline\"\n    }\n  ],\n  \"schema_version\": \"context_bootstrap_v1\",\n  \"semantic_refresh\": {\n    \"anchors\": [\n      \"objective\",\n      \"authority\",\n      \"claim_ceiling\",\n      \"critical_dependencies\"\n    ],\n    \"required_when_digest_unchanged\": true\n  },\n  \"skipped_reads\": [],\n  \"task_id\": \"DE-GOV-002\",\n  \"task_profile\": \"implementation\",\n  \"topology\": {\n    \"basis\": \"change_impact\",\n    \"reason\": \"根代理完成有边界的规则编辑，独立 Validation 检查规则语义和最终冻结包；不改执行判定。\",\n    \"route\": \"design -> builder -> independent validation -> closure\"\n  },\n  \"validation_evidence_surfaces\": [\n    \"original objective\",\n    \"acceptance criteria\",\n    \"actual diff\",\n    \"final state\"\n  ]\n}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/execution_admission.py",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-002/admission-v1.json",
+        "--root",
+        "/Users/xiaomei/Documents/projects/dataease",
+        "--action",
+        "builder",
+        "--target",
+        ".codex/skills/sge-governed-checkpoints"
+      ],
+      "exit_code": 0,
+      "output": "{\n  \"schema_version\": \"execution_admission_v1\",\n  \"admission_id\": \"DE-GOV-002-BUILDER-V1\",\n  \"action\": \"builder\",\n  \"target\": \".codex/skills/sge-governed-checkpoints\",\n  \"references\": {\n    \"goal\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/goal.md\",\n      \"sha256\": \"3278b941721601c832bfa590c387de28eff5491b3bdbe6cfff3618f34faeb83c\"\n    },\n    \"completion_contract\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/contract.json\",\n      \"sha256\": \"0b45b14e38783feb48d1d41c5a9a4f5068973c48f4661918fe22bc9ed49a19c7\"\n    },\n    \"context\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/context-v1.json\",\n      \"sha256\": \"602a21b339f918460a0b69da242e5bde0e1222d3ec1ed69de3b0775abcfcc8b2\"\n    },\n    \"design_review\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/design-v1.md\",\n      \"sha256\": \"5271c321ed96288d443bd505286b08761ad6795313f4b7b177e9f59b65af7caa\"\n    },\n    \"topology\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/topology-v1.json\",\n      \"sha256\": \"2bc7b62716906e194d940cd6c7a77d9a3c494418d6a8e42e5edca514cc50fed7\"\n    }\n  }\n}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/guardrail_checklist.py",
+        "--mode",
+        "closeout-language",
+        "--file",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-002/closeout.md"
+      ],
+      "exit_code": 0,
+      "output": "Closeout language check passed: /Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-002/closeout.md\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "global_skill_unchanged": true,
+  "scripts_and_schemas_unchanged": true,
+  "baseline_byte_copies_valid": 67,
+  "initial_environment_notes": [
+    "默认 Python 缺 PyYAML，改用现有 /usr/bin/python3 完成校验；未安装依赖",
+    "Skill 目录写保护通过用户已授权的范围内提升执行；无外部路径写入"
+  ],
+  "claim_ceiling": "这些检查不代替独立场景审阅，也不证明性能收益。"
+}

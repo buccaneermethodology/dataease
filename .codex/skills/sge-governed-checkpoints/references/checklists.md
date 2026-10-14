@@ -1,5 +1,8 @@
 # Checklists
 
+持久写入与最终 review 使用 [写前保全与收尾冻结](baseline-and-closeout.md)；详细模板复用其中的完整性与单向顺序约束，review 的 as-of 状态不要求等于后续 receipt 终态。
+
+
 ## Phase Workflow Runner
 
 Use at the start of a non-trivial phase batch so the current phase/stage contract is materialized from repo-local truth instead of recalled from memory.
