@@ -1,0 +1,140 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-GOV-001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "请安装 sge-governed-checkpoints skill 到本项目，以便后续任务可以按照要求进行；同时让后续 Dashboard 相关 skill 更好落实，当前 Dashboard 仅有 README。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "安装项目级 SGE Skill，建立后续可发现的协作入口，并整理执行 Dashboard 核心维护页面。",
+    "authority_role": "projection",
+    "assumptions": [
+      "仅修改本地项目文件，不提交、推送或发布。",
+      "现有 Dashboard 内容为待保留的用户材料。",
+      "不新增 registry 工具；当前项目缺少该能力。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      ".codex/skills/sge-governed-checkpoints/**",
+      "AGENTS.md",
+      "Dashboard/**"
+    ],
+    "forbidden_actions": [
+      "修改运行时代码",
+      "安装依赖",
+      "构建或启动 DataEase",
+      "数据库写入",
+      "提交或推送",
+      "发布或部署"
+    ],
+    "maximum_claim": "只声明文件安装、文档入口和手工 Dashboard 结构检查证据支持的结果。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "working-tree",
+      "applicability": "required",
+      "reason": "项目工作规范和用户范围",
+      "domains": [
+        "authority",
+        "scope",
+        "project-rules"
+      ]
+    },
+    {
+      "path": "Dashboard/README.md",
+      "revision": "working-tree",
+      "applicability": "required",
+      "reason": "保留既有 Dashboard 记录与边界",
+      "domains": [
+        "dashboard-state",
+        "history",
+        "evidence"
+      ]
+    },
+    {
+      "path": "/Users/xiaomei/.codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "provided-source",
+      "applicability": "required",
+      "reason": "待安装 Skill 的 authority 与 hard gates",
+      "domains": [
+        "skill-package",
+        "governance"
+      ]
+    },
+    {
+      "path": "/Users/xiaomei/.codex/skills/dashboard-governance/SKILL.md",
+      "revision": "provided-local-skill",
+      "applicability": "required",
+      "reason": "Dashboard 核心记录、artifact 布局和状态规则",
+      "domains": [
+        "dashboard-schema",
+        "dashboard-authority"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "C-01",
+      "condition": "若新增项目级 Dashboard registry 或 canonical KB",
+      "action": "先读取对应工具/KB contract 并扩展 AC 与验证范围",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "C-02",
+      "condition": "若发生范围外行为、authority 或执行拓扑变化",
+      "action": "重新构造 Context Bootstrap 并触发 full rebaseline",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "project-rules",
+      "dashboard-state",
+      "history",
+      "evidence",
+      "skill-package",
+      "governance",
+      "dashboard-schema",
+      "dashboard-authority"
+    ],
+    "preservation_statement": "检查足以覆盖本次项目级安装、原 Dashboard 状态保留、入口可发现性和证据声明边界的信息；缺失任一必要域时扩读或报告证据缺口。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design -> builder -> independent validation -> closure",
+    "reason": "tracked governance/documentation writes trigger validation; semantic risk is medium and user materials must be preserved."
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}
