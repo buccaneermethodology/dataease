@@ -4,10 +4,10 @@
 
 ## 当前快照
 
-- **当前批次：**`DE-EXEC-S007` — 本地 SGE 写前保全与收尾流程优化；文件交付已落地。
-- **验收与 Goal 状态：**[本轮结果入口](Artifacts/Goal-DE-GOV-002/README.md) 指向冻结快照、独立审阅和当前 Stop Gate receipt；交付状态不替代 Goal 终态。
-- **历史批次：**`DE-EXEC-S006` 安装结果按原记录保留；之后的本地优化不回写原安装快照。
-- **下一步：**当前无强制后续 Session；后续任务按项目 Skill 执行。
+- **当前活动：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
+- **观察状态：**[当前计数与结论](Artifacts/Goal-DE-GOV-003/data/state.json)；样本不足时明确保持证据不足。
+- **入口：**[观察 Goal 与采集协议](Artifacts/Goal-DE-GOV-003/README.md)。建立机制不代表已经证明效率收益。
+- **历史：**SGE 安装见 DE-EXEC-S006，本地优化见 DE-EXEC-S007；各自历史快照保留。
 - **能力边界：**没有 Session registry/reconcile/validate 工具，手工台账不构成程序化校验。
 
 ## 定位与边界

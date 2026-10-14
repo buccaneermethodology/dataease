@@ -5,6 +5,7 @@
 | Owner | 范围 | 目录 |
 |---|---|---|
 | Goal `DE-GOV-001` | 安装 SGE 项目级 Skill，并改善执行 Dashboard 的可维护入口 | [Goal-DE-GOV-001](Goal-DE-GOV-001/README.md) |
+| Goal `DE-GOV-003` | 每5任务评估本地 SGE 优化收益 | [Goal-DE-GOV-003](Goal-DE-GOV-003/README.md) |
 
 此索引不授予权限、不替代 Goal authority，也不证明独立验证或任务完成。
 

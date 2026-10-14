@@ -11,6 +11,11 @@
 - 当前项目未提供 Session registry/reconcile/validate 工具；不得声称通过程序化注册表校验。若后续引入工具，需明确权威记录与派生索引，按工具规定先 check、再修复并复验。
 - 本项目级 Skill 的确定性脚本从 `.codex/skills/sge-governed-checkpoints/scripts/` 调用；依赖未安装或能力不可用时，先报告并按 Skill 的 core fallback/阻断规则处理，不静默安装依赖或扩大权限。
 
+### 本地 SGE 优化的持续观察
+
+- 后续使用本地 SGE 的非平凡 DataEase 任务，按 `Dashboard/Artifacts/Goal-DE-GOV-003/protocol.md` 在任务开始登记类别、复杂度和 Skill 版本，并在收尾记录可追溯的时间点、返工与验收结果；模板为同目录 `task-record.template.json`。未知值保留 null，不从文件 mtime 或印象估计耗时。
+- 测量记录只追加到该 Goal 的 `data/tasks/`，不改写任务已冻结的证据。每5个已结束任务由观察者出一轮报告；任务的重试和子 Agent 不重复计数。采集复用已有验收并记录自身成本，不为写测量记录额外启动 review 或 Goal。
+
 ## 0. 产品版本、开源边界与协作分支
 
 - 当前工作区是 DataEase 产品 **V3** 源码，以下仓库属性和协作规则由项目维护者明确指定。
