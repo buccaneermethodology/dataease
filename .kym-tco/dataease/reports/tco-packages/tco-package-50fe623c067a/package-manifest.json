@@ -1,0 +1,47 @@
+{
+  "schema": "kym_tco.tco_package_manifest.v1",
+  "package_id": "tco-package-50fe623c067a",
+  "product_id": "dataease",
+  "state_axes": {
+    "environment_status": "ready",
+    "package_execution_status": "blocked",
+    "candidate_status": "not_generated",
+    "verification_status": "not_run",
+    "audit_status": "not_run",
+    "approval_status": "not_requested"
+  },
+  "result": "policy_blocked",
+  "finding_code": "PACKAGE_PROTECTED_READ_FORBIDDEN",
+  "command_evidence": [
+    {
+      "step": "package",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r001.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r005-r001.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 1,
+      "summary": "bound list ref Dashboard/Artifacts/DEEXEC016-TCO-r005/projection-ledger.json 不得读取 approval/receipt/authorization 或治理真源 surface",
+      "evidence_path": "package-manifest.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    }
+  ],
+  "artifact_index": {
+    "path": "artifact-index.json",
+    "digest": "sha256:1386809b17dffd7da45ab1a951c64efe839a90bb78f9d1a548be76d7fd766993"
+  },
+  "self_integrity": {
+    "path": "package-manifest.json",
+    "digest": "sha256:49f61d8197cbc978ebe252321e8267b429c9303deafb1b3f5ec01720b785672f",
+    "digest_algorithm": "sha256_canonical_json_without_self_integrity_digest",
+    "checksum_ref": "package-manifest.sha256"
+  },
+  "claim_ceiling": "repo-local TCO v4 + Coverage v3 candidate package only; candidate_not_approved; no semantic correctness, approval, receipt, release, implementation completion, or production readiness"
+}

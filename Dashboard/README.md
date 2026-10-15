@@ -4,6 +4,8 @@
 
 ## 当前快照
 
+- **需求核对：**[SP-004 S00](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/README.md>) 文档独立审查已完成：156题、171条AC、19组fixture规格；两组追加裁定已落实。最终终态见r004 Stop Gate，不代表产品测试或需求冻结，不自动执行S01。
+
 - **KB 建设：**`SP-001` 本地交付候选已落地，[知识库](../kb/README.md)与Dashboard平行；[最终验收与终态入口](Artifacts/SP-001/README.md)。
 - **持续观察：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
 - **观察状态：**[当前计数与结论](Artifacts/Goal-DE-GOV-003/data/state.json)；样本不足时明确保持证据不足。

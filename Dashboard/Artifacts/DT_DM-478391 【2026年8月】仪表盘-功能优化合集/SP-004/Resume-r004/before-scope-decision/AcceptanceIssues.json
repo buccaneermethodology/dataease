@@ -1,0 +1,299 @@
+{
+  "status": "proposed",
+  "scope": "测试设计阻塞与待调查项；不是未实现判定；不执行S01",
+  "issues": [
+    {
+      "id": "ISS-AC-01",
+      "type": "technical_boundary_pending",
+      "question_ids": [
+        "Q008"
+      ],
+      "title": "30分钟精确边界",
+      "detail": "精确1800秒的边界在实现契约中固定；当前用1799/1801秒证明已决定前后语义，不把工程等号问题升级为重新裁定整个有效期。",
+      "status": "open",
+      "owner": "后续技术契约边界确认",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-02",
+      "type": "technical_investigation",
+      "question_ids": [
+        "Q013",
+        "Q032"
+      ],
+      "title": "MB字节计量",
+      "detail": "1MB/100MB采用十进制或二进制、序列化编码及文件容量测量点未指定。S01明确实际计量并提出可复核边界，不得自行将MB写成MiB。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-03",
+      "type": "acceptance_environment_pending",
+      "question_ids": [
+        "Q016",
+        "Q019",
+        "Q021",
+        "Q026",
+        "Q063",
+        "Q083",
+        "Q084",
+        "Q127",
+        "Q149",
+        "Q155"
+      ],
+      "title": "性能与移动端验收条件",
+      "detail": "须确定App/设备/OS版本、浏览器、数据库、网络、硬件、数据规模、并发、表达式复杂度、计时采样方法；仅保留已确认3秒/2秒目标，功能fixture不是标准压测环境。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-04",
+      "type": "technical_investigation",
+      "question_ids": [
+        "Q028",
+        "Q031"
+      ],
+      "title": "导出类型与图片容量",
+      "detail": "S01枚举V3所有表格类型、确定图片格式及经技术验证的容量上限和测量单位；不得用当前可见三类收窄所有表格分母。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-05",
+      "type": "technical_investigation",
+      "question_ids": [
+        "Q032",
+        "Q033",
+        "Q040",
+        "Q041",
+        "Q046",
+        "Q047"
+      ],
+      "title": "异步导出机制及重试计时",
+      "detail": "同步异步切换、现有并发/排队、有限重试次数间隔、30分钟是否含排队和跨重试总计、动态源分批一致性机制待S01；不预定实现或阈值。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-06",
+      "type": "policy_evidence_pending",
+      "question_ids": [
+        "Q036",
+        "Q048"
+      ],
+      "title": "任务历史及审计保留策略",
+      "detail": "文件永久保留及人工删除已决定；任务历史与审计日志保留策略尚未提供，先寻找现有政策证据。不能把未定义策略混同文件永久，也不擅自规定期限；如确需新增政策再提交用户决定。",
+      "status": "open",
+      "owner": "后续治理/技术策略确认",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-07",
+      "type": "existing_behavior_oracle_pending",
+      "question_ids": [
+        "Q051",
+        "Q052",
+        "Q053",
+        "Q062",
+        "Q068",
+        "Q110",
+        "Q116",
+        "Q117",
+        "Q129",
+        "Q130"
+      ],
+      "title": "沿用现有语义的oracle",
+      "detail": "S01固定版本/Provider，记录动态表达式清单、树深、空值、大小写/特殊字符搜索、类型/日期/布尔解析和值相等、请求体容量；当前不能写未经证实的具体匹配/解析期望。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-08",
+      "type": "existing_behavior_oracle_pending",
+      "question_ids": [
+        "Q070",
+        "Q071",
+        "Q075",
+        "Q082",
+        "Q090"
+      ],
+      "title": "F05现有支持与历史兼容",
+      "detail": "历史静态代码不足证明字段和跨字段运行支持；S01列具体字段和可复现缺陷、历史>20及冲突规则编辑校验、旧新配置识别。Q072/Q079/Q087明确新增能力不在此阻塞。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-09",
+      "type": "existing_behavior_oracle_pending",
+      "question_ids": [
+        "Q091",
+        "Q092",
+        "Q097",
+        "Q105",
+        "Q106",
+        "Q107",
+        "Q108"
+      ],
+      "title": "批量拖拽既有机制",
+      "detail": "S01建立单拖角色转换、属性保留/丢失、各区域真实容量、选择入口、撤销及既有无障碍oracle；规格中的兼容/不兼容是测试分支条件，不断言某文本实际不兼容。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-10",
+      "type": "technical_investigation",
+      "question_ids": [
+        "Q140",
+        "Q150",
+        "Q155",
+        "Q156"
+      ],
+      "title": "数值与资源保护",
+      "detail": "NULL聚合及空值呈现沿Provider；安全超时/资源保护阈值需技术设计，不得把3秒验收指标变成终止阈值；非法聚合嵌套的合法性需解析器规范。",
+      "status": "open",
+      "owner": "S01技术调查/后续验收设计",
+      "impact": "相关精确边界或依赖现有行为的oracle未固定，不能声称这些用例可执行或已通过；其余已确定语义保持原分母"
+    },
+    {
+      "id": "ISS-AC-11",
+      "type": "benefit_measurement_pending",
+      "question_ids": [],
+      "source_ids": [
+        "ORIG-L170"
+      ],
+      "title": "30%效率目标缺少收益基线",
+      "detail": "保留原文约30%收益目标，不用功能验收代替。对照任务、人群、时间口径和统计方法未定义，后续明确后方能量化判定。",
+      "status": "open"
+    },
+    {
+      "id": "ISS-AC-12",
+      "type": "existing_behavior_oracle_pending",
+      "question_ids": [],
+      "source_ids": [
+        "ORIG-L244"
+      ],
+      "title": "现有节点/组件复制后改类型的回归入口",
+      "detail": "仅是原文现状方案线索；后续定位原操作及基线，不能当F01能力已满足。",
+      "status": "open"
+    },
+    {
+      "id": "ISS-AC-14",
+      "type": "technical_contract_pending",
+      "status": "open",
+      "title": "10条计数的异常/历史工程状态",
+      "detail": "用户已决定上限10及小计总计分别计数；正常9/10/11、修改、实际删除释放可明确验收。既有超10历史配置、无效/停用但仍保存槽位、并发保存实现需技术调查，不自行规定自动截断/删除/放行或事务技术。",
+      "owner": "后续获授权技术设计",
+      "decision_refs": [
+        "DEC-SUP-D11"
+      ],
+      "blocks_normal_count_scenarios": false
+    }
+  ],
+  "coverage_issue_refs": [
+    {
+      "id": "COV-D01",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "原文复制审计、敏感值保护及加密建议是否新增为验收要求？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D02",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "全屏进入/退出审计建议是否纳入新增范围？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D03",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "导出限频、敏感数据审批与文件密码/加密是否纳入新增范围？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D04",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "格式偏好记忆、大数据量导出二次确认是否新增？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D05",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "未批准的配置审计、敏感过滤值展示、自动草稿/定时保存/恢复提示，以及独立一键复用入口是否纳入新增范围？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D06",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "未批准的样式配置审计、敏感数据标记、已有规则覆盖提示、自动草稿/恢复是否纳入新增范围？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D07",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "是否新增一键清除全部已选枚举入口？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D08",
+      "path": "CoverageIssues.json",
+      "status": "DecisionNeeded",
+      "title": "函数提示/自动补全、字段点选、语法高亮和跨透视表模板复用是否新增？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D09",
+      "path": "CoverageIssues.json",
+      "status": "ConditionalNonBlocking",
+      "title": "保留原文选填国际化/埋点及外部敏感数据共享时的TS评估条件。",
+      "authority_boundary": "选填/条件适用登记，不升格S00新增强制决定"
+    },
+    {
+      "id": "COV-D10",
+      "path": "CoverageIssues.json",
+      "status": "EvidenceNeeded",
+      "title": "原文30秒导出响应具体指任务受理、同步文件就绪还是其他时点？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-D11",
+      "path": "CoverageIssues.json",
+      "status": "resolved",
+      "title": "原文每张透视表最多10条公式是否仍作为业务上限？",
+      "authority_boundary": "用户直接答复已落地user-decision.md；数量AC待增量审查"
+    },
+    {
+      "id": "COV-E01",
+      "path": "CoverageIssues.json",
+      "status": "EvidenceNeeded",
+      "title": "原文少列居中与快速返回示例如何由已有移动页面实现承接？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-E02",
+      "path": "CoverageIssues.json",
+      "status": "EvidenceNeeded",
+      "title": "50MB提示与可选导出字段列表如何承接？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    },
+    {
+      "id": "COV-E03",
+      "path": "CoverageIssues.json",
+      "status": "EvidenceNeeded",
+      "title": "条件运算符集合与空值不应用样式的原文条款如何对应现有实现？",
+      "authority_boundary": "保持coverage原身份；无决定不编造确定行为"
+    }
+  ]
+}

@@ -18,9 +18,11 @@
 
 1. 用户明确裁定的 156 项决策（须有可定位的完整记录）。
 2. 《DataEase F01–F08 完整需求规格 V1.0》（作为需求内容的主要候选基线）：docs/Req-Func-Optimization/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…。
-3. docs/Req-Func-Optimization/DataEase_KYM_Draft_r001_20261014.md 和 .kym-tco/dataease/kym/views/kym-r004.md 作为参考（目标、范围、Target Profiles、未解决问题）。
-4. 原始需求文档（用于来源核对与遗漏检测，不自动覆盖后续决策）也作为参考：docs/Req-Func-Optimization/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…
-5. 《DataEase F01–F08 开发计划 Draft r001》（规划参考，非需求真源）。
+3. docs/Req-Func-Optimization/DataEase_KYM_Draft_r001_20261014.md 和 .kym-tco/dataease/kym/views/kym-r005.md 作为参考（目标、范围、Target Profiles、未解决问题）。
+4. .kym-tco/dataease/reports/tco-r001-support/index.html 作为参考
+5. 原始需求文档（用于来源核对与遗漏检测，不自动覆盖后续决策）也作为参考：docs/Req-Func-Optimization/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…
+6. 《DataEase F01–F08 开发计划 Draft r001》（规划参考，非需求真源）
+7. 测试环境配置，供参考：Dashboard/debugging_env.md
 
 **冲突规则**：上述排序仅为审查假设；遇到矛盾、缺失、模糊或多义时登记 `DecisionNeeded`，由用户裁定；Agent 不得自行改变需求。KYM Draft 不能自动成为冻结的产品契约。
 
@@ -147,6 +149,5 @@
 
 1. Goal的定稿
 2. Stage Plan、Big Ideas、Sessions的编号和设计
-3. 按照 Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_F01-F08_Development_Plan_Draft_r001.md 里定义的候选执行波次 定义 KYM中的 Target Profile
 
 > **当前判定**：`Requirements Baseline Validity = INSUFFICIENT_EVIDENCE`；`S01 Entry Readiness = BLOCKED`。这是基于目前可见输入的设计阶段判定，不代表 S00 已执行。

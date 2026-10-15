@@ -1,0 +1,54 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "tco-candidate-complete",
+  "source_completion_rule_id": "tco-candidate-contract",
+  "source_completion_rule_ref": "Dashboard/Artifacts/DEEXEC016-TCO-r005/design.md",
+  "source_completion_rule_sha256": "2677427c4a700512ddddb437e4fa7e7520d0a964705b59dde6adc057a06d616c",
+  "issued_by_authority_ref": "Dashboard/Artifacts/DEEXEC016-TCO-r005/raw-intent.md",
+  "issued_by_authority_sha256": "43ab80d6d4c3b8bdf6d240d9c334d3e2fb52e01d22d3398cf2788fef0773b606",
+  "issued_by_authority_id": "tco-r005-user",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "tco-candidate"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "goal",
+            "completion_rule",
+            "obligation_inventory",
+            "final_diff",
+            "independent_validation",
+            "closeout",
+            "dashboard_state",
+            "kb_disposition",
+            "original_plan_coverage",
+            "scope_delta_audit",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S00-DECISION-RECONCILIATION-R003",
+  "session_id": "SP-004",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/LoopGoal_Final_r001.md",
+    "sha256": "8d102dba2ae88a80ac097b1248c85c280eeaa274a6864592b5240c2645278c34"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/DecisionLedger.json",
+      "sha256": "beac0e26392aea266c9dbe29bbd78802e9dfd21b6d6f81d3f06adc74b3c713cf"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/DataEase_Q001-Q156_Questions_Decisions_Acceptance_r003.md",
+      "sha256": "e66cac75d76c3bb41cdb1bb9a41eb2589f73b58dcda6482024ddc549d91ee655"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/pre-review.md",
+      "sha256": "96e50ce56fb73dcc12e2dc4f82c72d5cf01bf37468cb29cdfb132cd0c5bfc110"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "decision-ledger-r003",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "S00-AC-01",
+    "S00-AC-02",
+    "S00-AC-03",
+    "S00-AC-04",
+    "S00-AC-05",
+    "S00-AC-06",
+    "S00-AC-07",
+    "S00-AC-08",
+    "S00-AC-09"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/DecisionReconciliationReview.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/DecisionReconciliationReview.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "只对156项来源与V1.0对应语义作独立核验，不认定整体S00完成",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/design.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r003/design.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S00-GOAL-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/review-design.md",
+  "working_directory": ".",
+  "execution_command": "逐项读取156条DecisionLedger的原题/答案/确认与V1.0组合规则，发现同一功能内摘要遗漏/实质矛盾/旧规则覆盖/建议误升级；不得开展跨功能冲突检测。记录每题结论或分组全覆盖表，区分仅摘要遗漏（原确认仍有效、需AC追溯）与真的需要用户裁定。检查Q020追问解释、Q035/Q124、自定义回答及范围限制。不修改Builder产物，只写DecisionReconciliationReview.md供主代理修正。"
+}

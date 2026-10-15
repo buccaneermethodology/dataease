@@ -1,0 +1,3409 @@
+{
+  "created_at": "2026-10-15T04:07:34.017612+00:00",
+  "raw_user_intent": "更新了md文件，请再次查看。请把全部的156个问题、选项、答案、验收条件等，帮我整理为一份完整的markdown文档，作为Goa执行中间的Artifact保留下来",
+  "followup": "还缺哪些问题，告诉我，我来补充",
+  "scope": "仅新增中间Artifact；不改变原S00验收分母，不伪造缺失原题选项答案",
+  "source_files": [
+    {
+      "path": "docs/Req-Func-Optimization/DataEase_Q001-Q156_Conversation_Archive_Partial_20261014.md",
+      "sha256": "8f5c6eb5b6724121705072f5740af84e6dc16d69df8fcd1dd694d2569830f716"
+    },
+    {
+      "path": "docs/Req-Func-Optimization/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…/DataEase_Requirements_V1_20261014.md",
+      "sha256": "b2de23046c8000a52d5ada278df2302c6ab7a77682295cd38f1c88fd94854493"
+    },
+    {
+      "path": "kb/requirements/DT_DM-478391.v1.json",
+      "sha256": "83387f717bdb735d7d2bff762c9b635fca4e92d2050f0089028ac627c5d8cb88"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/decision-source-zip-r004.txt",
+      "sha256": "260790645c4df3575e227cc96f19075e2c21e62991402535c6a5806b78d4e8ed"
+    }
+  ],
+  "count": 156,
+  "complete_count": 25,
+  "records": [
+    {
+      "id": "Q001",
+      "feature": "GLOBAL",
+      "question": "Q01：本次开发计划覆盖哪些功能？\n\nA. 全部八项（建议）\nF01–F08 全部纳入需求范围，后续按依赖关系拆分研发 Slice，允许分阶段交付。\n\nB. 先开发 F01–F05\n优先完成原文档中描述较详细的前五项，F06–F08 留到下一阶段。\n\nC. 只选择部分功能\n由你指定具体功能编号，其余明确排除。\n\nD. 八项全部分析，但只实施首个最小切片\n完整澄清和设计八项需求，先选择一个可独立验证的最小业务切片实施。\n\n确认选择，进入下一题 \n后续我会按照你的选择逐项澄清功能行为、数据边界、权限、安全、性能和验收标准。每一题记录已确认决策，发现需求文档与代码存在冲突时，单独提出裁定，不自行假定。\n当前进度：Q01 / 总问题数待定。达到可以形成可验证的完整需求合同的程度后停止提问。",
+      "question_ref": "MD / conversation-source.md：L53–L90",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L104–L104",
+      "confirmation": "已确认 Q01：选择 A。",
+      "rules": [
+        {
+          "feature": "GLOBAL",
+          "text": "目标：提升仪表盘过滤复用、移动端查看、表格全量导出、查询选项精确性、透视表条件格式、批量字段编辑、高基数枚举选择和自定义行汇总。角色：仪表盘设计者、分析师、报表查看者、管理员。**F01–F08 全部在范围内，可分阶段交付**（Q01）；**差异驱动、复用现有 DataEase 能力，只补缺失**（Q02）；原始文档作为输入，本轮裁定作为最新需求基线（Q03）。",
+          "line": 9,
+          "ids": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q002",
+      "feature": "GLOBAL",
+      "question": "Q02：如何处理原始需求与 DataEase 现有实现的关系？\n从仓库中已经定位到部分相关实现，例如 TablePivotHandler.calcCustomExpr()，说明现有代码至少具有部分自定义计算处理逻辑，但是否满足 F08 仍需深入验证。\n因此，本次开发需要明确一个基本原则：现有功能与新需求重叠时，我们如何确定改造边界？\n\nA. 差异驱动开发（建议）\n逐项分析现有代码，识别已支持、部分支持、未支持的行为。只针对缺失能力和不符合要求的部分开发，优先复用既有实现。\n\nB. 严格按需求文档重新实现\n以原始需求规格为主要依据，即使现有功能类似，也可以重新设计或改造实现。\n\nC. 保持 DataEase 原生行为优先\n尽量避免修改核心实现；需求与现有机制冲突时，优先调整需求以适应 DataEase。\n\nD. 差异分析后逐项决定\n先完成八项功能的代码差异分析，每一项再分别决定采用复用、扩展或重构。",
+      "question_ref": "MD / conversation-source.md：L110–L130",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L162–L162",
+      "confirmation": "已确认 Q02：选择 A — 差异驱动开发。",
+      "rules": [
+        {
+          "feature": "GLOBAL",
+          "text": "目标：提升仪表盘过滤复用、移动端查看、表格全量导出、查询选项精确性、透视表条件格式、批量字段编辑、高基数枚举选择和自定义行汇总。角色：仪表盘设计者、分析师、报表查看者、管理员。**F01–F08 全部在范围内，可分阶段交付**（Q01）；**差异驱动、复用现有 DataEase 能力，只补缺失**（Q02）；原始文档作为输入，本轮裁定作为最新需求基线（Q03）。",
+          "line": 9,
+          "ids": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q003",
+      "feature": "GLOBAL",
+      "question": "Q03：原始需求文档中存在矛盾或不明确描述时，以什么作为裁定依据？\n例如，F05「透视表支持按列设置格式」中，基本事件流划掉了字体颜色、背景颜色等功能，但验收准则又要求支持这些样式。\n这意味着原始需求文档还不能直接作为最终开发和验收合同。\n\nA. 逐项澄清，以本次确认结果为最终依据（建议）\n原始文档作为需求输入。发现冲突、遗漏、歧义时逐项提问，由你裁定。最终形成独立的、可验证的需求基线。\n\nB. 原始需求文档优先\n尽量遵循原文。只对无法实施的部分提问，其他细节沿用文档规定。\n\nC. 现有 DataEase 实现优先\n遇到描述冲突时，优先采用现有产品行为，仅在明确要求新增能力时改变。",
+      "question_ref": "MD / conversation-source.md：L173–L189",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L221–L221",
+      "confirmation": "已确认 Q03：选择 A — 逐项澄清，以本次确认结果作为最终需求基线。",
+      "rules": [
+        {
+          "feature": "GLOBAL",
+          "text": "目标：提升仪表盘过滤复用、移动端查看、表格全量导出、查询选项精确性、透视表条件格式、批量字段编辑、高基数枚举选择和自定义行汇总。角色：仪表盘设计者、分析师、报表查看者、管理员。**F01–F08 全部在范围内，可分阶段交付**（Q01）；**差异驱动、复用现有 DataEase 能力，只补缺失**（Q02）；原始文档作为输入，本轮裁定作为最新需求基线（Q03）。",
+          "line": 9,
+          "ids": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q004",
+      "feature": "F01",
+      "question": "Q04：F01 过滤条件复制粘贴，究竟支持哪些对象之间的复制？\n原始需求中存在两个相关描述：\n- 基本事件流：从一个图表复制过滤条件，粘贴到另一个图表。\n- 补充约束：适用范围为「图表 + 查询组件」。\n这两处描述并没有明确图表与查询组件之间是否允许交叉复制。\n请选择需要支持的复制范围：\n\nA. 仅图表之间\n图表 → 图表。包括普通图表、表格和透视表，但不支持查询组件。\n\nB. 图表和查询组件分别支持（建议）\n图表 → 图表；查询组件 → 查询组件。两类组件独立复制，不允许跨类型粘贴。\n\nC. 图表和查询组件可以相互复制\n除了同类型复制，还支持图表 → 查询组件、查询组件 → 图表，需要处理两类过滤配置的语义映射。\n\nD. 先分析现有过滤配置模型，再决定\n先验证两类组件的过滤条件是否具有兼容的数据结构和业务语义，然后决定具体支持范围。",
+      "question_ref": "MD / conversation-source.md：L229–L252",
+      "answer": "B",
+      "answer_ref": "MD / conversation-source.md：L284–L284",
+      "confirmation": "已确认 Q04：选择 B — 图表和查询组件分别支持过滤条件复制粘贴，不支持跨类型复制。",
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q04/Q15**：图表间允许不同图表类型复制**通用过滤条件**；查询组件之间允许复制；图表与查询组件禁止跨类型。",
+          "line": 28,
+          "ids": [
+            4,
+            15
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q005",
+      "feature": "F01",
+      "question": "Q05：F01 是否允许跨仪表盘复制过滤条件？\n原始需求的扩展事件流明确写到：\n跨仪表盘复制：用户可在不同仪表盘之间复制粘贴过滤条件。\n\n但对于浏览器不同标签页、不同用户会话，以及复制内容如何保存，尚无完整定义。\n建议先确定业务范围，再澄清技术实现。\n\nA. 仅支持同一仪表盘\n只允许在当前仪表盘的组件之间复制粘贴。切换到其他仪表盘后不可粘贴。\n\nB. 支持跨仪表盘、同一浏览器标签页（建议）\n用户复制过滤条件后，可以导航到其他仪表盘粘贴，但不要求不同浏览器标签页之间共享复制内容。\n\nC. 支持跨仪表盘、跨浏览器标签页\n同一用户在多个浏览器标签页之间也可以复制粘贴过滤条件。\n\nD. 支持跨仪表盘，并在重新登录后继续使用\n复制内容持久化保存，用户重新登录后仍可粘贴，但需要进一步定义存储期限和安全边界。",
+      "question_ref": "MD / conversation-source.md：L293–L316",
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q05/Q10**：支持跨仪表盘、跨浏览器标签页；使用 DataEase 内部跨标签页共享机制及组件按钮，**不使用操作系统剪贴板**。",
+          "line": 29,
+          "ids": [
+            5,
+            10
+          ]
+        }
+      ],
+      "status": "缺原始回答"
+    },
+    {
+      "id": "Q006",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q06/Q07**：源与目标必须绑定**同一数据集**。目标已有过滤条件时二次确认，确认后全部覆盖；无条件直接粘贴；取消保持不变。",
+          "line": 30,
+          "ids": [
+            6,
+            7
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q007",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q06/Q07**：源与目标必须绑定**同一数据集**。目标已有过滤条件时二次确认，确认后全部覆盖；无条件直接粘贴；取消保持不变。",
+          "line": 30,
+          "ids": [
+            6,
+            7
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q008",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q08/Q09**：复制数据自复制时起 30 分钟有效；仅同一登录用户可用，登出/切换账号失效。",
+          "line": 31,
+          "ids": [
+            8,
+            9
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q009",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q08/Q09**：复制数据自复制时起 30 分钟有效；仅同一登录用户可用，登出/切换账号失效。",
+          "line": 31,
+          "ids": [
+            8,
+            9
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q010",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q05/Q10**：支持跨仪表盘、跨浏览器标签页；使用 DataEase 内部跨标签页共享机制及组件按钮，**不使用操作系统剪贴板**。",
+          "line": 29,
+          "ids": [
+            5,
+            10
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q011",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q11/Q12**：源无过滤条件时禁用复制；完整复制所有影响过滤行为的配置（字段、操作符、值、AND/OR、动态表达式等），不复制结果数据；不允许静默丢失。",
+          "line": 32,
+          "ids": [
+            11,
+            12
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q012",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q11/Q12**：源无过滤条件时禁用复制；完整复制所有影响过滤行为的配置（字段、操作符、值、AND/OR、动态表达式等），不复制结果数据；不允许静默丢失。",
+          "line": 32,
+          "ids": [
+            11,
+            12
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q013",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q13**：最多 50 条过滤条件，序列化内容不超过 1 MB；超限拒绝，不截断；暂按叶子条件节点计数，组合节点不计。",
+          "line": 33,
+          "ids": [
+            13
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q014",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q14**：粘贴立即应用并刷新预览；持久化沿用现有保存机制。",
+          "line": 34,
+          "ids": [
+            14
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q015",
+      "feature": "F01",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q04/Q15**：图表间允许不同图表类型复制**通用过滤条件**；查询组件之间允许复制；图表与查询组件禁止跨类型。",
+          "line": 28,
+          "ids": [
+            4,
+            15
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q016",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q16/Q26**：仅掌上运营、数智应用等明确指定 App 内嵌报告；手机、平板均须支持（具体系统版本待证），手机浏览器和任意第三方 WebView 不在范围。",
+          "line": 75,
+          "ids": [
+            16,
+            26
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q017",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q17/Q25/Q27**：手机优先自动横屏，宿主不支持时提示手动旋转；平板全屏保持当前方向、随设备方向适配；退出恢复原报告方向（受宿主能力约束）。不要求旋转设备自动进入全屏。",
+          "line": 76,
+          "ids": [
+            17,
+            25,
+            27
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q018",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q18/Q23**：全屏仅当前表格；普通表格和透视表支持，热力表不在 F02；不允许全屏中切换其他表格。",
+          "line": 77,
+          "ids": [
+            18,
+            23
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q019",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q19**：保留横纵滚动、分页、现有适用于移动端的排序筛选；不强制新增缩放、列宽调整。",
+          "line": 78,
+          "ids": [
+            19
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q020",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q20**：继承查询/筛选/排序/页码及尽可能已加载数据；全屏操作独立，退出恢复原报告状态及滚动位置。",
+          "line": 79,
+          "ids": [
+            20
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q021",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q21/Q22**：首屏**有效数据可用**≤3 秒（标准测试条件待定）；优先现有分页/按需加载，虚拟滚动由技术设计；超过 3 秒继续显示加载并允许返回，不自动超时终止。",
+          "line": 80,
+          "ids": [
+            21,
+            22
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q022",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q21/Q22**：首屏**有效数据可用**≤3 秒（标准测试条件待定）；优先现有分页/按需加载，虚拟滚动由技术设计；超过 3 秒继续显示加载并允许返回，不自动超时终止。",
+          "line": 80,
+          "ids": [
+            21,
+            22
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q023",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q18/Q23**：全屏仅当前表格；普通表格和透视表支持，热力表不在 F02；不允许全屏中切换其他表格。",
+          "line": 77,
+          "ids": [
+            18,
+            23
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q024",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q24**：成功空数据提示“暂无数据”，失败提示错误，均允许返回；不强制新增专用重试按钮。",
+          "line": 81,
+          "ids": [
+            24
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q025",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q17/Q25/Q27**：手机优先自动横屏，宿主不支持时提示手动旋转；平板全屏保持当前方向、随设备方向适配；退出恢复原报告方向（受宿主能力约束）。不要求旋转设备自动进入全屏。",
+          "line": 76,
+          "ids": [
+            17,
+            25,
+            27
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q026",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q16/Q26**：仅掌上运营、数智应用等明确指定 App 内嵌报告；手机、平板均须支持（具体系统版本待证），手机浏览器和任意第三方 WebView 不在范围。",
+          "line": 75,
+          "ids": [
+            16,
+            26
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q027",
+      "feature": "F02",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F02",
+          "text": "- **Q17/Q25/Q27**：手机优先自动横屏，宿主不支持时提示手动旋转；平板全屏保持当前方向、随设备方向适配；退出恢复原报告方向（受宿主能力约束）。不要求旋转设备自动进入全屏。",
+          "line": 76,
+          "ids": [
+            17,
+            25,
+            27
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q028",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q28–Q30**：支持普通表、透视表、热力表及其他表格类图表；XLSX、CSV、图片三种格式均覆盖**当前查询/筛选/排序下全部分页展示结果**。普通表导出筛选后明细；透视表导出聚合展示结果（含适用汇总），不额外导出底层原始明细；图片不得只截可视区域。",
+          "line": 124,
+          "ids": [
+            28,
+            29,
+            30
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q029",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q28–Q30**：支持普通表、透视表、热力表及其他表格类图表；XLSX、CSV、图片三种格式均覆盖**当前查询/筛选/排序下全部分页展示结果**。普通表导出筛选后明细；透视表导出聚合展示结果（含适用汇总），不额外导出底层原始明细；图片不得只截可视区域。",
+          "line": 124,
+          "ids": [
+            28,
+            29,
+            30
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q030",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q28–Q30**：支持普通表、透视表、热力表及其他表格类图表；XLSX、CSV、图片三种格式均覆盖**当前查询/筛选/排序下全部分页展示结果**。普通表导出筛选后明细；透视表导出聚合展示结果（含适用汇总），不额外导出底层原始明细；图片不得只截可视区域。",
+          "line": 124,
+          "ids": [
+            28,
+            29,
+            30
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q031",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q31**：图片有经技术验证的容量上限，超限拒绝并建议 XLSX/CSV，不允许部分导出。",
+          "line": 125,
+          "ids": [
+            31
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q032",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q32**：XLSX/CSV 单次 ≤500,000 行、≤100 MB、任务最长 30 分钟；>100,000 行有大数据量提示；超限/超时拒绝或终止，绝不将残缺文件标记成功。",
+          "line": 126,
+          "ids": [
+            32
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q033",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q33/Q40/Q41**：小数据同步，大数据/长耗时异步；优先复用现有切换机制，必要时依据数据量、复杂度、性能确定自动切换；异步并发/排队沿用现有框架，不新增用户级并发限制。",
+          "line": 127,
+          "ids": [
+            33,
+            40,
+            41
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q034",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q34–Q36**：全局导出任务中心，用户可跨仪表盘/重登查看排队、执行、成功、失败及下载；异步文件**永久保存**，不因时间到期自动清理；用户可删除自己的文件，授权管理员可管理全部文件，删除二次确认；任务记录与文件是不同对象。",
+          "line": 128,
+          "ids": [
+            34,
+            35,
+            36
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q035",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q34–Q36**：全局导出任务中心，用户可跨仪表盘/重登查看排队、执行、成功、失败及下载；异步文件**永久保存**，不因时间到期自动清理；用户可删除自己的文件，授权管理员可管理全部文件，删除二次确认；任务记录与文件是不同对象。",
+          "line": 128,
+          "ids": [
+            34,
+            35,
+            36
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q036",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q34–Q36**：全局导出任务中心，用户可跨仪表盘/重登查看排队、执行、成功、失败及下载；异步文件**永久保存**，不因时间到期自动清理；用户可删除自己的文件，授权管理员可管理全部文件，删除二次确认；任务记录与文件是不同对象。",
+          "line": 128,
+          "ids": [
+            34,
+            35,
+            36
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q037",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q37/Q38**：每次下载历史文件，重新验证原始资源访问及当前行级/列级权限是否覆盖历史文件内容；权限不足或无法证明覆盖则拒绝下载，提示重新导出，**保留文件**；管理员也不得绕过数据权限。",
+          "line": 129,
+          "ids": [
+            37,
+            38
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q038",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q37/Q38**：每次下载历史文件，重新验证原始资源访问及当前行级/列级权限是否覆盖历史文件内容；权限不足或无法证明覆盖则拒绝下载，提示重新导出，**保留文件**；管理员也不得绕过数据权限。",
+          "line": 129,
+          "ids": [
+            37,
+            38
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q039",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q39**：用户可取消自己的排队/执行任务，授权管理员可取消其他任务；取消停止后续处理并清理未完成文件，保留取消记录。",
+          "line": 130,
+          "ids": [
+            39
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q040",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q33/Q40/Q41**：小数据同步，大数据/长耗时异步；优先复用现有切换机制，必要时依据数据量、复杂度、性能确定自动切换；异步并发/排队沿用现有框架，不新增用户级并发限制。",
+          "line": 127,
+          "ids": [
+            33,
+            40,
+            41
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q041",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q33/Q40/Q41**：小数据同步，大数据/长耗时异步；优先复用现有切换机制，必要时依据数据量、复杂度、性能确定自动切换；异步并发/排队沿用现有框架，不新增用户级并发限制。",
+          "line": 127,
+          "ids": [
+            33,
+            40,
+            41
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q042",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q42/Q43**：XLSX 保留可计算的数值/日期类型和页面显示格式、字体色、背景色、加粗、合并单元格、汇总样式及适用条件样式；CSV 导出页面展示值（无单元格样式）；图片保留主要视觉效果。",
+          "line": 131,
+          "ids": [
+            42,
+            43
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q043",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q42/Q43**：XLSX 保留可计算的数值/日期类型和页面显示格式、字体色、背景色、加粗、合并单元格、汇总样式及适用条件样式；CSV 导出页面展示值（无单元格样式）；图片保留主要视觉效果。",
+          "line": 131,
+          "ids": [
+            42,
+            43
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q044",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q44**：文件名 `报告名称_表格名称_YYYYMMDD_HHMMSS.ext`；内部独立任务 ID，不能覆盖已有文件。",
+          "line": 132,
+          "ids": [
+            44
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q045",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q45/Q49**：**只要有表格查看权限即可导出**，不要求独立导出权限；所有格式及异步执行必须遵循发起用户的行列权限和脱敏规则，不允许导出绕过页面脱敏。",
+          "line": 133,
+          "ids": [
+            45,
+            49
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q046",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q46**：任务提交时冻结查询/筛选/排序配置；使用任务执行时的数据，不强制时间点快照，但批次读取不得因分页策略产生可避免的重复/遗漏。",
+          "line": 134,
+          "ids": [
+            46
+          ]
+        },
+        {
+          "feature": "F03",
+          "text": "- **Q153**：F08 自定义小计/总计结果必须进入 XLSX/CSV/图片，保持计算语义一致；异步执行时仍遵循 Q46 的数据时点语义。",
+          "line": 137,
+          "ids": [
+            46,
+            153
+          ]
+        },
+        {
+          "feature": "F08",
+          "text": "- **Q153/Q154**：F03 的 XLSX/CSV/图片必须包含 F08 自定义小计/总计，计算语义一致；异步导出数据时点遵循 Q46；历史透视表不迁移 SUM/AVG 等配置，未启用 F08 时结果不变。",
+          "line": 398,
+          "ids": [
+            46,
+            153,
+            154
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q047",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q47**：临时可恢复故障有限次数自动重试；权限、参数、容量等确定性错误不重试；重试不得重复交付或产生残缺文件。",
+          "line": 135,
+          "ids": [
+            47
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q048",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q48**：审计创建、执行结果、重试、取消、下载、权限拒绝、删除；记录操作人/时间/资源/结果，不记录敏感明文数据。",
+          "line": 136,
+          "ids": [
+            48
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q049",
+      "feature": "F03",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q45/Q49**：**只要有表格查看权限即可导出**，不要求独立导出权限；所有格式及异步执行必须遵循发起用户的行列权限和脱敏规则，不允许导出绕过页面脱敏。",
+          "line": 133,
+          "ids": [
+            45,
+            49
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q050",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q50**：**只过滤查询组件可选值**，不更改数据集权限或额外限制最终查询结果；未选择值时不因选项过滤自动限制图表数据。",
+          "line": 183,
+          "ids": [
+            50
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q051",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q51/Q52**：按值“属于/不属于”；范围固定/动态；不支持正则。动态值仅复用现有表达式，每次加载可选值重新计算，不新增类型。",
+          "line": 184,
+          "ids": [
+            51,
+            52
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q052",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q51/Q52**：按值“属于/不属于”；范围固定/动态；不支持正则。动态值仅复用现有表达式，每次加载可选值重新计算，不新增类型。",
+          "line": 184,
+          "ids": [
+            51,
+            52
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q053",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q53**：字段自身支持 AND/OR、混合及嵌套条件组，优先复用现有过滤树。",
+          "line": 185,
+          "ids": [
+            53
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q054",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q54/Q55**：多级级联，禁止循环依赖；字段自身过滤与级联结果取**交集**，同时满足。",
+          "line": 186,
+          "ids": [
+            54,
+            55
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q055",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q54/Q55**：多级级联，禁止循环依赖；字段自身过滤与级联结果取**交集**，同时满足。",
+          "line": 186,
+          "ids": [
+            54,
+            55
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q056",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q56/Q57**：上游变化后逐级重新加载下游列表，自动清除无效已选值、保留有效值；上游未选时，下游显示符合自身过滤条件的全部可访问选项。",
+          "line": 187,
+          "ids": [
+            56,
+            57
+          ]
+        },
+        {
+          "feature": "F07",
+          "text": "- **Q120**：搜索结果变化不清除已有选中值，允许跨多次搜索累计；F04 过滤/级联真正变化导致失效时遵循 Q56。",
+          "line": 339,
+          "ids": [
+            56,
+            120
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q057",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q56/Q57**：上游变化后逐级重新加载下游列表，自动清除无效已选值、保留有效值；上游未选时，下游显示符合自身过滤条件的全部可访问选项。",
+          "line": 187,
+          "ids": [
+            56,
+            57
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q058",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q58/Q59**：加载失败**不降级为不过滤**，显示错误并可重试，不展示未经验证选项；字段被删或类型不兼容时保留配置、标记失效、受影响字段不可用，其他字段继续。",
+          "line": 188,
+          "ids": [
+            58,
+            59
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q059",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q58/Q59**：加载失败**不降级为不过滤**，显示错误并可重试，不展示未经验证选项；字段被删或类型不兼容时保留配置、标记失效、受影响字段不可用，其他字段继续。",
+          "line": 188,
+          "ids": [
+            58,
+            59
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q060",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q60/Q61**：循环依赖编辑时实时提示、保存时拒绝；级联深度不设固定上限，超过 3 级提示性能风险但允许保存。",
+          "line": 189,
+          "ids": [
+            60,
+            61
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q061",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q60/Q61**：循环依赖编辑时实时提示、保存时拒绝；级联深度不设固定上限，超过 3 级提示性能风险但允许保存。",
+          "line": 189,
+          "ids": [
+            60,
+            61
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q062",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q62**：NULL、空字符串、空白字符串遵循现有 DataEase 过滤语义。",
+          "line": 190,
+          "ids": [
+            62
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q063",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q63**：后端可选值/级联过滤接口响应 ≤3 秒（不含网络和前端渲染；标准测试条件待定）。",
+          "line": 191,
+          "ids": [
+            63
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q064",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q64/Q65**：编辑时可预览，正式生效遵循仪表盘原保存机制；过滤合法但结果为空时警告并允许确认保存，查看时显示“暂无可用选项”；失败不等于空结果。",
+          "line": 192,
+          "ids": [
+            64,
+            65
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q065",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q64/Q65**：编辑时可预览，正式生效遵循仪表盘原保存机制；过滤合法但结果为空时警告并允许确认保存，查看时显示“暂无可用选项”；失败不等于空结果。",
+          "line": 192,
+          "ids": [
+            64,
+            65
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q066",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q66/Q67**：查询组件复制还包括 F04 自身可选值过滤、嵌套组和级联关系；目标字段及依赖必须兼容；粘贴后形成独立配置，不建立共享模板。",
+          "line": 35,
+          "ids": [
+            66,
+            67
+          ]
+        },
+        {
+          "feature": "F04",
+          "text": "- **Q66–Q69**：F01 复制包含全部 F04 规则与级联；组件配置彼此独立，不设共享模板；字段 ID 稳定且类型兼容时重命名不失效，ID 变化不按名称自动映射；历史组件未配置 F04 时保持原行为，可直接启用新能力。",
+          "line": 193,
+          "ids": [
+            66,
+            67,
+            68,
+            69
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q067",
+      "feature": "F04",
+      "question": null,
+      "question_ref": null,
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L320–L320",
+      "confirmation": "已确认 Q67：选择 A — 每个查询组件独立维护过滤配置，支持通过 F01 复制粘贴，但不建立共享引用关系。",
+      "rules": [
+        {
+          "feature": "F01",
+          "text": "- **Q66/Q67**：查询组件复制还包括 F04 自身可选值过滤、嵌套组和级联关系；目标字段及依赖必须兼容；粘贴后形成独立配置，不建立共享模板。",
+          "line": 35,
+          "ids": [
+            66,
+            67
+          ]
+        },
+        {
+          "feature": "F04",
+          "text": "- **Q66–Q69**：F01 复制包含全部 F04 规则与级联；组件配置彼此独立，不设共享模板；字段 ID 稳定且类型兼容时重命名不失效，ID 变化不按名称自动映射；历史组件未配置 F04 时保持原行为，可直接启用新能力。",
+          "line": 193,
+          "ids": [
+            66,
+            67,
+            68,
+            69
+          ]
+        }
+      ],
+      "status": "缺原题与选项"
+    },
+    {
+      "id": "Q068",
+      "feature": "F04",
+      "question": "Q68：F04 已保存的过滤配置，在数据集字段发生变化时，是否允许自动适配？\nREQ-059 已确认：过滤规则引用的字段被删除或类型不兼容时，保留配置并提示修复。\n\n但还有一种更常见的情况：\n\n数据集字段并没有删除，只是名称发生变化。\n\n例如，原来的数据集包含：\n\n字段 ID：10086\n字段名称：销售区域\n字段类型：文本\n仪表盘设计人员配置了过滤规则：\n\n销售区域 不属于 {未知, 测试区域}\n后来，数据集管理员将字段名称改为：\n\n字段 ID：10086\n字段名称：所属区域\n字段类型：文本\n字段 ID、数据类型和实际数据均未变化，只是名称发生变化。\n\n此时，原来的过滤配置应该如何处理？\n\nA. 按字段 ID 关联，名称变化不影响过滤（建议）\n\n只要字段 ID 不变、类型兼容，过滤配置继续生效，并自动显示新的字段名称。\n\n如果字段 ID 已改变，则不根据名称自动匹配，按照 REQ-059 处理。\n\nB. 字段名称变化后，过滤配置失效\n\n即使字段 ID 不变，也要求设计人员重新确认过滤规则，避免字段名称变化意味着业务语义变化。\n\nC. 自动尝试字段匹配\n\n当字段 ID 发生变化时，系统可以根据字段名称、类型等信息寻找替代字段，匹配成功后自动更新引用。\n\nD. 完全遵循 DataEase 现有字段引用机制\n\n不新增字段重命名适配逻辑。先分析现有过滤配置如何引用字段，再沿用原有行为。\n\n建议：A\n原因是：\n\n保持配置稳定性：字段显示名称调整不应导致大量仪表盘过滤配置失效。\n避免错误映射：字段 ID 改变时，不应仅凭名称相同就自动建立引用。\n符合差异驱动原则：优先利用 DataEase 现有字段标识和元数据机制。\n不过，字段 ID 不变并不必然意味着业务语义不变。如果字段的数据类型或计算逻辑发生不兼容变化，仍需按 REQ-059 进行失效处理。",
+      "question_ref": "MD / conversation-source.md：L336–L386",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L391–L391",
+      "confirmation": "已确认 Q68：选择 A — 按字段 ID 关联，字段名称变化不影响过滤配置；字段 ID 改变时不自动匹配。",
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q66–Q69**：F01 复制包含全部 F04 规则与级联；组件配置彼此独立，不设共享模板；字段 ID 稳定且类型兼容时重命名不失效，ID 变化不按名称自动映射；历史组件未配置 F04 时保持原行为，可直接启用新能力。",
+          "line": 193,
+          "ids": [
+            66,
+            67,
+            68,
+            69
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q069",
+      "feature": "F04",
+      "question": "Q69：F04 如何兼容升级前已经存在的查询组件？\n这是 F04 最后一项重要的兼容性问题。\n\n假设某企业已经使用 DataEase 创建了 500 个仪表盘，其中包含大量查询组件。\n\n这些查询组件是在 F04 功能开发之前创建的，因此没有新增的「可选值过滤配置」。\n\n系统升级后，这些历史仪表盘应该如何运行？\n\nA. 历史组件默认不过滤，保持原有行为（建议）\n已存在的查询组件无需修改即可继续使用。\n新增的可选值过滤配置默认为空。\n配置为空时，不施加 F04 新增的过滤限制。\n原有查询条件、级联关系及数据权限保持不变。\n只有设计人员主动配置 F04 后，新规则才生效。\nB. 历史组件自动应用默认过滤规则\n升级后，为已有查询组件自动生成一套默认可选值过滤配置，例如排除空值等。\n\n可能改变原有查询行为。\n\nC. 历史组件必须经过配置迁移\n升级后，系统需要将所有历史查询组件转换为新的配置结构，完成迁移后才能正常使用。\n\nD. 只保证新建查询组件支持 F04\n历史查询组件继续使用旧逻辑，不自动获得 F04 能力。若要使用新功能，必须删除并重新创建查询组件。\n\n建议：A\n主要原因：\n\n向后兼容（Backward Compatibility）：升级不应改变历史仪表盘的查询行为。\n符合差异驱动原则（REQ-002）：只扩展缺失能力，不破坏原有配置。\n降低迁移风险：不要求用户重新创建已有查询组件。\n便于渐进式使用：设计人员可以逐步为已有查询组件增加 F04 过滤规则。\n需要注意，选择 A 并不意味着完全不需要数据库或配置结构迁移。如果新增字段或配置属性，仍需保证旧配置能够正确加载，并且缺失新属性时具有明确的默认语义。",
+      "question_ref": "MD / conversation-source.md：L407–L442",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L447–L447",
+      "confirmation": "已确认 Q69：选择 A — 历史查询组件默认不应用 F04 新增过滤规则，保持原有行为，同时允许直接配置新功能。",
+      "rules": [
+        {
+          "feature": "F04",
+          "text": "- **Q66–Q69**：F01 复制包含全部 F04 规则与级联；组件配置彼此独立，不设共享模板；字段 ID 稳定且类型兼容时重命名不失效，ID 变化不按名称自动映射；历史组件未配置 F04 时保持原行为，可直接启用新能力。",
+          "line": 193,
+          "ids": [
+            66,
+            67,
+            68,
+            69
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q070",
+      "feature": "F05",
+      "question": "Q70：F05 透视表条件样式应该支持哪些目标字段？\n原始需求的核心描述是：\n\n透视表支持按列设置格式，能够选到指标设置格式，当前只支持选到维度。\n\n详细事件流又要求支持选择行维度字段、列维度字段和指标字段。\n\n这里需要区分透视表中的三类字段：\n\n假设透视表如下：\n\n地区\t产品\t2026年1月销售额\t2026年2月销售额\n华东\t产品A\t12,000\t15,000\n华东\t产品B\t8,000\t9,000\n华南\t产品A\t10,000\t13,000\n其中：\n\n行维度：地区、产品。\n列维度：月份。\n指标：销售额。\nF05 的目标是让设计人员可以为这些字段设置条件格式，例如销售额超过 10,000 时采用特定格式。\n\nA. 仅新增指标字段支持（最小改造）\n保留 DataEase 现有维度字段条件样式能力，只补齐指标字段的选择和格式设置。\n\nB. 行维度、列维度和指标字段全部支持（建议）\n允许选择三类字段作为条件样式的目标字段。\n\n例如：\n\n地区为“华东”时，对地区字段应用格式。\n月份为“2026年1月”时，对月份字段应用格式。\n销售额大于 10,000 时，对销售额指标应用格式。\n优先复用现有条件样式机制。\n\nC. 仅支持行维度和指标字段\n不要求直接对列维度字段设置条件样式。\n\nD. 先核实现有实现，再决定扩展范围\n先确认当前 DataEase 条件样式选择器实际支持哪些字段，再决定是否扩展到全部三类字段。\n\n建议：B\n它与原始需求中“条件样式支持应用于行列维度字段和指标字段”的要求一致。\n\n但需要注意：条件判断所引用的字段与最终应用样式的目标字段是两个不同概念。\n\n例如，可以根据“地区=华东”这个条件，对“销售额”指标应用格式。是否允许这种跨字段条件判断，我们将在后续单独澄清。",
+      "question_ref": "MD / conversation-source.md：L466–L514",
+      "answer": "D",
+      "answer_ref": "MD / conversation-source.md：L519–L519",
+      "confirmation": "已记录 Q70：选择 D — 先核实 DataEase 现有透视表条件样式实现，再确定扩展范围。",
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q70/Q71**：先核实现有行维度、列维度、指标的字段选择能力；**以现有代码支持范围为边界**，已有功能修复可复现缺陷，不主动新增字段类别。现有候选字段集合包含 `xAxis/xAxisExt/yAxis` 的代码线索，**不等于实际 UI/渲染能力已验证**。",
+          "line": 234,
+          "ids": [
+            70,
+            71
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q071",
+      "feature": "F05",
+      "question": "Q71：F05 应如何确定现有功能与新需求之间的差异？\n考虑到 Q70 的代码核查结果，需要进一步确定 F05 的验收目标。\n\nA. 以原始需求的完整业务行为为目标（建议）\n\n无论现有代码支持到什么程度，最终都要求行维度、列维度、指标字段能够正确参与条件样式配置。\n\n现有功能正常的部分直接复用；存在缺陷的部分修复；缺失的部分补齐。\n\nB. 只修复现有指标字段选择问题\n\n不扩大现有条件样式能力。重点解决原始需求提出的“指标无法正确选择”和“枚举值选择异常”。\n\nC. 完全以现有代码能力为边界\n\n现有代码支持哪些字段就保留哪些字段，只修复明确可复现的缺陷，不增加新的字段支持能力。\n\nD. 先完成实际运行验证，再裁定最终业务范围\n\n先通过 DataEase 运行环境测试行维度、列维度、指标字段的配置及渲染行为，取得证据后再确定 F05 的最终验收范围。\n\n建议：A\n因为它既保留了原始需求的业务目标，又符合已经确认的差异驱动开发原则。\n\n不过，选择 A 不意味着三类字段目前都存在缺陷。具体开发工作必须以代码分析和实际测试证据为依据。",
+      "question_ref": "MD / conversation-source.md：L550–L576",
+      "answer": "C",
+      "answer_ref": "MD / conversation-source.md：L579–L579",
+      "confirmation": "已确认 Q71：选择 C — F05 以 DataEase 现有代码能力为边界，只修复明确可复现的缺陷，不新增字段支持能力。",
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q70/Q71**：先核实现有行维度、列维度、指标的字段选择能力；**以现有代码支持范围为边界**，已有功能修复可复现缺陷，不主动新增字段类别。现有候选字段集合包含 `xAxis/xAxisExt/yAxis` 的代码线索，**不等于实际 UI/渲染能力已验证**。",
+          "line": 234,
+          "ids": [
+            70,
+            71
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q072",
+      "feature": "F05",
+      "question": "Q72：F05 透视表条件样式中的枚举值应该从哪里获取？\n原始需求明确提出：\n\n透视表条件样式能够正确选择枚举值。\n\n例如，透视表包含「销售区域」字段，其原始数据集包含：\n\n华东、华南、华北、西南\n\n但经过仪表盘查询条件过滤后，当前透视表只展示：\n\n华东、华南\n\n设计人员配置条件样式：\n\n当销售区域属于某些枚举值时，对对应单元格应用格式。\n\n此时，枚举值下拉框应该提供哪些选项？\n\nA. 从原始数据集获取全部可选值（建议）\n\n枚举值列表来自字段绑定的数据集，遵循数据权限，但不受当前仪表盘临时查询条件影响。\n\n例如，仍然可以选择华东、华南、华北、西南。\n\nB. 仅从当前透视表展示结果获取枚举值\n\n枚举值列表只包含当前查询、筛选条件下实际出现的值。\n\n例如，只能选择华东、华南。\n\nC. 默认从数据集获取，但允许切换来源\n\n设计人员可以选择“数据集全部可选值”或“当前透视表结果中的值”。\n\nD. 严格沿用 DataEase 现有枚举值获取机制\n\n不改变枚举值的数据来源，只修复现有加载、选择及显示异常。\n\n建议：D\n由于 Q71 已明确 F05 以现有功能为边界，因此建议保持枚举值来源语义不变，避免修复选择问题时意外改变条件样式的计算结果。\n\n如果现有机制存在缺陷，应通过可复现测试明确问题，而不是直接重新定义枚举值来源。",
+      "question_ref": "MD / conversation-source.md：L597–L641",
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q72/Q73**：枚举值默认来自数据集，可切换为当前透视表结果；当前结果模式仅含真实字段值、去重，不将系统生成的小计/总计标签当普通枚举；真实数据恰好名为“总计”仍可选。",
+          "line": 235,
+          "ids": [
+            72,
+            73
+          ]
+        }
+      ],
+      "status": "缺原始回答"
+    },
+    {
+      "id": "Q073",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q72/Q73**：枚举值默认来自数据集，可切换为当前透视表结果；当前结果模式仅含真实字段值、去重，不将系统生成的小计/总计标签当普通枚举；真实数据恰好名为“总计”仍可选。",
+          "line": 235,
+          "ids": [
+            72,
+            73
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q074",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q74/Q75**：当前查询结果不含历史已选枚举时保留持久化规则，暂不匹配、再次出现时恢复；跨字段条件→目标样式只保留并修复现有能力，不主动扩展。",
+          "line": 236,
+          "ids": [
+            74,
+            75
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q075",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q74/Q75**：当前查询结果不含历史已选枚举时保留持久化规则，暂不匹配、再次出现时恢复；跨字段条件→目标样式只保留并修复现有能力，不主动扩展。",
+          "line": 236,
+          "ids": [
+            74,
+            75
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q076",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q76–Q78**：冲突是**同一单元格、条件同时满足、修改同一样式属性**；即使属性设置值相同也视为冲突；不同属性可叠加。编辑时实时检测、保存时强制拒绝已确认冲突；不强制新增动态规则运行时冲突检测。",
+          "line": 237,
+          "ids": [
+            76,
+            77,
+            78
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q077",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q76–Q78**：冲突是**同一单元格、条件同时满足、修改同一样式属性**；即使属性设置值相同也视为冲突；不同属性可叠加。编辑时实时检测、保存时强制拒绝已确认冲突；不强制新增动态规则运行时冲突检测。",
+          "line": 237,
+          "ids": [
+            76,
+            77,
+            78
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q078",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q76–Q78**：冲突是**同一单元格、条件同时满足、修改同一样式属性**；即使属性设置值相同也视为冲突；不同属性可叠加。编辑时实时检测、保存时强制拒绝已确认冲突；不强制新增动态规则运行时冲突检测。",
+          "line": 237,
+          "ids": [
+            76,
+            77,
+            78
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q079",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q79/Q80**：支持数值格式（百分比、小数、单位后缀）及字体颜色、背景色、加粗、斜体；仅影响展示，不改变排序、条件判断、汇总的原始数值；已明确属性缺失时需补齐。",
+          "line": 238,
+          "ids": [
+            79,
+            80
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q080",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q79/Q80**：支持数值格式（百分比、小数、单位后缀）及字体颜色、背景色、加粗、斜体；仅影响展示，不改变排序、条件判断、汇总的原始数值；已明确属性缺失时需补齐。",
+          "line": 238,
+          "ids": [
+            79,
+            80
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q081",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q81/Q82**：新增条件样式仅作用于**明细单元格**，不作用于小计/总计；单张透视表最多 20 条独立条件样式规则，AND/OR 子条件不额外计数。",
+          "line": 239,
+          "ids": [
+            81,
+            82
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q082",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q81/Q82**：新增条件样式仅作用于**明细单元格**，不作用于小计/总计；单张透视表最多 20 条独立条件样式规则，AND/OR 子条件不额外计数。",
+          "line": 239,
+          "ids": [
+            81,
+            82
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q083",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q83/Q84**：前端从收到可渲染数据到样式全部完成 ≤2 秒（标准规模待定）；透视表结果**超过 10,000 行必须异步处理条件样式**，≤10,000 行允许同步。",
+          "line": 240,
+          "ids": [
+            83,
+            84
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q084",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q83/Q84**：前端从收到可渲染数据到样式全部完成 ≤2 秒（标准规模待定）；透视表结果**超过 10,000 行必须异步处理条件样式**，≤10,000 行允许同步。",
+          "line": 240,
+          "ids": [
+            83,
+            84
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q085",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q85/Q86**：条件字段或目标字段被删除/不兼容，保留规则并标记失效，其他规则继续；F05 与 F07 共用 5,000 枚举加载/搜索/自定义输入机制，但保持 F05 两种枚举来源。",
+          "line": 241,
+          "ids": [
+            85,
+            86
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q086",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q85/Q86**：条件字段或目标字段被删除/不兼容，保留规则并标记失效，其他规则继续；F05 与 F07 共用 5,000 枚举加载/搜索/自定义输入机制，但保持 F05 两种枚举来源。",
+          "line": 241,
+          "ids": [
+            85,
+            86
+          ]
+        },
+        {
+          "feature": "F07",
+          "text": "- **Q132/Q133/Q86**：覆盖仪表盘查询组件、图表过滤器、F05 条件样式；不强制覆盖数据集过滤配置。运行态查询选择自动清理失效值；图表过滤器和 F05 **设计态持久化规则**保留失效枚举并提示设计者，不自动删除；F05/F07 共用枚举交互但保留各自来源语义。",
+          "line": 344,
+          "ids": [
+            86,
+            132,
+            133
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q087",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q87–Q89**：配置更改不自动预览；点击“预览”计算，存在已检测冲突则禁止预览；“确定”提交编辑态，“取消”恢复进入面板前配置与效果；不新增逐步 Undo/Redo。",
+          "line": 242,
+          "ids": [
+            87,
+            88,
+            89
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q088",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q87–Q89**：配置更改不自动预览；点击“预览”计算，存在已检测冲突则禁止预览；“确定”提交编辑态，“取消”恢复进入面板前配置与效果；不新增逐步 Undo/Redo。",
+          "line": 242,
+          "ids": [
+            87,
+            88,
+            89
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q089",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q87–Q89**：配置更改不自动预览；点击“预览”计算，存在已检测冲突则禁止预览；“确定”提交编辑态，“取消”恢复进入面板前配置与效果；不新增逐步 Undo/Redo。",
+          "line": 242,
+          "ids": [
+            87,
+            88,
+            89
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q090",
+      "feature": "F05",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F05",
+          "text": "- **Q90**：历史配置保持旧行为（包括原有汇总样式及潜在冲突），不自动迁移；新建或修改的规则必须符合新约束，编辑历史不合规规则时提示修复。",
+          "line": 243,
+          "ids": [
+            90
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q091",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q91**：优先沿用现有字段多选机制，缺失时最小改造；不预先强制 Ctrl/Cmd/Shift 或复选框。",
+          "line": 281,
+          "ids": [
+            91
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q092",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q92/Q93**：兼容字段直接添加；可转换角色的按现有转换能力自动转换，不修改底层数据类型；无法转换跳过并提示；整批允许部分成功。",
+          "line": 282,
+          "ids": [
+            92,
+            93
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q093",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q92/Q93**：兼容字段直接添加；可转换角色的按现有转换能力自动转换，不修改底层数据类型；无法转换跳过并提示；整批允许部分成功。",
+          "line": 282,
+          "ids": [
+            92,
+            93
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q094",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q94/Q95**：按用户**选择先后顺序**排列，整组按鼠标释放位置连续插入，支持头部、中间、尾部。",
+          "line": 283,
+          "ids": [
+            94,
+            95
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q095",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q94/Q95**：按用户**选择先后顺序**排列，整组按鼠标释放位置连续插入，支持头部、中间、尾部。",
+          "line": 283,
+          "ids": [
+            94,
+            95
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q096",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q96/Q97**：同一目标区域**相同字段 ID 不重复添加**，即使聚合方式不同；同名不同 ID 可添加；遵循图表/区域现有数量上限，按选择顺序填满，余下跳过并提示。",
+          "line": 284,
+          "ids": [
+            96,
+            97
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q097",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q96/Q97**：同一目标区域**相同字段 ID 不重复添加**，即使聚合方式不同；同名不同 ID 可添加；遵循图表/区域现有数量上限，按选择顺序填满，余下跳过并提示。",
+          "line": 284,
+          "ids": [
+            96,
+            97
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q098",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q98**：完成全部校验与添加后统一刷新一次逻辑数据视图；全失败不刷新；持久化沿用现有仪表盘机制。",
+          "line": 285,
+          "ids": [
+            98
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q099",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q99/Q100**：仅普通表格和透视表；普通表维度/指标，透视表行维度/列维度/指标均支持；热力表和普通图表不在范围。",
+          "line": 286,
+          "ids": [
+            99,
+            100
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q100",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q99/Q100**：仅普通表格和透视表；普通表维度/指标，透视表行维度/列维度/指标均支持；热力表和普通图表不在范围。",
+          "line": 286,
+          "ids": [
+            99,
+            100
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q101",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q101/Q102**：有效拖放完成后清除全部选中状态；无效区域/取消则保留；拖拽预览显示“N 个字段”、插入位置指示线及无效区域禁止标识。",
+          "line": 287,
+          "ids": [
+            101,
+            102
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q102",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q101/Q102**：有效拖放完成后清除全部选中状态；无效区域/取消则保留；拖拽预览显示“N 个字段”、插入位置指示线及无效区域禁止标识。",
+          "line": 287,
+          "ids": [
+            101,
+            102
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q103",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q103/Q104**：除字段列表批量添加，还支持已配置字段同区域排序及跨区域批量**移动**；成功字段从源删除并插入目标（单字段原子性），失败字段留在源区域原位、原配置不变；允许部分成功。",
+          "line": 288,
+          "ids": [
+            103,
+            104
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q104",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q103/Q104**：除字段列表批量添加，还支持已配置字段同区域排序及跨区域批量**移动**；成功字段从源删除并插入目标（单字段原子性），失败字段留在源区域原位、原配置不变；允许部分成功。",
+          "line": 288,
+          "ids": [
+            103,
+            104
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q105",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q105/Q106**：移动尽量保留字段 ID、显示名、兼容格式，其他属性遵循现有单字段角色转换规则；不新增独立确认/提示；条件样式引用需要验证。",
+          "line": 289,
+          "ids": [
+            105,
+            106
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q106",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q105/Q106**：移动尽量保留字段 ID、显示名、兼容格式，其他属性遵循现有单字段角色转换规则；不新增独立确认/提示；条件样式引用需要验证。",
+          "line": 289,
+          "ids": [
+            105,
+            106
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q107",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q107/Q108**：撤销复用现有编辑器能力，无则不新增；本轮只要求鼠标批量拖拽，已有键盘/无障碍能力不得退化。",
+          "line": 290,
+          "ids": [
+            107,
+            108
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q108",
+      "feature": "F06",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F06",
+          "text": "- **Q107/Q108**：撤销复用现有编辑器能力，无则不新增；本轮只要求鼠标批量拖拽，已有键盘/无障碍能力不得退化。",
+          "line": 290,
+          "ids": [
+            107,
+            108
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q109",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q109/Q111**：初始最多加载 5,000 项；后端搜索覆盖全部可访问数据，单次搜索结果最多展示 5,000 项，超限提示缩小关键词；不新增分页/滚动加载。",
+          "line": 334,
+          "ids": [
+            109,
+            111
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q110",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q110/Q118/Q119**：匹配语义沿用现有 DataEase；仅按 Enter/点击搜索按钮触发后端搜索；清空关键词自动恢复初始列表；过时请求不得覆盖最新结果。",
+          "line": 335,
+          "ids": [
+            110,
+            118,
+            119
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q111",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q109/Q111**：初始最多加载 5,000 项；后端搜索覆盖全部可访问数据，单次搜索结果最多展示 5,000 项，超限提示缩小关键词；不新增分页/滚动加载。",
+          "line": 334,
+          "ids": [
+            109,
+            111
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q112",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q112**：手动添加的是数据源中**真实存在**的值，不是新增数据；需验证类型、存在性、F04 自身过滤、级联及数据权限；失败拒绝。",
+          "line": 336,
+          "ids": [
+            112
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q113",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q113–Q116**：支持批量输入、部分成功；中英文逗号、分号、换行、Tab 均可分隔；双引号包裹完整值，内部逗号/分号不拆分，内部双引号用 `\"\"` 转义，未闭合引号拒绝整次解析；与已有选值及本次输入去重，保留首次出现顺序并反馈失败/重复明细。",
+          "line": 337,
+          "ids": [
+            113,
+            114,
+            115,
+            116
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q114",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q113–Q116**：支持批量输入、部分成功；中英文逗号、分号、换行、Tab 均可分隔；双引号包裹完整值，内部逗号/分号不拆分，内部双引号用 `\"\"` 转义，未闭合引号拒绝整次解析；与已有选值及本次输入去重，保留首次出现顺序并反馈失败/重复明细。",
+          "line": 337,
+          "ids": [
+            113,
+            114,
+            115,
+            116
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q115",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q113–Q116**：支持批量输入、部分成功；中英文逗号、分号、换行、Tab 均可分隔；双引号包裹完整值，内部逗号/分号不拆分，内部双引号用 `\"\"` 转义，未闭合引号拒绝整次解析；与已有选值及本次输入去重，保留首次出现顺序并反馈失败/重复明细。",
+          "line": 337,
+          "ids": [
+            113,
+            114,
+            115,
+            116
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q116",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q113–Q116**：支持批量输入、部分成功；中英文逗号、分号、换行、Tab 均可分隔；双引号包裹完整值，内部逗号/分号不拆分，内部双引号用 `\"\"` 转义，未闭合引号拒绝整次解析；与已有选值及本次输入去重，保留首次出现顺序并反馈失败/重复明细。",
+          "line": 337,
+          "ids": [
+            113,
+            114,
+            115,
+            116
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q117",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q117/Q121**：单次批量输入沿用现有容量约束；累计已选不同枚举值最多 **5,000**，达到上限后不允许新增，重复值不占用名额。",
+          "line": 338,
+          "ids": [
+            117,
+            121
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q118",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q110/Q118/Q119**：匹配语义沿用现有 DataEase；仅按 Enter/点击搜索按钮触发后端搜索；清空关键词自动恢复初始列表；过时请求不得覆盖最新结果。",
+          "line": 335,
+          "ids": [
+            110,
+            118,
+            119
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q119",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q110/Q118/Q119**：匹配语义沿用现有 DataEase；仅按 Enter/点击搜索按钮触发后端搜索；清空关键词自动恢复初始列表；过时请求不得覆盖最新结果。",
+          "line": 335,
+          "ids": [
+            110,
+            118,
+            119
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q120",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q120**：搜索结果变化不清除已有选中值，允许跨多次搜索累计；F04 过滤/级联真正变化导致失效时遵循 Q56。",
+          "line": 339,
+          "ids": [
+            56,
+            120
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q121",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L644–L644",
+      "confirmation": "已确认 Q121：选择 A — F07 累计选中的枚举值最多为 5,000 个，超过上限时禁止继续选择。",
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q117/Q121**：单次批量输入沿用现有容量约束；累计已选不同枚举值最多 **5,000**，达到上限后不允许新增，重复值不占用名额。",
+          "line": 338,
+          "ids": [
+            117,
+            121
+          ]
+        }
+      ],
+      "status": "缺原题与选项"
+    },
+    {
+      "id": "Q122",
+      "feature": "F07",
+      "question": "Q122：F07 用户已选中的枚举值，在数据源发生变化后应该如何处理？\n例如，用户在查询组件中选择了三个客户：\n\n客户A、客户B、客户C\n\n随后，业务数据库中的「客户B」被删除，或者其值发生变化。\n\n当用户重新打开查询组件时，系统发现「客户B」已经不在当前数据源的可选值集合中。\n\n此时应该如何处理？\n\nA. 自动清除已经不存在的枚举值（建议）\n系统重新加载可选值时，验证已选值是否仍然存在。\n\n客户A：存在，保留。\n客户B：不存在，自动清除。\n客户C：存在，保留。\n最终选择变为：\n\n客户A、客户C\n\n这样可以确保当前选择始终与数据源保持一致。\n\nB. 保留已选值，即使数据源中已经不存在\n已选值作为查询条件保留。\n\n例如，客户B已经不存在，但用户仍然可以保留该查询条件。\n\n执行查询时，客户B可能不匹配任何数据。\n\n优点： 不会因为数据源变化而自动修改用户的查询条件。\n\nC. 保留已选值，但标记为失效\n系统保留客户B，同时显示提示：\n\n“客户B已不在当前可选值中。”\n\n用户可以手动删除或修改。\n\n在用户处理之前，原有查询条件保持不变。\n\nD. 仅在用户重新选择时验证\n已经选中的值不主动重新验证。\n\n只有用户重新打开下拉框并尝试选择新值时，才按照 REQ-112 验证其有效性。\n\n建议：C\n理由是：\n\n避免静默修改查询条件：数据源变化不应在用户不知情的情况下删除已选值。\n便于识别数据变化：用户能够知道哪些历史选择已经失效。\n与 REQ-112 一致：新增自定义值必须真实存在，但历史已选值可以采用不同的失效处理机制。\n便于排查问题：如果数据源发生异常变化，保留失效值有助于用户理解查询结果变化的原因。\n需要特别区分两种情况：\n\nF04 上游级联条件变化：已经通过 REQ-056 确认，自动清除下游无效值。\n数据源中的枚举值被删除：本题讨论是否自动清除历史选择。\n这两种情况可以采用不同的处理规则。",
+      "question_ref": "MD / conversation-source.md：L661–L720",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L723–L723",
+      "confirmation": "已确认 Q122：选择 A — F07 数据源中的枚举值发生变化后，自动清除已不存在的选中值，保留仍然有效的值。",
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q122–Q126**：每次打开仪表盘仅验证**已选枚举值**（不验证未选字段/动态日期表达式）；**先验证再执行图表查询**；成功验证后清除数据源中已不存在的值，保留有效值；任一必要验证失败则**阻止整个仪表盘查询**，不清除原选值，提示手动重试。",
+          "line": 340,
+          "ids": [
+            122,
+            123,
+            124,
+            125,
+            126
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q123",
+      "feature": "F07",
+      "question": "Q123：F07 应在什么时机检查已选枚举值是否仍然存在？\nQ122 已确认自动清除不存在的枚举值，但还需要明确验证时机。\n\n例如，用户昨天在销售仪表盘中选择了：\n\n客户A、客户B、客户C\n\n今天重新打开仪表盘时，客户B已经从数据源中删除。\n\n系统应该什么时候发现并清除客户B？\n\nA. 每次打开仪表盘时验证（建议）\n用户打开仪表盘后，系统自动验证查询组件中所有已选值。\n\n存在的值继续保留。\n不存在的值自动清除。\n验证完成后，使用有效的查询条件加载图表。\n用户不需要主动打开枚举值下拉框。\n\n优点： 保证仪表盘初始查询使用有效的枚举值。\n\nB. 仅在打开枚举值下拉框时验证\n用户打开仪表盘时，暂时保留原有选择。\n\n只有点击对应查询字段的下拉框时，才重新验证已选值并清除失效项。\n\n优点： 减少仪表盘初始加载时的额外查询。\n\nC. 每次执行查询前验证\n无论用户是首次打开仪表盘，还是修改查询条件后点击查询按钮，系统都先验证已选值。\n\n发现失效值后自动清除，再执行正式的数据查询。\n\n优点： 保证每次查询都使用经过验证的枚举值，但可能增加查询延迟。\n\nD. 仅在重新加载可选值列表时验证\n不新增独立的存在性检查。\n\n当系统因打开下拉框、搜索、级联变化等原因重新加载可选值时，同时验证已有选择。\n\n优点： 尽可能复用现有可选值加载机制，减少额外请求。\n\n建议：A\n理由是：\n\n符合 REQ-122：及时清除已经不存在的枚举值。\n避免无效初始查询：用户重新打开仪表盘时，不会继续使用已删除的客户值。\n交互透明：用户不需要手动打开下拉框才能触发校验。\n便于验收：可以通过“修改数据源 → 重新打开仪表盘”的场景直接验证。\n但需要注意：如果仪表盘包含多个高基数查询字段，逐个验证可能增加初始加载耗时。技术设计应优先考虑批量校验及复用现有查询机制。",
+      "question_ref": "MD / conversation-source.md：L739–L790",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L793–L793",
+      "confirmation": "已确认 Q123：选择 A — F07 每次打开仪表盘时，自动验证查询组件中已选枚举值是否仍然存在，并清除失效值。",
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q122–Q126**：每次打开仪表盘仅验证**已选枚举值**（不验证未选字段/动态日期表达式）；**先验证再执行图表查询**；成功验证后清除数据源中已不存在的值，保留有效值；任一必要验证失败则**阻止整个仪表盘查询**，不清除原选值，提示手动重试。",
+          "line": 340,
+          "ids": [
+            122,
+            123,
+            124,
+            125,
+            126
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q124",
+      "feature": "F07",
+      "question": "Q124：F07 枚举值有效性验证尚未完成时，仪表盘是否允许先执行数据查询？\nQ123 已确认每次打开仪表盘时自动验证已选枚举值。\n\n但这里存在一个需要明确的执行顺序问题。\n\n例如，用户打开销售仪表盘，查询组件中保存了三个客户：\n\n客户A、客户B、客户C\n\n系统需要向数据源验证这三个客户是否仍然存在。\n\n假设验证需要 2 秒，而仪表盘本身的数据查询需要 3 秒。\n\n此时应该如何安排两个操作？\n\nA. 先验证，再执行图表查询（建议）\n执行流程：\n\n打开仪表盘\n    ↓\n加载查询组件配置\n    ↓\n验证已选枚举值\n    ↓\n清除不存在的值\n    ↓\n更新查询条件\n    ↓\n执行图表数据查询\n    ↓\n展示仪表盘\n优点： 保证图表首次查询就使用经过验证的条件，避免先展示错误结果再刷新。\n\n缺点： 可能增加仪表盘首屏加载时间。\n\nB. 验证与图表查询并行执行\n系统同时执行：\n\n已选枚举值有效性验证。\n仪表盘数据查询。\n如果验证发现失效值，则更新查询条件并重新查询受影响的图表。\n\n优点： 首屏可能更快。\n\n缺点： 可能出现图表短时间内展示旧查询结果，随后再次刷新。\n\nC. 先展示仪表盘，后台验证\n仪表盘直接按照保存的查询条件加载。\n\n后台异步验证枚举值。\n\n验证完成后，如果发现失效值，则自动清除并刷新图表。\n\n优点： 不阻塞仪表盘初始加载。\n\n缺点： 用户可能短暂看到基于失效条件的查询结果。\n\nD. 根据 DataEase 现有查询机制决定\n优先复用现有仪表盘加载和查询流程。\n\n如果现有架构支持查询前验证，则采用 A；否则采用异步验证并保证最终查询条件正确。\n\n建议：A\n原因是：\n\n与 REQ-123 一致：打开仪表盘时验证已选值。\n保证查询条件正确性：避免使用已失效的枚举值执行首次查询。\n避免重复查询：不需要在验证完成后再次刷新图表。\n便于验收：可以明确验证图表首次查询使用的条件是否已经过有效性检查。\n需要注意，验证失败与验证发现值不存在是两种不同情况。如果数据源不可用，不能将所有已选值清空，也不能未经裁定就自动忽略原有查询条件。",
+      "question_ref": "MD / conversation-source.md：L810–L881",
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q122–Q126**：每次打开仪表盘仅验证**已选枚举值**（不验证未选字段/动态日期表达式）；**先验证再执行图表查询**；成功验证后清除数据源中已不存在的值，保留有效值；任一必要验证失败则**阻止整个仪表盘查询**，不清除原选值，提示手动重试。",
+          "line": 340,
+          "ids": [
+            122,
+            123,
+            124,
+            125,
+            126
+          ]
+        }
+      ],
+      "ambiguous_answer": "题后两个A与Q141确认相邻，暂不绑定最终选择；需用户明确确认。",
+      "status": "回答待确认"
+    },
+    {
+      "id": "Q125",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q122–Q126**：每次打开仪表盘仅验证**已选枚举值**（不验证未选字段/动态日期表达式）；**先验证再执行图表查询**；成功验证后清除数据源中已不存在的值，保留有效值；任一必要验证失败则**阻止整个仪表盘查询**，不清除原选值，提示手动重试。",
+          "line": 340,
+          "ids": [
+            122,
+            123,
+            124,
+            125,
+            126
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q126",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q122–Q126**：每次打开仪表盘仅验证**已选枚举值**（不验证未选字段/动态日期表达式）；**先验证再执行图表查询**；成功验证后清除数据源中已不存在的值，保留有效值；任一必要验证失败则**阻止整个仪表盘查询**，不清除原选值，提示手动重试。",
+          "line": 340,
+          "ids": [
+            122,
+            123,
+            124,
+            125,
+            126
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q127",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q127/Q128**：后端搜索接口响应≤3秒（不含网络/前端，标准测试条件待定）；交互式搜索失败只提示错误并允许重试，保留已选值，不阻断已展示的仪表盘；与初始化验证失败区分。",
+          "line": 341,
+          "ids": [
+            127,
+            128
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q128",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q127/Q128**：后端搜索接口响应≤3秒（不含网络/前端，标准测试条件待定）；交互式搜索失败只提示错误并允许重试，保留已选值，不阻断已展示的仪表盘；与初始化验证失败区分。",
+          "line": 341,
+          "ids": [
+            127,
+            128
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q129",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q129/Q130**：支持 DataEase 原枚举选择器覆盖的全部字段类型（文本/数值/日期/布尔等），各类型解析/匹配及 NULL/空字符串处理沿用现有语义。",
+          "line": 342,
+          "ids": [
+            129,
+            130
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q130",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q129/Q130**：支持 DataEase 原枚举选择器覆盖的全部字段类型（文本/数值/日期/布尔等），各类型解析/匹配及 NULL/空字符串处理沿用现有语义。",
+          "line": 342,
+          "ids": [
+            129,
+            130
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q131",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q131**：历史配置已选 >5,000 不自动截断，仍可使用，但禁止新增直至数量低于上限；真正不存在的值仍须验证清理。",
+          "line": 343,
+          "ids": [
+            131
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q132",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q132/Q133/Q86**：覆盖仪表盘查询组件、图表过滤器、F05 条件样式；不强制覆盖数据集过滤配置。运行态查询选择自动清理失效值；图表过滤器和 F05 **设计态持久化规则**保留失效枚举并提示设计者，不自动删除；F05/F07 共用枚举交互但保留各自来源语义。",
+          "line": 344,
+          "ids": [
+            86,
+            132,
+            133
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q133",
+      "feature": "F07",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F07",
+          "text": "- **Q132/Q133/Q86**：覆盖仪表盘查询组件、图表过滤器、F05 条件样式；不强制覆盖数据集过滤配置。运行态查询选择自动清理失效值；图表过滤器和 F05 **设计态持久化规则**保留失效枚举并提示设计者，不自动删除；F05/F07 共用枚举交互但保留各自来源语义。",
+          "line": 344,
+          "ids": [
+            86,
+            132,
+            133
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q134",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q134/Q135**：支持自定义汇总表达式，可引用当前数据集任意有权访问的字段，即使字段未显示在指标区；不支持跨数据集引用，不要求引用其他自定义汇总表达式。",
+          "line": 388,
+          "ids": [
+            134,
+            135
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q135",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q134/Q135**：支持自定义汇总表达式，可引用当前数据集任意有权访问的字段，即使字段未显示在指标区；不支持跨数据集引用，不要求引用其他自定义汇总表达式。",
+          "line": 388,
+          "ids": [
+            134,
+            135
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q136",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q136**：支持 `+ - * /`、括号、常量、`SUM/AVG/COUNT/MAX/MIN`、`IF/CASE WHEN`、`COALESCE`、`ROUND/ABS`；优先复用现有表达式引擎，不允许任意 SQL。",
+          "line": 389,
+          "ids": [
+            136
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q137",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q137/Q144/Q145**：**每个指标**分别配置一套行小计、一套行总计表达式；可以不同；所有多级行小计共用该指标小计表达式但按各自分组独立计算；未配置指标沿用原汇总。",
+          "line": 390,
+          "ids": [
+            137,
+            144,
+            145
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q138",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q138/Q139**：计算基于当前查询/筛选/权限下**底层数据集记录**，不是对透视表已展示明细行二次聚合；小计按分组、总计按当前有效数据范围计算；使用原始数值。",
+          "line": 391,
+          "ids": [
+            138,
+            139
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q139",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q138/Q139**：计算基于当前查询/筛选/权限下**底层数据集记录**，不是对透视表已展示明细行二次聚合；小计按分组、总计按当前有效数据范围计算；使用原始数值。",
+          "line": 391,
+          "ids": [
+            138,
+            139
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q140",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": null,
+      "answer_ref": null,
+      "confirmation": null,
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q140**：合法表达式最终出现除零/NULL 无法得到数值时，仅相应单元格显示空值（不自动变为0），其他正常计算继续；显式 CASE/COALESCE 遵循用户定义，聚合内部 NULL 语义沿用现有机制。",
+          "line": 392,
+          "ids": [
+            140
+          ]
+        }
+      ],
+      "status": "缺原始问答"
+    },
+    {
+      "id": "Q141",
+      "feature": "F08",
+      "question": null,
+      "question_ref": null,
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L887–L887",
+      "confirmation": "已确认 Q141：选择 A — F08 自定义汇总表达式在编辑时进行校验，保存时强制校验；存在语法、字段引用、类型或权限错误时禁止保存。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q141/Q142**：编辑时及保存时校验语法、函数、字段、类型、权限，错误拒绝保存；保存后引用失效则保留表达式、标记失效，受影响单元格显示计算不可用，其他指标正常；稳定字段 ID 的重命名不应失效。",
+          "line": 393,
+          "ids": [
+            141,
+            142
+          ]
+        }
+      ],
+      "status": "缺原题与选项"
+    },
+    {
+      "id": "Q142",
+      "feature": "F08",
+      "question": "Q142：F08 自定义汇总表达式引用的字段被删除或修改后，如何处理？\nREQ-141 已确认保存时必须验证字段引用，但保存后数据集结构可能发生变化。\n\n例如，设计人员配置了：\n\nSUM(利润) / SUM(销售额)\n\n随后，数据集管理员删除了「利润」字段。\n\n此时，原来合法的表达式已经无法执行。\n\n需要明确：系统应该如何处理已经保存、但因数据集变化而失效的自定义汇总表达式？\n\nA. 保留表达式，标记失效，不执行错误计算（建议）\n系统不自动删除或修改表达式。\n\n查看模式：受影响的汇总单元格显示计算不可用提示或错误状态。\n编辑模式：显示失效字段及错误原因。\n其他不依赖该表达式的指标继续正常展示。\n设计人员修复字段引用后，重新校验并恢复计算。\n优点： 避免配置丢失，同时保证错误不会被隐藏。\n\nB. 自动删除失效表达式，恢复默认汇总方式\n发现引用字段不存在后，系统自动删除自定义表达式。\n\n对应指标恢复使用 DataEase 原有的 SUM、AVG 等默认汇总方式。\n\n优点： 透视表可以继续展示汇总结果。\n\n风险： 可能在用户不知情的情况下改变业务计算语义。\n\nC. 保留表达式，但汇总结果显示空值\n不自动删除配置。\n\n如果字段不存在，则对应汇总单元格显示空值，其他指标继续正常展示。\n\n优点： 页面展示简洁。\n\n风险： 用户可能无法区分“合法表达式计算结果为空”和“表达式引用失效”。\n\nD. 整张透视表停止查询\n只要任意自定义汇总表达式引用失效字段，就停止整张透视表的数据查询，并提示设计人员修复。\n\n优点： 严格阻止错误配置继续运行。\n\n缺点： 一个指标失效可能影响其他正常指标。\n\n建议：A\n理由是：\n\n避免静默改变计算语义：不能因为字段被删除，就自动将利润率计算恢复为普通求和。\n与 REQ-085 一致：F05 已确认失效条件样式规则应保留配置并提示修复。\n区分两类错误：REQ-140 规定的空值展示仅适用于合法表达式的数值计算异常；字段引用失效属于配置错误。\n局部故障隔离：一个自定义汇总表达式失效，不应影响其他正常指标。\n这里还需要注意：字段只是重命名、但稳定字段 ID 和数据类型未变化时，不应直接判定表达式失效。具体引用机制需要结合 DataEase 现有字段模型验证。",
+      "question_ref": "MD / conversation-source.md：L906–L962",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L965–L965",
+      "confirmation": "已确认 Q142：选择 A — F08 自定义汇总表达式引用的字段被删除或发生不兼容变化时，保留表达式并标记失效，不执行错误计算，不影响其他正常指标。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q141/Q142**：编辑时及保存时校验语法、函数、字段、类型、权限，错误拒绝保存；保存后引用失效则保留表达式、标记失效，受影响单元格显示计算不可用，其他指标正常；稳定字段 ID 的重命名不应失效。",
+          "line": 393,
+          "ids": [
+            141,
+            142
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q143",
+      "feature": "F08",
+      "question": "Q143：F08 自定义汇总表达式的计算结果，是否允许参与透视表排序和过滤？\n目前已经确认：\n\nREQ-134：支持自定义汇总表达式。\nREQ-137：小计和总计可以分别配置表达式。\nREQ-138：基于底层数据集记录计算。\nREQ-139：遵循当前透视表的查询和筛选条件。\n现在需要明确：自定义汇总结果仅用于展示，还是也可以参与后续排序和过滤？\n\n例如，透视表展示：\n\n地区\t销售额\t自定义利润率\n华东\t300\t26.67%\n华南\t500\t15.00%\n华北\t200\t35.00%\n总计\t1,000\t23.00%\n其中，自定义利润率由表达式计算：\n\nSUM(利润) / SUM(销售额)\n\n用户希望按照利润率从高到低排序，或者只显示利润率超过 20% 的地区。\n\nA. 自定义汇总结果仅用于展示（建议）\n自定义表达式只影响小计、总计单元格的计算结果。\n不改变透视表明细数据。\n不新增基于自定义汇总结果的排序或过滤能力。\n原有排序和过滤功能保持不变。\n优点： 严格限定 F08 为汇总计算增强，避免改变现有查询流程。\n\nB. 支持基于自定义汇总结果排序\n允许根据自定义汇总值对透视表分组进行排序。\n\n例如，按照各地区的自定义利润率降序排列：\n\n华北 → 华东 → 华南\n\n但不新增基于自定义汇总结果的过滤能力。\n\nC. 同时支持排序和过滤\n允许设计人员使用自定义汇总结果进行：\n\n升序、降序排序。\n大于、小于、等于等条件过滤。\n需要明确过滤发生在汇总计算之后，避免改变表达式参与计算的数据范围。\n\nD. 沿用 DataEase 现有透视表排序和过滤机制\n不新增专门的自定义汇总结果排序、过滤能力。\n\n如果现有机制已经支持相关操作，则保持原有行为；否则不扩展。\n\n建议：A\n原因是：\n\n保持 F08 范围清晰：本次重点是自定义小计和总计的计算正确性。\n避免计算依赖问题：如果先根据自定义汇总结果过滤数据，再重新计算汇总，可能产生循环依赖。\n符合 REQ-002：只开发明确缺失的能力。\n降低回归风险：不改变 DataEase 原有透视表排序和过滤逻辑。\n需要特别说明：A 不会取消现有透视表的排序和过滤功能，只是本次不要求新增“以自定义汇总结果为依据”的排序或过滤能力。",
+      "question_ref": "MD / conversation-source.md：L988–L1047",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1050–L1050",
+      "confirmation": "已确认 Q143：选择 A — F08 自定义汇总表达式仅用于计算和展示小计、总计结果，不新增基于自定义汇总结果的排序或过滤能力。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q143/Q146**：只扩展**行方向**小计和总计，不扩展列方向自定义汇总；不新增基于自定义汇总结果的排序/过滤，现有排序过滤不变。",
+          "line": 394,
+          "ids": [
+            143,
+            146
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q144",
+      "feature": "F08",
+      "question": "Q144：F08 自定义汇总表达式的配置粒度是什么？\n目前已经确认：\n\nREQ-134：支持自定义汇总表达式。\nREQ-135：允许引用当前数据集中的字段。\nREQ-137：小计和总计可以分别配置表达式。\nREQ-138：基于底层数据集记录计算。\n但还需要明确：表达式是针对整张透视表配置，还是针对每个指标分别配置？\n\n例如，一张透视表包含三个指标：\n\n地区\t销售额\t利润\t利润率\n华东\t100\t20\t20%\n华南\t200\t60\t30%\n总计\t300\t80\t26.67%\n不同指标可能需要不同的汇总计算方式。\n\nA. 每个指标分别配置小计和总计表达式（建议）\n设计人员可以针对每个指标独立配置：\n\n指标\t小计计算\t总计计算\n销售额\tSUM\tSUM\n利润\tSUM\tSUM\n利润率\tAVG(利润率)\tSUM(利润)/SUM(销售额)\n不配置自定义表达式的指标，继续使用 DataEase 原有汇总方式。\n\n优点：灵活且符合不同指标的业务计算语义。\n\nB. 整张透视表共用一套表达式\n所有指标的小计使用同一个表达式，所有指标的总计使用另一个表达式。\n\n优点：配置简单，但不同指标难以使用不同计算规则。\n\nC. 只允许一个指标使用自定义汇总表达式\n每张透视表最多选择一个指标配置自定义汇总。\n\n其他指标使用默认汇总方式。\n\n优点：实现范围较小，但限制较多。\n\nD. 沿用 DataEase 现有汇总配置粒度\n先检查当前透视表的汇总计算配置是按指标、按区域还是按整表组织。\n\n在现有结构上扩展自定义表达式，不新增独立配置层级。\n\n建议：A\n原因是：\n\n符合 REQ-137：小计和总计可以分别配置。\n满足实际业务场景：销售额、利润、利润率等指标通常需要不同的汇总方式。\n避免影响其他指标：修改利润率的汇总表达式，不应改变销售额和利润的汇总结果。\n符合差异驱动原则：优先复用 DataEase 现有按指标配置汇总方式的能力。\n需要注意，选择 A 后，每个指标最多可以拥有两套自定义表达式：一套用于小计，一套用于总计。",
+      "question_ref": "MD / conversation-source.md：L1067–L1121",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1125–L1125",
+      "confirmation": "已确认 Q144：选择 A — F08 支持为透视表中的每个指标分别配置小计和总计的自定义汇总表达式。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q137/Q144/Q145**：**每个指标**分别配置一套行小计、一套行总计表达式；可以不同；所有多级行小计共用该指标小计表达式但按各自分组独立计算；未配置指标沿用原汇总。",
+          "line": 390,
+          "ids": [
+            137,
+            144,
+            145
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q145",
+      "feature": "F08",
+      "question": "Q145：F08 当透视表包含多个层级的小计时，自定义表达式应该如何配置？\nQ137、Q144 已确认小计和总计可以分别配置表达式，但还存在一个问题：透视表可能具有多个层级的小计。\n\n例如，一张透视表包含三级行维度：\n\n地区\n ├── 华东\n │    ├── 浙江省\n │    │    ├── 杭州\n │    │    └── 宁波\n │    │    └── 浙江省小计\n │    └── 江苏省\n │         ├── 南京\n │         └── 江苏省小计\n │\n └── 华东地区小计\n\n整表总计\n这里存在两级小计：\n\n省份级小计\n地区级小计\n假设利润率指标配置了自定义小计表达式：\n\nSUM(利润) / SUM(销售额)\n\n需要明确该表达式是否统一应用于所有小计层级。\n\nA. 所有小计层级共用同一表达式（建议）\n每个指标只需要配置一套小计表达式。\n\n系统在不同小计层级，使用对应分组的底层数据执行相同表达式。\n\n例如：\n\n浙江省小计：根据浙江省数据计算。\n江苏省小计：根据江苏省数据计算。\n华东地区小计：根据华东地区数据计算。\n优点： 配置简单，计算语义一致。\n\nB. 不同小计层级可以配置不同表达式\n允许设计人员分别定义：\n\n小计层级\t自定义表达式\n省份级小计\tAVG(利润率)\n地区级小计\tSUM(利润)/SUM(销售额)\n整表总计\tSUM(利润)/SUM(销售额)\n优点： 灵活性更高，但需要建立按维度层级管理表达式的机制。\n\nC. 仅最外层小计支持自定义表达式\n例如，只允许对“地区级小计”设置自定义计算。\n\n省份级小计继续使用 DataEase 原有汇总方式。\n\n优点： 实现相对简单，但不同层级可能采用不同的计算语义。\n\nD. 沿用 DataEase 现有小计层级机制\n先检查当前透视表是否支持多个层级的小计，以及这些小计如何配置计算方式。\n\n在现有机制基础上扩展，不额外增加按层级配置表达式的能力。\n\n建议：A\n原因是：\n\n与 REQ-144 一致：每个指标配置一套小计表达式、一套总计表达式。\n符合 REQ-138：不同小计层级分别基于各自分组的底层记录计算。\n降低配置复杂度：设计人员不需要为每一级维度重复配置公式。\n避免计算语义不一致：同一指标在不同小计层级采用相同计算逻辑。\n需要注意，选择 A 后，不同小计层级虽然使用同一表达式，但计算结果仍然不同，因为各层级对应的数据范围不同。",
+      "question_ref": "MD / conversation-source.md：L1149–L1219",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1222–L1222",
+      "confirmation": "已确认 Q145：选择 A — F08 同一指标的所有小计层级共用同一套自定义汇总表达式，但分别基于各自分组的底层数据计算。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q137/Q144/Q145**：**每个指标**分别配置一套行小计、一套行总计表达式；可以不同；所有多级行小计共用该指标小计表达式但按各自分组独立计算；未配置指标沿用原汇总。",
+          "line": 390,
+          "ids": [
+            137,
+            144,
+            145
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q146",
+      "feature": "F08",
+      "question": "Q146：F08 自定义汇总表达式是否同时适用于行汇总和列汇总？\n原始需求名称是“透视表自定义行汇总计算”，但透视表通常同时支持行汇总和列汇总。\n\n例如，一张透视表：\n\n地区\t1月销售额\t2月销售额\t3月销售额\t行总计\n华东\t100\t200\t300\t600\n华南\t150\t250\t350\t750\n列总计\t250\t450\t650\t1350\n这里存在两种汇总方向：\n\n行汇总（Row Total）：每行最右侧的总计，例如华东的 600。\n列汇总（Column Total）：每列最下方的总计，例如 1 月的 250。\n如果用户配置自定义汇总表达式：\n\nSUM(利润) / SUM(销售额)\n\n需要明确该表达式应用于哪些方向。\n\nA. 仅支持行汇总（建议）\n只对透视表每行右侧的汇总结果应用自定义表达式。\n\n列汇总继续使用 DataEase 原有计算方式。\n\n这与原始需求名称“自定义行汇总计算”一致。\n\nB. 同时支持行汇总和列汇总，共用表达式\n同一指标的小计和总计表达式分别应用于对应的行、列汇总区域。\n\n不区分行汇总和列汇总的公式。\n\nC. 行汇总和列汇总可以分别配置表达式\n每个指标可以独立配置：\n\n行小计表达式。\n行总计表达式。\n列小计表达式。\n列总计表达式。\n灵活性最高，但配置模型和计算逻辑更复杂。\n\nD. 沿用 DataEase 现有行列汇总能力\n先核实现有透视表对行汇总、列汇总的支持范围及计算机制。\n\n仅在原有支持的汇总方向上扩展自定义表达式，不主动增加新的汇总方向。\n\n建议：A\n主要原因：\n\n遵循原始需求范围：需求明确强调“行汇总计算”。\n控制实现复杂度：避免同时改造行、列两个方向的汇总计算链路。\n符合 REQ-002：差异驱动开发，只扩展明确要求的能力。\n但需要注意：此前 REQ-137 已确认支持小计和总计，小计/总计是汇总层级，行汇总/列汇总是汇总方向，二者并不相同。\n\n因此，选择 A 后，F08 的范围将是行方向的小计与总计，不包含列方向的自定义汇总。",
+      "question_ref": "MD / conversation-source.md：L1248–L1303",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1306–L1306",
+      "confirmation": "已确认 Q146：选择 A — F08 仅支持透视表行方向的自定义汇总计算，不扩展列方向的自定义汇总能力。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q143/Q146**：只扩展**行方向**小计和总计，不扩展列方向自定义汇总；不新增基于自定义汇总结果的排序/过滤，现有排序过滤不变。",
+          "line": 394,
+          "ids": [
+            143,
+            146
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q147",
+      "feature": "F08",
+      "question": "Q147：F08 自定义汇总表达式的计算结果是否需要支持实时预览？\n目前已经确认：\n\n每个指标可以分别配置小计和总计表达式。\n表达式基于当前筛选后的底层数据计算。\n保存前必须通过语法、字段、类型和权限校验。\nF08 仅扩展行方向的汇总计算。\n现在需要明确设计人员配置表达式时，如何验证计算结果是否符合预期。\n\n例如，设计人员输入：\n\nSUM(利润) / SUM(销售额)\n\n表达式语法正确，并不代表业务计算结果一定符合设计人员的预期。\n\n因此，是否需要在正式保存前查看实际计算结果？\n\nA. 支持手动预览（建议）\n\n设计人员输入表达式后，点击“预览”按钮。\n\n系统使用当前透视表的查询条件和底层数据执行计算，并展示小计、总计结果。\n\n用户确认后，再将表达式提交到仪表盘编辑态。\n\nB. 修改表达式后自动实时预览\n\n每次修改表达式，系统在校验通过后自动重新计算汇总结果。\n\n不需要点击预览按钮，但可能产生频繁的后端查询。\n\nC. 不提供独立预览功能\n\n设计人员配置表达式后点击“确定”，系统更新当前透视表的汇总结果。\n\n最终持久化仍遵循 DataEase 原有保存机制。\n\nD. 沿用 DataEase 现有表达式编辑器的预览机制\n\n先检查现有自定义计算表达式是否支持预览。\n\n已有则复用；没有则不新增独立预览功能。\n\n建议：A\n理由是：\n\n计算正确性：语法校验只能证明表达式合法，实际预览才能帮助设计人员检查业务结果。\n避免错误配置：在正式保存前发现不符合预期的汇总结果。\n与 F05 保持一致：REQ-087 已确认条件样式采用手动预览机制。\n减少重复查询：相比每次修改表达式都自动计算，手动预览更容易控制后端负载。\n选择 A 后，预览必须使用当前透视表实际生效的查询条件和数据权限，不允许使用未经筛选的全量数据代替。",
+      "question_ref": "MD / conversation-source.md：L1320–L1372",
+      "answer": "B",
+      "answer_ref": "MD / conversation-source.md：L1375–L1375",
+      "confirmation": "已确认 Q147：选择 B — F08 修改自定义汇总表达式后，系统自动实时预览计算结果，无需点击“预览”按钮。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q147/Q148**：表达式合法修改后**自动实时预览**，可防抖，旧请求不得覆盖最新；预览失败保留上次成功结果并明确标记为旧结果，保留用户当前输入；取消恢复进入编辑前状态，确认提交编辑态。",
+          "line": 395,
+          "ids": [
+            147,
+            148
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q148",
+      "feature": "F08",
+      "question": "Q148：F08 实时预览计算失败时，应该如何处理？\nREQ-147 已确认：表达式修改并通过校验后，自动重新计算小计和总计。\n\n但实际计算可能因为数据库连接异常、查询超时或其他运行时错误而失败。\n\n例如，用户正在编辑：\n\nSUM(利润) / SUM(销售额)\n\n系统已经成功预览了计算结果。\n\n随后用户修改为：\n\nROUND(SUM(利润) / SUM(销售额), 2)\n\n新表达式通过语法校验，但后端计算时发生数据库连接超时。\n\n此时，透视表应该如何展示？\n\nA. 保留上一次成功预览的结果，并显示错误（建议）\n不使用失败的计算结果覆盖现有预览。\n保留上一次成功预览的表格内容。\n显示“自定义汇总计算失败，请重试”。\n明确提示当前展示的是上一次成功预览的结果，而不是最新表达式的结果。\n用户可以继续修改表达式，系统再次尝试计算。\n优点： 避免预览区域突然清空，同时防止用户误认为旧结果来自新表达式。\n\nB. 清空自定义汇总结果，显示错误\n计算失败时，受影响的小计和总计单元格显示错误状态。\n\n其他正常指标继续展示。\n\n优点： 不会出现旧结果与新表达式不一致的问题。\n\nC. 自动恢复到上一次成功的表达式\n新表达式计算失败后，系统自动将编辑框中的内容恢复为上一次成功计算的表达式。\n\n优点： 保证当前表达式始终可以正常计算。\n\n缺点： 用户刚输入的内容可能丢失。\n\nD. 自动重试，失败后采用 A\n对于网络超时、临时数据库连接失败等可恢复错误，自动执行有限次数重试。\n\n达到重试上限后，保留上一次成功预览结果并显示错误。\n\n优点： 可以减少临时故障对编辑体验的影响，但增加后台请求和等待时间。\n\n建议：A\n理由是：\n\n保护用户输入：计算失败不应自动丢弃用户正在编辑的表达式。\n保持预览连续性：可以继续查看此前成功计算的结果。\n避免误导：明确标记当前预览结果并非来自最新表达式。\n控制实现复杂度：不强制新增自动重试机制。\n需要特别区分：REQ-140 处理的是合法表达式中个别单元格的除零或 NULL 结果；Q148 处理的是整个表达式预览计算请求失败，两者不应混淆。",
+      "question_ref": "MD / conversation-source.md：L1396–L1453",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1456–L1456",
+      "confirmation": "已确认 Q148：选择 A — F08 实时预览计算失败时，保留上一次成功预览的结果，显示错误提示，并明确标识当前结果并非来自最新表达式。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q147/Q148**：表达式合法修改后**自动实时预览**，可防抖，旧请求不得覆盖最新；预览失败保留上次成功结果并明确标记为旧结果，保留用户当前输入；取消恢复进入编辑前状态，确认提交编辑态。",
+          "line": 395,
+          "ids": [
+            147,
+            148
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q149",
+      "feature": "F08",
+      "question": "Q149：F08 自定义汇总表达式的计算性能要求是什么？\n目前已确认：\n\nREQ-138：基于底层数据集记录计算。\nREQ-139：遵循当前透视表的查询和筛选条件。\nREQ-144：每个指标可以分别配置小计、总计表达式。\nREQ-145：多个小计层级共用表达式，但分别计算。\nREQ-147：修改表达式后自动实时预览。\n这些要求意味着，一次表达式修改可能触发多组聚合计算。\n\n例如，一张透视表包含：\n\n100 万条底层数据记录。\n5 个行维度。\n3 个指标。\n20 个需要计算的小计分组。\n每个指标分别配置小计、总计表达式。\n如果每次修改表达式都重新执行全部聚合查询，可能影响数据库性能和编辑体验。\n\n因此，需要明确 F08 的性能验收标准。\n\nA. 后端计算接口响应时间不超过 3 秒（建议）\n从后端收到有效表达式的计算请求开始，到完成汇总计算并返回结果为止，不超过 3 秒。\n\n不包含网络传输和前端渲染时间。\n\n与 F04、F07 已确认的性能指标保持一致。\n\nB. 端到端预览时间不超过 3 秒\n从用户停止输入表达式开始，到透视表展示最新计算结果为止，不超过 3 秒。\n\n包含防抖等待、网络传输、后端计算和前端渲染。\n\nC. 3 秒作为性能目标，不作为强制验收条件\n正常情况下尽量在 3 秒内完成计算。\n\n复杂表达式或大数据量允许超过 3 秒，但必须显示加载状态，不得导致页面长时间无响应。\n\nD. 先建立性能基线，再确定指标\n先测试 DataEase 当前透视表在不同数据量、分组数量及表达式复杂度下的计算性能。\n\n根据测试结果确定合理的响应时间指标。\n\n建议：D\nF08 与 F04、F07 的性能特征存在明显区别。\n\nF04、F07 主要执行枚举值查询，而 F08 可能涉及复杂聚合、多个分组以及表达式计算。\n\n在没有实际性能测试证据的情况下，直接要求所有计算在 3 秒内完成，可能不合理。\n\n选择 D 可以先建立可验证的性能基线，再确定正式验收指标。",
+      "question_ref": "MD / conversation-source.md：L1473–L1525",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1530–L1530",
+      "confirmation": "已确认 Q149：选择 A — F08 自定义汇总表达式的后端计算接口响应时间不超过 3 秒，不包含网络传输和前端渲染时间。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q149/Q150**：后端计算接口响应≤3秒（含查询、聚合、计算、序列化，不含网络/前端，标准条件待定）；超过3秒继续计算并显示加载，不因3秒强制终止。",
+          "line": 396,
+          "ids": [
+            149,
+            150
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q150",
+      "feature": "F08",
+      "question": "Q150：F08 自定义汇总计算超过 3 秒时，系统应该如何处理？\nREQ-147 已确认自动实时预览，REQ-148 已确认预览失败时保留上一次成功结果。\n\n现在考虑一个场景：\n\n设计人员修改自定义汇总表达式：\n\nSUM(利润) / SUM(销售额)\n\n由于数据量较大，后端计算需要 8 秒。\n\n此时系统应该如何处理？\n\nA. 继续等待，显示加载状态（建议）\n3 秒内完成：正常展示计算结果。\n超过 3 秒：继续计算，并显示加载状态。\n用户可以继续编辑表达式或关闭配置面板。\n如果计算成功，展示最新结果。\n如果计算失败，按照 REQ-148 处理。\n优点： 将性能验收目标与请求超时机制分开，不因暂时超过 3 秒而中断计算。\n\nB. 超过 3 秒立即终止计算\n如果后端计算超过 3 秒，则立即终止请求。\n\n显示“计算超时”，保留上一次成功预览结果。\n\n优点： 严格控制单次计算资源消耗。\n\n缺点： 对复杂表达式或大数据量场景不够友好。\n\nC. 超过 3 秒自动切换后台异步计算\n3 秒内完成：同步返回结果。\n超过 3 秒：转为后台异步任务。\n前端继续显示加载状态。\n后台完成后更新预览。\n优点： 适合复杂计算，但需要额外的异步任务管理机制。\n\nD. 沿用 DataEase 现有查询超时机制\n不为 F08 单独定义 3 秒超时行为。\n\n3 秒仍然作为性能验收目标。\n实际请求超时遵循 DataEase 现有配置。\n超时或失败时按照 REQ-148 处理。\n不新增独立的计算任务调度系统。\n优点： 符合 REQ-002 的差异驱动原则，避免重复建设超时控制机制。\n\n建议：D\n原因是：\n\n区分性能目标与超时阈值：超过 3 秒意味着性能未达到验收目标，不必立即终止计算。\n复用现有机制：避免 F08 引入独立于 DataEase 查询框架的超时处理。\n与 REQ-148 一致：请求最终失败时，保留上一次成功预览结果并提示错误。\n控制实现复杂度：不要求新增异步任务调度能力。\n需要注意，选择 D 后，如果现有 DataEase 查询超时设置不合理，仍需在技术验证中报告问题，但不自动扩大 F08 的开发范围。",
+      "question_ref": "MD / conversation-source.md：L1551–L1606",
+      "answer": "A",
+      "answer_ref": "ZIP / zip-conversation-source.txt：L195–L195",
+      "confirmation": "已确认 Q150：选择 A — F08 自定义汇总计算超过 3 秒时继续执行，并显示加载状态，不强制终止计算。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q149/Q150**：后端计算接口响应≤3秒（含查询、聚合、计算、序列化，不含网络/前端，标准条件待定）；超过3秒继续计算并显示加载，不因3秒强制终止。",
+          "line": 396,
+          "ids": [
+            149,
+            150
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q151",
+      "feature": "F08",
+      "question": "Q151：F08 自定义汇总表达式修改后，是否需要重新查询整张透视表？\nREQ-147 已确认修改表达式后自动实时预览。但这里存在一个重要的性能与计算架构问题。\n例如，一张透视表包含：\n100 万条底层数据。\n3 个维度。\n5 个指标。\n20 个小计分组。\n1 个总计。\n用户只修改了「利润率」指标的总计表达式：\n原表达式：\nAVG(利润率)\n新表达式：\nSUM(利润) / SUM(销售额)\n此时，销售额、利润等其他指标的明细数据和汇总配置都没有变化。\n系统应该如何重新计算？\nA. 只重新计算受影响的汇总结果（建议）\n尽可能复用当前透视表已经加载的数据及查询上下文。\n只针对修改的指标和汇总层级执行必要的计算。\n例如：\n利润率总计：重新计算。\n利润率小计：不变。\n销售额、利润等其他指标：不重新计算。\n透视表明细：不重新查询。\n但由于 REQ-138 已确认基于底层数据计算，必要时仍允许后端查询相关底层数据。\n优点： 减少不必要的查询和计算，更有利于满足 3 秒性能目标。\nB. 每次修改表达式都重新查询整张透视表\n沿用完整的透视表查询流程。\n即使只修改一个指标的总计表达式，也重新计算全部明细、小计和总计。\n优点： 实现相对简单，可以复用现有查询链路。\n缺点： 可能产生大量重复计算。\nC. 优先增量计算，无法增量时完整刷新\n系统优先识别表达式修改影响的指标和汇总层级。\n如果现有架构支持局部计算，则只更新受影响结果。\n如果无法安全复用现有数据，则重新执行完整透视表查询。\n优点： 兼顾性能与实现可行性。\nD. 完全沿用 DataEase 现有透视表刷新机制\n不新增局部计算或增量刷新要求。\n表达式修改后，直接调用现有透视表查询与渲染流程。\n只要求计算结果正确，并满足已确认的性能验收目标。\n建议：C\n原因是：\n符合 REQ-002：优先复用现有计算能力，不强制重构查询架构。\n支持性能优化：能够局部计算时避免重新查询整张透视表。\n保证计算正确性：不能为了复用缓存而违反 REQ-138、REQ-139 的底层数据计算与过滤语义。\n降低实现风险：当局部计算无法保证结果正确时，允许退回完整查询。\n需要注意，局部刷新不等于直接使用透视表已展示的明细值计算汇总。REQ-138 已明确要求使用底层数据记录，因此任何增量计算都必须保持相同的聚合语义。",
+      "question_ref": "ZIP / zip-conversation-source.txt：L211–L257",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1612–L1612",
+      "confirmation": "已确认 Q151：选择 A — F08 修改自定义汇总表达式后，只重新计算受影响的汇总结果，不重新查询整张透视表。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q151/Q152**：仅重新计算**受影响指标及汇总层级**，不重新查询整张透视表明细或其他指标；每次必要计算重新执行，不复用历史计算结果缓存、不新增 F08 专用缓存；允许针对受影响汇总查询底层记录。",
+          "line": 397,
+          "ids": [
+            151,
+            152
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q152",
+      "feature": "F08",
+      "question": "Q152：F08 自定义汇总表达式是否需要支持计算结果缓存？\nREQ-151 已确认局部重新计算。考虑到表达式可能涉及大量底层数据，缓存可以进一步减少重复查询。\n\n例如，用户正在编辑利润率总计表达式：\n\nSUM(利润) / SUM(销售额)\n\n随后修改为：\n\nROUND(SUM(利润) / SUM(销售额), 2)\n\n两次表达式使用的底层聚合结果完全相同：\n\nSUM(利润)\nSUM(销售额)\n如果能够复用这些聚合结果，就不必重复查询数据库。\n\n但缓存也可能导致数据更新后仍使用旧结果，因此需要明确缓存策略。\n\nA. 复用 DataEase 现有缓存机制（建议）\n优先复用现有数据查询缓存，不为 F08 新增独立缓存系统。\n\n现有缓存有效时直接使用。\n缓存不可用时执行必要查询。\n不改变 DataEase 原有缓存生命周期。\n必须保证缓存与当前查询条件、数据权限及计算上下文一致。\nB. 为 F08 新增专用的聚合结果缓存\n针对自定义汇总表达式缓存底层聚合结果。\n\n例如：\n\nSUM(利润)、SUM(销售额)\n\n不同表达式可以复用这些结果。\n\n需要新增缓存键、失效规则及容量管理机制。\n\nC. 不使用缓存，每次重新计算\n每次表达式变化后，都针对受影响的汇总重新执行必要查询。\n\n优点： 结果更容易保持最新，实现相对简单。\n\n缺点： 可能增加数据库负载。\n\nD. 优先复用现有缓存，性能不足时增加专用缓存\n先检查 DataEase 现有缓存是否满足 REQ-149 的 3 秒性能目标。\n\n如果满足，直接复用。\n\n如果不满足，则允许为 F08 增加聚合结果缓存，但必须设计明确的缓存隔离及失效机制。\n\n建议：D\n主要原因：\n\n符合 REQ-002：优先复用已有能力，只补齐缺失部分。\n有助于满足 REQ-149：复杂汇总计算可能需要缓存优化。\n与 REQ-151 一致：局部计算和聚合结果复用可以相互配合。\n避免过早设计：只有性能验证证明必要时才新增专用缓存。\n需要注意：缓存正确性比缓存命中率更重要。不能因为不同用户的表达式相同，就直接共享可能受到行级权限、列级权限或过滤条件影响的聚合结果。",
+      "question_ref": "MD / conversation-source.md：L1640–L1700",
+      "answer": "C",
+      "answer_ref": "MD / conversation-source.md：L1703–L1703",
+      "confirmation": "已确认 Q152：选择 C — F08 不使用缓存，每次自定义汇总表达式变化后，都重新执行必要的汇总计算。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q151/Q152**：仅重新计算**受影响指标及汇总层级**，不重新查询整张透视表明细或其他指标；每次必要计算重新执行，不复用历史计算结果缓存、不新增 F08 专用缓存；允许针对受影响汇总查询底层记录。",
+          "line": 397,
+          "ids": [
+            151,
+            152
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q153",
+      "feature": "F08",
+      "question": "Q153：F08 自定义汇总表达式是否需要支持结果导出？\n此前已经确认：\n\nREQ-029：F03 导出当前查询条件下的全部展示结果。\nREQ-030：F03 支持 XLSX、CSV 和图片。\nREQ-042：XLSX 保留可计算的数据类型。\nREQ-043：XLSX 保留主要视觉样式。\nREQ-134：F08 支持自定义汇总表达式。\nREQ-137：小计和总计可以分别配置表达式。\n现在需要明确：F08 计算出的自定义汇总结果，是否必须包含在 F03 导出的文件中？\n\n例如，透视表展示：\n\n地区\t销售额\t利润\t自定义利润率\n华东\t300\t80\t26.67%\n华南\t500\t75\t15.00%\n总计\t800\t155\t19.38%\n其中，总计利润率由自定义表达式计算：\n\nSUM(利润) / SUM(销售额)\n\n用户点击“导出 Excel”。\n\n此时应该如何处理？\n\nA. 导出文件必须包含自定义汇总结果（建议）\nXLSX、CSV 和图片均应包含 F08 计算得到的小计、总计结果。\n\n要求：\n\n导出结果与当前透视表展示的计算语义一致。\nXLSX 保留数值类型及显示格式。\nCSV 导出格式化后的展示值。\n图片保留当前展示的汇总效果。\n导出全部符合条件的数据，不受当前分页限制。\n不允许导出时退回默认 SUM、AVG 等汇总计算方式。\n优点： F03 与 F08 的业务行为一致。\n\nB. 仅 XLSX 导出包含自定义汇总结果\nXLSX 包含 F08 计算结果。\n\nCSV 和图片继续使用原有透视表导出机制，不要求包含自定义汇总结果。\n\n优点： 改造范围较小，但不同导出格式的数据可能不一致。\n\nC. 导出时重新计算自定义汇总结果\n所有导出格式均包含自定义汇总结果，但导出时必须重新执行 F08 表达式。\n\n不直接使用当前页面中的计算结果。\n\n优点： 可以基于导出任务执行时的数据状态重新计算，尤其适合异步导出。\n\nD. 沿用 DataEase 现有导出机制\n如果当前导出链路能够包含自定义汇总结果，则直接复用。\n\n如果不能，本次不强制扩展导出能力。\n\n优点： 开发范围较小，但可能导致导出数据与页面展示不一致。\n\n建议：C\n原因是：\n\n符合 REQ-046：F03 已确认异步导出使用任务执行时的数据，不要求严格的提交时点快照。\n符合 REQ-152：F08 已确认不使用历史计算结果缓存。\n保证导出完整性：导出必须包含正确的小计和总计，不能退回默认汇总方式。\n保持格式一致性：XLSX、CSV 和图片均应采用相同的业务计算语义。\n需要注意，选择 C 后，导出时重新计算的结果可能与用户点击导出时页面显示的数值不同，因为底层数据可能发生变化。这与 REQ-046 已确认的数据一致性模型相符。",
+      "question_ref": "MD / conversation-source.md：L1733–L1801",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1804–L1804",
+      "confirmation": "已确认 Q153：选择 A — F08 自定义汇总计算结果必须包含在 F03 导出的 XLSX、CSV 和图片中，并保持与透视表展示一致的计算语义。",
+      "rules": [
+        {
+          "feature": "F03",
+          "text": "- **Q153**：F08 自定义小计/总计结果必须进入 XLSX/CSV/图片，保持计算语义一致；异步执行时仍遵循 Q46 的数据时点语义。",
+          "line": 137,
+          "ids": [
+            46,
+            153
+          ]
+        },
+        {
+          "feature": "F08",
+          "text": "- **Q153/Q154**：F03 的 XLSX/CSV/图片必须包含 F08 自定义小计/总计，计算语义一致；异步导出数据时点遵循 Q46；历史透视表不迁移 SUM/AVG 等配置，未启用 F08 时结果不变。",
+          "line": 398,
+          "ids": [
+            46,
+            153,
+            154
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q154",
+      "feature": "F08",
+      "question": "Q154：F08 自定义汇总表达式是否需要支持历史配置向后兼容？\nF08 是对 DataEase 现有透视表汇总计算能力的扩展。\n\n假设某企业已经创建了大量透视表，这些透视表使用现有的 SUM、AVG、COUNT 等汇总方式，并没有配置 F08 新增的自定义表达式。\n\n升级后，应该如何处理这些历史透视表？\n\nA. 完全向后兼容，历史配置保持原有计算行为（建议）\n已有透视表无需修改即可正常运行。\n未配置自定义表达式的指标继续使用原有汇总计算方式。\n新增的表达式配置默认为空。\n只有设计人员主动配置 F08 后，才启用自定义计算。\n不自动迁移或重写历史汇总配置。\n优点： 避免升级改变已有报表的业务计算结果。\n\nB. 将历史汇总配置自动转换为新表达式\n例如：\n\n原有 SUM 汇总自动转换为 SUM(字段)。\n原有 AVG 汇总自动转换为 AVG(字段)。\n原有 COUNT 汇总自动转换为 COUNT(字段)。\n优点： 新旧配置使用统一的表达式模型。\n\n风险： 不同汇总层级、NULL 处理及聚合计算语义可能存在差异。\n\nC. 历史透视表必须重新配置汇总方式\n升级后，设计人员需要重新确认每个指标的小计和总计计算方式。\n\n优点： 可以统一检查计算规则。\n\n缺点： 对已有仪表盘影响较大。\n\nD. 先分析现有汇总配置结构，再确定兼容方案\n通过代码分析确认现有透视表汇总配置、序列化结构及计算机制，再制定迁移策略。\n\n建议：A\n理由是：\n\n符合 REQ-002：差异驱动开发，优先保留现有能力。\n避免业务结果变化：升级不应导致历史透视表的汇总数值发生非预期变化。\n与 REQ-069、REQ-090、REQ-131 一致：此前 F04、F05、F07 均确认了历史配置兼容原则。\n降低迁移风险：无需对已有透视表执行大规模配置转换。\n需要特别强调：向后兼容不仅意味着历史配置能够正常加载，还意味着相同数据和查询条件下，升级前后的汇总计算结果应保持一致。",
+      "question_ref": "MD / conversation-source.md：L1834–L1878",
+      "answer": "A",
+      "answer_ref": "MD / conversation-source.md：L1888–L1888",
+      "confirmation": "已确认 Q154：选择 A — F08 完全向后兼容，历史透视表保持原有汇总计算行为，只有主动配置自定义表达式后才启用新能力。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q153/Q154**：F03 的 XLSX/CSV/图片必须包含 F08 自定义小计/总计，计算语义一致；异步导出数据时点遵循 Q46；历史透视表不迁移 SUM/AVG 等配置，未启用 F08 时结果不变。",
+          "line": 398,
+          "ids": [
+            46,
+            153,
+            154
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q155",
+      "feature": "F08",
+      "question": "Q155：F08 自定义汇总表达式是否需要限制计算复杂度？\n目前 F08 已确认：\n\n支持算术运算、聚合函数、条件表达式等（REQ-136）。\n允许引用当前数据集中的任意字段（REQ-135）。\n每个指标可以分别配置小计和总计表达式（REQ-144）。\n表达式修改后自动实时预览（REQ-147）。\n后端计算响应时间目标为 3 秒（REQ-149）。\n不使用计算结果缓存（REQ-152）。\n这意味着复杂表达式可能产生较高的数据库计算开销。\n\n例如，设计人员编写：\n\nCASE\n    WHEN SUM(销售额) = 0 THEN 0\n    ELSE ROUND(\n        (SUM(利润) - SUM(成本)) /\n        SUM(销售额) * 100,\n        2\n    )\nEND\n\n这样的表达式比较常见。\n\n但如果表达式包含几十层嵌套函数、数百个字段引用，可能显著影响解析、校验及计算性能。\n\n因此，需要明确是否设置表达式复杂度限制。\n\nA. 设置固定的复杂度上限\n例如：\n\n表达式最大长度：2,000 字符。\n函数嵌套深度：最多 10 层。\n单条表达式最多引用 20 个字段。\n超过任一限制时拒绝保存。\n\n这些数值是候选值，尚未经过 DataEase 性能验证。\n\nB. 不设置业务层面的固定复杂度限制（建议）\n允许设计人员使用 REQ-136 已确认的函数和运算符自由组合。\n\n不额外限制表达式长度、嵌套层级或字段引用数量。\n\n但必须保留必要的语法校验、权限校验及系统资源保护机制。\n\nC. 根据 DataEase 现有表达式机制确定限制\n优先复用现有表达式编辑器、解析器和计算引擎的容量限制。\n\n如果现有机制已有长度、嵌套深度或字段数量约束，则直接沿用。\n\n只有发现现有约束不足以保证系统稳定性时，才提出调整。\n\nD. 通过性能测试确定复杂度上限\n先使用不同复杂度的表达式进行性能测试。\n\n结合 REQ-149 的 3 秒指标，确定合理的长度、嵌套深度和字段引用数量限制。\n\n超过验证上限时禁止保存。\n\n建议：C\n原因是：\n\n符合 REQ-002：优先复用现有表达式机制。\n避免任意设置限制：目前没有证据证明 2,000 字符或 10 层嵌套是合理上限。\n保持兼容性：尽可能沿用 DataEase 现有计算字段的使用习惯。\n控制资源风险：不因为开放自定义表达式而取消系统已有的资源保护措施。\n需要注意，选择 C 不会取消 REQ-149 的 3 秒性能验收目标。后续仍需通过实际测试验证表达式复杂度对计算性能的影响。",
+      "question_ref": "MD / conversation-source.md：L1905–L1973",
+      "answer": "B",
+      "answer_ref": "MD / conversation-source.md：L1978–L1978",
+      "confirmation": "已确认 Q155：选择 B — F08 不设置业务层面的固定表达式复杂度限制，允许使用已支持的函数和运算符自由组合，但必须保留系统安全及资源保护机制。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q155/Q156**：不新增公式字符数、嵌套层级、引用字段数等业务固定上限，但保留安全和资源保护；结构化错误诊断尽可能定位错误字段/函数/位置，不向前端暴露 SQL 原文、连接信息或堆栈，不新增单步调试器。",
+          "line": 399,
+          "ids": [
+            155,
+            156
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    },
+    {
+      "id": "Q156",
+      "feature": "F08",
+      "question": "Q156：F08 自定义汇总表达式是否需要提供计算过程的错误诊断信息？\n此前已经确认：\n\nREQ-141：表达式存在语法、字段、类型或权限错误时禁止保存。\nREQ-142：保存后字段引用失效时，保留表达式并提示修复。\nREQ-148：实时预览失败时，保留上一次成功预览结果并提示错误。\nREQ-155：不设置固定的表达式复杂度限制。\n但还没有明确：发生计算错误时，用户应该看到多详细的信息？\n\n例如，设计人员配置：\n\nROUND(SUM(利润) / SUM(销售额), 2)\n\n执行预览时，后端返回计算错误。\n\nA. 只显示通用错误提示\n例如：\n\n自定义汇总计算失败，请检查表达式。\n\n不提供具体错误位置、函数或字段信息。\n\n优点：实现简单，但不利于定位问题。\n\nB. 提供结构化错误诊断信息（建议）\n根据错误类型，向设计人员提供可理解的诊断信息。\n\n例如：\n\n错误类型\t提示示例\n语法错误\t第 15 个字符附近存在非法运算符\n字段不存在\t字段“利润”已不存在\n类型不兼容\tSUM 函数不支持当前字段类型\n函数不支持\t当前表达式不支持函数 XXX\n权限不足\t表达式引用了无权访问的字段\n计算超时\t汇总计算未能在规定时间内完成\n数据源异常\t数据源查询失败，请稍后重试\n要求：\n\n尽可能定位错误字段、函数或表达式位置。\n不向普通用户暴露数据库连接信息、SQL 原文、堆栈信息等敏感内容。\n技术诊断信息可以记录在服务端日志中。\n优点：有利于设计人员独立排查和修复表达式问题。\n\nC. 提供完整的计算调试功能\n除 B 外，还支持：\n\n查看表达式各部分的中间计算结果。\n查看每个聚合函数的计算值。\n逐步定位导致错误的子表达式。\n查看表达式执行耗时及性能信息。\n优点：调试能力强，但需要开发独立的表达式调试工具。\n\nD. 完全沿用 DataEase 现有表达式错误提示机制\n优先复用现有计算字段编辑器的错误提示。\n\n不额外要求结构化诊断或表达式位置定位。\n\n建议：B\nF08 涉及自定义表达式，用户需要能够区分配置错误、字段失效和数据源异常。\n\n结构化诊断可以显著降低问题定位成本，而且不必引入 C 所描述的完整调试系统。\n\n不过，错误提示的详细程度必须以实际能够可靠识别的信息为准。例如，如果底层数据库只返回通用查询错误，就不能凭空生成一个具体的表达式错误位置。",
+      "question_ref": "MD / conversation-source.md：L2001–L2066",
+      "answer": "B",
+      "answer_ref": "MD / conversation-source.md：L2071–L2071",
+      "confirmation": "已确认 Q156：选择 B — F08 自定义汇总表达式提供结构化错误诊断信息，帮助设计人员定位和修复问题，但不新增完整的表达式调试工具。",
+      "rules": [
+        {
+          "feature": "F08",
+          "text": "- **Q155/Q156**：不新增公式字符数、嵌套层级、引用字段数等业务固定上限，但保留安全和资源保护；结构化错误诊断尽可能定位错误字段/函数/位置，不向前端暴露 SQL 原文、连接信息或堆栈，不新增单步调试器。",
+          "line": 399,
+          "ids": [
+            155,
+            156
+          ]
+        }
+      ],
+      "status": "原始问答齐备"
+    }
+  ]
+}
