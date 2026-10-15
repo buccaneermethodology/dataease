@@ -1,9 +1,10 @@
 # DataEase V3 知识库
 
-本目录与执行 Dashboard 平行。仅保存经源码核实的知识 JSON、结构合同、生成工具和阅读投影。产品全景 Dashboard 只作为提取参考，不作为正式事实证据。
+本目录与执行 Dashboard 平行，包含源码核实型产品事实及独立标注状态的规范型需求基线。源码事实与产品需求分型保存；需求投影不冒充实现证据。产品全景 Dashboard 只作为提取参考，不作为正式事实证据。
 
 ## 阅读入口
 
+- [仪表盘八项功能需求基线（F01–F08 / Q01–Q156）](generated/dashboard-requirements-DT_DM-478391-v1.md)：需求决策真源与阅读投影；实现状态为未评估；真源、版本与维护方式见 [需求型 KB 真源](requirements/README.md)。
 - [分享、嵌入、导出与权限](generated/access.md)：K03、K04、K05、K07、K09、K10
 - [产品术语、架构、运行配置与扩展导航](generated/architecture-extensions.md)：K00、K01、K02、K05、K06、K08、K09、K10
 - [图表取数、仪表板与大屏](generated/chart.md)：K03、K04、K05、K06、K07、K09

@@ -1,0 +1,92 @@
+{
+  "schema_version": "sge_observation_task_v1",
+  "task_id": "dataease-requirement-kb-v1-de-req-001",
+  "revision": 1,
+  "thread_id": "01a13976-f199-7640-a49f-c540a9062fe7",
+  "session_id": "DE-EXEC-S014",
+  "eligibility": {
+    "eligible": true,
+    "reason": "DataEase 本地非平凡 KB 持久化任务，使用项目 SGE checkpoints。"
+  },
+  "task_family": "requirement_kb_initial_build",
+  "complexity_at_intake": "large",
+  "risk": "medium",
+  "model": null,
+  "reasoning_effort": null,
+  "lanes": [
+    "orchestrator_design_builder",
+    "single_agent_exception_system_no_delegation"
+  ],
+  "cohort_id": null,
+  "skill_manifest_ref": ".codex/skills/sge-governed-checkpoints/SKILL.md; /Users/xiaomei/.codex/skills/doc-system-kb-builder/SKILL.md",
+  "outcome": "in_progress",
+  "observed_at": "2026-10-14T08:37:38Z",
+  "observation_sequence": null,
+  "timestamps": {
+    "task_started_at": null,
+    "delivery_candidate_ready_at": "2026-10-14T08:37:38Z",
+    "first_final_review_submitted_at": null,
+    "terminal_receipt_at": null,
+    "final_readback_at": null,
+    "ended_at": null
+  },
+  "governance_intervals": [],
+  "external_wait_intervals": [],
+  "measurement_inline_intervals": [],
+  "rework_events": [],
+  "final_review": {
+    "applicability": "applicable",
+    "first_attempt_passed": null,
+    "attempt_count": 0,
+    "verdict": "独立语义审阅未完成；不以执行者自检替代。",
+    "evidence_ref": null
+  },
+  "gate": {
+    "applicability": "applicable",
+    "first_attempt_valid": null,
+    "attempt_count": 0,
+    "final_verdict": null,
+    "evidence_ref": null
+  },
+  "quality": {
+    "known": false,
+    "missing_evidence_blocker_count": null,
+    "false_completion": false,
+    "unapproved_scope_narrowing": false,
+    "serious_regression": null,
+    "evidence_refs": []
+  },
+  "comparator": {
+    "task_id": null,
+    "matched": false,
+    "reason": "无合格可比基线"
+  },
+  "metric_provenance": {},
+  "sources": [
+    {
+      "path": "docs/DataEase_Requirements_V1_20261014.md",
+      "sha256": "b2de23046c8000a52d5ada278df2302c6ab7a77682295cd38f1c88fd94854493",
+      "kind": "authoritative_requirement_source"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-REQ-001/",
+      "sha256": null,
+      "kind": "goal_and_contract",
+      "locator": "Goal-DE-REQ-001/goal.md and planning/contract-v001.json"
+    },
+    {
+      "path": "kb/requirements/DT_DM-478391.v1.json",
+      "sha256": "83387f717bdb735d7d2bff762c9b635fca4e92d2050f0089028ac627c5d8cb88",
+      "kind": "candidate_source_of_truth"
+    }
+  ],
+  "data_gaps": [
+    "首次实质执行的精确 UTC 时间未捕获，task_started_at 保留 null。",
+    "独立语义 Validation、实际 execution admission、Stop Gate 及 final readback 尚未完成。"
+  ],
+  "notes": [
+    "首次需求 JSON 提取在本轮 Goal/合同冻结之前发生；已在候选收尾记录该顺序偏差，不将其标记为通过的受治理执行。",
+    "系统限制本轮不得创建子 Agent；single-agent exception 不等于独立审阅。",
+    "独立验收项抽取器对中文权威稿返回 success/0 criteria；未将其当成验证证据，记录见 Goal-DE-REQ-001/evidence/acceptance-extractor-check.json。"
+  ]
+}

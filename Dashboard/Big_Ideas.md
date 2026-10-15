@@ -10,3 +10,4 @@
 | ID | 归属 | Topic | Scope | Purpose | Status | Evidence | Next |
 |---|---|---|---|---|---|---|---|
 | SP-001 | DE-KNOW-BI01 | DataEase 初始 KB | 全仓盘点＋核心深挖；静态证实；XPack公共契约 | 支撑后续开发理解与影响分析 | doing | [Goal](Artifacts/SP-001/goal.md)、[Stage Plan](Artifacts/SP-001/stage-plan.md) | 本地交付候选已齐；验收和Goal终态读取[结果入口](Artifacts/SP-001/README.md) |
+| SP-002 | DE-KNOW-BI01 | DT_DM-478391 需求 KYM 首稿 | 以已批准需求基线为新增权威输入；基于现有 KYM r001 追加需求语义，不核定代码实现 | 让需求角色、范围、规则和未决事项可追溯地进入 KYM | doing | [Goal](Artifacts/Goal-DE-KYM-001/goal.md)、[Stage Plan](Artifacts/SP-002/stage-plan.md) | 产出 candidate r002；保持未审批并明确来源与语义审阅边界 |

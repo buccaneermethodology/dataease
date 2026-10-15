@@ -1,0 +1,23 @@
+{
+  "schema_version": "de_kym_candidate_contract_v1",
+  "goal_id": "DE-KYM-001",
+  "raw_intent_ref": "planning/raw-user-intent-v001.txt",
+  "baseline": ".kym-tco/dataease/kym/revisions/kym-r001.json",
+  "source": "kb/requirements/DT_DM-478391.v1.json",
+  "scope": {
+    "features": ["F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08"],
+    "confirmed_decisions": "Q01-Q156",
+    "excluded_or_unresolved": ["Q157", "cross-feature conflict adjudication", "unadjudicated source suggestions", "implementation status"]
+  },
+  "acceptance_criteria": [
+    {"id":"AC-01","predicate":"以现有 r001 为基线生成新修订；原有语句、来源、冲突、未决问题和 Profile 不静默删除或改写。"},
+    {"id":"AC-02","predicate":"新增需求陈述引用指定 JSON 的准确 source_id 与行范围，并覆盖 F01-F08、Q01-Q156、验收边界和来源中显式未决项。"},
+    {"id":"AC-03","predicate":"保持固定 Customer/Product/Project 二级节点及顺序；Customer、Stakeholder 与 Target 只录入来源明示且角色关系充分支持的内容。"},
+    {"id":"AC-04","predicate":"需求型规范与现行实现事实分开；不把未评估的代码状态、验收条件或原文建议写成已实现规则。"},
+    {"id":"AC-05","predicate":"需求 JSON 引用的权威主文档若当前缺失，明确记录来源链待核，不从缺失源补写内容。"},
+    {"id":"AC-06","predicate":"生成普通 CLI candidate package 和 renderer-owned reader；validate、strict lint、audit、checksum 与 byte-identical rerender 按可用命令实际核验。"},
+    {"id":"AC-07","predicate":"候选保持 candidate_not_approved / approval_status=not_requested；不声称 supported-host、独立语义审阅、代码运行或用户验收通过。"}
+  ],
+  "claim_ceiling":"Candidate KYM revision and deterministic CLI checks only; no independent semantic, implementation, runtime, approval, supported-host, or user-acceptance claim.",
+  "termination":"候选包与阅读版齐备，所有检查结果、来源差异和限制记录完成；未审批。"
+}

@@ -1,0 +1,116 @@
+                    } catch (Exception ignore) {
+                    }
+                });
+            }
+        }
+        LogUtil.info("dsMap size..." + coreDatasources.size());
+
+    }
+
+    private void initEngineSchema(DatasourceSchemaDTO datasourceSchemaDTO) throws Exception {
+        CalciteConnection calciteConnection = take().unwrap(CalciteConnection.class);
+        buildSchema(datasourceSchemaDTO, calciteConnection.getRootSchema());
+    }
+
+    public void update(DatasourceDTO datasourceDTO) throws Exception {
+        DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+        BeanUtils.copyBean(datasourceSchemaDTO, datasourceDTO);
+        datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        datasourceRequest.setDsList(Map.of(datasourceSchemaDTO.getId(), datasourceSchemaDTO));
+        CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+        buildSchema(datasourceSchemaDTO, calciteConnection.getRootSchema());
+    }
+
+    public void updateDsPoolAfterCheckStatus(DatasourceDTO datasourceDTO) throws DEException {
+        DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+        BeanUtils.copyBean(datasourceSchemaDTO, datasourceDTO);
+        datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        datasourceRequest.setDsList(Map.of(datasourceSchemaDTO.getId(), datasourceSchemaDTO));
+        try {
+            CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+            SchemaPlus rootSchema = calciteConnection.getRootSchema();
+            if (rootSchema.getSubSchema(datasourceSchemaDTO.getSchemaAlias()) == null) {
+                buildSchema(datasourceSchemaDTO, rootSchema);
+            }
+            DatasourceConfiguration configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), DatasourceConfiguration.class);
+            if (configuration.isUseSSH()) {
+                Session session = Provider.getSessions().get(datasourceDTO.getId());
+                session.disconnect();
+                Provider.getSessions().remove(datasourceDTO.getId());
+                startSshSession(configuration, null, datasourceDTO.getId());
+            }
+        } catch (Exception e) {
+            DEException.throwException(e.getMessage());
+        }
+    }
+
+    public void delete(CoreDatasource datasource) throws DEException {
+        DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+        BeanUtils.copyBean(datasourceSchemaDTO, datasource);
+        datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+        try {
+            if (connection != null) {
+                CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+                SchemaPlus rootSchema = calciteConnection.getRootSchema();
+                if (rootSchema.getSubSchema(datasourceSchemaDTO.getSchemaAlias()) != null) {
+                    JdbcSchema jdbcSchema = rootSchema.getSubSchema(datasourceSchemaDTO.getSchemaAlias()).unwrap(JdbcSchema.class);
+                    BasicDataSource basicDataSource = (BasicDataSource) jdbcSchema.getDataSource();
+                    basicDataSource.close();
+                    rootSchema.removeSubSchema(datasourceSchemaDTO.getSchemaAlias());
+                }
+            }
+        } catch (Exception e) {
+            DEException.throwException(e.getMessage());
+        }
+        Provider.getLPorts().remove(datasource.getId());
+        if (Provider.getSessions().get(datasource.getId()) != null) {
+            Provider.getSessions().get(datasource.getId()).disconnect();
+        }
+        Provider.getSessions().remove(datasource.getId());
+    }
+
+    public Connection take() {
+        if (connection == null) { // 第一次检查，无需锁
+            synchronized (Connection.class) { // 同步块
+                if (connection == null) { // 第二次检查，需要锁
+                    connection = getCalciteConnection();
+                }
+            }
+        }
+        return connection;
+    }
+
+    private Connection getConnectionFromPool(Long dsId) {
+        try {
+            Connection connection = take();
+            CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+            SchemaPlus rootSchema = calciteConnection.getRootSchema();
+            if (rootSchema.getSubSchema(String.format(SQLConstants.SCHEMA, dsId)) == null) {
+                DEException.throwException(Translator.get("i18n_check_datasource_connection"));
+            }
+            JdbcSchema jdbcSchema = rootSchema.getSubSchema(String.format(SQLConstants.SCHEMA, dsId)).unwrap(JdbcSchema.class);
+            BasicDataSource basicDataSource = (BasicDataSource) jdbcSchema.getDataSource();
+            basicDataSource.setMaxWaitMillis(5 * 1000);
+            return basicDataSource.getConnection();
+        } catch (Exception e) {
+            DEException.throwException(Translator.get("i18n_invalid_connection") + e.getMessage());
+        }
+        return null;
+    }
+
+    public void execDDL(DatasourceRequest datasourceRequest) throws Exception {
+        DatasourceConfiguration configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+        int queryTimeout = configuration.getQueryTimeout();
+        DatasourceDTO datasource = new DatasourceDTO();
+        BeanUtils.copyBean(datasource, datasourceRequest.getDatasource());
+        try (Connection connection = getConnectionFromPool(datasource.getId()); Statement stat = getStatement(connection, queryTimeout)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(datasourceRequest.getQuery());
+            preparedStatement.setQueryTimeout(queryTimeout);
+            Boolean result = preparedStatement.execute();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+}

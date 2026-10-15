@@ -1,0 +1,617 @@
+{
+  "doc_id": "architecture-extensions",
+  "title": "产品术语、架构、运行配置与扩展导航",
+  "domains": [
+    "K00",
+    "K01",
+    "K02",
+    "K05",
+    "K06",
+    "K08",
+    "K09",
+    "K10"
+  ],
+  "facts": [
+    {
+      "id": "BASE-001",
+      "statement": "根Maven聚合器只列sdk；不能将根聚合构建等同核心前后端构建。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "pom.xml",
+          "start_line": 1,
+          "end_line": 28,
+          "symbol": "modules/properties",
+          "sha256": "780ccd4f0452760a7da5117ae17242926e5f7ba937192c74a360dbcce252a9cf"
+        }
+      ]
+    },
+    {
+      "id": "BASE-002",
+      "statement": "core聚合core-frontend和core-backend。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/pom.xml",
+          "start_line": 1,
+          "end_line": 20,
+          "symbol": "modules",
+          "sha256": "5428d27d2faa34a22fb0cffeddebd2fc7d80c6cca9bd61714b2fff33e4d8d4d9"
+        }
+      ]
+    },
+    {
+      "id": "BASE-003",
+      "statement": "sdk聚合common、api和extensions，用于共享代码、业务接口与扩展契约。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "sdk/pom.xml",
+          "start_line": 1,
+          "end_line": 21,
+          "symbol": "modules",
+          "sha256": "fa25d2239200f6d06ce8289c43183f226bd5c5009d9d6789ec796114f41ac646"
+        }
+      ]
+    },
+    {
+      "id": "BASE-004",
+      "statement": "根POM声明DataEase版本3.2.0、Java 21及Spring Boot 3.5.15；这些是构建声明，不代表安装环境版本。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "pom.xml",
+          "start_line": 14,
+          "end_line": 30,
+          "symbol": "properties",
+          "sha256": "780ccd4f0452760a7da5117ae17242926e5f7ba937192c74a360dbcce252a9cf"
+        }
+      ]
+    },
+    {
+      "id": "BASE-005",
+      "statement": "CoreApplication启用缓存、调度和io.dataease包下JPA Repository，排除QuartzAutoConfiguration，并在Spring启动前添加EhCacheStartListener。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/CoreApplication.java",
+          "start_line": 12,
+          "end_line": 26,
+          "symbol": "CoreApplication",
+          "sha256": "648636f707a294130f1138cf171b4eef8a458ea8c65bb5eab547f594117d90fa"
+        }
+      ]
+    },
+    {
+      "id": "BASE-006",
+      "statement": "多页面配置读取src/pages直接子目录，排除点/下划线开头和lib开头目录；没有匹配页面时返回index入口。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/config/pagesConfig.ts",
+          "start_line": 10,
+          "end_line": 28,
+          "symbol": "readPages",
+          "sha256": "ef8f0e20c16df5fe525f1b9e3de6904a1b8a0a66a2a37445b39eb7e312f0a476"
+        }
+      ]
+    },
+    {
+      "id": "BASE-007",
+      "statement": "嵌入lib配置使用src/pages/lib/main.ts入口、ES格式，并把vue设为外部依赖。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/config/lib.ts",
+          "start_line": 1,
+          "end_line": 25,
+          "symbol": "build.lib/rollupOptions",
+          "sha256": "59da89f4c4bd4ac0c2e4816e9c3ec59d18c69cd1b10563b929f4532c237b3287"
+        }
+      ]
+    },
+    {
+      "id": "BASE-008",
+      "statement": "开发配置声明前端7070端口；/api/f转发localhost:8100并移除前缀，/api转发同端口并将前缀改成de2api。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/config/dev.ts",
+          "start_line": 1,
+          "end_line": 18,
+          "symbol": "server.proxy",
+          "sha256": "155016a0562e33ec82ec4985816fbf40773568ba2468d7b386a8a7a606fcdb2d"
+        }
+      ]
+    },
+    {
+      "id": "BASE-009",
+      "statement": "前端包声明版本3.0.0；build:base和build:distributed后运行build:flush，其中包含npm i；lint与lint:stylelint启用自动修复。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/package.json",
+          "start_line": 1,
+          "end_line": 16,
+          "symbol": "scripts",
+          "sha256": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-010",
+      "statement": "前端Maven的npm build执行run build:distributed。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/pom.xml",
+          "start_line": 69,
+          "end_line": 80,
+          "symbol": "npm run build",
+          "sha256": "331414e51f4ff355443104dab78697dddb58b3d44849a8f998f8dbd5216a4187"
+        }
+      ]
+    },
+    {
+      "id": "BASE-011",
+      "statement": "后端standalone Profile通过activeByDefault默认激活，并声明profiles.active=standalone。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 133,
+          "end_line": 145,
+          "symbol": "standalone",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        }
+      ]
+    },
+    {
+      "id": "BASE-012",
+      "statement": "后端distributed Profile引入distributed依赖，编译配置排除io/dataease/substitute/**。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 272,
+          "end_line": 300,
+          "symbol": "distributed",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        }
+      ]
+    },
+    {
+      "id": "BASE-013",
+      "statement": "后端maven-surefire-plugin配置skip=true；不能将普通Maven测试生命周期的成功视为测试已执行。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 374,
+          "end_line": 381,
+          "symbol": "maven-surefire-plugin",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        }
+      ]
+    },
+    {
+      "id": "BASE-014",
+      "statement": "Dockerfile使用OpenJDK21 JRE基础镜像，将CoreApplication.jar放入/opt/apps/app.jar，声明RUNNING_PORT=8100和额外配置目录/opt/apps/config/；健康检查是端口探测。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "Dockerfile",
+          "start_line": 1,
+          "end_line": 24,
+          "symbol": "image/runtime",
+          "sha256": "45f5073ef8121b7ffa4ff0f7057658f05010db4134231c86f2bf543c2a9b1a82"
+        }
+      ]
+    },
+    {
+      "id": "BASE-015",
+      "statement": "许可证将V3描述为带附加条件的GPLv3修改版，包含Logo/版权信息及贡献者条款，应保留原文约束。",
+      "kind": "normative",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "LICENSE",
+          "start_line": 1,
+          "end_line": 14,
+          "symbol": "Open Source License",
+          "sha256": "4563f1187189b4741fba45e9092ad3fe8fce0ce0071e83726542cadee9d031d9"
+        }
+      ]
+    },
+    {
+      "id": "BASE-016",
+      "statement": "后端MenuServer.query从MenuManage取得coreMenus后转换为MenuVO列表。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/menu/server/MenuServer.java",
+          "start_line": 15,
+          "end_line": 26,
+          "symbol": "query",
+          "sha256": "b8a5f8401d6bdaad76e8fd09860d94d334986c1e5652f8151d8ef538f547d23b"
+        }
+      ]
+    },
+    {
+      "id": "BASE-017",
+      "statement": "前端动态路由生成器从views/pages的glob映射查找组件，并递归处理children；页面文件存在不等于已经分配菜单。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/router/establish.ts",
+          "start_line": 1,
+          "end_line": 62,
+          "symbol": "generateRoutesFn2",
+          "sha256": "a0f2f377b29954922f91ec9b1460a36c8a78a9df07c50d3ed3c80b1e6daea867"
+        }
+      ]
+    },
+    {
+      "id": "BASE-018",
+      "statement": "Permission Store的generateRoutes调用generateRoutesFn2，将结果加入动态路由并与基础routes合并。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/permission.ts",
+          "start_line": 47,
+          "end_line": 71,
+          "symbol": "generateRoutes",
+          "sha256": "ef0ba7f93df7ea2d680885275cbdad11e3fd249fe1799f984a33faaf89c060c5"
+        }
+      ]
+    },
+    {
+      "id": "BASE-019",
+      "statement": "电子表格SDK在/spreadsheet资源下声明创建、更新、读取、编辑稿、移动、删除、发布状态和恢复到发布版方法；部分方法声明DePermit资源权限。这里只确认契约。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/spreadsheet/SpreadsheetApi.java",
+          "start_line": 23,
+          "end_line": 91,
+          "symbol": "SpreadsheetApi",
+          "sha256": "611f3be2f804fae968c6caa7121da76e9a5256396817e760a08be5562b6cb10f"
+        }
+      ]
+    },
+    {
+      "id": "BASE-020",
+      "statement": "电子表格菜单页导入UniverSheet、工作簿数据类型、资源API及发布状态类型。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/pages/menu/spreadsheet/index.vue",
+          "start_line": 49,
+          "end_line": 78,
+          "symbol": "spreadsheet imports",
+          "sha256": "2e5244b75fe1f0e2b2f9bed95f522156dd1907fae439e5488f57eb68119cb0a7"
+        }
+      ]
+    },
+    {
+      "id": "BASE-021",
+      "statement": "填报SDK在/data-filling下声明表单资源、行数据查询/保存/删除与任务操作；行数据修改方法声明manage权限。这里只确认契约。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/xpack/dataFilling/DataFillingApi.java",
+          "start_line": 28,
+          "end_line": 130,
+          "symbol": "DataFillingApi",
+          "sha256": "03cd2b8e12d4be8ada67f6bde047113f4c85ec3c0dc728ce7b231e197a251d9e"
+        }
+      ]
+    },
+    {
+      "id": "BASE-022",
+      "statement": "填报管理页导入RowDataForm、FilterSearchDrawer以及搜索、删除、批量删除、清空和导出相关客户端函数。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/pages/menu/data/data-filling/manage/index.vue",
+          "start_line": 30,
+          "end_line": 62,
+          "symbol": "data filling imports",
+          "sha256": "ee2d1fa539fd2ed0c198aedaa4fcb95f4cbb278a1c688d8a35ad993ec24ad383"
+        }
+      ]
+    },
+    {
+      "id": "BASE-023",
+      "statement": "同步TaskApi声明/sync/task下的分页、新增、更新、启动、停止、执行一次和目标键策略契约；并不证明同步引擎运行。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "sdk/api/api-sync/src/main/java/io/dataease/api/sync/task/api/TaskApi.java",
+          "start_line": 26,
+          "end_line": 81,
+          "symbol": "TaskApi",
+          "sha256": "3bb29cdd945d504d1b802a19a60d675eb53835ce458f20c5f938a4d452d2ff7a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-024",
+      "statement": "同步前端API将执行一次、启动、停止、新增和修改分别请求/sync/task下对应端点。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/sync/syncTask.ts",
+          "start_line": 216,
+          "end_line": 254,
+          "symbol": "executeOneApi/startTaskApi",
+          "sha256": "ccf502538549a7d132611588930549efd1cf0715cbbfa400f29a2f13eff1f105"
+        }
+      ]
+    },
+    {
+      "id": "BASE-025",
+      "statement": "报表SDK声明任务创建/更新/立即执行/启停、日志查询/删除和导出方法；此接口自身没有提供调度执行实现。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/report/ReportApi.java",
+          "start_line": 29,
+          "end_line": 86,
+          "symbol": "ReportApi",
+          "sha256": "7e66a6d3d2ca66a6ecd40e730c06e1430803ff29ee161a4c8ef3537ba5302068"
+        }
+      ]
+    },
+    {
+      "id": "BASE-026",
+      "statement": "报表菜单页切换任务与实例视图，openTaskLog将taskId/name传给ReportInstance并切换到instance。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/pages/menu/system/report/index.vue",
+          "start_line": 1,
+          "end_line": 38,
+          "symbol": "openTaskLog",
+          "sha256": "b7e2d1ba50bd30f674e306f52b75092a90d0f45db7b7cedd5d14179e1e061077"
+        }
+      ]
+    },
+    {
+      "id": "BASE-027",
+      "statement": "PluginComponent在dev模式设置distributed=false；其他模式仅当xpack-model-distributed缓存为null时读取xpackModel，否则复用缓存。distributed路径使用window模块mapping或加载pluginStaticInfo，非distributed路径调用loadComponent。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/components/plugin/src/PluginComponent.vue",
+          "start_line": 115,
+          "end_line": 158,
+          "symbol": "onMounted",
+          "sha256": "47661fbce5dbeac715bd7ee24854a140c357eb468e7460f9de77e14838722cfb"
+        }
+      ]
+    },
+    {
+      "id": "BASE-028",
+      "statement": "PluginComponent在组件未就绪时把invokeMethod调用放入pendingMethods，watch插件后通过nextTick刷新；非distributed导入失败显示noLic，加载接口失败还发出loadFail。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/components/plugin/src/PluginComponent.vue",
+          "start_line": 38,
+          "end_line": 127,
+          "symbol": "invokeMethod/importProxy/loadComponent",
+          "sha256": "47661fbce5dbeac715bd7ee24854a140c357eb468e7460f9de77e14838722cfb"
+        },
+        {
+          "path": "core/core-frontend/src/components/plugin/src/PluginComponent.vue",
+          "start_line": 22,
+          "end_line": 25,
+          "symbol": "showNolic",
+          "sha256": "47661fbce5dbeac715bd7ee24854a140c357eb468e7460f9de77e14838722cfb"
+        }
+      ]
+    },
+    {
+      "id": "BASE-029",
+      "statement": "插件客户端请求/xpackComponent/contentPlugin/{key}及/xpackModel。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/plugin.ts",
+          "start_line": 1,
+          "end_line": 6,
+          "symbol": "loadPluginApi/xpackModelApi",
+          "sha256": "7446ef5e22451261fa49256954c742ff2ab51da1bfb93475ce6d2f330512ed86"
+        }
+      ]
+    },
+    {
+      "id": "BASE-030",
+      "statement": "SQLBot页面请求/sysParameter/sqlbot后读取domain/id/enabled/valid；enabled或valid为false时记录console.error，仍继续调用loadSqlbotPage。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/sqlbot/index.vue",
+          "start_line": 25,
+          "end_line": 45,
+          "symbol": "loadSqlbotInfo",
+          "sha256": "bd262023253ac8d986bd4a7d61f6cf9aede4f84e88238ebab91664b87d03ba5a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-031",
+      "statement": "SQLBot页面从配置域名加载xpack_static/sqlbot-embedded-dynamic.umd.js，调用全局sqlbot_embedded_handler.mounted；每30秒重新读取配置，卸载时清除interval。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/sqlbot/index.vue",
+          "start_line": 47,
+          "end_line": 109,
+          "symbol": "loadSqlbotPage/mountedEmbeddedPage",
+          "sha256": "bd262023253ac8d986bd4a7d61f6cf9aede4f84e88238ebab91664b87d03ba5a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-032",
+      "statement": "FontServer在/typeface实现FontApi，将字体列表、创建/编辑/删除、上传/下载和默认字体委派给FontManage，设置读写委派给FontSettingsManage。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/font/server/FontServer.java",
+          "start_line": 18,
+          "end_line": 77,
+          "symbol": "FontServer",
+          "sha256": "2ffafd38d42c3c12097d743a54e09ee0bcaa7c3cd3920630a60d81c57a816e21"
+        }
+      ]
+    },
+    {
+      "id": "BASE-033",
+      "statement": "静态资源上传校验文件名、按上限读取内容并调用StaticResourceContentGuard.validate，随后使用CREATE_NEW写入；捕获异常时抛出国际化错误。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/StaticResourceServer.java",
+          "start_line": 25,
+          "end_line": 57,
+          "symbol": "upload",
+          "sha256": "41507a741fb011c42860ef198d4cb26ff7e43931053f5be740d2fa41087345b1"
+        }
+      ]
+    },
+    {
+      "id": "BASE-034",
+      "statement": "模板静态资源保存先验证文件名、Base64长度及解码内容，再拒绝符号链接目标，并仅在不存在时CREATE_NEW写入。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/StaticResourceServer.java",
+          "start_line": 71,
+          "end_line": 96,
+          "symbol": "saveSingleFileToServe",
+          "sha256": "41507a741fb011c42860ef198d4cb26ff7e43931053f5be740d2fa41087345b1"
+        }
+      ]
+    },
+    {
+      "id": "BASE-035",
+      "statement": "MsgCenterServer.count声明XpackInteract replace=true，主仓库可见方法体返回0；不能将该默认实现解释为完整消息中心能力。",
+      "kind": "implemented",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/msgCenter/MsgCenterServer.java",
+          "start_line": 8,
+          "end_line": 16,
+          "symbol": "count",
+          "sha256": "4b1c5654837a18ff2f4326fa9ce0536c066c4cd3c813436458aeb53866cbbc6e"
+        }
+      ]
+    },
+    {
+      "id": "BASE-036",
+      "statement": "可视化读取安全Regression构造DataVisualizationServer并模拟Repository/InteractiveAuthApi，断言名称最小响应、资源类型与READ/MANAGE拒绝路径。这里只记录测试资产，不记录执行结果。",
+      "kind": "implemented",
+      "scope": "测试源码；未运行",
+      "evidence": [
+        {
+          "path": "tests/visualization-read-security/Regression.java",
+          "start_line": 49,
+          "end_line": 91,
+          "symbol": "Regression.main",
+          "sha256": "1de51023a0997855f2cb16c0abe0b453108a16d5522c1bb72ab2f144985fff05"
+        }
+      ]
+    },
+    {
+      "id": "BASE-037",
+      "statement": "静态资源Regression引入生产内容校验器、StaticResourceServer和响应拦截器，提供check/denied断言辅助函数。这里只记录测试资产，不记录执行结果。",
+      "kind": "implemented",
+      "scope": "测试源码；未运行",
+      "evidence": [
+        {
+          "path": "tests/static-resource-security/Regression.java",
+          "start_line": 1,
+          "end_line": 25,
+          "symbol": "Regression",
+          "sha256": "c6b7dbd72f25401d07c7e8258ef4187c631655a997ec92f2874a9783cd746fb0"
+        }
+      ]
+    },
+    {
+      "id": "BASE-038",
+      "statement": "饼图标签check.py使用Playwright访问测试页面，对标签边界、重叠、原版溢出及换行进行断言，并输出截图。这里只记录自动化脚本，不声称本次运行通过。",
+      "kind": "implemented",
+      "scope": "测试源码；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/tests/pie-label-overflow/check.py",
+          "start_line": 1,
+          "end_line": 46,
+          "symbol": "Playwright label checks",
+          "sha256": "af76819671a6c70ad635feae27358368ec7aa17c469eed8ee29b4a203c687fac"
+        }
+      ]
+    },
+    {
+      "id": "BASE-039",
+      "statement": "Desktop Builder由workflow_dispatch触发，branch/tag默认仍为dev-v2，构建步骤包含mvn clean和-Pdesktop及跳过测试参数；这是当前工作流配置，不是V3开发目标规定。",
+      "kind": "configured",
+      "scope": "当前V3静态源码",
+      "evidence": [
+        {
+          "path": ".github/workflows/desktop_build.yml",
+          "start_line": 1,
+          "end_line": 40,
+          "symbol": "workflow_dispatch/build",
+          "sha256": "154499bcb0fe64dc049f8094ef8429c35f2e865f15f973f003f46a92c8bea746"
+        }
+      ]
+    },
+    {
+      "id": "BASE-040",
+      "statement": "CoreOptRecentManage.recordSpreadsheet按UPDATE记录电子表格；saveOpt先按资源、用户、类型更新，更新数为0才以Snowflake ID新增并saveAndFlush。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/operation/manage/CoreOptRecentManage.java",
+          "start_line": 26,
+          "end_line": 59,
+          "symbol": "recordSpreadsheet/saveOpt",

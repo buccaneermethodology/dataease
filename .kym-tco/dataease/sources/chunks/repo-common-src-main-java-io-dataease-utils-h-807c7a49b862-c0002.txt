@@ -1,0 +1,422 @@
+            logger.error("HttpClient查询失败", e);
+            throw new RuntimeException("HttpClient查询失败: " + e.getMessage(), e);
+        } finally {
+            if (!completed && localFile != null) {
+                try { Files.deleteIfExists(localFile); }
+                catch (IOException cleanup) { logger.warn("Cannot remove incomplete remote file", cleanup); }
+            }
+        }
+        return name;
+    }
+
+    private static String extractFileName(HttpResponse response, String url) {
+        url = URLDecoder.decode(url, StandardCharsets.UTF_8);
+        String fileName = StringUtils.EMPTY;
+        Header dispositionHeader = response.getFirstHeader("Content-Disposition");
+        if (dispositionHeader != null && StringUtils.isNotBlank(dispositionHeader.getValue())) {
+            String disposition = dispositionHeader.getValue();
+            int filenameStarIndex = disposition.indexOf("filename*=");
+            if (filenameStarIndex >= 0) {
+                fileName = disposition.substring(filenameStarIndex + 10).trim();
+                int charsetIndex = fileName.indexOf("''");
+                if (charsetIndex >= 0) {
+                    fileName = fileName.substring(charsetIndex + 2);
+                }
+                fileName = URLDecoder.decode(fileName.replace("\"", "").trim(), StandardCharsets.UTF_8);
+            } else {
+                int filenameIndex = disposition.indexOf("filename=");
+                if (filenameIndex >= 0) {
+                    fileName = disposition.substring(filenameIndex + 9)
+                            .replace("\"", "")
+                            .trim();
+                }
+            }
+        }
+        if (fileName.isEmpty()) {
+            url = url.split("\\?")[0];
+            fileName = url.contains("/")
+                    ? url.substring(url.lastIndexOf('/') + 1)
+                    : "download_" + System.currentTimeMillis();
+        }
+        return fileName;
+    }
+
+    private static String normalizeDownloadFileName(String fileName) {
+        String normalizedFileName = StringUtils.trimToEmpty(fileName);
+        if (normalizedFileName.isEmpty()) {
+            normalizedFileName = "download_" + System.currentTimeMillis();
+        }
+        int separatorIndex = Math.max(normalizedFileName.lastIndexOf('/'), normalizedFileName.lastIndexOf('\\'));
+        if (separatorIndex >= 0) {
+            normalizedFileName = normalizedFileName.substring(separatorIndex + 1);
+        }
+        if (normalizedFileName.isEmpty()) {
+            normalizedFileName = "download_" + System.currentTimeMillis();
+        }
+        FileUtils.validateUploadFilename(normalizedFileName);
+        return normalizedFileName;
+    }
+
+    private static String extractSuffix(String fileName) {
+        int suffixIndex = fileName.lastIndexOf(".");
+        if (suffixIndex < 0 || suffixIndex == fileName.length() - 1) {
+            return "bin";
+        }
+        return fileName.substring(suffixIndex + 1);
+    }
+
+    private static Path resolveDownloadPath(String path, String fileName) {
+        FileUtils.validateUploadFilename(fileName);
+        Path directory = Paths.get(path).toAbsolutePath().normalize();
+        Path target = directory.resolve(fileName).normalize();
+        if (!target.startsWith(directory)) {
+            DEException.throwException("invalid download path");
+        }
+        return target;
+    }
+
+    public static byte[] downloadBytes(String url) {
+        HttpClientConfig config = new HttpClientConfig();
+        return HttpClientUtil.downFromRemote(url, config);
+    }
+
+    public static byte[] downFromRemote(String url, HttpClientConfig config) {
+        try (CloseableHttpClient httpClient = buildHttpClient(url)) {
+            HttpGet httpGet = new HttpGet(url);
+            // 设置请求配置
+            httpGet.setConfig(config.buildRequestConfig());
+
+            // 设置请求头
+            config.getHeader().forEach(httpGet::addHeader);
+            HttpResponse response = executeBounded(httpClient, httpGet, config.getMaxResponseBytes(), config.getResponseTimeout());
+            try (InputStream inputStream = response.getEntity().getContent();
+                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+
+                // 读取响应内容并写入输出流
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                return outputStream.toByteArray();
+            }
+        } catch (Exception e) {
+            logger.error("HttpClient查询失败", e);
+            throw new RuntimeException("HttpClient查询失败: " + e.getMessage(), e);
+        }
+    }
+
+    public static String postFile(String fileServer, byte[] bytes, String fileName, Map<String, String> param, HttpClientConfig config) {
+        CloseableHttpClient httpClient = buildHttpClient(fileServer);
+        HttpPost postRequest = new HttpPost(fileServer);
+        if (config == null) {
+            config = new HttpClientConfig();
+        }
+
+        postRequest.setConfig(config.buildRequestConfig());
+        Map<String, String> header = config.getHeader();
+        if (MapUtils.isNotEmpty(header)) {
+            Iterator var8 = header.keySet().iterator();
+
+            while (var8.hasNext()) {
+                String key = (String) var8.next();
+                postRequest.addHeader(key, (String) header.get(key));
+            }
+        }
+
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setCharset(StandardCharsets.UTF_8);
+        builder.addBinaryBody("image", bytes, ContentType.DEFAULT_BINARY, fileName);
+        if (param != null) {
+            Iterator var13 = param.entrySet().iterator();
+            while (var13.hasNext()) {
+                Map.Entry<String, String> entry = (Map.Entry) var13.next();
+                builder.addTextBody((String) entry.getKey(), (String) entry.getValue());
+            }
+        }
+        try {
+            postRequest.setEntity((HttpEntity) builder.build());
+            return getResponseStr(executeBounded(httpClient, postRequest, config.getMaxResponseBytes(), config.getResponseTimeout()), config);
+        } catch (Exception var11) {
+            logger.error("HttpClient查询失败", var11);
+            throw new RuntimeException("HttpClient查询失败: " + var11.getMessage());
+        }
+    }
+
+    public static String upload(String url, byte[] bytes, String name, Map<String, String> paramMap, Map<String, Object> headMap) {
+        HttpClientConfig config = new HttpClientConfig();
+        addHead(config, headMap);
+        return HttpClientUtil.postFile(url, bytes, name, paramMap, config);
+    }
+
+    public static String upload(String url, File file, String name) {
+        HttpClientConfig config = new HttpClientConfig();
+        Map<String, String> param = new HashMap<>();
+        param.put("fileFlag", "media");
+        param.put("fileName", name);
+        return HttpClientUtil.postFile(url, file, param, config);
+    }
+
+    public static String postFile(String fileServer, File file, Map<String, String> param, HttpClientConfig config) {
+        CloseableHttpClient httpClient = buildHttpClient(fileServer);
+        HttpPost postRequest = new HttpPost(fileServer);
+        if (config == null) {
+            config = new HttpClientConfig();
+        }
+        postRequest.setConfig(config.buildRequestConfig());
+        Map<String, String> header = config.getHeader();
+        String fileFlag = param.get("fileFlag");
+        String fileName = param.get("fileName");
+        param.remove("fileFlag");
+        param.remove("fileName");
+        if (MapUtils.isNotEmpty(header)) {
+            for (String key : header.keySet()) {
+                postRequest.addHeader(key, header.get(key));
+            }
+        }
+        postRequest.setHeader("Content-Type", "multipart/form-data");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setCharset(StandardCharsets.UTF_8);
+        builder.addBinaryBody(StringUtils.isNotBlank(fileFlag) ? fileFlag : "file", file, ContentType.APPLICATION_OCTET_STREAM, StringUtils.isNotBlank(fileName) ? fileName : file.getName());
+        if (MapUtils.isNotEmpty(param)) {
+            for (Map.Entry<String, String> entry : param.entrySet()) {
+                StringBody stringBody = new StringBody(entry.getValue(), ContentType.TEXT_PLAIN.withCharset("utf-8"));
+                builder.addPart(entry.getKey(), stringBody);
+            }
+        }
+        try {
+            postRequest.setEntity(builder.build());
+            return getResponseStr(executeBounded(httpClient, postRequest, config.getMaxResponseBytes(), config.getResponseTimeout()), config);
+        } catch (Exception e) {
+            logger.error("HttpClient查询失败", e);
+            throw new RuntimeException("HttpClient查询失败: " + e.getMessage());
+        }
+    }
+
+    private static void addHead(HttpClientConfig config, Map<String, Object> headMap) {
+        if (MapUtils.isEmpty(headMap)) return;
+        for (Map.Entry<String, Object> entry : headMap.entrySet()) {
+            config.addHeader(entry.getKey(), entry.getValue().toString());
+        }
+    }
+
+    public static String delete(String url, HttpClientConfig config) {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = buildHttpClient(url);
+            HttpDelete httpDelete = new HttpDelete(url);
+
+            if (config == null) {
+                config = new HttpClientConfig();
+            }
+            httpDelete.setConfig(config.buildRequestConfig());
+
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpDelete.addHeader(key, header.get(key));
+            }
+            HttpResponse response = executeBounded(httpClient, httpDelete, config.getMaxResponseBytes(), config.getResponseTimeout());
+            return getResponseStr(response, config);
+        } catch (Exception e) {
+            logger.error("HttpClient查询失败", e);
+            throw new DEException(SYSTEM_INNER_ERROR.code(), "HttpClient查询失败: " + e.getMessage());
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (Exception e) {
+                logger.error("HttpClient关闭连接失败", e);
+            }
+        }
+    }
+
+    public static boolean isURLReachable(String urlString, Map<String, String> head) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000); // 设置连接超时时间，单位为毫秒
+            connection.setReadTimeout(5000); // 设置读取超时时间，单位为毫秒
+            if (MapUtils.isNotEmpty(head)) {
+                for (Map.Entry<String, String> entry : head.entrySet()) {
+                    connection.addRequestProperty(entry.getKey(), entry.getValue());
+                }
+            }
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true; // 状态码200表示URL可达
+            } else if (StringUtils.equalsIgnoreCase("Unauthorized", connection.getResponseMessage())) {
+                LogUtil.error("apisix key error [failed to check token]");
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return false; // 如果发生异常或状态码不是200，则URL不可达
+    }
+
+    public static String postWebhook(String url, String contentType, Map<String, Object> param, boolean ssl, HttpClientConfig config) {
+
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = buildHttpClient(ssl);
+            HttpPost httpPost = new HttpPost(url);
+            if (ObjectUtils.isEmpty(config)) {
+                config = new HttpClientConfig();
+            }
+            httpPost.setConfig(config.buildRequestConfig());
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpPost.addHeader(key, header.get(key));
+            }
+            if (StringUtils.equalsIgnoreCase(contentType, ContentType.APPLICATION_JSON.getMimeType())) {
+                EntityBuilder entityBuilder = EntityBuilder.create();
+                if (MapUtils.isNotEmpty(param)) {
+                    String json = JsonUtil.toJSONString(param).toString();
+                    entityBuilder.setText(json);
+                }
+                entityBuilder.setContentType(ContentType.APPLICATION_JSON);
+                HttpEntity requestEntity = entityBuilder.build();
+                httpPost.setEntity(requestEntity);
+            } else {
+                List<NameValuePair> nvps = param.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(), ObjectUtils.isEmpty(entry.getValue()) ? null : entry.getValue().toString())).collect(Collectors.toList());
+                try {
+                    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps, config.getCharset());
+                    httpPost.setEntity(entity);
+                } catch (Exception e) {
+                    logger.error("HttpClient转换编码错误", e);
+                    throw new DEException(SYSTEM_INNER_ERROR.code(), "HttpClient转换编码错误: " + e.getMessage());
+                }
+            }
+            HttpResponse response = executeBounded(httpClient, httpPost, config.getMaxResponseBytes(), config.getResponseTimeout());
+            return getResponseStr(response, config);
+        } catch (Exception e) {
+            logger.error("HttpClient查询失败", e);
+            throw new DEException(SYSTEM_INNER_ERROR.code(), "HttpClient查询失败: " + e.getMessage());
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (Exception e) {
+                logger.error("HttpClient关闭连接失败", e);
+            }
+        }
+    }
+
+    public static String postRawBody(String url, String contentType, String body, boolean ssl, HttpClientConfig config) {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = buildHttpClient(ssl);
+            HttpPost httpPost = new HttpPost(url);
+            if (ObjectUtils.isEmpty(config)) {
+                config = new HttpClientConfig();
+            }
+            httpPost.setConfig(config.buildRequestConfig());
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpPost.addHeader(key, header.get(key));
+            }
+            EntityBuilder entityBuilder = EntityBuilder.create();
+            entityBuilder.setText(body);
+            entityBuilder.setContentType(ContentType.parse(contentType).withCharset(java.nio.charset.StandardCharsets.UTF_8));
+            httpPost.setEntity(entityBuilder.build());
+            HttpResponse response = executeBounded(httpClient, httpPost, config.getMaxResponseBytes(), config.getResponseTimeout());
+            return getResponseStr(response, config);
+        } catch (Exception e) {
+            logger.error("HttpClient POST raw body failed", e);
+            throw new DEException(SYSTEM_INNER_ERROR.code(), "HttpClient POST raw body failed: " + e.getMessage());
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (Exception e) {
+                logger.error("HttpClient关闭连接失败", e);
+            }
+        }
+    }
+
+    private static CloseableHttpClient buildRedirectingHttpClient(boolean ssl) throws Exception {
+        HttpClientBuilder builder = HttpClientBuilder.create();
+        if (ssl) {
+            Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", new PlainConnectionSocketFactory())
+                    .register("https", buildSslSocketFactory()).build();
+            builder.setConnectionManager(new PoolingHttpClientConnectionManager(registry));
+        }
+        builder.setRedirectStrategy(new DefaultRedirectStrategy(new String[]{"GET", "HEAD", "POST", "PUT", "DELETE"}));
+        return builder.build();
+    }
+
+    public static String putRawBody(String url, String contentType, String body, boolean ssl, HttpClientConfig config) {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = buildRedirectingHttpClient(ssl);
+            HttpPut httpPut = new HttpPut(url);
+            if (ObjectUtils.isEmpty(config)) {
+                config = new HttpClientConfig();
+            }
+            httpPut.setConfig(config.buildRequestConfig());
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpPut.addHeader(key, header.get(key));
+            }
+            EntityBuilder entityBuilder = EntityBuilder.create();
+            entityBuilder.setText(body);
+            entityBuilder.setContentType(ContentType.parse(contentType).withCharset(java.nio.charset.StandardCharsets.UTF_8));
+            httpPut.setEntity(entityBuilder.build());
+            HttpResponse response = executeBounded(httpClient, httpPut, config.getMaxResponseBytes(), config.getResponseTimeout());
+            return getResponseStr(response, config);
+        } catch (Exception e) {
+            logger.error("HttpClient PUT raw body failed", e);
+            throw new DEException(SYSTEM_INNER_ERROR.code(), "HttpClient PUT raw body failed: " + e.getMessage());
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (Exception e) {
+                logger.error("HttpClient关闭连接失败", e);
+            }
+        }
+    }
+
+    public static MultipartResponse postForScreenshot(
+            String url, Map<String,String> body, HttpClientConfig config) throws IOException {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = buildHttpClient(url);
+            HttpPost httpPost = new HttpPost(url);
+            if (config == null) {
+                config = new HttpClientConfig();
+            }
+            httpPost.setConfig(config.buildRequestConfig());
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpPost.addHeader(key, header.get(key));
+            }
+            EntityBuilder entityBuilder = EntityBuilder.create();
+            String json = JsonUtil.toJSONString(body).toString();
+            entityBuilder.setText(json);
+            entityBuilder.setContentType(ContentType.APPLICATION_JSON);
+            HttpEntity requestEntity = entityBuilder.build();
+            httpPost.setEntity(requestEntity);
+
+
+            try (CloseableHttpResponse response = executeBounded(httpClient, httpPost, config.getMaxResponseBytes(), config.getResponseTimeout())) {
+                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    throw new DEException(response.getStatusLine().getStatusCode(), response.toString());
+                }
+                HttpEntity entity = response.getEntity();
+                byte[] bytes = EntityUtils.toByteArray(entity);          // raw bytes
+                Header contentTypeHeader = response.getFirstHeader("Content-Type");
+                if (contentTypeHeader == null) {
+                    throw new IOException("No Content-Type header in response from Playwright server, status: " + response.getStatusLine());
+                }
+                String contentType = contentTypeHeader.getValue();
+                if (contentType.startsWith("multipart/")) {
+                    return MultipartParser.parse(bytes, contentType);   // see util below
+                } else {

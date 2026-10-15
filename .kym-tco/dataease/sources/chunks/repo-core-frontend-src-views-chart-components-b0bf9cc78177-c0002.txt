@@ -1,0 +1,716 @@
+            t('visualization.url_protocol_not_supported', [`${urlCheckResult.protocol}:`])
+          )
+        } else {
+          ElMessage.warning(t('visualization.url_check_error'))
+        }
+        return
+      }
+      url = urlCheckResult.url
+
+      if (isIframe.value || isDataEaseBi.value) {
+        embeddedStore.clearState()
+      }
+      if (divSelf) {
+        embeddedStore.setOuterUrl(url)
+        divEmbedded('Iframe')
+        return
+      }
+
+      windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+    }
+  } else {
+  }
+}
+
+const queryDataFromSelect = (firstLoad = false) => {
+  cancelRequestBatch(`chartData/getData/${view.value.id}`)
+  loading.value = false
+  queryData(firstLoad)
+}
+
+/**
+ * 合并连续查询触发，阻止重复请求及非预览编辑画布的定时查询
+ * 定时刷新复用上一次筛选参数，并将刷新来源传入取数与绘制链路
+ */
+const queryData = debounce((firstLoad = false, autoRefresh = false) => {
+  if (
+    loading.value ||
+    (autoRefresh &&
+      ['canvas', 'edit', 'canvasDataV'].includes(showPosition.value) &&
+      !isChartRefreshPreview(showPosition.value, editMode.value, dvInfo.value.type))
+  ) {
+    return
+  }
+  const searched = dvMainStore.firstLoadMap.includes(element.value.id)
+  let queryFilter = filter(searched ? false : firstLoad)
+  if (showPosition.value.includes('viewDialog') || autoRefresh) {
+    queryFilter = dvMainStore.getLastViewRequestInfo(view.value.id)
+  }
+  let params = cloneDeep(view.value)
+  params['chartExtRequest'] = queryFilter
+  chartExtRequest.value = queryFilter
+  calcData(params, autoRefresh)
+}, 300)
+
+/**
+ * 记录本轮请求并调用图表组件，定时刷新仅隐藏加载动画而不取消请求锁
+ * 插件沿用原调用参数，原生图表额外接收刷新来源
+ */
+const calcData = (params, autoRefresh = false) => {
+  dvMainStore.setLastViewRequestInfo(params.id, params.chartExtRequest)
+  if (chartComponent?.value) {
+    isAutoRefreshing.value = autoRefresh
+    loading.value = true
+    if (view.value.isPlugin) {
+      chartComponent?.value?.invokeMethod({
+        methodName: 'calcData',
+        args: [
+          params,
+          res => {
+            loading.value = false
+          }
+        ]
+      })
+    } else {
+      chartComponent?.value?.calcData?.(
+        params,
+        () => {
+          loading.value = false
+        },
+        autoRefresh
+      )
+    }
+  }
+}
+
+const showChartView = (...libs: ChartLibraryType[]) => {
+  if (view.value?.render && view.value?.type) {
+    const chartView = chartViewManager.getChartView(view.value.render, view.value.type)
+    return chartView && libs?.includes(chartView.library)
+  } else {
+    return false
+  }
+}
+
+onBeforeMount(() => {
+  if (!showPosition.value.includes('viewDialog')) {
+    nextTick(() => {
+      useEmitt({
+        name: `query-data-${view.value.id}`,
+        callback: queryDataFromSelect
+      })
+    })
+  }
+})
+// 部分场景不需要更新图表，例如放大页面
+const listenerEnable = computed(() => {
+  return !showPosition.value.includes('viewDialog')
+})
+// 存储所有数据集字段，用于判断图表拖入的字段是否存在
+const viewAllDatasetFields = new Map()
+const showEmpty = ref(false)
+const checkFieldIsAllowEmpty = (allField?) => {
+  showEmpty.value = false
+  if (view.value?.render && view.value?.type) {
+    const chartView = chartViewManager.getChartView(view.value.render, view.value.type)
+    // 插件
+    if (!chartView) {
+      return
+    }
+    const map = parseJson(view.value.customAttr).map
+    if (['bubble-map', 'map'].includes(view.value?.type) && !map?.id) {
+      showEmpty.value = true
+      return
+    }
+    const axisConfigMap = new Map(Object.entries(chartView.axisConfig))
+    // 验证拖入的字段是否包含在当前数据集字段中，如果有一个不在数据集字段中，则显示空图表
+    let includeDatasetField = false
+    if (allField && allField.length > 0) {
+      viewAllDatasetFields.set(view.value.id, allField)
+      outerLoop: for (const [key, value] of axisConfigMap) {
+        // 只判断必须的
+        if (value['allowEmpty']) continue
+        if (!view.value?.[key]?.length) continue
+        for (const item of view.value[key]) {
+          if (!allField.find(field => field.id === item.id)) {
+            includeDatasetField = true
+            break outerLoop
+          }
+        }
+      }
+    }
+    if (includeDatasetField) {
+      showEmpty.value = true
+      return
+    }
+    for (const [key, value] of axisConfigMap) {
+      // 跳过允许为空的配置项
+      if (value['allowEmpty']) continue
+
+      // 如果有数据集字段并且字段值存在且不为空
+      if (viewAllDatasetFields.get(view.value?.id)) {
+        if (view.value?.[key]?.length) {
+          // 检查图表字段是否有不在数据集中
+          for (const item of view.value[key]) {
+            if (!viewAllDatasetFields.get(view.value?.id).find(field => field.id === item.id)) {
+              includeDatasetField = true
+              break
+            }
+          }
+        }
+        // 如果有不在数据集中
+        if (includeDatasetField) {
+          showEmpty.value = true
+          break
+        }
+      }
+
+      // 如果没有限制长度，且值为空，标记为空并跳出
+      if (!value['limit'] && view.value?.[key]?.length === 0) {
+        showEmpty.value = true
+        break
+      }
+
+      // 如果有限制长度，且字段长度不足，标记为空并跳出
+      if (
+        value['limit'] &&
+        (!view.value?.[key] || view.value?.[key]?.length < parseInt(value['limit']))
+      ) {
+        showEmpty.value = true
+        break
+      }
+
+      // 如果是table-info类型且字段为空，标记为空并跳出
+      if (view.value?.type === 'table-info' && view.value?.[key]?.length === 0) {
+        showEmpty.value = true
+        break
+      }
+    }
+  }
+}
+const changeChartType = () => {
+  checkFieldIsAllowEmpty()
+}
+const changeDataset = () => {
+  checkFieldIsAllowEmpty()
+}
+
+onBeforeUnmount(() => queryData.cancel())
+
+const loadPlugin = ref(false)
+
+onMounted(() => {
+  if (!view.value.isPlugin) {
+    state.drillClickDimensionList = view.value?.chartExtRequest?.drill ?? []
+    queryData(!showPosition.value.includes('viewDialog'))
+  } else {
+    const searched = dvMainStore.firstLoadMap.includes(element.value.id)
+    const queryFilter = filter(!searched)
+    view.value['chartExtRequest'] = queryFilter
+    chartExtRequest.value = queryFilter
+    loadPlugin.value = true
+  }
+  if (!listenerEnable.value) {
+    return
+  }
+  useEmitt({
+    name: 'checkShowEmpty',
+    callback: param => {
+      if (param.view?.id === view.value.id) {
+        checkFieldIsAllowEmpty(param.allFields)
+      }
+    }
+  })
+  useEmitt({ name: 'chart-type-change', callback: changeChartType })
+  useEmitt({ name: 'dataset-change', callback: changeDataset })
+  useEmitt({
+    name: 'clearPanelLinkage',
+    callback: function (param) {
+      if (param.viewId === 'all' || param.viewId === element.value.id) {
+        chartComponent?.value?.clearLinkage?.()
+      }
+    }
+  })
+  useEmitt({
+    name: 'snapshotChangeToView',
+    callback: function (cacheViewInfo) {
+      initTitle()
+      nextTick(() => {
+        if (
+          cacheViewInfo.snapshotCacheViewCalc.includes(view.value.id) ||
+          cacheViewInfo.snapshotCacheViewCalc.includes('all')
+        ) {
+          view.value.chartExtRequest = filter(false)
+          calcData(view.value)
+        } else if (
+          cacheViewInfo.snapshotCacheViewRender.includes(view.value.id) ||
+          cacheViewInfo.snapshotCacheViewRender.includes('all')
+        ) {
+          chartComponent?.value?.renderChart?.(view.value)
+        }
+      })
+    }
+  })
+
+  useEmitt({
+    name: 'calcData-' + view.value.id,
+    callback: function (val) {
+      if (!state.initReady) {
+        return
+      }
+      initTitle()
+      nextTick(() => {
+        view.value.chartExtRequest = filter(false)
+        const targetVal = val || view.value
+        calcData(targetVal)
+      })
+    }
+  })
+
+  useEmitt({
+    name: 'calcData-all',
+    callback: function () {
+      if (!state.initReady) {
+        return
+      }
+      initTitle()
+      nextTick(() => {
+        view.value.chartExtRequest = filter(false)
+        calcData(view.value)
+      })
+    }
+  })
+  const waitNextFrame = () =>
+    new Promise<void>(resolve => {
+      if (!window.requestAnimationFrame) {
+        resolve()
+        return
+      }
+      window.requestAnimationFrame(() => resolve())
+    })
+
+  const waitRenderPaint = async () => {
+    await nextTick()
+    await waitNextFrame()
+  }
+
+  const notifyRenderChartAllItem = (eventName: string, payload: RenderChartAllPayload) => {
+    emitter.emit(eventName, {
+      ...payload,
+      viewId: `${showPosition.value}-${view.value.id}-${suffixId.value}`
+    })
+  }
+
+  const renderChartByViewInfo = async viewInfo => {
+    if (view.value?.plugin?.isPlugin) {
+      const renderResult = chartComponent?.value?.invokeMethod({
+        methodName: 'renderChart',
+        args: [viewInfo]
+      })
+      await Promise.resolve(renderResult)
+      return
+    }
+    const renderResult = chartComponent?.value?.renderChart?.(viewInfo)
+    await Promise.resolve(renderResult)
+  }
+
+  const handleRenderChart = function (val) {
+    if (!state.initReady) {
+      return
+    }
+    initTitle()
+    const renderAllPayload = isRenderChartAllPayload(val) ? val : null
+    const viewInfo = renderAllPayload ? view.value : val ? val : view.value
+    if (renderAllPayload) {
+      notifyRenderChartAllItem(RENDER_CHART_ALL_ITEM_START, renderAllPayload)
+    }
+    nextTick(async () => {
+      try {
+        await renderChartByViewInfo(viewInfo)
+      } catch (e) {
+        console.warn('renderChart error', e)
+      } finally {
+        if (renderAllPayload) {
+          await waitRenderPaint()
+          notifyRenderChartAllItem(RENDER_CHART_ALL_ITEM_FINISH, renderAllPayload)
+        }
+      }
+    })
+  }
+  useEmitt({
+    name: 'renderChart-' + view.value.id,
+    callback: handleRenderChart
+  })
+  useEmitt({
+    name: RENDER_CHART_ALL,
+    callback: handleRenderChart
+  })
+  useEmitt({
+    name: 'resetDrill-' + view.value.id,
+    callback: function (val) {
+      nextTick(() => {
+        drillJump(val)
+      })
+    }
+  })
+  useEmitt({
+    name: 'tabCanvasChange-' + element.value.canvasId,
+    callback: function () {
+      if (!state.initReady && !view.value.type.includes('table')) {
+        return
+      }
+      setTimeout(function () {
+        chartComponent?.value?.renderChart?.(view.value)
+      }, 200)
+    }
+  })
+  useEmitt({
+    name: 'updateTitle-' + view.value.id,
+    callback: () => {
+      initTitle()
+    }
+  })
+  useEmitt({
+    name: 'chart-type-change-' + view.value.id,
+    callback: () => {
+      const chart = cloneDeep(view.value)
+      chart.container =
+        'container-' + showPosition.value + '-' + view.value.id + '-' + suffixId.value
+    }
+  })
+
+  initTitle()
+})
+
+// 定时刷新只隐藏加载动画，loading 仍用于阻止重复请求，其他查询保留原有显示规则
+const loadingFlag = computed(() => {
+  return (
+    !isAutoRefreshing.value &&
+    (canvasStyleData.value.refreshViewLoading ||
+      (searchCount.value === 0 && innerSearchCount === 0)) &&
+    loading.value
+  )
+})
+
+const chartAreaShow = computed(() => {
+  if (view.value.tableId) {
+    if (element.value['state'] === undefined || element.value['state'] === 'ready') {
+      return true
+    }
+  }
+  if (['rich-text', 'picture-group'].includes(view.value.type)) {
+    return true
+  }
+  if (view.value?.isPlugin) {
+    return true
+  }
+  if (view.value['dataFrom'] === 'template') {
+    return true
+  }
+  if (view.value.customAttr?.map?.id) {
+    const MAP_CHARTS = ['map', 'bubble-map', 'flow-map']
+    if (MAP_CHARTS.includes(view.value.type)) {
+      return true
+    }
+  }
+  return false
+})
+
+const titleInputRef = ref()
+const titleEditStatus = ref(false)
+const titleEditable = computed(() => {
+  return ['canvas', 'canvasDataV'].includes(showPosition.value) && !props.disabled
+})
+function changeEditTitle() {
+  if (!titleEditable.value || !props.active || mobileInPc.value) {
+    return
+  }
+  if (!titleEditStatus.value) {
+    titleEditStatus.value = true
+    nextTick(() => {
+      titleInputRef.value?.focus()
+      element.value['editing'] = true
+    })
+  }
+}
+
+function onLeaveTitleInput() {
+  element.value['editing'] = false
+  titleEditStatus.value = false
+}
+
+//v-click-outside 指令
+const vClickOutside = {
+  beforeMount(el, binding) {
+    // 在元素上绑定一个事件监听器
+    el.clickOutsideEvent = function (event) {
+      // 判断点击事件是否发生在元素外部
+      if (!(el === event.target || el.contains(event.target))) {
+        // 如果是外部点击，则执行绑定的函数
+        binding.value(event)
+      }
+    }
+    // 在全局添加点击事件监听器
+    document.addEventListener('click', el.clickOutsideEvent)
+  },
+  unmounted(el) {
+    // 在组件销毁前，移除事件监听器以避免内存泄漏
+    document.removeEventListener('click', el.clickOutsideEvent)
+  }
+}
+
+function onTitleChange() {
+  element.value.name = view.value.title
+  element.value.label = view.value.title
+  snapshotStore.recordSnapshotCache('onTitleChange')
+}
+
+const toolTip = computed(() => {
+  return props.themes || 'dark'
+})
+
+const marginBottom = computed<string | 0>(() => {
+  if (!titleShow.value) {
+    return 0
+  }
+  if (titleShow.value || trackMenu.value.length > 0 || state.title_remark.show) {
+    return 12 * scale.value + 'px'
+  }
+  return 0
+})
+
+const iconSize = computed<string>(() => {
+  return 16 * scale.value + 'px'
+})
+
+/**
+ * 修改透明度
+ * 边框透明度为0时会是存色，顾配置低透明度
+ * @param {boolean} isBorder 是否为边框
+ */
+const modifyAlpha = isBorder => {
+  const { backgroundColor, backgroundType, backgroundImageEnable, backgroundColorSelect } =
+    element.value.commonBackground
+  // 透明
+  const transparent = 'rgba(0,0,0,0.01)'
+  // 背景图时，设置透明度为0.01
+  if (backgroundType === 'outerImage' && backgroundImageEnable) return transparent
+  // hex转rgba
+  if (backgroundColor.includes('#'))
+    return isBorder || !backgroundColorSelect ? transparent : backgroundColor
+  const match = backgroundColor.match(/rgba\((\d+), (\d+), (\d+), (\d+|0.\d+)\)/)
+  if (!match) return backgroundColor
+  const [r, g, b, a] = match.slice(1).map(Number)
+  // 边框或者不设置背景色时，设置透明度为0.01，否则原透明度
+  return `rgba(${r}, ${g}, ${b}, ${!backgroundColorSelect || isBorder ? 0.01 : a})`
+}
+
+const titleIconStyle = computed(() => {
+  const bgColor = modifyAlpha(false)
+  const borderColor = modifyAlpha(true)
+  // 不显示标题时，图标的样式
+  const style = {
+    position: 'absolute',
+    border: `1px solid ${borderColor}`,
+    'background-color': bgColor,
+    'border-radius': '2px',
+    padding: '0 2px 0 2px',
+    'z-index': 1,
+    top: '2px',
+    left: '2px',
+    ...(trackMenu.value.length ? {} : { display: 'none' })
+  }
+  return {
+    color: canvasStyleData.value.component.seniorStyleSetting.linkageIconColor,
+    height: iconSize.value,
+    lineHeight: iconSize.value,
+    ...(titleShow.value ? {} : style)
+  }
+})
+// 只稳定标题行高度，图标隐藏时不占用标题横向空间
+const hasActionIcons = computed(
+  () => state.title_remark.show || hasLinkIcon.value || hasJumpIcon.value || hasDrillIcon.value
+)
+// 编辑标题时隐藏操作图标，避免遮挡输入框
+const showTitleActionIcons = computed(() => hasActionIcons.value && !titleEditStatus.value)
+const chartConfigs = ref(CHART_TYPE_CONFIGS)
+const pluginLoaded = computed(() => {
+  let result = false
+  chartConfigs.value.forEach(cat => {
+    result = cat.details.find(chart => view.value?.type === chart.value) !== undefined
+  })
+  return result
+})
+// TODO 统一加载
+const loadPluginCategory = data => {
+  data.forEach(item => {
+    const { category, title, render, chartValue, chartTitle, icon, staticMap } = item
+    const node = {
+      render,
+      category,
+      icon,
+      value: chartValue,
+      title: chartTitle,
+      isPlugin: true,
+      staticMap
+    }
+    if (view.value?.type === node.value) {
+      view.value.plugin = {
+        isPlugin: true,
+        staticMap
+      }
+    }
+    const stack = [...chartConfigs.value]
+    let findParent = false
+    while (stack?.length) {
+      const parent = stack.pop()
+      if (parent.category === category) {
+        const chart = parent.details.find(chart => chart.value === node.value)
+        if (!chart) {
+          parent.details.push(node)
+        }
+        findParent = true
+      }
+    }
+    if (!findParent) {
+      stack.push({
+        category,
+        title,
+        display: 'show',
+        details: [node]
+      })
+    }
+  })
+}
+
+const allEmptyCheck = computed(() => {
+  return ['rich-text', 'picture-group'].includes(element.value.innerType)
+})
+/**
+ * 标题提示的最大宽度
+ */
+const titleTooltipWidth = computed(() => {
+  if (inMobile.value) {
+    return `${screen.width - 10}px`
+  }
+  if (mobileInPc.value) {
+    return '270px'
+  }
+  return '500px'
+})
+const clearG2Tooltip = () => {
+  const g2TooltipWrapper = document.getElementById('g2-tooltip-wrapper')
+  if (g2TooltipWrapper) {
+    for (const ele of g2TooltipWrapper.children) {
+      ele.style.display = 'none'
+    }
+  }
+}
+</script>
+
+<template>
+  <div
+    class="chart-area report-load"
+    :class="{ 'report-load-finish': !loadingFlag }"
+    v-loading="loadingFlag"
+    element-loading-background="rgba(0,0,0,0)"
+  >
+    <div
+      class="title-container"
+      :style="{ 'justify-content': titleAlign, 'margin-bottom': marginBottom }"
+    >
+      <div
+        class="title-content"
+        :class="{ 'is-editing': titleEditStatus }"
+        :style="titleShow && !titleEditStatus ? titleContentStyle : undefined"
+      >
+        <template v-if="!titleEditStatus">
+          <p
+            class="ellipsis"
+            v-if="titleShow"
+            :style="titleTextStyle"
+            :title="view.title || ''"
+            @dblclick="changeEditTitle"
+          >
+            {{ view.title }}
+          </p>
+        </template>
+        <template v-else>
+          <el-input
+            style="flex: 1; min-width: 0"
+            :effect="canvasStyleData.dashboard.themeColor"
+            ref="titleInputRef"
+            v-model="view.title"
+            @keydown.stop
+            @keydown.enter="onLeaveTitleInput"
+            v-click-outside="onLeaveTitleInput"
+            @change="onTitleChange"
+          />
+        </template>
+        <div v-if="showTitleActionIcons" class="icons-container-out">
+          <div
+            class="icons-container"
+            :class="{ 'is-editing': titleEditStatus }"
+            :style="titleIconStyle"
+          >
+            <el-tooltip :effect="toolTip" placement="top" v-if="state.title_remark.show">
+              <template #content>
+                <div
+                  :style="{
+                    maxWidth: titleTooltipWidth,
+                    wordBreak: 'break-all',
+                    wordWrap: 'break-word',
+                    whiteSpace: 'pre-wrap'
+                  }"
+                  v-html="safeTitleRemark"
+                ></div>
+              </template>
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_info_outlined"><icon_info_outlined class="svg-icon" /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip :effect="toolTip" placement="top" content="已设置联动" v-if="hasLinkIcon">
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_link-record_outlined"
+                  ><icon_linkRecord_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip
+              :effect="toolTip"
+              placement="top"
+              :content="t('visualization.jump_set_tips')"
+              v-if="hasJumpIcon"
+            >
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_viewinchat_outlined"
+                  ><icon_viewinchat_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip
+              :effect="toolTip"
+              placement="top"
+              :content="t('visualization.drill_set_tips')"
+              v-if="hasDrillIcon"
+            >
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_drilling_outlined"
+                  ><icon_drilling_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--这里去渲染不同图库的图表-->
+    <div v-if="allEmptyCheck || (chartAreaShow && !showEmpty)" style="flex: 1; overflow: hidden">
+      <plugin-component
+        v-if="view.plugin?.isPlugin && loadPlugin"
+        :jsname="view.plugin.staticMap['index']"
+        :scale="scale"
+        :dynamic-area-id="dynamicAreaId"
+        :view="view"
+        :show-position="showPosition"
+        :element="element"

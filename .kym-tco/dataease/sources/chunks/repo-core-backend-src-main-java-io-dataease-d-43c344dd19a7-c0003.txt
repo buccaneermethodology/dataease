@@ -1,0 +1,354 @@
+                        throw new SQLException(e.getMessage() + ". VALUE: " + datasourceRequest.getTableFieldWithValues().get(i).getValue().toString() + " , TARGET TYPE: " + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName());
+                    }
+                }
+                ((PreparedStatement) statement).execute();
+            } else {
+                statement.execute(datasourceRequest.getQuery());
+            }
+
+        } catch (SQLException e) {
+            DEException.throwException("SQL ERROR: " + e.getMessage());
+        } catch (Exception e) {
+            DEException.throwException("Datasource connection exception: " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LogUtil.error(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 针对Oracle特殊处理
+     */
+    private Statement getStatement(DatasourceSchemaDTO value, Connection con, DatasourceRequest datasourceRequest, DatasourceConfiguration datasourceConfiguration, String autoIncrementPkName) throws Exception {
+        Statement statement;
+        if (DatasourceConfiguration.DatasourceType.valueOf(value.getType()) == DatasourceConfiguration.DatasourceType.oracle) {
+            statement = getStatement(con, datasourceConfiguration.getQueryTimeout());
+            statement.executeUpdate("ALTER SESSION SET CURRENT_SCHEMA = " + quoteName(datasourceConfiguration.getSchema(), '"'));
+
+            //调整字符集
+            if (StringUtils.isNotEmpty(datasourceConfiguration.getCharset()) && StringUtils.isNotEmpty(datasourceConfiguration.getTargetCharset())) {
+                datasourceRequest.setQuery(new String(datasourceRequest.getQuery().getBytes(datasourceConfiguration.getTargetCharset()), datasourceConfiguration.getCharset()));
+            }
+        }
+        statement = getPreparedStatement(con, datasourceConfiguration.getQueryTimeout(), datasourceRequest.getQuery(), datasourceRequest.getTableFieldWithValues(), autoIncrementPkName, datasourceConfiguration);
+        return statement;
+    }
+
+    @Override
+    public ExecuteResult executeUpdate(DatasourceRequest datasourceRequest, String autoIncrementPkName) throws DEException {
+        DatasourceSchemaDTO value = datasourceRequest.getDsList().entrySet().iterator().next().getValue();
+        datasourceRequest.setDatasource(value);
+        DatasourceConfiguration datasourceConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+        // schema
+        ResultSet resultSet = null;
+        try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId())) {
+
+            Statement statement = getStatement(value, con, datasourceRequest, datasourceConfiguration, autoIncrementPkName);
+
+            int count = 0;
+            if (CollectionUtils.isNotEmpty(datasourceRequest.getTableFieldWithValues())) {
+                LogUtil.info("execWithPreparedStatement sql: " + datasourceRequest.getQuery());
+                for (int i = 0; i < datasourceRequest.getTableFieldWithValues().size(); i++) {
+                    try {
+                        Object valueObject = datasourceRequest.getTableFieldWithValues().get(i).getValue();
+
+                        if (valueObject instanceof String && DatasourceConfiguration.DatasourceType.valueOf(value.getType()) == DatasourceConfiguration.DatasourceType.oracle) {
+                            if (StringUtils.isNotEmpty(datasourceConfiguration.getCharset()) && StringUtils.isNotEmpty(datasourceConfiguration.getTargetCharset())) {
+                                //转换为数据库的字符集
+                                valueObject = new String(((String) valueObject).getBytes(datasourceConfiguration.getTargetCharset()), datasourceConfiguration.getCharset());
+                            }
+                            if (datasourceRequest.getTableFieldWithValues().get(i).getType().equals(Types.CLOB)) {
+                                Reader reader = new StringReader((String) valueObject);
+                                ((PreparedStatement) statement).setCharacterStream(i + 1, reader, ((String) valueObject).length());
+                            } else {
+                                ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                            }
+                        } else {
+                            ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                        }
+                        LogUtil.info("execWithPreparedStatement param[" + (i + 1) + "](" + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName() + "): " + datasourceRequest.getTableFieldWithValues().get(i).getValue());
+                    } catch (SQLException e) {
+                        throw new SQLException(e.getMessage() + ". VALUE: " + datasourceRequest.getTableFieldWithValues().get(i).getValue().toString() + " , TARGET TYPE: " + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName());
+                    }
+                }
+                count = ((PreparedStatement) statement).executeUpdate();
+            } else {
+                count = statement.executeUpdate(datasourceRequest.getQuery());
+            }
+
+            ExecuteResult result = new ExecuteResult();
+            result.setCount(count);
+
+            if (StringUtils.isNotBlank(autoIncrementPkName)) {
+                List<String> generatedKeys = new ArrayList<>();
+                ResultSet keys = statement.getGeneratedKeys();
+                while (keys.next()) {
+                    generatedKeys.add(keys.getObject(1).toString());
+                }
+                result.setGeneratedKeys(generatedKeys);
+            }
+
+            return result;
+        } catch (SQLException e) {
+            DEException.throwException("SQL ERROR: " + e.getMessage());
+        } catch (Exception e) {
+            DEException.throwException("Datasource connection exception: " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LogUtil.error(e);
+                }
+            }
+        }
+
+        return new ExecuteResult();
+    }
+
+    private List<TableField> getField(ResultSet rs, DatasourceRequest datasourceRequest) throws Exception {
+        List<TableField> fieldList = new ArrayList<>();
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int j = 0; j < columnCount; j++) {
+            String f = metaData.getColumnName(j + 1);
+            if (StringUtils.containsIgnoreCase(f, "ROWNUM")) {
+                continue;
+            }
+            String l = StringUtils.isNotEmpty(metaData.getColumnLabel(j + 1)) ? metaData.getColumnLabel(j + 1) : f;
+            String t = metaData.getColumnTypeName(j + 1).toUpperCase();
+            TableField field = new TableField();
+            field.setOriginName(l);
+            field.setName(l);
+            field.setFieldType(t);
+            field.setType(t);
+            int deType = transType2DeType(t, datasourceRequest);
+            field.setDeExtractType(deType);
+            field.setDeType(deType);
+            fieldList.add(field);
+        }
+        return fieldList;
+    }
+
+    private List<String[]> getData(ResultSet rs, DatasourceRequest datasourceRequest) throws Exception {
+        String targetCharset = null;
+        String originCharset = null;
+        if (datasourceRequest != null && datasourceRequest.getDatasource().getType().equalsIgnoreCase("oracle")) {
+            DatasourceConfiguration jdbcConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+
+            if (StringUtils.isNotEmpty(jdbcConfiguration.getCharset())) {
+                originCharset = jdbcConfiguration.getCharset();
+            }
+            if (StringUtils.isNotEmpty(jdbcConfiguration.getTargetCharset())) {
+                targetCharset = jdbcConfiguration.getTargetCharset();
+            }
+        }
+        List<String[]> list = new LinkedList<>();
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        while (rs.next()) {
+            String[] row = new String[columnCount];
+            for (int j = 0; j < columnCount; j++) {
+                int columnType = metaData.getColumnType(j + 1);
+                switch (columnType) {
+                    case Types.DATE:
+                        if (rs.getDate(j + 1) != null) {
+                            row[j] = rs.getDate(j + 1).toString();
+                        }
+                        break;
+                    case Types.TIMESTAMP:
+                        if (rs.getTimestamp(j + 1) != null) {
+                            row[j] = rs.getTimestamp(j + 1).toString();
+                        }
+                        break;
+                    case Types.BOOLEAN:
+                        row[j] = rs.getBoolean(j + 1) ? "1" : "0";
+                        break;
+                    case Types.NUMERIC:
+                        BigDecimal bigDecimal = rs.getBigDecimal(j + 1);
+                        row[j] = bigDecimal == null ? null : bigDecimal.toString();
+                        break;
+                    default:
+                        String columnTypeName = metaData.getColumnTypeName(j + 1);
+                        if ("blob".equalsIgnoreCase(columnTypeName) || "bytea".equalsIgnoreCase(columnTypeName) || "binary".equalsIgnoreCase(columnTypeName) || "varbinary".equalsIgnoreCase(columnTypeName)) {
+                            row[j] = readBinaryValue(rs, j + 1, columnTypeName);
+                        } else if ("bfile".equalsIgnoreCase(columnTypeName) || columnTypeName.toUpperCase().endsWith("XMLTYPE")) {
+                            row[j] = "";
+                        } else if (targetCharset != null && StringUtils.isNotEmpty(rs.getString(j + 1)) && columnType == Types.CLOB) {
+                            if (originCharset == null) {
+                                row[j] = new String(rs.getString(j + 1).getBytes(), targetCharset);
+                            } else {
+                                row[j] = new String(rs.getString(j + 1).getBytes(originCharset), targetCharset);
+                            }
+                        } else if (targetCharset != null && StringUtils.isNotEmpty(rs.getString(j + 1)) && (columnType != Types.NVARCHAR && columnType != Types.NCHAR)) {
+                            row[j] = new String(rs.getBytes(j + 1), targetCharset);
+                        } else {
+                            row[j] = rs.getString(j + 1);
+                        }
+
+                        break;
+                }
+            }
+            list.add(row);
+        }
+        return list;
+    }
+
+    private String normalizeOracleCharset(String charset) {
+        if (StringUtils.isBlank(charset) || StringUtils.equalsIgnoreCase(charset, "Default")) {
+            return null;
+        }
+        String normalized = StringUtils.equalsIgnoreCase(charset, "US7ASCII") ? "US-ASCII" : charset;
+        try {
+            return Charset.forName(normalized).name();
+        } catch (UnsupportedCharsetException | IllegalCharsetNameException e) {
+            DEException.throwException("Unsupported charset: " + charset);
+        }
+        return null;
+    }
+
+    private String convertOracleText(String value, String fromCharset, String toCharset) throws UnsupportedEncodingException {
+        if (StringUtils.isEmpty(value) || StringUtils.isBlank(fromCharset) || StringUtils.isBlank(toCharset)) {
+            return value;
+        }
+        return new String(value.getBytes(fromCharset), toCharset);
+    }
+
+    @Override
+    public void hidePW(DatasourceDTO datasourceDTO) {
+        DatasourceConfiguration configuration = null;
+        DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(datasourceDTO.getType());
+        switch (datasourceType) {
+            case mysql:
+            case mongo:
+            case mariadb:
+            case TiDB:
+            case StarRocks:
+            case doris:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Mysql.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case gaussdb:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), GaussDB.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case pg:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Pg.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case kingbase:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Kingbase.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case redshift:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Redshift.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case ck:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), CK.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("\\?")[1].split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case impala:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Impala.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split(";");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }
+                        configuration.setJdbcUrl(configuration.getJdbcUrl().replace(pd, "password=******"));
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(configuration).toString());
+                    }
+                }
+                break;
+            case oracle:
+                configuration = JsonUtil.parseObject(datasourceDTO.getConfiguration(), Oracle.class);
+                if (StringUtils.isNotEmpty(configuration.getUrlType()) && configuration.getUrlType().equalsIgnoreCase("jdbcUrl")) {
+                    if (configuration.getJdbcUrl().contains("password=")) {
+                        String[] params = configuration.getJdbcUrl().split("&");
+                        String pd = "";
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].contains("password=")) {
+                                pd = params[i];
+                            }
+                        }

@@ -1,0 +1,106 @@
+                excelSheetDataList.add(excelSheetData);
+            }
+            inputStream.close();
+
+            for (ExcelSheetData excelSheetData : excelSheetDataList) {
+                List<String[]> data = excelSheetData.getData();
+                String[] fieldArray = excelSheetData.getFields().stream().map(TableField::getName).toArray(String[]::new);
+
+                List<Map<String, Object>> jsonArray = new ArrayList<>();
+                if (data != null) {
+                    jsonArray = data.stream().map(ele -> {
+                        Map<String, Object> map = new HashMap<>();
+                        for (int i = 0; i < fieldArray.length; i++) {
+                            map.put(fieldArray[i], i < ele.length ? ele[i] : "");
+                        }
+                        return map;
+                    }).collect(Collectors.toList());
+                }
+                excelSheetData.setJsonArray(jsonArray);
+            }
+
+            return excelSheetDataList;
+        }
+    }
+
+    public static Map<String, String> downLoadFromFtp(ExcelConfiguration remoteExcelRequest) {
+        Map<String, String> fileNames = new HashMap<>();
+        String username = "";
+        String password = "";
+        String serverAddress = "";
+        String filePath = "";
+        if (remoteExcelRequest.getUrl().contains("@")) {
+            String regex = "ftp://([^:]+):([^@]+)@([^/]+)(.*)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(remoteExcelRequest.getUrl());
+            if (matcher.find()) {
+                username = matcher.group(1);
+                password = matcher.group(2);
+                serverAddress = matcher.group(3);
+                filePath = matcher.group(4);
+            } else {
+                DEException.throwException(Translator.get("i18n_invalid_address"));
+            }
+        } else {
+            String regex = "ftp://([^/]+)(.*)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(remoteExcelRequest.getUrl());
+            if (matcher.find()) {
+                serverAddress = matcher.group(1);
+                filePath = matcher.group(2);
+            } else {
+                DEException.throwException(Translator.get("i18n_invalid_address"));
+            }
+        }
+        if (StringUtils.isNotEmpty(remoteExcelRequest.getUserName())) {
+            username = remoteExcelRequest.getUserName();
+        }
+        if (StringUtils.isNotEmpty(remoteExcelRequest.getPasswd())) {
+            password = remoteExcelRequest.getPasswd();
+        }
+        filePath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        String suffix = filePath.substring(filePath.lastIndexOf(".") + 1);
+        if (!Arrays.asList("csv", "xlsx", "xls").contains(suffix)) {
+            DEException.throwException(Translator.get("i18n_unsupported_file_format"));
+        }
+        String tranName = UUID.randomUUID().toString() + "." + suffix;
+        String localFilePath = path + tranName;
+        fileNames.put("fileName", filePath);
+        fileNames.put("tranName", tranName);
+
+        try {
+            URL url;
+            if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                url = new URL("ftp://" + username + ":" + URLEncoder.encode(password, StandardCharsets.UTF_8) + "@" + serverAddress + "/" + filePath);
+            } else {
+                url = new URL("ftp://" + serverAddress + "/" + filePath);
+            }
+
+            URLConnection conn = url.openConnection();
+            long timeout = RemoteTransfer.timeoutMillis(remoteExcelRequest.getTransferTimeoutSeconds());
+            conn.setConnectTimeout((int) Math.min(30_000, timeout));
+            conn.setReadTimeout((int) Math.min(60_000, timeout));
+            java.util.concurrent.atomic.AtomicReference<InputStream> active = new java.util.concurrent.atomic.AtomicReference<>();
+            try (RemoteTransfer transfer = new RemoteTransfer(
+                    RemoteTransfer.sizeBytes(remoteExcelRequest.getMaxFileSizeMb(), 100, 1024),
+                    RemoteTransfer.timeoutMillis(remoteExcelRequest.getTransferTimeoutSeconds()), () -> {
+                InputStream stream = active.get();
+                if (stream != null) try { stream.close(); } catch (IOException ignored) { }
+            }); InputStream raw = conn.getInputStream()) {
+                active.set(raw);
+                transfer.checkLength(conn.getContentLengthLong());
+                try (InputStream input = transfer.wrap(raw);
+                     OutputStream output = new FileOutputStream(localFilePath)) {
+                    input.transferTo(output);
+                }
+            }
+
+        } catch (IOException e) {
+            try { java.nio.file.Files.deleteIfExists(java.nio.file.Path.of(localFilePath)); }
+            catch (IOException cleanup) { e.addSuppressed(cleanup); }
+            DEException.throwException(Translator.get("i18n_file_download_failed") + ", " + e.getMessage());
+        }
+        return fileNames;
+    }
+
+}

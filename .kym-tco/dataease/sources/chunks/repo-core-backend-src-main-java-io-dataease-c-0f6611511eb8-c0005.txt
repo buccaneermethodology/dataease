@@ -1,0 +1,362 @@
+                for (int j = 0; j < xAxis.size(); j++) {
+                    ChartDimensionDTO chartDimensionDTO = new ChartDimensionDTO();
+                    chartDimensionDTO.setId(xAxis.get(j).getId());
+                    chartDimensionDTO.setValue(row[j]);
+                    dimensionList.add(chartDimensionDTO);
+                }
+                axisChartDataDTO.setDimensionList(dimensionList);
+
+                int j = i - xAxis.size();
+                if (j > -1) {
+                    ChartQuotaDTO chartQuotaDTO = new ChartQuotaDTO();
+                    chartQuotaDTO.setId(yAxis.get(j).getId());
+                    quotaList.add(chartQuotaDTO);
+                    axisChartDataDTO.setQuotaList(quotaList);
+                    try {
+                        axisChartDataDTO.setValue(StringUtils.isEmpty(row[i]) ? null : new BigDecimal(row[i]));
+                        axisChartDataDTO.setField(yAxis.get(j).getOriginName());
+                        axisChartDataDTO.setName(yAxis.get(j).getName());
+                    } catch (Exception e) {
+                        axisChartDataDTO.setValue(new BigDecimal(0));
+                    }
+                    axisChartDataDTO.setCategory(StringUtils.defaultIfBlank(yAxis.get(j).getChartShowName(), yAxis.get(j).getName()));
+                }
+                dataList.add(axisChartDataDTO);
+            }
+        }
+        map.put("data", dataList);
+        return map;
+    }
+
+    public static Map<String, Object> transBarRangeDataAntV(boolean skipBarRange, boolean isDate, List<ChartViewFieldDTO> xAxisBase, List<ChartViewFieldDTO> xAxis, List<ChartViewFieldDTO> yAxis, ChartViewDTO view, List<String[]> data, boolean isDrill) {
+
+        Map<String, Object> map = new HashMap<>();
+        if (skipBarRange) {
+            map.put("data", new ArrayList<>());
+            return map;
+        }
+
+        List<Date> dates = new ArrayList<>();
+        List<BigDecimal> numbers = new ArrayList<>();
+
+        ChartViewFieldDTO dateAxis1 = null;
+
+        SimpleDateFormat sdf = null;
+        if (isDate) {
+            if (BooleanUtils.isTrue(view.getAggregate())) {
+                dateAxis1 = yAxis.get(0);
+            } else {
+                dateAxis1 = xAxis.get(xAxisBase.size());
+            }
+            sdf = new SimpleDateFormat(getDateFormat(dateAxis1.getDateStyle(), dateAxis1.getDatePattern()));
+        }
+
+        List<Object> dataList = new ArrayList<>();
+        for (int i1 = 0; i1 < data.size(); i1++) {
+            String[] row = data.get(i1);
+
+            StringBuilder xField = new StringBuilder();
+            if (isDrill) {
+                xField.append(row[xAxis.size() - 1]);
+            } else {
+                for (int i = 0; i < xAxisBase.size(); i++) {
+                    if (i == xAxisBase.size() - 1) {
+                        xField.append(row[i]);
+                    } else {
+                        xField.append(row[i]).append("\n");
+                    }
+                }
+            }
+
+
+            Map<String, Object> obj = new HashMap<>();
+            obj.put("field", xField.toString());
+            obj.put("category", xField.toString());
+
+            List<ChartDimensionDTO> dimensionList = new ArrayList<>();
+
+            for (int i = 0; i < xAxisBase.size(); i++) {
+                ChartDimensionDTO chartDimensionDTO = new ChartDimensionDTO();
+                chartDimensionDTO.setId(xAxis.get(i).getId());
+                chartDimensionDTO.setValue(row[i]);
+                dimensionList.add(chartDimensionDTO);
+            }
+            if (isDrill) {
+                int index = xAxis.size() - 1;
+                ChartDimensionDTO chartDimensionDTO = new ChartDimensionDTO();
+                chartDimensionDTO.setId(xAxis.get(index).getId());
+                chartDimensionDTO.setValue(row[index]);
+                dimensionList.add(chartDimensionDTO);
+            }
+            obj.put("dimensionList", dimensionList);
+
+
+            List<Object> values = new ArrayList<>();
+
+            if (isDate) {
+                int index;
+                if (BooleanUtils.isTrue(view.getAggregate())) {
+                    index = xAxis.size();
+                } else {
+                    index = xAxisBase.size();
+                }
+
+                String startValue = StringUtils.trimToNull(row[index]);
+                String endValue = StringUtils.trimToNull(row[index + 1]);
+                values.add(startValue);
+                values.add(endValue);
+                obj.put("values", values);
+                Date date1 = parseBarRangeDate(sdf, startValue);
+                Date date2 = parseBarRangeDate(sdf, endValue);
+                if (date1 != null) {
+                    dates.add(date1);
+                }
+                if (date2 != null) {
+                    dates.add(date2);
+                }
+                //间隔时间
+                obj.put("gap", date1 != null && date2 != null ? getTimeGap(date1, date2, dateAxis1.getDateStyle()) : null);
+
+            } else {
+                int index = xAxis.size();
+                // 保留空端点交给前端空值策略处理
+                BigDecimal startValue = parseBarRangeNumber(row[index]);
+                BigDecimal endValue = parseBarRangeNumber(row[index + 1]);
+                values.add(startValue);
+                values.add(endValue);
+                obj.put("values", values);
+
+                if (startValue != null) {
+                    numbers.add(startValue);
+                }
+                if (endValue != null) {
+                    numbers.add(endValue);
+                }
+
+                //间隔差
+                obj.put("gap", startValue != null && endValue != null ? endValue.subtract(startValue) : null);
+            }
+
+            dataList.add(obj);
+        }
+
+        if (isDate) {
+            Date minDate = dates.stream().min(Date::compareTo).orElse(null);
+            if (minDate != null) {
+                map.put("minTime", sdf.format(minDate));
+            }
+            Date maxDate = dates.stream().max(Date::compareTo).orElse(null);
+            if (maxDate != null) {
+                map.put("maxTime", sdf.format(maxDate));
+            }
+        } else {
+            map.put("min", numbers.stream().min(BigDecimal::compareTo).orElse(null));
+            map.put("max", numbers.stream().max(BigDecimal::compareTo).orElse(null));
+        }
+
+        map.put("isDate", isDate);
+        map.put("data", dataList);
+        return map;
+
+    }
+
+    private static BigDecimal parseBarRangeNumber(String value) {
+        return StringUtils.isBlank(value) ? null : new BigDecimal(value);
+    }
+
+    private static Date parseBarRangeDate(SimpleDateFormat sdf, String value) {
+        if (StringUtils.isBlank(value)) {
+            return null;
+        }
+        try {
+            return sdf.parse(value);
+        } catch (Exception ignore) {
+            return null;
+        }
+    }
+
+    private static String getDateFormat(String dateStyle, String datePattern) {
+        String split;
+        if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+            split = "/";
+        } else {
+            split = "-";
+        }
+        switch (dateStyle) {
+            case "y":
+                return "yyyy";
+            case "y_M":
+                return "yyyy" + split + "MM";
+            case "y_M_d":
+                return "yyyy" + split + "MM" + split + "dd";
+            case "M_d":
+                return "MM" + split + "dd";
+            case "H_m_s":
+                return "HH:mm:ss";
+            case "y_M_d_H":
+                return "yyyy" + split + "MM" + split + "dd" + " HH";
+            case "y_M_d_H_m":
+                return "yyyy" + split + "MM" + split + "dd" + " HH:mm";
+            case "y_M_d_H_m_s":
+                return "yyyy" + split + "MM" + split + "dd" + " HH:mm:ss";
+            default:
+                return "yyyy-MM-dd HH:mm:ss";
+        }
+    }
+
+    private static String getTimeGap(Date from, Date to, String dateStyle) {
+        if (from == null || to == null) {
+            return "";
+        }
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.setTime(from);
+
+        Calendar toCalender = Calendar.getInstance();
+        toCalender.setTime(to);
+
+        long yearGap = 0;
+        long monthGap = 0;
+        long dayGap = (toCalender.getTimeInMillis() - fromCalender.getTimeInMillis()) / (1000 * 3600 * 24);
+        long hourGap = ((toCalender.getTimeInMillis() - fromCalender.getTimeInMillis()) / (1000 * 3600)) % 24;
+        long minuteGap = ((toCalender.getTimeInMillis() - fromCalender.getTimeInMillis()) / (1000 * 60)) % 60;
+        long secondGap = ((toCalender.getTimeInMillis() - fromCalender.getTimeInMillis()) / 1000) % 60;
+
+        String language = "zh-CN"; //国际化
+        Lang lang = Lang.getLangWithoutDefault(language);
+        boolean isEnUs = Lang.en_US.equals(lang);
+        String splitter = isEnUs ? " " : "";
+
+        String yearGapStr = "";
+        String monthGapStr = "";
+
+        String dayGapStr = "";
+        if (dayGap != 0) {
+            dayGapStr = dayGap + splitter + Translator.get("i18n_day") + (isEnUs && dayGap != 1 ? "s" : "");
+        }
+        String hourGapStr = "";
+        if (hourGap != 0) {
+            hourGapStr = hourGap + splitter + Translator.get("i18n_hour") + (isEnUs && hourGap != 1 ? "s" : "");
+        }
+        String minuteGapStr = "";
+        if (minuteGap != 0) {
+            minuteGapStr = minuteGap + splitter + Translator.get("i18n_minute") + (isEnUs && minuteGap != 1 ? "s" : "");
+        }
+        String secondGapStr = "";
+        if (secondGap != 0) {
+            secondGapStr = secondGap + splitter + Translator.get("i18n_second") + (isEnUs && secondGap != 1 ? "s" : "");
+        }
+
+        List<String> list = new ArrayList<>();
+
+        switch (dateStyle) {
+            case "y":
+                yearGap = toCalender.get(Calendar.YEAR) - fromCalender.get(Calendar.YEAR);
+                yearGapStr = yearGap == 0 ? "" : (yearGap + splitter + Translator.get("i18n_year") + (isEnUs && yearGap != 1 ? "s" : ""));
+                return yearGapStr;
+            case "y_M":
+                yearGap = ((toCalender.get(Calendar.YEAR) - fromCalender.get(Calendar.YEAR)) * 12L + (toCalender.get(Calendar.MONTH) - fromCalender.get(Calendar.MONTH))) / 12;
+                monthGap = ((toCalender.get(Calendar.YEAR) - fromCalender.get(Calendar.YEAR)) * 12L + (toCalender.get(Calendar.MONTH) - fromCalender.get(Calendar.MONTH))) % 12;
+
+                yearGapStr = yearGap == 0 ? "" : (yearGap + splitter + Translator.get("i18n_year") + (isEnUs && yearGap != 1 ? "s" : ""));
+                monthGapStr = monthGap == 0 ? "" : (monthGap + splitter + Translator.get("i18n_month") + (isEnUs && monthGap != 1 ? "s" : ""));
+
+                if (!yearGapStr.isEmpty()) {
+                    list.add(yearGapStr);
+                }
+                if (!monthGapStr.isEmpty()) {
+                    list.add(monthGapStr);
+                }
+                return StringUtils.join(list, splitter);
+            case "y_M_d":
+            case "M_d":
+                return dayGapStr;
+            case "y_M_d_H":
+                if (!dayGapStr.isEmpty()) {
+                    list.add(dayGapStr);
+                }
+                if (!hourGapStr.isEmpty()) {
+                    list.add(hourGapStr);
+                }
+                return StringUtils.join(list, splitter);
+            case "y_M_d_H_m":
+                if (!dayGapStr.isEmpty()) {
+                    list.add(dayGapStr);
+                }
+                if (!hourGapStr.isEmpty()) {
+                    list.add(hourGapStr);
+                }
+                if (!minuteGapStr.isEmpty()) {
+                    list.add(minuteGapStr);
+                }
+                return StringUtils.join(list, splitter);
+            case "H_m_s":
+            case "y_M_d_H_m_s":
+                if (!dayGapStr.isEmpty()) {
+                    list.add(dayGapStr);
+                }
+                if (!hourGapStr.isEmpty()) {
+                    list.add(hourGapStr);
+                }
+                if (!minuteGapStr.isEmpty()) {
+                    list.add(minuteGapStr);
+                }
+                if (!secondGapStr.isEmpty()) {
+                    list.add(secondGapStr);
+                }
+                return StringUtils.join(list, splitter);
+            default:
+                return "";
+        }
+    }
+
+    public static Map<String, Object> transSymbolicMapNormalWithDetail(ChartViewDTO view, List<ChartViewFieldDTO> xAxis, List<ChartViewFieldDTO> yAxis, List<ChartViewFieldDTO> extBubble, List<String[]> data, List<ChartViewFieldDTO> detailFields, List<String[]> detailData) {
+        int detailIndex = xAxis.size();
+
+        List<ChartViewFieldDTO> realDetailFields = detailFields.subList(detailIndex, detailFields.size());
+
+        List<ChartViewFieldDTO> fields = new ArrayList<>();
+        if (ObjectUtils.isNotEmpty(xAxis))
+            fields.addAll(xAxis);
+        if (ObjectUtils.isNotEmpty(extBubble))
+            fields.addAll(extBubble);
+        if (ObjectUtils.isNotEmpty(yAxis))
+            fields.addAll(yAxis);
+        Map<String, Object> map = transTableNormal(fields, view, data, new HashMap<>());
+        List<Map<String, Object>> tableRow = (List<Map<String, Object>>) map.get("tableRow");
+        final int xEndIndex = detailIndex;
+        Map<String, List<String[]>> groupDataList = detailData.stream().collect(Collectors.groupingBy(item -> "(" + StringUtils.join(ArrayUtils.subarray(item, 0, xEndIndex), ")-de-(") + ")"));
+        String extBubbleDataeaseName = ObjectUtils.isNotEmpty(extBubble) ? extBubble.get(0).getDataeaseName() : "";
+        tableRow.forEach(row -> {
+            BigDecimal rowValue = row.get(extBubbleDataeaseName) == null ? BigDecimal.ZERO : new BigDecimal(row.get(extBubbleDataeaseName).toString());
+            String key = xAxis.stream().map(x -> String.format(format, row.get(x.getDataeaseName()).toString())).collect(Collectors.joining("-de-"));
+            List<String[]> detailFieldValueList = groupDataList.get(key);
+            List<Map<String, Object>> detailValueMapList = Optional.ofNullable(detailFieldValueList).orElse(new ArrayList<>()).stream().map((detailArr -> {
+                Map<String, Object> temp = new HashMap<>();
+                for (int i = 0; i < realDetailFields.size(); i++) {
+                    ChartViewFieldDTO realDetailField = realDetailFields.get(i);
+                    if (StringUtils.equalsIgnoreCase(extBubbleDataeaseName, realDetailField.getDataeaseName())) {
+                        temp.put(realDetailField.getDataeaseName(), rowValue);
+                    } else {
+                        temp.put(realDetailField.getDataeaseName(), detailArr[detailIndex + i]);
+                    }
+                }
+                return temp;
+            })).collect(Collectors.toList());
+            //详情只要一个
+            row.put("details", !detailValueMapList.isEmpty() ? Collections.singletonList(detailValueMapList.getFirst()) : detailValueMapList);
+        });
+        // 先过滤掉所有记录数字段
+        List<ChartViewFieldDTO> filterCountAxis = fields.stream()
+                .filter(item -> !StringUtils.equalsIgnoreCase(item.getDataeaseName(), "*"))
+                .collect(Collectors.toList());
+        // 如果气泡大小是记录数，添加到字段列表中
+        if (ObjectUtils.isNotEmpty(extBubble) && "*".equals(extBubble.get(0).getDataeaseName())) {
+            filterCountAxis.addAll(yAxis);
+        }
+        map.put("fields", filterCountAxis);
+        map.put("detailFields", realDetailFields);
+        map.put("tableRow", tableRow);
+        return map;
+    }
+
+}

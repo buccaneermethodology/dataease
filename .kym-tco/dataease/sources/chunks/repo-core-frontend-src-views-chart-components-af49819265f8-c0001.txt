@@ -1,0 +1,615 @@
+# Repo evidence: core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
+<script lang="ts" setup>
+import { installG2AssistLineVisibility } from '@/views/chart/components/js/panel/types/impl/g2-assist-line'
+import {
+  applyG2TiledLegend,
+  installG2TiledLegendStateAdapter,
+  replayG2TiledLegendSelection
+} from '@/views/chart/components/js/panel/types/impl/g2-legend-tile'
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  shallowRef,
+  toRefs
+} from 'vue'
+import { getData } from '@/api/chart'
+import { ChartLibraryType } from '@/views/chart/components/js/panel/types'
+import { G2ChartView, isLargeDataLabelMark } from '@/views/chart/components/js/panel/types/impl/g2'
+import { L7PlotChartView } from '@/views/chart/components/js/panel/types/impl/l7plot'
+import chartViewManager from '@/views/chart/components/js/panel'
+import { useAppStoreWithOut } from '@/store/modules/app'
+import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
+import ViewTrackBar from '@/components/visualization/ViewTrackBar.vue'
+import { storeToRefs } from 'pinia'
+import { getColorFormAlphaColor, hexColorToRGBA, parseJson } from '@/views/chart/components/js/util'
+import { defaultsDeep, cloneDeep, concat } from 'lodash-es'
+import ChartError from '@/views/chart/components/views/components/ChartError.vue'
+import { BASE_VIEW_CONFIG } from '../../editor/util/chart'
+import { customAttrTrans, customStyleTrans, recursionTransObj } from '@/utils/canvasStyle'
+import { deepCopy, isMobile } from '@/utils/utils'
+import { isDashboard, trackBarStyleCheck } from '@/utils/canvasUtils'
+import { useEmitt } from '@/hooks/web/useEmitt'
+import { L7ChartView } from '@/views/chart/components/js/panel/types/impl/l7'
+import { useI18n } from '@/hooks/web/useI18n'
+import { ExportImage } from '@antv/l7'
+import {
+  configAxisTitleOverflowTooltip,
+  configEmptyDataStyle,
+  installG2SliderAdapter
+} from '@/views/chart/components/js/panel/common/common_antv'
+import { installG2SideLegendPaginationAdapter } from '@/views/chart/components/js/panel/types/impl/g2-legend-pagination'
+import { ElMessage } from 'element-plus-secondary'
+import G2TooltipCarousel from '@/views/chart/components/js/G2TooltipCarousel'
+import { listenerTooltipShow } from '@/views/chart/components/js/panel/charts/g2/bar/barUtil'
+import { createChartRefreshMock } from './chart-refresh-mock'
+const mockRefreshResponse = import.meta.env.DEV ? createChartRefreshMock() : undefined
+const { t } = useI18n()
+const dvMainStore = dvMainStoreWithOut()
+const { nowPanelTrackInfo, nowPanelJumpInfo, mobileInPc, embeddedCallBack, inMobile } =
+  storeToRefs(dvMainStore)
+const { emitter } = useEmitt()
+const props = defineProps({
+  element: {
+    type: Object,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  view: {
+    type: Object,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  showPosition: {
+    type: String,
+    required: false,
+    default: 'canvas'
+  },
+  scale: {
+    type: Number,
+    required: false,
+    default: 1
+  },
+  terminal: {
+    type: String,
+    default: 'pc'
+  },
+  //图表渲染id后缀
+  suffixId: {
+    type: String,
+    required: false,
+    default: 'common'
+  },
+  fontFamily: {
+    type: String,
+    required: false,
+    default: 'inherit'
+  },
+  active: {
+    type: Boolean,
+    required: false,
+    default: true
+  }
+})
+
+const emit = defineEmits([
+  'onPointClick',
+  'onChartClick',
+  'onDrillFilters',
+  'onJumpClick',
+  'resetLoading'
+])
+
+const g2TypeSeries1 = ['bidirectional-bar']
+const g2TypeSeries0 = ['bar-range']
+const g2TypeTree = ['circle-packing', 'treemap']
+const g2TypeStack = [
+  'bar-stack',
+  'bar-group-stack',
+  'percentage-bar-stack',
+  'bar-stack-horizontal',
+  'percentage-bar-stack-horizontal'
+]
+const g2TypeGroup = ['bar-group', 'box-plot']
+
+const { view, showPosition, scale, terminal, suffixId } = toRefs(props)
+
+const isError = ref(false)
+const errMsg = ref('')
+const linkageActiveHistory = ref(false)
+// 箱线图的生效联动独立于最近点击，下钻和打开菜单不能覆盖已提交的联动条件
+const boxPlotLinkageData = shallowRef(null)
+// G2 重绘后只用这些原始字段回放选中，避免旧 datum 的对象引用参与匹配
+const LINKAGE_REPLAY_FIELDS = ['field', 'name', 'category', 'group', 'value', 'x', 'y', 'path']
+
+const dataVMobile = !isDashboard() && isMobile()
+
+const state = reactive({
+  trackBarStyle: {
+    position: 'absolute',
+    left: '50px',
+    top: '50px'
+  },
+  trackBarStyleMobile: {
+    position: 'absolute',
+    left: '50px',
+    top: '50px'
+  },
+  linkageActiveParam: null,
+  pointParam: null,
+  data: { fields: [] } // 图表数据
+})
+let chartData = shallowRef<Partial<Chart['data']>>({
+  fields: []
+})
+
+const containerId = 'container-' + showPosition.value + '-' + view.value.id + '-' + suffixId.value
+const viewTrack = ref(null)
+const chartStroke = computed(() => {
+  const customAttr = parseJson(view.value.customAttr)
+  // 联动选中态优先使用主题转换后的反色
+  const stroke =
+    customAttr?.basicStyle?.themeContrastColor ??
+    customAttr?.label?.color ??
+    (!isDashboard() || dvMainStore.canvasStyleData?.dashboard?.themeColor === 'dark'
+      ? '#fff'
+      : '#000')
+  // 箱线图联动回放也使用基础不透明度，避免选中后覆盖为不透明描边
+  return view.value.type === 'box-plot'
+    ? hexColorToRGBA(getColorFormAlphaColor(stroke), customAttr?.basicStyle?.alpha ?? 100)
+    : stroke
+})
+const LINKAGE_STYLE_CACHE = '__deLinkageStyleCache__'
+const LINKAGE_STYLE_KEYS = ['opacity', 'stroke', 'lineWidth']
+const LINKAGE_SELECTED_STYLE = computed(() => ({
+  stroke: chartStroke.value,
+  lineWidth: 1,
+  linkStroke: chartStroke.value,
+  linkStrokeOpacity: chartStroke.value
+}))
+const LINKAGE_SELECTED_OPACITY_STYLE = { opacity: 1 }
+const LINKAGE_SELECTED_POINT_STYLE = computed(() => ({
+  ...LINKAGE_SELECTED_STYLE.value,
+  opacity: 1,
+  strokeOpacity: 1
+}))
+const LINKAGE_UNSELECTED_STYLE = { opacity: 0.5 }
+const LINKAGE_OPACITY_MARK_TYPES = ['line', 'point', 'area']
+const LINKAGE_IGNORE_MARK_TYPES = ['lineX', 'lineY']
+const LINKAGE_IGNORE_CLASS_REG = /crosshair|tooltip/
+
+const clearLinkage = () => {
+  linkageActiveHistory.value = false
+  boxPlotLinkageData.value = null
+  try {
+    resetLinkageElementState()
+    myChart?.emit('element:unselect', { nativeEvent: false })
+    myChart?.emit('element:unhighlight', { nativeEvent: false })
+    resetLinkageContentOpacity()
+  } catch (e) {
+    console.warn('clearLinkage error', e)
+  }
+}
+const reDrawView = () => {
+  linkageActiveHistory.value = false
+}
+const linkageActivePre = () => {
+  if (linkageActiveHistory.value) {
+    reDrawView()
+  }
+  nextTick(() => {
+    linkageActive()
+  })
+}
+const linkageActive = () => {
+  linkageActiveHistory.value = true
+  try {
+    const replayData = getLinkageReplayData()
+    if (!replayData) {
+      return
+    }
+    if (view.value.type === 'box-plot') {
+      // 箱线图先恢复原样式，避免 G2 将联动淡化值缓存为取消选中后的原始值
+      resetLinkageElementState()
+    } else {
+      applyLinkageElementState()
+    }
+    // elementSelect 单选会切换已选元素；回放前先清空，避免重复选中时被反向取消
+    myChart?.emit('element:unselect', { nativeEvent: false })
+    myChart?.emit('element:select', {
+      nativeEvent: false,
+      data: { data: [replayData] }
+    })
+    const chart = myChart
+    if (chart === myChart && linkageActiveHistory.value) {
+      applyLinkageElementState(true)
+    }
+  } catch (err) {
+    console.warn('linkageActive error', err)
+  }
+}
+// 只收集 primitive 字段，G2 selectElementByData 使用严格相等匹配
+const getLinkageReplayData = () => {
+  const data = view.value.type === 'box-plot' ? boxPlotLinkageData.value : state.pointParam?.data
+  if (!data) {
+    return null
+  }
+  const replayData: Record<string, any> = {}
+  LINKAGE_REPLAY_FIELDS.forEach(key => {
+    const value = data[key]
+    if (['string', 'number', 'boolean'].includes(typeof value) && !Number.isNaN(value)) {
+      replayData[key] = value
+    }
+  })
+  return Object.keys(replayData).length ? replayData : null
+}
+// renderG2 和 forceFit 共用回放逻辑，覆盖图例和标题显隐两类路径
+const replayLinkageActive = () => {
+  if (!linkageActiveHistory.value || !state.linkageActiveParam) {
+    return
+  }
+  const chart = myChart
+  requestAnimationFrame(() => {
+    if (chart !== myChart || !linkageActiveHistory.value) {
+      return
+    }
+    linkageActive()
+  })
+}
+const getG2Elements = () => {
+  const document = myChart?.getContext?.()?.canvas?.document
+  return Array.from(document?.getElementsByClassName?.('element') || [])
+}
+const getElementDatum = element => {
+  const data = element?.__data__
+  if (data?.data) {
+    return data.data
+  }
+  const viewList = myChart?.getContext?.()?.views || []
+  const targetView = viewList.find(item => item.key === data?.viewKey) || viewList[0]
+  const targetMark = Array.from(targetView?.markState?.keys?.() || []).find(
+    (mark: any) => mark.key === data?.markKey
+  ) as any
+  return targetMark?.data?.[data?.index] ?? data
+}
+const eachElementShape = (element, callback) => {
+  if (!element) {
+    return
+  }
+  callback(element)
+  Array.from(element.childNodes || []).forEach(child => eachElementShape(child, callback))
+}
+const getShapeAttr = (shape, key) =>
+  typeof shape?.getAttribute === 'function' ? shape.getAttribute(key) : shape?.attributes?.[key]
+const setShapeAttr = (shape, key, value) => {
+  if (typeof shape?.setAttribute === 'function') {
+    shape.setAttribute(key, value)
+  }
+}
+const flushG2Canvas = () => {
+  myChart?.getContext?.()?.canvas?.render?.()
+}
+const isLinkageOpacityElement = element => LINKAGE_OPACITY_MARK_TYPES.includes(element?.markType)
+const getElementClassInfo = element => {
+  const info = []
+  eachElementShape(element, shape => {
+    info.push(shape?.className, shape?.id, shape?.name, getShapeAttr(shape, 'className'))
+  })
+  return info.filter(Boolean).join(' ').toLowerCase()
+}
+const isLinkageDataElement = element => {
+  // 象限背景是区域不参与数据联动的选中和淡化
+  if (view.value.type === 'quadrant' && element?.markType === 'range') {
+    return false
+  }
+  // 采样标签载体只负责定位文本，不参与联动选中和透明度回放
+  if (isLargeDataLabelMark(element?.__data__?.markKey)) {
+    return false
+  }
+  if (LINKAGE_IGNORE_MARK_TYPES.includes(element?.markType)) {
+    return false
+  }
+  return !LINKAGE_IGNORE_CLASS_REG.test(getElementClassInfo(element))
+}
+const backupShapeStyle = shape => {
+  if (!shape?.[LINKAGE_STYLE_CACHE]) {
+    shape[LINKAGE_STYLE_CACHE] = LINKAGE_STYLE_KEYS.reduce((pre, key) => {
+      pre[key] = getShapeAttr(shape, key)
+      return pre
+    }, {})
+  }
+}
+const applyElementStyle = (element, style) => {
+  eachElementShape(element, shape => {
+    backupShapeStyle(shape)
+    Object.entries(style).forEach(([key, value]) => setShapeAttr(shape, key, value))
+  })
+}
+const getLinkageElementStyle = (element, selected) => {
+  if (view.value.type === 'box-plot') {
+    // 箱体和异常点保留基础配色的 alpha，仅用额外透明度区分联动状态
+    if (!selected) {
+      return { opacity: 0.65 }
+    }
+    if (element?.markType === 'box') {
+      return { ...LINKAGE_SELECTED_STYLE.value, opacity: 1 }
+    }
+  }
+  if (view.value.type === 'sankey') {
+    // 联动触发后直接设置已渲染 polygon 的真实属性，不使用 Sankey spec 的 link 前缀
+    return selected
+      ? {
+          lineWidth: 1,
+          stroke: chartStroke.value,
+          strokeOpacity: 1
+        }
+      : LINKAGE_UNSELECTED_STYLE
+  }
+  // 子弹图仅实际值柱绘制选中描边，背景区间和目标值只按维度切换透明度
+  if (view.value.type === 'bullet-graph') {
+    if (!selected) {
+      return LINKAGE_UNSELECTED_STYLE
+    }
+    return element?.__data__?.markKey === '__de_bullet_measure__'
+      ? LINKAGE_SELECTED_STYLE.value
+      : LINKAGE_SELECTED_OPACITY_STYLE
+  }
+  // 进度条背景层只切换透明度，不绘制选中描边
+  if (element?.__data__?.markKey === 'progress-background') {
+    return selected ? LINKAGE_SELECTED_OPACITY_STYLE : LINKAGE_UNSELECTED_STYLE
+  }
+  if (element?.markType === 'point') {
+    return selected ? LINKAGE_SELECTED_POINT_STYLE.value : LINKAGE_UNSELECTED_STYLE
+  }
+  if (isLinkageOpacityElement(element)) {
+    return selected ? LINKAGE_SELECTED_OPACITY_STYLE : LINKAGE_UNSELECTED_STYLE
+  }
+  return selected ? LINKAGE_SELECTED_STYLE.value : LINKAGE_UNSELECTED_STYLE
+}
+const resetElementStyle = element => {
+  eachElementShape(element, shape => {
+    const cache = shape?.[LINKAGE_STYLE_CACHE]
+    if (!cache) {
+      return
+    }
+    Object.entries(cache).forEach(([key, value]) => {
+      // 原始属性不存在时必须移除，否则 AntV G 会保留联动覆盖值
+      if (value === undefined || value === null) {
+        shape.removeAttribute?.(key)
+      } else {
+        setShapeAttr(shape, key, value)
+      }
+    })
+    delete shape[LINKAGE_STYLE_CACHE]
+  })
+}
+const resetLinkageElementState = () => {
+  getG2Elements().forEach(resetElementStyle)
+}
+const resetLinkageContentOpacity = () => {
+  let changed = false
+  getG2Elements().forEach(element => {
+    const isBoxPlotBox = view.value.type === 'box-plot' && element?.markType === 'box'
+    if (!isLinkageDataElement(element) || (!isLinkageOpacityElement(element) && !isBoxPlotBox)) {
+      return
+    }
+    eachElementShape(element, shape => {
+      const opacity = Number(getShapeAttr(shape, 'opacity'))
+      if (opacity !== 0 && opacity < 1) {
+        setShapeAttr(shape, 'opacity', 1)
+        changed = true
+      }
+    })
+  })
+  changed && flushG2Canvas()
+}
+const applyLinkageElementState = (flush = false) => {
+  const elements = getG2Elements()
+  resetLinkageElementState()
+  elements.forEach(element => {
+    if (!isLinkageDataElement(element)) {
+      return
+    }
+    const datum = getElementDatum(element)
+    if (!datum || Array.isArray(datum)) {
+      return
+    }
+    const selected = checkSelected(datum)
+    // 折线/点/面积只改透明度，避免定位线或点被套成黑色选中描边
+    const style = getLinkageElementStyle(element, selected)
+    applyElementStyle(element, style)
+  })
+  flush && flushG2Canvas()
+}
+const checkSelected = param => {
+  if (view.value.type === 'box-plot') {
+    // 箱线图按已映射维度的原始值匹配，空值和 0 不转换成展示占位符
+    const dimensions =
+      boxPlotLinkageData.value?.dimensionList?.filter(
+        item => nowPanelTrackInfo.value[`${view.value.id}#${String(item.id)}`]?.length
+      ) ?? []
+    return (
+      dimensions.length > 0 &&
+      dimensions.every(selected =>
+        param?.dimensionList?.some(
+          item => String(item.id) === String(selected.id) && item.value === selected.value
+        )
+      )
+    )
+  }
+  // 获取当前视图的所有联动字段ID
+  const mappingFieldIds = Array.from(
+    new Set(
+      (view.value.type.includes('chart-mix')
+        ? concat(chartData.value?.left?.fields, chartData.value?.right?.fields)
+        : chartData.value?.fields
+      )
+        .map(item => item?.id)
+        .filter(id =>
+          Object.keys(nowPanelTrackInfo.value).some(
+            key => key.startsWith(view.value.id) && key.split('#')[1] === id
+          )
+        )
+    )
+  )
+  // 维度字段匹配
+  const [xAxis, xAxisExt, extStack] = ['xAxis', 'xAxisExt', 'extStack'].map(key =>
+    view.value[key].find(item => mappingFieldIds.includes(item.id))
+  )
+  // 选中字段数据
+  const { group, name, category } = state.linkageActiveParam
+  // 选中字段数据匹配
+  if (view.value.type === 'sankey') {
+    // 桑基图联动只选中实际点击的连接，不选中起止节点
+    const sourceSelected = name === param?.source?.key
+    return view.value.xAxisExt?.length
+      ? sourceSelected && category === param?.target?.key
+      : sourceSelected
+  } else if (view.value.type === 'stock-line') {
+    // K线 datum 使用动态日期字段，联动参数中的 name 即对应日期值
+    return name === param[view.value.xAxis[0].dataeaseName]
+  } else if (g2TypeSeries1.includes(view.value.type)) {
+    return name === param.field
+  } else if (g2TypeSeries0.includes(view.value.type)) {
+    return category === param.category
+  } else if (g2TypeTree.includes(view.value.type)) {
+    // pack 图元使用 d3 hierarchy 节点包装原始数据，联动匹配需读取节点的 data
+    const treeData = param?.data ?? param
+    const treePath = typeof treeData?.path === 'string' ? treeData.path : ''
+    if (treePath.startsWith(name) || name === t('commons.all')) {
+      return true
+    }
+    return name === treeData?.name
+  } else if (g2TypeGroup.includes(view.value.type)) {
+    const isNameMatch = name === param.name || (name === 'NO_DATA' && !param.name)
+    const isCategoryMatch = category === param.category
+    if (xAxis && xAxisExt) {
+      return isNameMatch && isCategoryMatch
+    }
+    if (xAxis && !xAxisExt) {
+      return isNameMatch
+    }
+    if (!xAxis && xAxisExt) {
+      return isCategoryMatch
+    }
+    return false
+  } else if (g2TypeStack.includes(view.value.type)) {
+    const isGroupMatch = group === param.group || (group === 'NO_DATA' && !param.group)
+    const isNameMatch = name === param.name || (name === 'NO_DATA' && !param.name)
+    const isCategoryMatch = category === param.category
+    // 全部匹配
+    if (xAxis && xAxisExt && extStack) {
+      return isNameMatch && isGroupMatch && isCategoryMatch
+    }
+    // 只匹配到维度
+    if (xAxis && !xAxisExt && !extStack) {
+      return isNameMatch
+    } else if (!xAxis && xAxisExt && !extStack) {
+      return isGroupMatch
+    } else if (!xAxis && !xAxisExt && extStack) {
+      return isCategoryMatch
+    } else if (xAxis && xAxisExt && !extStack) {
+      return isNameMatch && isGroupMatch
+    } else if (xAxis && !xAxisExt && extStack) {
+      return isNameMatch && isCategoryMatch
+    } else if (!xAxis && xAxisExt && extStack) {
+      return isGroupMatch && isCategoryMatch
+    } else {
+      return false
+    }
+  } else {
+    return (
+      (name === param.name || (name === 'NO_DATA' && !param.name)) && category === param.category
+    )
+  }
+}
+
+/**
+ * 查询图表数据并传递刷新来源，开发模拟仅在显式开启时修改响应副本
+ * autoRefresh 只标记定时刷新，手动查询仍使用完整绘制流程
+ */
+const calcData = async (view, callback, autoRefresh = false) => {
+  if (view.tableId || view['dataFrom'] === 'template') {
+    isError.value = false
+    const v = JSON.parse(JSON.stringify(view))
+    getData(v)
+      .then(async res => {
+        if (res.code && res.code !== 0) {
+          isError.value = true
+          errMsg.value = res.msg
+          callback?.()
+        } else {
+          if (mockRefreshResponse) {
+            res = mockRefreshResponse(res, view, autoRefresh)
+          }
+          chartData.value = res?.data as Partial<Chart['data']>
+          emit('onDrillFilters', res?.drillFilters)
+          if (!res?.drillFilters?.length) {
+            dynamicAreaId.value = ''
+            scope = null
+            gadmName = null
+          } else {
+            const chartExtRequest = view.chartExtRequest || view.value?.chartExtRequest
+            const extra = chartExtRequest?.drill?.[res?.drillFilters?.length - 1].extra
+            dynamicAreaId.value = extra?.adcode ? extra.adcode + '' : ''
+            scope = extra?.scope
+            gadmName = extra?.gadmName
+            // 地图
+            const map = parseJson(view.customAttr)?.map
+            if (map) {
+              let areaId = map.id
+              country.value = areaId.slice(0, 3)
+              if (country.value === '000' || dynamicAreaId.value?.startsWith('000')) {
+                const firstAdcode = chartExtRequest?.drill?.[0]?.extra?.adcode
+                if (firstAdcode) {
+                  country.value = firstAdcode + ''
+                }
+              }
+            }
+            if (dynamicAreaId.value && !dynamicAreaId.value?.startsWith(country.value)) {
+              if (country.value === 'cus') {
+                dynamicAreaId.value = '156' + dynamicAreaId.value
+              } else {
+                dynamicAreaId.value = country.value + dynamicAreaId.value
+              }
+            }
+          }
+          dvMainStore.setViewDataDetails(view.id, res)
+          if (!res.drill && !res.chartExtRequest?.linkageFilters?.length) {
+            dvMainStore.setViewOriginData(view.id, chartData.value)
+            emitter.emit('chart-data-change')
+          }
+          await renderChart(res, callback, autoRefresh)
+        }
+      })
+      .catch(() => {
+        callback?.()
+      })
+  } else {
+    if (['bubble-map', 'map', 'flow-map', 'heat-map'].includes(view.type)) {
+      await renderChart(view, callback)
+    }
+    callback?.()
+  }
+}
+let curView
+/**
+ * 按图表渲染库分发查询结果，仅向 G2 传递局部更新所需的定时刷新标记
+ */
+const renderChart = async (view, callback?, autoRefresh = false) => {
+  if (!view) {
+    return
+  }
+  curView = view
+  // view 为引用对象 需要存库 view.data 直接赋值会导致保存不必要的数据
+  // 与默认图表对象合并，方便增加配置项
+  const chart = deepCopy({

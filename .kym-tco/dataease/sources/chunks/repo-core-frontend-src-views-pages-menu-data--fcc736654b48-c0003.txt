@@ -1,0 +1,687 @@
+                        style="width: fit-content; white-space: nowrap"
+                        :title="formatDate(scope.row.data[c.props], c.dateType)"
+                      >
+                        {{ formatDate(scope.row.data[c.props], c.dateType) }}
+                      </span>
+                      <template
+                        v-else-if="
+                          ((c.type === 'select' && c.multiple) || c.type === 'checkbox') &&
+                          scope.row.data[c.props]
+                        "
+                      >
+                        <span
+                          style="width: fit-content; white-space: nowrap"
+                          :title="getMultipleValueList(scope.row.data[c.props])"
+                        >
+                          {{ getMultipleValueList(scope.row.data[c.props]) }}
+                        </span>
+                      </template>
+                      <span
+                        v-else
+                        style="width: fit-content; white-space: nowrap"
+                        :title="scope.row.data[c.props]"
+                      >
+                        {{ scope.row.data[c.props] }}
+                      </span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="t('data_fill.data.recent_committer')"
+                    fixed="right"
+                    width="100"
+                  >
+                    <template #default="scope">
+                      {{ scope.row.logInfo?.committer }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="t('data_fill.data.recent_commit_time')"
+                    fixed="right"
+                    width="180"
+                  >
+                    <template #default="scope">
+                      {{ formatDate(scope.row.logInfo?.commitTime, 'datetime') }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="t('data_fill.form.operation')" width="160" fixed="right">
+                    <template #default="scope">
+                      <div style="display: flex; flex-direction: row">
+                        <el-button text @click="openRow(scope.row.data)">
+                          <template #icon>
+                            <Icon name="icon_describe_outlined">
+                              <icon_describe_outlined />
+                            </Icon>
+                          </template>
+                        </el-button>
+                        <el-button
+                          text
+                          v-if="selectedItem?.weight >= 7"
+                          @click="updateRow(scope.row.data)"
+                        >
+                          <template #icon>
+                            <Icon name="icon_edit_outlined">
+                              <icon_edit_outlined />
+                            </Icon>
+                          </template>
+                        </el-button>
+                        <el-button
+                          text
+                          v-if="selectedItem?.weight >= 7"
+                          @click="deleteRow(scope.row.data[state.paginationConfig.key])"
+                        >
+                          <template #icon>
+                            <Icon name="icon_delete-trash_outlined">
+                              <icon_deleteTrash_outlined />
+                            </Icon>
+                          </template>
+                        </el-button>
+                      </div>
+                    </template>
+                  </el-table-column>
+                </GridTable>
+              </div>
+            </div>
+            <div
+              v-if="state.multipleSelection.length && selectedItem?.weight >= 7"
+              class="df-bottom-bar flex-align-center"
+            >
+              <el-button type="danger" class="batch-delete-button" plain @click="batchDelHandler">
+                {{ t('user.batch_del') }}
+              </el-button>
+              <span class="bottom-info">
+                {{ t('user.selection_info', [state.multipleSelection.length]) }}
+              </span>
+              <el-button text @click="clearSelection">
+                {{ t('data_fill.clear_selection') }}
+              </el-button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="activeName === 'record'" class="df-table-container">
+          <LogGrid :form-id="selectedItemId" :has-manage-permission="selectedItem?.weight >= 7" />
+        </div>
+
+        <div v-if="activeName === 'task'" class="df-table-container" style="padding: 0">
+          <TaskGrid
+            :form-id="selectedItemId"
+            :form-name="selectedItem?.name"
+            :columns="columns"
+            :forms="existsForms"
+          />
+        </div>
+      </template>
+      <template v-else-if="mounted">
+        <empty-background :description="t('data_fill.on_the_left')" img-type="select" />
+      </template>
+    </div>
+  </div>
+
+  <FilterSearchDrawer
+    v-if="showFilter"
+    @trigger-filter="search"
+    :form-id="selectedItem?.id"
+    :base-form="selectedItem?.forms"
+    v-model:conditions="searchConditions"
+    v-model:model-value="showFilter"
+  />
+
+  <creat-ds-group @finish="listDf" ref="creatDsFolder" />
+
+  <RowDataForm ref="rowDataFormRef" @finish="onCloseToRefresh" />
+
+  <el-drawer
+    :title="t('data_fill.data.batch_upload')"
+    :close-on-click-modal="false"
+    size="calc(100% - 100px)"
+    v-model="showDownloadDrawer"
+    direction="btt"
+    append-to-body
+    modal-class="df-upload-drawer"
+  >
+    <ExcelBatchUpload
+      v-if="showDownloadDrawer"
+      :formId="selectedItemId"
+      :form-name="selectedItem.name"
+      :columns="columns"
+      @close="closeUpload"
+      @finish="finishUpload"
+    />
+  </el-drawer>
+</template>
+
+<style lang="less" scoped>
+@import '@/style/mixin.less';
+
+.filter-icon-span {
+  border: 1px solid #d9dcdf;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  color: #1f2329;
+  padding: 8px;
+  margin-left: 8px;
+  font-size: 16px;
+  cursor: pointer;
+
+  .opt-icon:focus {
+    outline: none !important;
+  }
+
+  &:hover {
+    background: #f5f6f7;
+  }
+
+  &:active {
+    background: #eff0f1;
+  }
+}
+
+.datasource-manage {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  position: relative;
+
+  .resource-area {
+    position: relative;
+    height: 100%;
+    width: 279px;
+    padding: 0;
+    border-right: 1px solid #d7d7d7;
+    overflow: visible;
+
+    &.retract {
+      display: none;
+    }
+
+    .resource-tree {
+      padding: 16px 0 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .tree-header {
+        padding: 0 16px;
+      }
+
+      .icon-methods {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--TextPrimary, #1f2329);
+        padding-bottom: 16px;
+
+        .title {
+          margin-right: auto;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 24px;
+        }
+
+        .custom-icon {
+          &.btn {
+            color: var(--ed-color-primary);
+          }
+
+          &:hover {
+            cursor: pointer;
+            &::after {
+              content: '';
+              background-color: var(--ed-color-primary-1a, #3370ff1a);
+              width: 28px;
+              height: 28px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              border-radius: 4px;
+              transform: translate(-50%, -50%);
+            }
+          }
+        }
+      }
+
+      .search-bar {
+        padding-bottom: 10px;
+        width: calc(100% - 40px);
+      }
+    }
+  }
+
+  .update-records {
+    position: absolute;
+    top: 19px;
+    right: 12px;
+  }
+
+  .update-info {
+    display: inline-flex;
+    height: 24px;
+    padding: 1px 6px;
+    align-items: center;
+    border-radius: 2px;
+
+    &.to-be-updated {
+      background: rgba(31, 35, 41, 0.1);
+      color: #646a73;
+    }
+
+    &.updating {
+      color: var(--ed-color-primary, rgba(51, 112, 255, 1));
+      background: var(--ed-color-primary-33, rgba(51, 112, 255, 0.2));
+    }
+
+    &.pause {
+      background: rgba(31, 35, 41, 0.1);
+      color: #646a73;
+    }
+
+    &.updated {
+      color: #2ca91f;
+      background: rgba(52, 199, 36, 0.2);
+    }
+  }
+
+  .icon-border {
+    font-size: 18px;
+  }
+
+  .excel-table {
+    margin-top: 16px;
+
+    .sheet-table-content {
+      height: 400px;
+    }
+  }
+
+  .api-card-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    margin-left: -16px;
+  }
+
+  .api-card {
+    width: calc(50% - 16px);
+    height: 140px;
+    border-radius: 4px;
+    border: 1px solid var(--deCardStrokeColor, #dee0e3);
+    border-radius: 4px;
+    margin: 0 0 16px 16px;
+    padding: 16px;
+    font-family: var(--de-custom_font, 'PingFang');
+
+    .name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-right: 8px;
+      max-width: 70%;
+      display: inline-flex;
+    }
+
+    .req-title,
+    .req-value {
+      display: flex;
+      font-size: 14px;
+      font-weight: 400;
+
+      :nth-child(1) {
+        width: 100px;
+      }
+
+      :nth-child(2) {
+        margin-left: 24px;
+        max-width: calc(100% - 124px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .req-title {
+      color: var(--deTextSecondary, #646a73);
+      margin: 16px 0 4px 0;
+    }
+
+    .req-value {
+      color: var(--deTextPrimary, #1f2329);
+    }
+
+    .de-copy-icon {
+      cursor: pointer;
+      margin-right: 20px;
+      color: var(--deTextSecondary, #646a73);
+    }
+
+    .de-delete-icon:not(.not-allow) {
+      cursor: pointer;
+
+      &:hover {
+        color: var(--deDanger, #f54a45);
+      }
+    }
+
+    .de-tag {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 2px;
+      padding: 1px 6px;
+      height: 24px;
+      font-size: 14px;
+    }
+
+    .error-color {
+      color: #646a73;
+      background-color: rgba(31, 35, 41, 10%);
+    }
+
+    .success-color {
+      color: green;
+      background-color: rgba(52, 199, 36, 20%);
+    }
+  }
+
+  .de-expand {
+    font-family: var(--de-custom_font, 'PingFang');
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    color: var(--ed-color-primary);
+    cursor: pointer;
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+
+    .ed-icon {
+      margin-left: 4px;
+    }
+  }
+
+  .datasource-height,
+  .datasource-content {
+    height: calc(100vh - 56px);
+    overflow: auto;
+    position: relative;
+
+    &.h100 {
+      .df-table-container {
+        height: calc(100% - 90px);
+      }
+    }
+
+    &.h90 {
+      .df-table-container {
+        height: calc(100% - 90px);
+      }
+    }
+  }
+
+  .datasource-list {
+    width: 279px;
+    padding: 16px 8px;
+  }
+
+  .datasource-content {
+    background: #f5f6f7;
+    overflow-y: auto;
+
+    &.auto {
+      height: auto;
+    }
+  }
+
+  .m24 {
+    margin: 24px 0;
+  }
+
+  .w100 {
+    width: 100%;
+  }
+
+  .datasource-content {
+    flex: 1;
+    position: relative;
+
+    .datasource-info {
+      background: #fff;
+      padding: 0 24px;
+      padding-top: 12px;
+      height: 90px;
+      position: sticky;
+      top: 0;
+      z-index: 6;
+
+      .info-method {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-family: var(--de-custom_font, 'PingFang');
+        font-size: 16px;
+        font-weight: 500;
+
+        .ed-icon {
+          font-size: 24px;
+        }
+
+        .name {
+          margin-left: 8px;
+          max-width: 200px;
+        }
+
+        .create-user {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+          color: #646a73;
+          margin-right: 4px;
+        }
+
+        .mr8 {
+          margin-left: 8px;
+        }
+
+        .right-btn {
+          margin-left: auto;
+
+          .replace-excel {
+            margin: 0 12px;
+          }
+        }
+      }
+
+      .tab-border {
+        .border-bottom-tab(24px);
+
+        :deep(.ed-tabs__item) {
+          font-size: 14px;
+        }
+
+        :deep(.ed-tabs__nav-wrap::after) {
+          border-color: rgba(31, 35, 41, 0.15);
+        }
+
+        margin-left: 0;
+      }
+    }
+
+    .df-table-container {
+      padding: 24px;
+      height: calc(100vh - 148px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .df-table-container-no-bottom {
+      padding: 24px 24px 0;
+    }
+
+    .df-table {
+      padding: 24px;
+      background: #fff;
+      height: 100%;
+
+      .search-operate {
+        width: 500px;
+      }
+    }
+
+    .df-table-bottom {
+      height: calc(100% - 64px);
+    }
+
+    .info-table-full {
+      height: 100%;
+    }
+
+    .info-table {
+      height: calc(100% - 49px);
+    }
+
+    .info-table-no-bottom {
+      height: 100%;
+    }
+  }
+}
+
+.custom-tree {
+  height: calc(100vh - 148px);
+  padding: 0 8px;
+}
+
+.custom-tree-node {
+  width: calc(100% - 30px);
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  padding-right: 4px;
+  position: relative;
+
+  .label-tooltip {
+    width: calc(100% - 40px);
+    margin-left: 8.75px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 18px;
+  }
+
+  .icon-more {
+    margin-left: auto;
+    opacity: 0;
+  }
+
+  &:hover {
+    .label-tooltip {
+      width: calc(100% - 78px);
+
+      &.excel {
+        width: calc(100% - 54px);
+      }
+    }
+
+    .icon-more {
+      opacity: 1;
+    }
+  }
+}
+
+.node-disabled-custom {
+  color: rgba(187, 191, 196, 1);
+  cursor: not-allowed;
+}
+
+.df-bottom-bar {
+  z-index: 800;
+  position: unset !important;
+  height: 64px;
+  min-height: 64px !important;
+  width: 100%;
+  padding-left: 24px;
+  background: var(--neutral-00, #fff);
+  box-shadow: 0px -2px 4px 0px rgba(31, 35, 41, 0.08);
+
+  .bottom-info {
+    color: #646a73;
+    margin: 0 16px 0 24px;
+  }
+
+  .batch-delete-button {
+    color: var(--ed-button-text-color);
+    border-color: var(--ed-button-border-color);
+
+    &:hover {
+      color: var(--ed-button-hover-text-color);
+      border-color: var(--ed-button-hover-border-color);
+      background-color: var(--ed-button-hover-bg-color);
+      outline: none;
+    }
+  }
+}
+
+.df-data-form-table {
+  :deep(.ed-table--border) {
+    border-bottom: var(--ed-table-border);
+  }
+}
+</style>
+<style lang="less">
+.new-data_fill {
+  .ed-popper__arrow {
+    transform: translate(39px, 0px) !important;
+  }
+}
+.record-drawer {
+  .ed-drawer__body {
+    padding: 24px;
+  }
+
+  .flex-align-center {
+    .ed-icon {
+      margin: 0 4px;
+    }
+
+    .error-info {
+      cursor: pointer;
+    }
+  }
+}
+
+.ds-table-drawer {
+  max-height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+
+  .ed-dialog__body {
+    overflow-y: auto;
+  }
+
+  .table-value,
+  .table-name {
+    font-family: var(--de-custom_font, 'PingFang');
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .table-name {
+    color: var(--deTextSecondary, #646a73);
+  }
+
+  .table-value {
+    margin: 4px 0 24px 0;
+    color: var(--deTextPrimary, #1f2329);
+  }
+}
+
+.df-upload-drawer {
+  .ed-drawer__body {
+    padding: 0;
+  }
+}
+</style>

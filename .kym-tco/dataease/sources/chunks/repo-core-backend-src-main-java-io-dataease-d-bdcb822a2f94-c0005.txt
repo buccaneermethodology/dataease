@@ -1,0 +1,135 @@
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(JsonUtil.parseObject(datasourceDTO.getConfiguration(), Oracle.class)).toString());
+                        break;
+                    case "sqlServer":
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(JsonUtil.parseObject(datasourceDTO.getConfiguration(), Sqlserver.class)).toString());
+                        break;
+                }
+            }
+        }
+        if (datasourceDTO.getType().contains(DatasourceConfiguration.DatasourceType.Excel.toString())) {
+            datasourceDTO.setFileName(ExcelUtils.getFileName(datasource));
+            datasourceDTO.setSize(ExcelUtils.getSize(datasource));
+        }
+        if (datasourceDTO.getType().equalsIgnoreCase(DatasourceConfiguration.DatasourceType.ExcelRemote.name()) || datasourceDTO.getType().contains(DatasourceConfiguration.DatasourceType.API.toString())) {
+            CoreDatasourceTask coreDatasourceTask = datasourceTaskServer.selectByDSId(datasourceDTO.getId());
+            TaskDTO taskDTO = new TaskDTO();
+            BeanUtils.copyBean(taskDTO, coreDatasourceTask);
+            datasourceDTO.setSyncSetting(taskDTO);
+            CoreDatasourceTask task = datasourceTaskServer.selectByDSId(datasourceDTO.getId());
+            if (task != null) {
+                datasourceDTO.setLastSyncTime(task.getStartTime());
+            }
+        }
+        datasourceDTO.setConfiguration(RsaUtils.symmetricEncrypt(datasourceDTO.getConfiguration()));
+        if (StringUtils.isNotBlank(datasourceDTO.getCreateBy())) {
+            datasourceDTO.setCreator(coreUserManage.getUserName(Long.valueOf(datasourceDTO.getCreateBy())));
+        }
+        return datasourceDTO;
+    }
+
+    private DatasourceDTO validate(CoreDatasource coreDatasource) {
+        DatasourceDTO datasourceDTO = new DatasourceDTO();
+        BeanUtils.copyBean(datasourceDTO, coreDatasource);
+        try {
+            checkDatasourceStatus(datasourceDTO);
+            if (!Arrays.asList("API", "Excel", "folder").contains(coreDatasource.getType()) && !coreDatasource.getType().contains(DatasourceConfiguration.DatasourceType.API.name()) && !coreDatasource.getType().contains(DatasourceConfiguration.DatasourceType.ExcelRemote.name())) {
+                if (ProviderFactory.getProvider(coreDatasource.getType()) instanceof CalciteProvider) {
+                    calciteProvider.updateDsPoolAfterCheckStatus(datasourceDTO);
+                }
+            }
+        } catch (DEException e) {
+            LogUtil.error(e);
+            datasourceDTO.setStatus("Error");
+            DEException.throwException(e.getMessage());
+        } catch (Exception e) {
+            datasourceDTO.setStatus("Error");
+            DEException.throwException(e.getMessage());
+        } finally {
+            coreDatasource.setStatus(datasourceDTO.getStatus());
+            dataSourceManage.innerEditStatus(coreDatasource);
+        }
+        datasourceDTO.setConfiguration("");
+        return datasourceDTO;
+    }
+
+    @Override
+    public DsSimpleVO simple(Long id) {
+        if (ObjectUtils.isEmpty(id)) DEException.throwException("id is null");
+        CoreDatasource coreDatasource = dataSourceManage.getCoreDatasource(id);
+        if (ObjectUtils.isEmpty(coreDatasource)) return null;
+        DsSimpleVO vo = new DsSimpleVO();
+        vo.setName(coreDatasource.getName());
+        vo.setType(coreDatasource.getType());
+        vo.setDescription(coreDatasource.getDescription());
+        String configuration = coreDatasource.getConfiguration();
+        DatasourceConfiguration config = null;
+        String host = null;
+        if (StringUtils.isBlank(configuration) || StringUtils.equalsIgnoreCase("[]", configuration) || ObjectUtils.isEmpty(config = JsonUtil.parseObject(configuration, DatasourceConfiguration.class)) || StringUtils.isBlank(host = config.getHost())) {
+            return vo;
+        }
+        vo.setHost(host);
+        return vo;
+    }
+
+    @Override
+    public List<Map<String, String>> multidimensionalTables(Map<String, String> request) throws DEException {
+        List<ApiDefinition> paramsList = new ArrayList<>();
+        ApiDefinition apiDefinition = JsonUtil.parseObject(new String(java.util.Base64.getDecoder().decode(request.get("data"))), ApiDefinition.class);
+        paramsList.add(apiDefinition);
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        DatasourceDTO datasource = new DatasourceDTO();
+        datasource.setConfiguration(JsonUtil.toJSONString(paramsList).toString());
+        datasourceRequest.setDatasource(datasource);
+        List<Map<String, String>> result = new ArrayList<>();
+        if (request.keySet().contains("type") && request.get("type").equals("tables")) {
+            result = (List<Map<String, String>>) invokeMethod(request.get("dsType"), "listTables", DatasourceRequest.class, datasourceRequest);
+        }
+        if (request.keySet().contains("type") && request.get("type").equals("views")) {
+            result = (List<Map<String, String>>) invokeMethod(request.get("dsType"), "listViews", DatasourceRequest.class, datasourceRequest);
+        }
+        return result;
+    }
+
+    private Method getMethod(String dsType, String methodName, Class<?> classes) {
+        Method method = null;
+        try {
+            String ClassName = "io.dataease.datasource.provider.ApiUtils";
+            if (!dsType.equals(DatasourceConfiguration.DatasourceType.API.name())) {
+                Provider provider = ProviderFactory.getProvider(dsType);
+                method = provider.getClass().getMethod(methodName, classes);
+            } else {
+                Class<?> clazz = Class.forName(ClassName);
+                method = clazz.getMethod(methodName, classes);
+            }
+
+        } catch (Exception e) {
+            DEException.throwException("Cant find method: " + e.getMessage());
+        }
+        return method;
+    }
+
+    public Object invokeMethod(String dsType, String methodName, Class<?> classes, Object object) {
+        Object resObj = null;
+        try {
+            Method method = getMethod(dsType, methodName, classes);
+            resObj = method.invoke(null, object);
+        } catch (Exception e) {
+            DEException.throwException(msg(e));
+        }
+        return resObj;
+    }
+
+    private String msg(Throwable e) {
+        Throwable exception = e;
+        while (true) {
+            if (exception.getCause() == null) {
+                return exception.getMessage();
+            }
+            if (exception instanceof DEException && (!(exception.getCause() instanceof DEException) && !(exception.getCause() instanceof InvocationTargetException))) {
+                return exception.getMessage();
+            }
+            exception = exception.getCause();
+
+        }
+    }
+}

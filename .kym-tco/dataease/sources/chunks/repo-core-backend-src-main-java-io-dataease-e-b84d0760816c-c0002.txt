@@ -1,0 +1,339 @@
+                        sortFields.add(sortField);
+                    }
+                }
+                dto.setSortFields(sortFields);
+                DatasetOrder2SQLObj.getOrders(sqlMeta, dto.getSortFields(), allFields);
+                String replaceSql = provider.rebuildSQL(SQLProvider.createQuerySQL(sqlMeta, false, false, false), sqlMeta, crossDs, dsMap);
+                Long totalCount = datasetDataManage.getDatasetTotal(dto, replaceSql, null);
+                Long curLimit = ExportCenterUtils.getExportLimit("dataset");
+                totalCount = totalCount > curLimit ? curLimit : totalCount;
+
+                Long sheetCount = (totalCount / sheetLimit) + (totalCount % sheetLimit > 0 ? 1 : 0);
+                Workbook wb = new SXSSFWorkbook();
+                CellStyle cellStyle = wb.createCellStyle();
+                Font font = wb.createFont();
+                font.setFontHeightInPoints((short) 12);
+                font.setBold(true);
+                cellStyle.setFont(font);
+                cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                CellStyle plainNumberCellStyle = createPlainNumberCellStyle(wb);
+
+                for (Long s = 1L; s < sheetCount + 1; s++) {
+                    Long sheetSize;
+                    if (s.equals(sheetCount)) {
+                        sheetSize = totalCount - (s - 1) * sheetLimit;
+                    } else {
+                        sheetSize = sheetLimit;
+                    }
+                    Long pageSize = (sheetSize / extractPageSize) + (sheetSize % extractPageSize > 0 ? 1 : 0);
+                    Sheet detailsSheet = null;
+                    List<List<String>> details = new ArrayList<>();
+                    for (Long p = 0L; p < pageSize; p++) {
+                        int beforeCount = (int) ((s - 1) * sheetLimit);
+                        String querySQL = SQLProvider.createQuerySQLWithLimit(sqlMeta, false, needOrder, false, beforeCount + p.intValue() * extractPageSize, extractPageSize);
+                        if (pageSize == 1) {
+                            querySQL = SQLProvider.createQuerySQLWithLimit(sqlMeta, false, needOrder, false, 0, sheetSize.intValue());
+                        }
+                        querySQL = provider.rebuildSQL(querySQL, sqlMeta, crossDs, dsMap);
+                        DatasourceRequest datasourceRequest = new DatasourceRequest();
+                        datasourceRequest.setQuery(querySQL);
+                        datasourceRequest.setDsList(dsMap);
+                        datasourceRequest.setIsCross(coreDatasetGroup.getIsCross());
+                        applyPreparedParams(datasourceRequest, sqlMap);
+                        Map<String, Object> previewData = datasetDataManage.buildPreviewData(provider.fetchResultField(datasourceRequest), allFields, desensitizationList, false);
+                        List<Map<String, Object>> data = (List<Map<String, Object>>) previewData.get("data");
+                        if (p.equals(0L)) {
+                            detailsSheet = wb.createSheet("数据" + s);
+                            List<String> header = new ArrayList<>();
+                            for (DatasetTableFieldDTO field : allFields) {
+                                header.add(field.getName());
+                            }
+                            details.add(header);
+                            for (Map<String, Object> obj : data) {
+                                List<String> row = new ArrayList<>();
+                                for (DatasetTableFieldDTO field : allFields) {
+                                    String string = (String) obj.get(field.getDataeaseName());
+                                    row.add(string);
+                                }
+                                details.add(row);
+                            }
+                            if (CollectionUtils.isNotEmpty(details)) {
+                                for (int i = 0; i < details.size(); i++) {
+                                    Row row = detailsSheet.createRow(i);
+                                    List<String> rowData = details.get(i);
+                                    if (rowData != null) {
+                                        for (int j = 0; j < rowData.size(); j++) {
+                                            Cell cell = row.createCell(j);
+                                            if (i == 0) {
+                                                cell.setCellValue(rowData.get(j));
+                                                cell.setCellStyle(cellStyle);
+                                                detailsSheet.setColumnWidth(j, 255 * 20);
+                                            } else {
+                                                setDatasetCellValue(cell, allFields.get(j), rowData.get(j), plainNumberCellStyle);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            details.clear();
+                            for (Map<String, Object> obj : data) {
+                                List<String> row = new ArrayList<>();
+                                for (DatasetTableFieldDTO field : allFields) {
+                                    String string = (String) obj.get(field.getDataeaseName());
+                                    row.add(string);
+                                }
+                                details.add(row);
+                            }
+                            int lastNum = detailsSheet.getLastRowNum();
+                            for (int i = 0; i < details.size(); i++) {
+                                Row row = detailsSheet.createRow(i + lastNum + 1);
+                                List<String> rowData = details.get(i);
+                                if (rowData != null) {
+                                    for (int j = 0; j < rowData.size(); j++) {
+                                        Cell cell = row.createCell(j);
+                                        setDatasetCellValue(cell, allFields.get(j), rowData.get(j), plainNumberCellStyle);
+                                    }
+                                }
+                            }
+                        }
+                        double exportRogress2 = (double) ((double) s - 1) / ((double) sheetCount);
+                        double exportRogress = (double) ((double) (p + 1) / (double) pageSize) * ((double) 1 / sheetCount);
+                        DecimalFormat df = new DecimalFormat("#.##");
+                        String formattedResult = df.format((exportRogress + exportRogress2) * 100);
+                        updateExportTask(exportTarget.taskId(), "IN_PROGRESS", formattedResult, null, null, null);
+                    }
+                }
+                this.addWatermarkTools(wb);
+                try (OutputStream fileOutputStream = exportTarget.newOutputStream()) {
+                    wb.write(fileOutputStream);
+                    fileOutputStream.flush();
+                }
+                wb.close();
+                updateExportTaskSuccess(exportTarget, "100");
+
+            } catch (Exception e) {
+                LogUtil.error("Failed to export data", e);
+                updateExportTask(exportTarget.taskId(), "FAILED", null, e.getMessage(), null, null);
+            } finally {
+                IPUtils.remove();
+                V3UserUtil.clear();
+            }
+        });
+        Running_Task.put(exportTarget.taskId(), future);
+    }
+
+    @DeLog(id = "#p2.viewId", ot = LogOT.EXPORT, st = LogST.PANEL)
+    public void startPanelViewTask(CoreExportTask exportTask, ExportTaskFileTarget exportTarget, ChartExcelRequest request) {
+        startViewTask(exportTask, exportTarget, request);
+    }
+
+    @DeLog(id = "#p2.viewId", ot = LogOT.EXPORT, st = LogST.SCREEN)
+    public void startDataVViewTask(CoreExportTask exportTask, ExportTaskFileTarget exportTarget, ChartExcelRequest request) {
+        startViewTask(exportTask, exportTarget, request);
+    }
+
+    public static void removeColumn(List<Object[]> list, List<Integer> columnIndexs) {
+        if (list == null || list.isEmpty() || columnIndexs == null || columnIndexs.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            Object[] originalRow = list.get(i);
+            Object[] newRow = new Object[originalRow.length - columnIndexs.size()];
+            int newIndex = 0;
+            for (int j = 0; j < originalRow.length; j++) {
+                if (!columnIndexs.contains(j)) {
+                    newRow[newIndex++] = originalRow[j];
+                }
+            }
+            list.set(i, newRow);
+        }
+    }
+
+    public void startViewTask(CoreExportTask exportTask, ExportTaskFileTarget exportTarget, ChartExcelRequest request) {
+        exportTarget.createParentDirectory();
+        Long uid = V3UserUtil.getUid();
+        Long proxyOid = V3UserUtil.getProxy().getProxyOid();
+        String clientIp = IPUtils.get();
+        Future future = scheduledThreadPoolExecutor.submit(() -> {
+            try {
+                V3UserUtil.setUid(uid);
+                if (ObjectUtils.isNotEmpty(proxyOid) && proxyOid > 0) {
+                    V3UserUtil.setProxy(proxyOid);
+                }
+                IPUtils.set(clientIp);
+                coreExportTaskRepository.saveAndFlush(exportTask);
+                LicenseUtil.validate();
+                updateExportTask(exportTarget.taskId(), "IN_PROGRESS", null, null, null, null);
+                Workbook wb = new SXSSFWorkbook();
+                CellStyle cellStyle = wb.createCellStyle();
+                Font font = wb.createFont();
+                font.setFontHeightInPoints((short) 12);
+                font.setBold(true);
+                cellStyle.setFont(font);
+                cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+                List<Object[]> details = new ArrayList<>();
+                Sheet detailsSheet;
+                Integer sheetIndex = 1;
+                if ("dataset".equals(request.getDownloadType()) || request.getViewInfo().getType().equalsIgnoreCase("table-info") || request.getViewInfo().getType().equalsIgnoreCase("table-normal")) {
+                    boolean summaryEnabled = !"dataset".equals(request.getDownloadType()) && ChartDataServer.isSummaryEnabled(request.getViewInfo());
+                    ChartDataServer.SummaryConfig summaryConfig = null;
+                    ChartDataServer.SummaryAccumulator summaryAcc = null;
+                    List<ChartViewFieldDTO> allExportColumns = null;
+                    Map<String, java.math.BigDecimal> customSumResult = null;
+                    if (summaryEnabled) {
+                        summaryConfig = ChartDataServer.parseSummaryConfig(request.getViewInfo());
+                        summaryAcc = new ChartDataServer.SummaryAccumulator();
+                        allExportColumns = ChartDataServer.getAllExportColumns(request.getViewInfo());
+                    }
+
+                    request.getViewInfo().getChartExtRequest().setPageSize(Long.valueOf(extractPageSize));
+                    ChartViewDTO chartViewDTO = chartDataServer.findExcelData(request);
+                    for (long i = 1; i < chartViewDTO.getTotalPage() + 1; i++) {
+                        request.getViewInfo().getChartExtRequest().setGoPage(i);
+                        request.getViewInfo().setExtStack(request.getViewInfo().getExtStack().stream().filter(ele -> !ele.isHide()).collect(Collectors.toList()));
+                        ChartViewDTO pageDto = chartDataServer.findExcelData(request);
+                        details.addAll(request.getDetails());
+
+                        if (summaryEnabled) {
+                            ChartDataServer.accumulatePageStats(summaryAcc, request.getDetails(), allExportColumns, summaryConfig);
+                            if (i == chartViewDTO.getTotalPage() && pageDto.getData() != null && pageDto.getData().get("customSumResult") != null) {
+                                customSumResult = (Map<String, java.math.BigDecimal>) pageDto.getData().get("customSumResult");
+                            }
+                        }
+
+                        if (((details.size() + extractPageSize) > sheetLimit) || i == chartViewDTO.getTotalPage()) {
+                            boolean hasSummaryRow = i == chartViewDTO.getTotalPage() && summaryEnabled && summaryAcc.totalCount > 0;
+                            if (hasSummaryRow) {
+                                Object[] totalRow = ChartDataServer.buildSummaryRow(allExportColumns, summaryConfig, summaryAcc, customSumResult);
+                                details.add(totalRow);
+                            }
+
+                            detailsSheet = wb.createSheet("数据" + sheetIndex);
+                            Integer[] excelTypes = request.getExcelTypes();
+                            ViewDetailField[] detailFields = request.getDetailFields();
+                            Object[] header = ChartDataServer.filterExportHeader(request.getHeader(), request.getViewInfo());
+                            details.add(0, header);
+                            List<Integer> columnIndexs = ChartDataServer.getHiddenExportColumnIndexes(header, request.getViewInfo());
+                            removeColumn(details, columnIndexs);
+                            ChartDataServer.setExcelData(detailsSheet, cellStyle, header, details, detailFields, excelTypes, null, request.getViewInfo(), wb, hasSummaryRow);
+                            sheetIndex++;
+                            details.clear();
+                        }
+                        double exportProgress = (double) ((double) i / (chartViewDTO.getTotalPage()));
+                        DecimalFormat df = new DecimalFormat("#.##");
+                        String formattedResult = df.format((exportProgress) * 100);
+                        updateExportTask(exportTarget.taskId(), "IN_PROGRESS", formattedResult, null, null, null);
+                    }
+                } else {
+                    downloadNotTableInfoData(request, wb);
+                }
+                this.addWatermarkTools(wb);
+
+                try (OutputStream outputStream = exportTarget.newOutputStream()) {
+                    wb.write(outputStream);
+                    outputStream.flush();
+                }
+                wb.close();
+                updateExportTaskSuccess(exportTarget, "100");
+            } catch (Exception e) {
+                LogUtil.error("Failed to export data", e);
+                updateExportTask(exportTarget.taskId(), "FAILED", null, e.getMessage(), null, null);
+            } finally {
+                IPUtils.remove();
+                V3UserUtil.clear();
+            }
+        });
+        Running_Task.put(exportTarget.taskId(), future);
+    }
+
+    private void updateExportTask(String taskId, String exportStatus, String exportProgress, String msg, Double fileSize, String fileSizeUnit) {
+        CoreExportTask exportTask = coreExportTaskRepository.findById(taskId).orElse(null);
+        if (exportTask == null) return;
+        exportTask.setExportStatus(exportStatus);
+        if (exportProgress != null) exportTask.setExportProgress(exportProgress);
+        if (msg != null) exportTask.setMsg(msg);
+        if (fileSize != null) exportTask.setFileSize(fileSize);
+        if (fileSizeUnit != null) exportTask.setFileSizeUnit(fileSizeUnit);
+        coreExportTaskRepository.saveAndFlush(exportTask);
+    }
+
+    private void downloadNotTableInfoData(ChartExcelRequest request, Workbook wb) {
+        chartDataServer.findExcelData(request);
+        //给单元格设置样式
+        CellStyle cellStyle = wb.createCellStyle();
+        Font font = wb.createFont();
+        //设置字体大小
+        font.setFontHeightInPoints((short) 12);
+        //设置字体加粗
+        font.setBold(true);
+        //给字体设置样式
+        cellStyle.setFont(font);
+        //设置单元格背景颜色
+        cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        //设置单元格填充样式(使用纯色背景颜色填充)
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        if (CollectionUtils.isEmpty(request.getMultiInfo())) {
+            if (request.getViewInfo().getType().equalsIgnoreCase("chart-mix-dual-line")) {
+            } else {
+                List<Object[]> details = request.getDetails();
+                Integer[] excelTypes = request.getExcelTypes();
+                details.add(0, request.getHeader());
+                ViewDetailField[] detailFields = request.getDetailFields();
+                Object[] header = request.getHeader();
+                Sheet detailsSheet = wb.createSheet("数据");
+                if (request.getViewInfo().getType().equalsIgnoreCase("table-normal")) {
+                    ChartDataServer.setExcelData(detailsSheet, cellStyle, header, details, detailFields, excelTypes, request.getViewInfo(), wb);
+                } else {
+                    ChartDataServer.setExcelData(detailsSheet, cellStyle, header, details, detailFields, excelTypes, request.getViewInfo(), null);
+                }
+            }
+        } else {
+            //多个sheet
+            for (int i = 0; i < request.getMultiInfo().size(); i++) {
+                ChartExcelRequestInner requestInner = request.getMultiInfo().get(i);
+
+                List<Object[]> details = requestInner.getDetails();
+                Integer[] excelTypes = requestInner.getExcelTypes();
+                details.add(0, requestInner.getHeader());
+                ViewDetailField[] detailFields = requestInner.getDetailFields();
+                Object[] header = requestInner.getHeader();
+                //明细sheet
+                Sheet detailsSheet = wb.createSheet("数据 " + (i + 1));
+                ChartDataServer.setExcelData(detailsSheet, cellStyle, header, details, detailFields, excelTypes, request.getViewInfo(), null);
+            }
+        }
+    }
+
+    private void updateExportTaskSuccess(ExportTaskFileTarget exportTarget, String exportProgress) {
+        try {
+            ExportTaskFileTarget.FileSize fileSize = exportTarget.readFileSize();
+            updateExportTask(exportTarget.taskId(), "SUCCESS", exportProgress, null, fileSize.size(), fileSize.unit());
+        } catch (IOException e) {
+            DEException.throwException(e);
+        }
+    }
+
+    public void addWatermarkTools(Workbook wb) {
+        VisualizationWatermark watermark = watermarkRepository.findById("system_default").orElse(null);
+        WatermarkContentDTO watermarkContent = JsonUtil.parseObject(watermark.getSettingContent(), WatermarkContentDTO.class);
+        if (watermarkContent.getEnable() && watermarkContent.getExcelEnable()) {
+            UserFormVO userInfo = CommonBeanFactory.getBean(UserApi.class).queryById(V3UserUtil.getUid());
+            // 在主逻辑中添加水印
+            int watermarkPictureIdx = ExcelWatermarkUtils.addWatermarkImage(wb, watermarkContent, userInfo); // 生成水印图片并获取 ID
+            for (Sheet sheet : wb) {
+                ExcelWatermarkUtils.addWatermarkToSheet(sheet, watermarkPictureIdx); // 为每个 Sheet 添加水印
+            }
+        }
+    }
+
+    public void download(ExportTaskFileTarget exportTarget, String downloadFileName, HttpServletResponse response) throws Exception {
+        response.setContentType("application/octet-stream");
+        String encodedFileName = URLEncoder.encode(downloadFileName, StandardCharsets.UTF_8);
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"; filename*=utf-8''" + encodedFileName);
+        try (InputStream fileInputStream = exportTarget.newInputStream(); OutputStream outputStream = response.getOutputStream()) {
+            fileInputStream.transferTo(outputStream);
+            outputStream.flush();

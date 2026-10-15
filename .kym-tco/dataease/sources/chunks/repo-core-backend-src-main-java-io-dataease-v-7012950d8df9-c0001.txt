@@ -1,0 +1,399 @@
+# Repo evidence: core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java
+package io.dataease.visualization.manage;
+
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.dataease.api.visualization.dto.VisualizationViewTableDTO;
+import io.dataease.api.visualization.request.DataVisualizationBaseRequest;
+import io.dataease.api.visualization.request.VisualizationWorkbranchQueryRequest;
+import io.dataease.api.visualization.vo.DataVisualizationVO;
+import io.dataease.api.visualization.vo.VisualizationReportFilterVO;
+import io.dataease.api.visualization.vo.VisualizationResourceVO;
+import io.dataease.chart.dao.auto.mapper.CoreChartViewRepository;
+import io.dataease.chart.manage.ChartViewManege;
+import io.dataease.commons.constants.DataVisualizationConstants;
+import io.dataease.commons.constants.OptConstants;
+import io.dataease.constant.BusiResourceEnum;
+import io.dataease.constant.CommonConstants;
+import io.dataease.dao.auto.entity.*;
+import io.dataease.dao.auto.entity.QCoreDatasetGroup;
+import io.dataease.dao.auto.entity.QCoreDatasource;
+import io.dataease.dao.auto.entity.QDataVisualizationInfo;
+import io.dataease.dao.auto.entity.QPerBusiResource;
+import io.dataease.operation.dao.auto.entity.QCoreOptRecent;
+import io.dataease.dao.auto.repo.VisualizationReportFilterRepository;
+import io.dataease.exception.DEException;
+import io.dataease.extensions.datasource.dto.DatasetTableFieldDTO;
+import io.dataease.license.config.XpackInteract;
+import io.dataease.model.BusiNodeRequest;
+import io.dataease.model.BusiNodeVO;
+import io.dataease.operation.manage.CoreOptRecentManage;
+import io.dataease.permission.util.V3UserUtil;
+import io.dataease.result.PageResult;
+import io.dataease.utils.*;
+import io.dataease.visualization.dao.auto.entity.*;
+import io.dataease.visualization.dao.auto.entity.QCoreStore;
+import io.dataease.visualization.dao.auto.mapper.*;
+import io.dataease.visualization.dao.ext.po.VisualizationNodePO;
+import io.dataease.visualization.dao.ext.po.VisualizationResourcePO;
+import io.dataease.visualization.dto.VisualizationNodeBO;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Component
+@Transactional
+public class CoreVisualizationManage {
+    @Resource
+    private JPAQueryFactory queryFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Resource
+    CoreChartViewRepository coreChartViewRepository;
+    @Resource
+    private DataVisualizationInfoRepository dataVisualizationInfoRepository;
+
+    @Resource
+    private SnapshotDataVisualizationInfoRepository snapshotDataVisualizationInfoRepository;
+
+    @Resource
+    private VisualizationOuterParamsTargetViewInfoRepository visualizationOuterParamsTargetViewInfoRepository;
+    @Resource
+    private VisualizationLinkageFieldRepository visualizationLinkageFieldRepository;
+    @Resource
+    private VisualizationLinkageRepository visualizationLinkageRepository;
+    @Resource
+    private VisualizationLinkJumpRepository visualizationLinkJumpRepository;
+    @Resource
+    private VisualizationLinkJumpInfoRepository visualizationLinkJumpInfoRepository;
+    @Resource
+    private VisualizationLinkJumpTargetViewInfoRepository visualizationLinkJumpTargetViewInfoRepository;
+
+    @Resource
+    private CoreOptRecentManage coreOptRecentManage;
+
+    @Resource
+    private ChartViewManege chartViewManege;
+    @Autowired
+    private SnapshotCoreChartViewRepository snapshotCoreChartViewRepository;
+
+    @Resource
+    private VisualizationOuterParamsRepository visualizationOuterParamsRepository;
+    @Resource
+    private SnapshotVisualizationOuterParamsRepository snapshotVisualizationOuterParamsRepository;
+    @Resource
+    private SnapshotVisualizationOuterParamsInfoRepository snapshotVisualizationOuterParamsInfoRepository;
+    @Resource
+    private SnapshotVisualizationOuterParamsTargetViewInfoRepository snapshotVisualizationOuterParamsTargetViewInfoRepository;
+    @Resource
+    private SnapshotVisualizationLinkageRepository snapshotVisualizationLinkageRepository;
+    @Resource
+    private SnapshotVisualizationLinkageFieldRepository snapshotVisualizationLinkageFieldRepository;
+    @Resource
+    private SnapshotVisualizationLinkJumpRepository snapshotVisualizationLinkJumpRepository;
+    @Autowired
+    private VisualizationOuterParamsInfoRepository visualizationOuterParamsInfoRepository;
+    @Resource
+    private SnapshotVisualizationLinkJumpInfoRepository snapshotVisualizationLinkJumpInfoRepository;
+    @Resource
+    private SnapshotVisualizationLinkJumpTargetViewInfoRepository snapshotVisualizationLinkJumpTargetViewInfoRepository;
+    @Resource
+    private VisualizationReportFilterRepository reportFilterRepository;
+
+    @XpackInteract(value = "visualizationResourceTree", replace = true, invalid = true)
+    public List<BusiNodeVO> tree(BusiNodeRequest request) {
+        List<VisualizationNodeBO> nodes = new ArrayList<>();
+        if (ObjectUtils.isEmpty(request.getLeaf()) || !request.getLeaf()) {
+            nodes.add(rootNode());
+        }
+        QDataVisualizationInfo dataVisualizationInfo = QDataVisualizationInfo.dataVisualizationInfo;
+        JPAQuery<VisualizationNodePO> query = queryFactory.select(
+                        Projections.fields(VisualizationNodePO.class,
+                                dataVisualizationInfo.id.castToNum(Long.class).as("id"),
+                                dataVisualizationInfo.name,
+                                dataVisualizationInfo.pid.castToNum(Long.class).as("pid"),
+                                dataVisualizationInfo.nodeType,
+                                dataVisualizationInfo.mobileLayout.castToNum(Integer.class).as("extraFlag"),
+                                dataVisualizationInfo.status.as("extraFlag1")))
+                .from(dataVisualizationInfo)
+                .where(dataVisualizationInfo.deleteFlag.eq(false).or(dataVisualizationInfo.deleteFlag.isNull()))
+                .where(dataVisualizationInfo.pid.ne(-1L))
+                .where(dataVisualizationInfo.type.eq(request.getBusiFlag()))
+                .orderBy(dataVisualizationInfo.createTime.desc());
+        if (CommonConstants.RESOURCE_TABLE.SNAPSHOT.equals(request.getResourceTable())) {
+            query.where(dataVisualizationInfo.status.in(Arrays.asList(1, 2)));
+        }
+        if (ObjectUtils.isNotEmpty(request.getLeaf())) {
+            query.where(dataVisualizationInfo.nodeType.eq(request.getLeaf() ? "leaf" : "folder"));
+        }
+        if (CommunityUtils.isCommunityMode()) {
+            int rtId = StringUtils.equalsAny(request.getBusiFlag(), "dataV", "screen") ? BusiResourceEnum.SCREEN.getFlag() : BusiResourceEnum.PANEL.getFlag();
+            query.where(CommunityUtils.buildNotExistsCondition(dataVisualizationInfo, rtId));
+        }
+
+        List<VisualizationNodePO> pos = query.fetch();
+        if (CollectionUtils.isNotEmpty(pos)) {
+            nodes.addAll(pos.stream().map(this::convert).toList());
+        }
+        return TreeUtils.mergeTree(nodes, BusiNodeVO.class, false);
+    }
+
+    public void dataVisualizationInit() {
+        List<Long> resourceIds = dataVisualizationInfoRepository.findByPid(-1L)
+                .stream().map(DataVisualizationInfo::getId).toList();
+        if (CollectionUtils.isNotEmpty(resourceIds)) {
+            resourceIds.forEach(this::delete);
+        }
+    }
+
+    public void delete(Long id) {
+        delete(id, false);
+    }
+
+    @XpackInteract(value = "visualizationResourceTree", before = false)
+    public void delete(Long id, boolean rootOrgNode) {
+        if (!rootOrgNode) {
+            DataVisualizationInfo info = dataVisualizationInfoRepository.findById(id).orElse(null);
+            if (ObjectUtils.isEmpty(info)) {
+                return;
+            }
+        }
+        Set<Long> delIds = new LinkedHashSet<>();
+        Stack<Long> stack = new Stack<>();
+        if (rootOrgNode) {
+            // 组织同名根目录为虚拟目录，业务表无自身记录，直接从其子节点开始收集
+            List<Long> childrenIdList = dataVisualizationInfoRepository.queryChildrenId(id);
+            if (CollectionUtils.isNotEmpty(childrenIdList)) {
+                childrenIdList.forEach(stack::add);
+            }
+        } else {
+            stack.add(id);
+        }
+        while (!stack.isEmpty()) {
+            Long tempPid = stack.pop();
+            if (isTopNode(tempPid)) continue;
+            delIds.add(tempPid);
+
+            List<Long> childrenIdList = dataVisualizationInfoRepository.queryChildrenId(tempPid);
+            if (CollectionUtils.isNotEmpty(childrenIdList)) {
+                childrenIdList.forEach(kid -> {
+                    if (!delIds.contains(kid)) {
+                        stack.add(kid);
+                    }
+                });
+            }
+        }
+        // 删除可视化资源
+        snapshotDataVisualizationInfoRepository.deleteAllByIdInBatch(delIds);
+        dataVisualizationInfoRepository.deleteAllByIdInBatch(delIds);
+
+        // 删除图表信息
+        coreChartViewRepository.deleteBySceneIds(delIds);
+        snapshotCoreChartViewRepository.deleteBySceneIds(delIds);
+
+        if (!rootOrgNode) {
+            coreOptRecentManage.saveOpt(id, OptConstants.OPT_RESOURCE_TYPE.VISUALIZATION, OptConstants.OPT_TYPE.DELETE);
+        }
+    }
+
+    @XpackInteract(value = "visualizationResourceTree", before = false)
+    public void move(DataVisualizationBaseRequest request) {
+        if (!request.getMoveFromUpdate()) {
+            DataVisualizationInfo visualizationInfo = new DataVisualizationInfo();
+            BeanUtils.copyBean(visualizationInfo, request);
+            if (ObjectUtils.isEmpty(visualizationInfo.getId())) {
+                DEException.throwException("resource not exist");
+            }
+            visualizationInfo.setUpdateTime(System.currentTimeMillis());
+            SnapshotDataVisualizationInfo snapshotVisualizationInfo = new SnapshotDataVisualizationInfo();
+            BeanUtils.copyBean(snapshotVisualizationInfo, visualizationInfo);
+            coreOptRecentManage.saveOpt(visualizationInfo.getId(), OptConstants.OPT_RESOURCE_TYPE.VISUALIZATION, OptConstants.OPT_TYPE.UPDATE);
+            dataVisualizationInfoRepository.saveAndFlush(visualizationInfo);
+            snapshotDataVisualizationInfoRepository.saveAndFlush(snapshotVisualizationInfo);
+        }
+    }
+
+    @XpackInteract(value = "visualizationResourceTree", before = false)
+    public Long innerSave(DataVisualizationInfo visualizationInfo) {
+        visualizationInfo.setVersion(3);
+        return preInnerSave(visualizationInfo);
+    }
+
+    public Long preInnerSave(DataVisualizationInfo visualizationInfo) {
+        if (visualizationInfo.getId() == null) {
+            Long id = IDUtils.snowID();
+            visualizationInfo.setId(id);
+        }
+
+        Long uid = V3UserUtil.getUid();
+        java.lang.Long oid = V3UserUtil.getUser().getOid();
+        visualizationInfo.setDeleteFlag(DataVisualizationConstants.DELETE_FLAG.AVAILABLE);
+        visualizationInfo.setStatus(visualizationInfo.getStatus());
+        visualizationInfo.setCreateBy(uid.toString());
+        visualizationInfo.setUpdateBy(uid.toString());
+        visualizationInfo.setCreateTime(System.currentTimeMillis());
+        visualizationInfo.setUpdateTime(System.currentTimeMillis());
+        visualizationInfo.setOrgId(oid);
+        dataVisualizationInfoRepository.saveAndFlush(visualizationInfo);
+        // 镜像文件插入
+        SnapshotDataVisualizationInfo snapshotVisualizationInfo = new SnapshotDataVisualizationInfo();
+        BeanUtils.copyBean(snapshotVisualizationInfo, visualizationInfo);
+        snapshotDataVisualizationInfoRepository.saveAndFlush(snapshotVisualizationInfo);
+        coreOptRecentManage.saveOpt(visualizationInfo.getId(), OptConstants.OPT_RESOURCE_TYPE.VISUALIZATION, OptConstants.OPT_TYPE.NEW);
+        return Long.valueOf(visualizationInfo.getId());
+    }
+
+    @XpackInteract(value = "visualizationResourceTree", before = false)
+    public void innerEdit(DataVisualizationInfo visualizationInfo) {
+        if (Boolean.TRUE.equals(visualizationInfo.getOrgRoot())) {
+            return;
+        }
+        // 镜像和主表保持名称一致
+        Long uid = V3UserUtil.getUid();
+        visualizationInfo.setUpdateTime(System.currentTimeMillis());
+        visualizationInfo.setUpdateBy(uid.toString());
+        visualizationInfo.setVersion(3);
+        // 更新镜像
+        SnapshotDataVisualizationInfo snapshotVisualizationInfo = new SnapshotDataVisualizationInfo();
+        BeanUtils.copyBean(snapshotVisualizationInfo, visualizationInfo);
+        snapshotDataVisualizationInfoRepository.saveAndFlush(snapshotVisualizationInfo);
+        // 更新主表名称
+        DataVisualizationInfo coreVisualizationInfo = new DataVisualizationInfo();
+        coreVisualizationInfo.setId(visualizationInfo.getId());
+        coreVisualizationInfo.setStatus(visualizationInfo.getStatus());
+        coreVisualizationInfo.setPid(visualizationInfo.getPid());
+        coreVisualizationInfo.setContentId(visualizationInfo.getContentId());
+        coreVisualizationInfo.setName(visualizationInfo.getName());
+        coreVisualizationInfo.setUpdateTime(System.currentTimeMillis());
+        coreVisualizationInfo.setUpdateBy(uid.toString());
+        coreVisualizationInfo.setVersion(3);
+        dataVisualizationInfoRepository.saveAndFlush(coreVisualizationInfo);
+        coreOptRecentManage.saveOpt(visualizationInfo.getId(), OptConstants.OPT_RESOURCE_TYPE.VISUALIZATION, OptConstants.OPT_TYPE.UPDATE);
+    }
+
+    private boolean isTopNode(Long pid) {
+        return ObjectUtils.isEmpty(pid) || pid.equals(0L);
+    }
+
+    private VisualizationNodeBO rootNode() {
+        return new VisualizationNodeBO(0L, "root", false, 7, -1L, 0, 1);
+    }
+
+    private VisualizationNodeBO convert(VisualizationNodePO po) {
+        return new VisualizationNodeBO(po.getId(), po.getName(), StringUtils.equals(po.getNodeType(), "leaf"), 9, po.getPid(), po.getExtraFlag(), po.getExtraFlag1());
+    }
+
+    public CoreVisualizationManage proxy() {
+        return CommonBeanFactory.getBean(this.getClass());
+    }
+
+    @XpackInteract(value = "perFilterManage", recursion = true, invalid = true)
+    public PageResult<VisualizationResourceVO> query(int pageNum, int pageSize, VisualizationWorkbranchQueryRequest request) {
+        Page<VisualizationResourcePO> poPage = proxy().queryVisualizationPage(pageNum, pageSize, request);
+        if (poPage == null || poPage.getContent().isEmpty()) {
+            return new PageResult<>();
+        }
+        Page<VisualizationResourceVO> visualizationResourcePOPageIPage = poPage.map(po -> {
+            return new VisualizationResourceVO(
+                    po.getId(), po.getResourceId(), po.getName(),
+                    po.getType(), String.valueOf(po.getCreator()), String.valueOf(po.getLastEditor()), po.getLastEditTime(),
+                    po.getFavorite(), 9, po.getExtFlag(), po.getExtFlag1());
+        });
+        return new PageResult<>(visualizationResourcePOPageIPage);
+    }
+
+
+    public Page<VisualizationResourcePO> queryVisualizationPage(int goPage, int pageSize, VisualizationWorkbranchQueryRequest request) {
+        Long uid = V3UserUtil.getUid();
+        String type = null;
+        if (StringUtils.isNotBlank(request.getType())) {
+            BusiResourceEnum busiResourceEnum = BusiResourceEnum.valueOf(request.getType().toUpperCase());
+            if (ObjectUtils.isEmpty(busiResourceEnum)) {
+                DEException.throwException("type is invalid");
+            }
+            type = request.getType();
+        }
+        boolean isCommunityMode = CommunityUtils.isCommunityMode();
+        boolean isAsc = request.isAsc();
+        String keyword = request.getKeyword();
+
+        // Use QueryDSL for database-agnostic queries
+        QCoreDatasetGroup dataset = QCoreDatasetGroup.coreDatasetGroup;
+        QCoreDatasource datasource = QCoreDatasource.coreDatasource;
+        QDataVisualizationInfo visualization = QDataVisualizationInfo.dataVisualizationInfo;
+        QCoreOptRecent optRecent = QCoreOptRecent.coreOptRecent;
+        QCoreStore store = QCoreStore.coreStore;
+        QPerBusiResource perBusiResource = QPerBusiResource.perBusiResource;
+
+        // Build three separate queries for UNION ALL logic
+        // 1. Dataset query
+        JPAQuery<VisualizationResourcePO> datasetQuery = queryFactory
+                .select(Projections.bean(VisualizationResourcePO.class,
+                        dataset.id.as("id"),
+                        dataset.id.as("resourceId"),
+                        dataset.name.as("name"),
+                        ExpressionUtils.as(Expressions.constant(0), "extFlag"),
+                        ExpressionUtils.as(Expressions.constant(1), "extFlag1"),
+                        ExpressionUtils.as(Expressions.constant("dataset"), "type"),
+                        dataset.createBy.castToNum(Long.class).as("creator"),
+                        dataset.updateBy.castToNum(Long.class).as("lastEditor"),
+                        dataset.lastUpdateTime.as("lastEditTime"),
+                        ExpressionUtils.as(store.resourceId.isNotNull(), "favorite")
+                ))
+                .from(dataset)
+                .innerJoin(optRecent).on(dataset.id.eq(optRecent.resourceId).and(optRecent.uid.eq(uid)))
+                .leftJoin(store).on(dataset.id.eq(store.resourceId).and(store.uid.eq(uid)))
+                .where(dataset.nodeType.eq("dataset"));
+
+        // Apply filters to dataset query
+        if (StringUtils.isNotBlank(keyword)) {
+            datasetQuery.where(dataset.name.lower().like("%" + keyword.toLowerCase() + "%"));
+        }
+        if (StringUtils.isNotBlank(type) && !"dataset".equals(type)) {
+            // If type filter doesn't match, return empty for this query
+            datasetQuery.where(Expressions.FALSE);
+        }
+        if (isCommunityMode) {
+            datasetQuery.where(JPAExpressions
+                    .selectOne()
+                    .from(perBusiResource)
+                    .where(perBusiResource.id.eq(dataset.id))
+                    .notExists());
+        }
+
+        // 2. Datasource query
+        JPAQuery<VisualizationResourcePO> datasourceQuery = queryFactory
+                .select(Projections.bean(VisualizationResourcePO.class,
+                        datasource.id.as("id"),
+                        datasource.id.as("resourceId"),
+                        datasource.name.as("name"),
+                        ExpressionUtils.as(Expressions.constant(0), "extFlag"),
+                        ExpressionUtils.as(Expressions.constant(1), "extFlag1"),
+                        ExpressionUtils.as(Expressions.constant("datasource"), "type"),
+                        datasource.createBy.castToNum(Long.class).as("creator"),
+                        datasource.updateBy.as("lastEditor"),
+                        datasource.updateTime.as("lastEditTime"),
+                        ExpressionUtils.as(store.resourceId.isNotNull(), "favorite")
+                ))
+                .from(datasource)
+                .innerJoin(optRecent).on(datasource.id.eq(optRecent.resourceId).and(optRecent.uid.eq(uid)))

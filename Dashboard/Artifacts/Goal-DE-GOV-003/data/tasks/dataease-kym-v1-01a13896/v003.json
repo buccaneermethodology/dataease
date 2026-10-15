@@ -1,0 +1,111 @@
+{
+  "schema_version": "sge_observation_task_v1",
+  "task_id": "dataease-kym-v1-01a13896",
+  "revision": 3,
+  "thread_id": "01a13896-0cb1-7900-b05f-b2945b0e3bd9",
+  "session_id": null,
+  "eligibility": {
+    "eligible": true,
+    "reason": "本项目非平凡 KYM 构建请求，已使用本地 SGE；在写入候选前因必需宿主能力缺失而终止。"
+  },
+  "task_family": "kym_initial_build",
+  "complexity_at_intake": "large",
+  "risk": "medium",
+  "model": null,
+  "reasoning_effort": null,
+  "lanes": [
+    "orchestrator_preflight"
+  ],
+  "cohort_id": "sha256:c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+  "skill_manifest_ref": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+  "outcome": "completed",
+  "observed_at": "2026-10-14T06:26:18+00:00",
+  "observation_sequence": null,
+  "timestamps": {
+    "task_started_at": null,
+    "delivery_candidate_ready_at": null,
+    "first_final_review_submitted_at": null,
+    "terminal_receipt_at": null,
+    "final_readback_at": null,
+    "ended_at": "2026-10-14T06:26:18+00:00"
+  },
+  "governance_intervals": [],
+  "external_wait_intervals": [],
+  "measurement_inline_intervals": [],
+  "rework_events": [],
+  "final_review": {
+    "applicability": "not_applicable",
+    "first_attempt_passed": null,
+    "attempt_count": 0,
+    "verdict": "候选已生成，未进行独立语义审阅；候选交付面向后续审阅。",
+    "evidence_ref": ".kym-tco/dataease/reports/kym-packages/kym-package-f18d0c0f57fd/package-manifest.json"
+  },
+  "gate": {
+    "applicability": "not_applicable",
+    "first_attempt_valid": null,
+    "attempt_count": 0,
+    "final_verdict": "candidate_not_approved",
+    "evidence_ref": "未创建Goal/Loop Stop Gate receipt；KYM包状态为candidate_not_approved。"
+  },
+  "quality": {
+    "known": false,
+    "missing_evidence_blocker_count": null,
+    "false_completion": null,
+    "unapproved_scope_narrowing": null,
+    "serious_regression": null,
+    "evidence_refs": [
+      "package validation/audit/readback passed; independent semantic validation and runtime validation not performed"
+    ]
+  },
+  "comparator": {
+    "task_id": null,
+    "matched": false,
+    "reason": "未选择可比基线"
+  },
+  "metric_provenance": {},
+  "sources": [
+    {
+      "path": ".kym-tco/dataease/reports/kym-packages/kym-package-f18d0c0f57fd/package-manifest.json",
+      "sha256": "sha256:708af33b1d21128aa345c18d724a25cf10b4e0dc47793e526e18659c0c050a2d",
+      "kind": "candidate_package_manifest"
+    },
+    {
+      "path": ".kym-tco/dataease/reports/kym-packages/kym-package-f18d0c0f57fd/audit.json",
+      "sha256": "sha256:b935c36e3e9b39a2fb405d8163d4074e522f6914fe029eb0c610ac9171c78ee1",
+      "kind": "deterministic_candidate_audit"
+    },
+    {
+      "path": ".kym-tco/dataease/reports/kym-packages/kym-package-f18d0c0f57fd/validation.json",
+      "sha256": "sha256:52af85f4e1e09893353c68040613ff6761eb538afd44895660567e2c71657465",
+      "kind": "deterministic_candidate_validation"
+    },
+    {
+      "path": ".kym-tco/dataease/kym/revisions/kym-r001.json",
+      "sha256": "sha256:382730e4330cf76fc6e323b945acd7c5ef7723a150321a894814c3d756f047b5",
+      "kind": "candidate_revision"
+    },
+    {
+      "path": ".kym-tco/dataease/kym/views/kym-r001.md",
+      "sha256": "sha256:90e1fcb4ecac44a650e28856fdfbd0b9bda6eb2db02714f67745b7cc043a8770",
+      "kind": "rendered_reader"
+    },
+    {
+      "path": ".kym-tco/dataease/config.json",
+      "sha256": "sha256:747b05591a7844a794418126a6b279c2cafa0c9699546844dfa553db5d4f9947",
+      "kind": "task_workspace_configuration"
+    }
+  ],
+  "data_gaps": [
+    "首次实质执行时间未捕获，task_started_at 保持 null；候选打包时点与最终只读读回时点未精确采集，保留 null。",
+    "DataEase 不含 supported_host_registry_v1.json 或 src/kym_tco/tco_cli.py，因此未执行 v0.4.2-candidate supported-host post-generation pipeline；本次执行了普通 package-candidate CLI，不将其声明为 supported-host pass。",
+    "KB validator/check-render 因四份文档登记的 source_revision 与当前 HEAD 不匹配而失败；手工摘要核对确认 285 条引用对应 159 个文件的 SHA-256 与行范围均匹配当前文件。",
+    "候选包内部验证、静态审计和阅读版重渲染通过；未做独立语义审阅、生产/运行验证或用户验收。"
+  ],
+  "notes": [
+    "用户重申构建第一版 KYM 后，生成 r001 candidate package，状态 candidate_not_approved，approval_status=not_requested。",
+    "候选含30条有来源语句，固定Customer/Product/Project及全部14个二级节点，target_profiles为空；记录1项来源提交身份冲突和2项未决问题。",
+    "普通 kym package-candidate 返回 candidate_package_ready；audit 0 error/0 warning，strict lint 0 findings；canonical reader 与独立 CLI rerender 字节一致，checksum 与 artifact-index digest 核验通过。",
+    "工作区记录 Git HEAD 4a140a8e89f5e64b0ccca1a8502c81884f16a3aa、dirty；工作区包含本次新增的项目级技能、KYM来源快照与候选，不表示被引用源码文件本身修改。",
+    "本任务完成边界为候选交付，未声明accepted、独立语义正确、运行成功或supported-host流水线通过。"
+  ]
+}

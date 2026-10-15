@@ -323,7 +323,7 @@ onMounted(async () => {
                     v-model="state.loginForm.password"
                     :placeholder="t('common.pwd')"
                     show-password
-                    maxlength="30"
+                    maxlength="64"
                     show-word-limit
                     autocomplete="new-password"
                     @keypress.enter.stop="enterHandler"

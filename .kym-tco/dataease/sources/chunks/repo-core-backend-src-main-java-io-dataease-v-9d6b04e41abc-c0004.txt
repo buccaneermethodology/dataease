@@ -1,0 +1,172 @@
+                    .where(coreDatasetTable.datasetGroupId.in(dsIds)).fetch(), AppCoreDatasourceVO.class);
+
+            datasourceTaskVOInfo = EntityConverter.convertList(queryFactory.selectFrom(coreDatasourceTask)
+                    .innerJoin(coreDatasource).on(coreDatasourceTask.dsId.eq(coreDatasource.id))
+                    .innerJoin(coreDatasetTable).on(coreDatasetTable.datasourceId.eq(coreDatasource.id))
+                    .where(coreDatasetTable.datasetGroupId.in(dsIds))
+                    .fetch(), AppCoreDatasourceTaskVO.class);
+
+
+        }
+
+        if (CollectionUtils.isEmpty(datasourceVOInfo)) {
+            DEException.throwException("当前不存在数据源无法导出");
+        } else if (datasourceVOInfo.stream().anyMatch(datasource -> DatasourceConfiguration.DatasourceType.API.name().equals(datasource.getType()))) {
+            DEException.throwException(Translator.get("i18n_app_error_no_api"));
+        }
+
+
+        List<VisualizationLinkageVO> linkageVOInfo = visualizationLinkageRepository.findByDvId(dvId).stream().map(item -> {
+            VisualizationLinkageVO linkageVO = BeanUtils.copyBean(new VisualizationLinkageVO(), item);
+            return linkageVO;
+        }).collect(Collectors.toList());
+
+        QVisualizationLinkageField visualizationLinkageField = QVisualizationLinkageField.visualizationLinkageField;
+        QVisualizationLinkage visualizationLinkage = QVisualizationLinkage.visualizationLinkage;
+
+        List<VisualizationLinkageFieldVO> linkageFieldVOInfo = EntityConverter.convertList(queryFactory.selectFrom(visualizationLinkageField)
+                .innerJoin(visualizationLinkage).on(visualizationLinkageField.linkageId.eq(visualizationLinkage.id))
+                .where(visualizationLinkage.dvId.eq(dvId)).fetch(), VisualizationLinkageFieldVO.class);
+
+        List<VisualizationLinkJumpVO> linkJumpVOInfo = visualizationLinkJumpRepository.findBySourceDvId(dvId).stream().map(item -> {
+            VisualizationLinkJumpVO linkJumpVO = BeanUtils.copyBean(new VisualizationLinkJumpVO(), item);
+            return linkJumpVO;
+        }).collect(Collectors.toList());
+
+        QVisualizationLinkJumpInfo visualizationLinkJumpInfo = QVisualizationLinkJumpInfo.visualizationLinkJumpInfo;
+        QVisualizationLinkJump visualizationLinkJump = QVisualizationLinkJump.visualizationLinkJump;
+
+        List<VisualizationLinkJumpInfoVO> linkJumpInfoVOInfo = EntityConverter.convertList(queryFactory.selectFrom(visualizationLinkJumpInfo)
+                .innerJoin(visualizationLinkJump).on(visualizationLinkJumpInfo.linkJumpId.eq(visualizationLinkJump.id))
+                .where(visualizationLinkJump.sourceDvId.eq(dvId)).fetch(), VisualizationLinkJumpInfoVO.class);
+
+        QVisualizationLinkJumpTargetViewInfo visualizationLinkJumpTargetViewInfo = QVisualizationLinkJumpTargetViewInfo.visualizationLinkJumpTargetViewInfo;
+        List<VisualizationLinkJumpTargetViewInfoVO> listJumpTargetViewInfoVO = EntityConverter.convertList(queryFactory.selectFrom(visualizationLinkJumpTargetViewInfo)
+                .innerJoin(visualizationLinkJumpInfo).on(visualizationLinkJumpTargetViewInfo.linkJumpInfoId.eq(visualizationLinkJumpInfo.id))
+                .innerJoin(visualizationLinkJump).on(visualizationLinkJump.id.eq(visualizationLinkJumpInfo.linkJumpId))
+                .where(visualizationLinkJump.sourceDvId.eq(dvId))
+                .fetch(), VisualizationLinkJumpTargetViewInfoVO.class);
+
+
+        return new VisualizationExport2AppVO(chartViewVOInfo, datasetGroupVOInfo, datasetTableVOInfo, datasetTableFieldVOInfo, datasourceVOInfo, datasourceTaskVOInfo, linkJumpVOInfo, linkJumpInfoVOInfo, listJumpTargetViewInfoVO, linkageVOInfo, linkageFieldVOInfo);
+    }
+
+
+    @Override
+    public void nameCheck(DataVisualizationBaseRequest request) {
+
+        if (DataVisualizationConstants.RESOURCE_OPT_TYPE.MOVE.equals(request.getOpt()) || DataVisualizationConstants.RESOURCE_OPT_TYPE.RENAME.equals(request.getOpt()) || DataVisualizationConstants.RESOURCE_OPT_TYPE.EDIT.equals(request.getOpt()) || DataVisualizationConstants.RESOURCE_OPT_TYPE.COPY.equals(request.getOpt())) {
+            if (request.getPid() == null) {
+                DataVisualizationInfo result = dataVisualizationInfoRepository.findById(request.getId()).orElse(null);
+                request.setPid(result.getPid());
+            }
+        }
+
+        Specification<DataVisualizationInfo> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get("deleteFlag"), DataVisualizationConstants.DELETE_FLAG.AVAILABLE));
+            predicates.add(cb.equal(root.get("pid"), request.getPid()));
+            predicates.add(cb.notEqual(root.get("pid"), -1L));
+            if (DataVisualizationConstants.RESOURCE_OPT_TYPE.MOVE.equals(request.getOpt()) || DataVisualizationConstants.RESOURCE_OPT_TYPE.RENAME.equals(request.getOpt()) || DataVisualizationConstants.RESOURCE_OPT_TYPE.EDIT.equals(request.getOpt())) {
+                predicates.add(cb.notEqual(root.get("id"), request.getId()));
+            }
+            predicates.add(cb.equal(root.get("name"), request.getName().trim()));
+            predicates.add(cb.equal(root.get("nodeType"), request.getNodeType()));
+            predicates.add(cb.equal(root.get("type"), request.getType()));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        List<DataVisualizationInfo> existList = dataVisualizationInfoRepository.findAll(spec);
+        if (CollectionUtils.isNotEmpty(existList) && existList.stream().anyMatch(item -> item.getName().equals(request.getName().trim()))) {
+            DEException.throwException("当前名称已经存在");
+        }
+    }
+
+    public String getAbsPath(Long id) {
+        ChartViewDTO viewDTO = chartViewManege.findChartViewAround(String.valueOf(id));
+        if (viewDTO == null) {
+            return null;
+        }
+        if (viewDTO.getPid() == null) {
+            return viewDTO.getTitle();
+        }
+        List<DataVisualizationInfo> parents = getParents(viewDTO.getPid());
+        StringBuilder stringBuilder = new StringBuilder();
+        parents.forEach(ele -> {
+            if (ObjectUtils.isNotEmpty(ele)) {
+                stringBuilder.append(ele.getName()).append("/");
+            }
+        });
+        stringBuilder.append(viewDTO.getTitle());
+        return stringBuilder.toString();
+    }
+
+    public List<DataVisualizationInfo> getParents(Long id) {
+        List<DataVisualizationInfo> list = new ArrayList<>();
+        DataVisualizationInfo dataVisualizationInfo = dataVisualizationInfoRepository.findById(id).orElse(null);
+        list.add(dataVisualizationInfo);
+        if (dataVisualizationInfo.getPid().equals(dataVisualizationInfo.getId())) {
+            return list;
+        }
+        getParent(list, dataVisualizationInfo);
+        Collections.reverse(list);
+        return list;
+    }
+
+    public void getParent(List<DataVisualizationInfo> list, DataVisualizationInfo dataVisualizationInfo) {
+        if (ObjectUtils.isNotEmpty(dataVisualizationInfo) && dataVisualizationInfo.getPid() != null && !dataVisualizationInfo.getPid().equals(dataVisualizationInfo.getId())) {
+            DataVisualizationInfo d = dataVisualizationInfoRepository.findById(dataVisualizationInfo.getPid()).orElse(null);
+            list.add(d);
+            getParent(list, d);
+        }
+    }
+
+    public List<Long> getEnabledViewIds(Long dvId, String resourceTable) {
+        List<Long> result = new ArrayList<>();
+        DataVisualizationVO dvInfo = coreVisualizationManage.findDvInfo(dvId, null, resourceTable);
+        List<CoreChartView> views;
+        if (resourceTable.equalsIgnoreCase("core")) {
+            views = coreChartViewRepository.findBySceneId(dvId);
+        } else {
+            views = snapshotCoreChartViewRepository.findBySceneId(dvId).stream().map(ele -> {
+                CoreChartView coreChartView = new CoreChartView();
+                BeanUtils.copyBean(coreChartView, ele);
+                return coreChartView;
+            }).collect(Collectors.toList());
+        }
+
+        if (CollectionUtils.isNotEmpty(views) && dvInfo != null) {
+            String componentData = dvInfo.getComponentData();
+            result = views.stream().filter(item -> componentData.indexOf("\"id\":\"" + item.getId()) > 0).map(CoreChartView::getId).collect(Collectors.toList());
+
+        }
+        return result;
+    }
+
+    @Override
+    public void exportLogApp(DataVisualizationBaseRequest request) throws Exception {
+
+    }
+
+    @Override
+    public void exportLogTemplate(DataVisualizationBaseRequest request) throws Exception {
+
+    }
+
+    @Override
+    public void exportLogPDF(DataVisualizationBaseRequest request) throws Exception {
+
+    }
+
+    @Override
+    public void exportLogImg(DataVisualizationBaseRequest request) throws Exception {
+
+    }
+
+    @Resource
+    private ResourcePermissionManage resourcePermissionManage;
+
+    @Override
+    public List<DatasetPermissionTemplate> queruDatasetPermissionTemplate(Long resourceId) {
+        return resourcePermissionManage.queruDatasetPermissionTemplate(resourceId);
+    }
+}

@@ -1,0 +1,631 @@
+# Repo evidence: core/core-frontend/src/views/chart/components/views/index.vue
+<script lang="ts" setup>
+import icon_info_outlined from '@/assets/svg/icon_info_outlined.svg'
+import icon_linkRecord_outlined from '@/assets/svg/icon_link-record_outlined.svg'
+import icon_viewinchat_outlined from '@/assets/svg/icon_viewinchat_outlined.svg'
+import { cancelRequestBatch } from '@/config/axios/service'
+import icon_drilling_outlined from '@/assets/svg/icon_drilling_outlined.svg'
+import { useI18n } from '@/hooks/web/useI18n'
+import { isChartRefreshPreview, useChartRefreshTimer } from '@/hooks/web/useChartRefreshTimer'
+import ChartComponentG2Plot from './components/ChartComponentG2Plot.vue'
+import DeIndicator from '@/custom-component/indicator/DeIndicator.vue'
+import { useAppearanceStoreWithOut } from '@/store/modules/appearance'
+import { useAppStoreWithOut } from '@/store/modules/app'
+import { useEmbedded } from '@/store/modules/embedded'
+import { PluginComponent } from '@/components/plugin'
+import {
+  computed,
+  CSSProperties,
+  defineAsyncComponent,
+  nextTick,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  provide,
+  reactive,
+  ref,
+  shallowRef,
+  toRefs,
+  watch
+} from 'vue'
+import { useEmitt } from '@/hooks/web/useEmitt'
+import { hexColorToRGBA, parseJson } from '@/views/chart/components/js/util.js'
+import {
+  CHART_FONT_FAMILY_MAP,
+  DEFAULT_TITLE_STYLE
+} from '@/views/chart/components/editor/util/chart'
+import DrillPath from '@/views/chart/components/views/components/DrillPath.vue'
+import { ElIcon, ElInput, ElMessage } from 'element-plus-secondary'
+import { useFilter } from '@/hooks/web/useFilter'
+import { useCache } from '@/hooks/web/useCache'
+
+import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
+import { cloneDeep, debounce } from 'lodash-es'
+import ChartComponentS2 from '@/views/chart/components/views/components/ChartComponentS2.vue'
+import { ChartLibraryType } from '@/views/chart/components/js/panel/types'
+import chartViewManager from '@/views/chart/components/js/panel'
+import { storeToRefs } from 'pinia'
+import { normalizeExternalLinkUrl, setIdValueTrans } from '@/utils/canvasUtils'
+import { sanitizeHtml } from '@/utils/utils'
+import { Base64 } from 'js-base64'
+import DeRichTextView from '@/custom-component/rich-text/DeRichTextView.vue'
+import DePictureGroup from '@/custom-component/picture-group/Component.vue'
+import ChartEmptyInfo from '@/views/chart/components/views/components/ChartEmptyInfo.vue'
+import { snapshotStoreWithOut } from '@/store/modules/data-visualization/snapshot'
+import { viewFieldTimeTrans } from '@/utils/viewUtils'
+import { CHART_TYPE_CONFIGS } from '@/views/chart/components/editor/util/chart'
+import request from '@/config/axios'
+import { store } from '@/store'
+// import { clearExtremum } from '@/views/chart/components/js/extremumUitl'
+import DePreviewPopDialog from '@/components/visualization/DePreviewPopDialog.vue'
+import { useRoute } from 'vue-router_2'
+import {
+  isRenderChartAllPayload,
+  RENDER_CHART_ALL,
+  RENDER_CHART_ALL_ITEM_FINISH,
+  RENDER_CHART_ALL_ITEM_START,
+  type RenderChartAllPayload
+} from './renderChartAll'
+const OpenHandler = defineAsyncComponent(
+  () => import('@/views/component/embedded-iframe/OpenHandler.vue')
+)
+const ViewCategoryHandler = defineAsyncComponent(
+  () => import('@/views/component/plugins-handler/ViewCategoryHandler.vue')
+)
+const route = useRoute()
+const { wsCache } = useCache()
+const chartComponent = ref<any>()
+const { t } = useI18n()
+const dvMainStore = dvMainStoreWithOut()
+const { emitter } = useEmitt()
+const dePreviewPopDialogRef = ref(null)
+let innerSearchCount = 0
+const appStore = useAppStoreWithOut()
+const appearanceStore = useAppearanceStoreWithOut()
+const isDataEaseBi = computed(() => appStore.getIsDataEaseBi)
+const isIframe = computed(() => appStore.getIsIframe)
+
+const emit = defineEmits(['onPointClick', 'onComponentEvent'])
+
+const {
+  nowPanelJumpInfo,
+  publicLinkStatus,
+  dvInfo,
+  curComponent,
+  canvasStyleData,
+  mobileInPc,
+  inMobile,
+  editMode
+} = storeToRefs(dvMainStore)
+
+const props = defineProps({
+  // 公共参数集
+  commonParams: {
+    type: Object,
+    required: false
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  element: {
+    type: Object,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  view: {
+    type: Object as PropType<ChartObj>,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  themes: {
+    type: String,
+    required: false,
+    default: 'dark'
+  },
+  showPosition: {
+    type: String,
+    required: false,
+    default: 'preview'
+  },
+  // 仪表板刷新计时器
+  searchCount: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  scale: {
+    type: Number,
+    required: false,
+    default: 1
+  },
+  suffixId: {
+    type: String,
+    required: false,
+    default: 'common'
+  },
+  fontFamily: {
+    type: String,
+    required: false,
+    default: 'inherit'
+  },
+  optType: {
+    type: String,
+    required: false
+  }
+})
+const dynamicAreaId = ref('')
+const { view, showPosition, element, active, searchCount, scale, suffixId } = toRefs(props)
+const richTextTitleEnabled = computed(() => {
+  if (element.value.innerType !== 'rich-text' && view.value.type !== 'rich-text') {
+    return true
+  }
+  return view.value.customStyle?.text?.richTextTitleEnabled === true
+})
+const titleShow = computed(() => {
+  return (
+    element.value.innerType !== 'picture-group' &&
+    richTextTitleEnabled.value &&
+    state.title_show &&
+    (element.value.dashboardHidden ? true : showPosition.value !== 'viewDialog')
+  )
+})
+const snapshotStore = snapshotStoreWithOut()
+
+const state = reactive({
+  initReady: true, //curComponent 切换期间 不接收外部的calcData 和 renderChart 事件
+  title_show: true,
+  title_remark: {
+    show: false,
+    remark: ''
+  },
+  title_class: {
+    fontSize: '18px',
+    color: '#303133',
+    textAlign: 'left',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    background: '',
+    fontFamily: '',
+    textShadow: 'none',
+    letterSpacing: '0px',
+    fontSynthesis: 'style weight',
+    width: 'fit-content',
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    paddingRight: '0px',
+    overflow: 'hidden'
+  } as CSSProperties,
+  chart_hide_title_class: {
+    fontSize: '10px',
+    color: '#303133',
+    textAlign: 'left',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    background: '',
+    fontFamily: '',
+    textShadow: 'none',
+    letterSpacing: '0px',
+    fontSynthesis: 'style weight',
+    width: 'fit-content',
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    paddingRight: '0px',
+    overflow: 'hidden'
+  } as CSSProperties,
+  drillFilters: [],
+  viewInfoData: null,
+  drillClickDimensionList: []
+})
+
+const drillClickLength = computed(() => state.drillClickDimensionList.length)
+
+const titleAlign = computed<string>(() => {
+  if (!titleShow.value) {
+    return 'flex-start'
+  }
+
+  if (state.title_class.textAlign === 'center') {
+    return 'center'
+  } else if (state.title_class.textAlign === 'right') {
+    return 'flex-end'
+  }
+
+  return 'flex-start'
+})
+
+const titleBaseStyle = computed<CSSProperties>(() =>
+  element.value.dashboardHidden ? state.chart_hide_title_class : state.title_class
+)
+
+// 标题宽度交给 flex 计算，图标显示时优先占位
+const titleTextStyle = computed<CSSProperties>(() => ({
+  ...titleBaseStyle.value,
+  flex: '1 1 auto',
+  minWidth: 0,
+  width: 'auto',
+  maxWidth: '100%',
+  wordBreak: 'normal',
+  whiteSpace: 'nowrap'
+}))
+
+// 固定标题行高度，避免图标显示时触发图表区域 resize
+const titleContentHeight = computed<string>(() => {
+  const iconFontSize = Number.parseFloat(iconSize.value) || 0
+  const titleFontSize = Number.parseFloat(`${titleBaseStyle.value.fontSize}`) || iconFontSize
+  return Math.max(iconFontSize, titleFontSize * 1.2) + 'px'
+})
+
+const titleContentStyle = computed<CSSProperties>(() => ({
+  height: titleContentHeight.value,
+  minHeight: titleContentHeight.value,
+  lineHeight: titleContentHeight.value
+}))
+
+const safeTitleRemark = computed(() => sanitizeHtml(state.title_remark.remark || ''))
+
+const trackMenu = computed<Array<string>>(() => {
+  return chartComponent?.value?.trackMenu ?? []
+})
+
+const hasLinkIcon = computed(() => {
+  return trackMenu.value.indexOf('linkage') > -1 || trackMenu.value.indexOf('linkageAndDrill') > -1
+})
+const hasJumpIcon = computed(() => {
+  return trackMenu.value.indexOf('jump') > -1 && !mobileInPc.value
+})
+const hasDrillIcon = computed(() => {
+  return trackMenu.value.indexOf('drill') > -1 || trackMenu.value.indexOf('linkageAndDrill') > -1
+})
+
+const loading = ref(false)
+const isAutoRefreshing = ref(false)
+
+const resultMode = computed(() => {
+  return canvasStyleData.value.dashboard?.resultMode || null
+})
+
+const resultCount = computed(() => {
+  return canvasStyleData.value.dashboard?.resultCount || null
+})
+
+const embeddedStore = useEmbedded()
+const innerRefreshRunning = useChartRefreshTimer(
+  () => ({
+    enabled:
+      isChartRefreshPreview(showPosition.value, editMode.value, dvInfo.value.type) &&
+      !!view.value.refreshViewEnable,
+    interval: view.value.refreshTime ?? 5,
+    unit: view.value.refreshUnit ?? 'minute'
+  }),
+  () => {
+    clearViewLinkage()
+    queryData(false, true)
+    innerSearchCount++
+  }
+)
+
+// 清除相同sourceViewId 的 联动条件
+const clearViewLinkage = () => {
+  dvMainStore.clearViewLinkage(element.value.id)
+  useEmitt().emitter.emit('clearPanelLinkage', { viewId: element.value.id })
+}
+
+watch([() => scale.value], () => {
+  initTitle()
+})
+
+watch([() => searchCount.value], () => {
+  // 内部计时器启动 忽略外部计时器
+  if (!innerRefreshRunning.value) {
+    queryData(false, true)
+  }
+})
+// 仪表板的查询结果设置变化 图表数据需要刷新
+watch([() => resultCount.value], () => {
+  queryData()
+})
+
+watch([() => resultMode.value], () => {
+  queryData()
+})
+
+watch([() => scale.value], () => {
+  nextTick(() => {
+    chartComponent?.value?.renderChart?.(view.value)
+  })
+})
+
+watch([() => curComponent.value], () => {
+  if (curComponent.value && curComponent.value.id === view.value.id) {
+    state.initReady = false
+    nextTick(() => {
+      state.initReady = true
+    })
+  }
+})
+
+const chartExtRequest = shallowRef(null)
+provide('chartExtRequest', chartExtRequest)
+
+const initTitle = () => {
+  if (view.value.customStyle) {
+    const customStyle = view.value.customStyle
+    if (customStyle.text) {
+      state.title_show = customStyle.text.show
+      state.title_class.fontSize = customStyle.text.fontSize * scale.value + 'px'
+      state.title_class.color = customStyle.text.color
+      state.title_class.textAlign = customStyle.text.hPosition as CSSProperties['textAlign']
+      state.title_class.fontStyle = customStyle.text.isItalic ? 'italic' : 'normal'
+      state.title_class.fontWeight = customStyle.text.isBolder ? 'bold' : 'normal'
+      if (!!appearanceStore.fontList.length) {
+        appearanceStore.fontList.forEach(ele => {
+          CHART_FONT_FAMILY_MAP[ele.name] = ele.name
+        })
+      }
+      if (customStyle.text.isItalic) {
+        if (customStyle.text.hPosition === 'right') {
+          state.title_class.paddingRight = Math.floor(customStyle.text.fontSize / 7) + 'px'
+        } else {
+          state.title_class.paddingRight = '0px'
+          state.title_class.overflow = 'visible'
+        }
+      }
+      state.title_class.fontFamily = customStyle.text.fontFamily
+        ? CHART_FONT_FAMILY_MAP[customStyle.text.fontFamily]
+        : DEFAULT_TITLE_STYLE.fontFamily
+      if (!CHART_FONT_FAMILY_MAP[customStyle.text.fontFamily]) {
+        state.title_class.fontFamily = appearanceStore.fontList.find(ele => ele.isDefault)?.name
+        customStyle.text.fontFamily = state.title_class.fontFamily
+      }
+      appearanceStore.setCurrentFont(state.title_class.fontFamily)
+      state.title_class.letterSpacing =
+        (customStyle.text.letterSpace
+          ? customStyle.text.letterSpace
+          : DEFAULT_TITLE_STYLE.letterSpace) + 'px'
+      state.title_class.textShadow = customStyle.text.fontShadow ? '2px 2px 4px' : 'none'
+    }
+    if (customStyle.background) {
+      state.title_class.background = hexColorToRGBA(
+        customStyle.background.color,
+        customStyle.background.alpha
+      )
+    }
+
+    state.title_remark.show = customStyle.text.show && customStyle.text.remarkShow
+    state.title_remark.remark = sanitizeHtml(customStyle.text.remark || '')
+  }
+}
+
+const drillJump = (index: number) => {
+  state.drillClickDimensionList.splice(index)
+  view.value.chartExtRequest = filter()
+  calcData(view.value)
+}
+
+const onPointClick = param => {
+  try {
+    const msg = {
+      sourceDvId: dvInfo.value.id,
+      sourceViewId: view.value.id,
+      message: Base64.encode(JSON.stringify(param))
+    }
+    emit('onPointClick', msg)
+  } catch (e) {
+    console.warn('de_inner_params send error')
+  }
+}
+
+const chartClick = param => {
+  // 下钻字段第一个没有在维度中不允许下钻
+  const xIds = view.value.xAxis.map(ele => ele.id)
+  if (xIds.indexOf(props.view.drillFields[0].id) == -1) {
+    ElMessage.error(t('chart.drill_field_error'))
+    return
+  }
+  if (view.value.type === 'circle-packing' && param.data.name === t('commons.all')) {
+    ElMessage.error(t('chart.last_layer'))
+    return
+  }
+  if (state.drillClickDimensionList.length < props.view.drillFields.length - 1) {
+    state.drillClickDimensionList.push({
+      dimensionList: param.data.dimensionList,
+      extra: param.extra
+    })
+    view.value.chartExtRequest = filter()
+    calcData(view.value)
+  } else if (props.view.drillFields.length > 0) {
+    ElMessage.error(t('chart.last_layer'))
+  }
+}
+
+// 仪表板和大屏所有额外过滤参数都在此处
+const filter = (firstLoad?: boolean) => {
+  const { filter } = useFilter(view.value.id, firstLoad, showPosition.value)
+  const result = {
+    user: wsCache.get('user.uid'),
+    filter,
+    linkageFilters: element.value.linkageFilters,
+    outerParamsFilters: element.value.outerParamsFilters,
+    webParamsFilters: element.value.webParamsFilters,
+    drill: state.drillClickDimensionList,
+    resultCount: resultCount.value,
+    resultMode: resultMode.value
+  }
+  // 定时报告相关勿动
+  if (route.path === '/preview' && route.query.taskId) {
+    const sceneId = view.value['sceneId']
+    const filterJson = window[`de-report-filter-${sceneId}`]
+    let filterObj = {}
+    if (filterJson) {
+      filterObj = JSON.parse(filterJson)
+    }
+    filterObj[view.value.id] = result
+    window[`de-report-filter-${sceneId}`] = JSON.stringify(filterObj)
+  }
+  return result
+}
+
+const onDrillFilters = param => {
+  state.drillFilters = param ? param : []
+}
+const openHandler = ref(null)
+const initOpenHandler = newWindow => {
+  if (openHandler?.value) {
+    openHandler.value.initOpenHandler(newWindow)
+  }
+}
+
+const divEmbedded = type => {
+  useEmitt().emitter.emit('changeCurrentComponent', type)
+}
+
+const windowsJump = (url, jumpType, size = 'middle') => {
+  try {
+    let newWindow
+    if ('newPop' === jumpType) {
+      dePreviewPopDialogRef.value.previewInit({ url, size })
+    } else if ('_self' === jumpType) {
+      newWindow = window.open(url, jumpType)
+    } else {
+      newWindow = window.open(url, jumpType)
+    }
+    initOpenHandler(newWindow)
+  } catch (e) {
+    console.warn(t('visualization.url_check_error') + ':' + url)
+  }
+}
+
+const jumpClick = param => {
+  let dimension, jumpInfo, sourceInfo, targetDvType
+  // 如果有名称name 获取和name匹配的dimension 否则倒序取最后一个能匹配的
+  if (param.name) {
+    const colList = [...param.dimensionList, ...param.quotaList]
+    colList.forEach(dimensionItem => {
+      if (
+        dimensionItem.id === param.name ||
+        dimensionItem.value === param.name ||
+        dimensionItem.name === param.name
+      ) {
+        dimension = dimensionItem
+        sourceInfo = param.viewId + '#' + dimension.id
+        jumpInfo = nowPanelJumpInfo.value[sourceInfo]
+      }
+    })
+  } else {
+    for (let i = param.dimensionList.length - 1; i >= 0; i--) {
+      dimension = param.dimensionList[i]
+      sourceInfo = param.viewId + '#' + dimension.id
+      jumpInfo = nowPanelJumpInfo.value[sourceInfo]
+      if (jumpInfo) {
+        break
+      }
+    }
+  }
+  if (jumpInfo) {
+    // 维度日期类型转换
+    viewFieldTimeTrans(dvMainStore.getViewDataDetails(param.viewId), param)
+    param.sourceDvId = dvInfo.value.id
+    param.sourceViewId = param.viewId
+    param.sourceFieldId = dimension.id
+    let embeddedBaseUrl = ''
+    const divSelf = isDataEaseBi.value && jumpInfo.jumpType === '_self'
+    const iframeSelf = isIframe.value && jumpInfo.jumpType === '_self'
+    if (isDataEaseBi.value) {
+      embeddedBaseUrl = embeddedStore.baseUrl
+    }
+    const jumpInfoParam = `&jumpInfoParam=${encodeURIComponent(
+      Base64.encode(JSON.stringify(param))
+    )}`
+
+    // 内部仪表板跳转
+    if (jumpInfo.linkType === 'inner') {
+      if (jumpInfo.targetDvId) {
+        const editPreviewParams = ['canvas', 'edit-preview'].includes(showPosition.value)
+          ? '&editPreview=true'
+          : ''
+        const filterOuterParams = {}
+        const curFilter = dvMainStore.getLastViewRequestInfo(param.viewId)
+        const targetViewInfoList = jumpInfo.targetViewInfoList
+        if (
+          curFilter &&
+          curFilter.filter &&
+          curFilter.filter.length > 0 &&
+          targetViewInfoList &&
+          targetViewInfoList.length > 0
+        ) {
+          // do filter
+          curFilter.filter.forEach(filterItem => {
+            targetViewInfoList.forEach(targetViewInfo => {
+              if (targetViewInfo.sourceFieldActiveId === filterItem.filterId) {
+                filterOuterParams[targetViewInfo.outerParamsName] = {
+                  operator: filterItem.operator,
+                  value: filterItem.value
+                }
+              }
+            })
+          })
+        }
+        let attachParamsInfo
+        if (Object.keys(filterOuterParams).length > 0) {
+          filterOuterParams['outerParamsVersion'] = 'v2'
+          attachParamsInfo =
+            '&attachParams=' + encodeURIComponent(Base64.encode(JSON.stringify(filterOuterParams)))
+        }
+        // 携带外部参数
+        if (publicLinkStatus.value) {
+          // 判断是否有公共链接ID
+          if (jumpInfo.publicJumpId) {
+            let url = `${embeddedBaseUrl}#/de-link/${jumpInfo.publicJumpId}?fromLink=true&dvType=${jumpInfo.targetDvType}`
+            if (attachParamsInfo) {
+              url = url + attachParamsInfo + jumpInfoParam + editPreviewParams
+            } else {
+              url = url + '&ignoreParams=true' + jumpInfoParam + editPreviewParams
+            }
+            const currentUrl = window.location.href
+            localStorage.setItem('beforeJumpUrl', currentUrl)
+            windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+          } else {
+            ElMessage.warning(t('visualization.public_link_tips'))
+          }
+        } else {
+          let url = `${embeddedBaseUrl}#/preview?dvId=${jumpInfo.targetDvId}&fromLink=true&dvType=${jumpInfo.targetDvType}`
+          if (attachParamsInfo) {
+            url = url + attachParamsInfo + jumpInfoParam + editPreviewParams
+          } else {
+            url = url + '&ignoreParams=true' + jumpInfoParam + editPreviewParams
+          }
+          const currentUrl = window.location.href
+          localStorage.setItem('beforeJumpUrl', currentUrl)
+          if (divSelf || iframeSelf) {
+            embeddedStore.setDvId(jumpInfo.targetDvId)
+            embeddedStore.setJumpInfoParam(encodeURIComponent(Base64.encode(JSON.stringify(param))))
+            divEmbedded('Preview')
+            return
+          }
+          windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+        }
+      } else {
+        ElMessage.warning('未指定跳转仪表板')
+      }
+    } else {
+      const colList = [...param.dimensionList, ...param.quotaList]
+      let url = setIdValueTrans('id', 'value', jumpInfo.content, colList)
+      const urlCheckResult = normalizeExternalLinkUrl(url)
+      if (!urlCheckResult.valid) {
+        if (urlCheckResult.status === 'unsupportedProtocol') {
+          ElMessage.warning(

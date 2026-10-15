@@ -1,0 +1,106 @@
+{
+  "schema_version": "sge_observation_task_v1",
+  "task_id": "dataease-kym-v1-01a13896",
+  "revision": 2,
+  "thread_id": "01a13896-0cb1-7900-b05f-b2945b0e3bd9",
+  "session_id": null,
+  "eligibility": {
+    "eligible": true,
+    "reason": "本项目非平凡 KYM 构建请求，已使用本地 SGE；在写入候选前因必需宿主能力缺失而终止。"
+  },
+  "task_family": "kym_initial_build",
+  "complexity_at_intake": "large",
+  "risk": "medium",
+  "model": null,
+  "reasoning_effort": null,
+  "lanes": [
+    "orchestrator_preflight"
+  ],
+  "cohort_id": "sha256:c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+  "skill_manifest_ref": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+  "outcome": "failed",
+  "observed_at": "2026-10-14T06:17:53+00:00",
+  "observation_sequence": null,
+  "timestamps": {
+    "task_started_at": null,
+    "delivery_candidate_ready_at": null,
+    "first_final_review_submitted_at": null,
+    "terminal_receipt_at": null,
+    "final_readback_at": null,
+    "ended_at": "2026-10-14T06:17:53+00:00"
+  },
+  "governance_intervals": [],
+  "external_wait_intervals": [],
+  "measurement_inline_intervals": [],
+  "rework_events": [],
+  "final_review": {
+    "applicability": "not_applicable",
+    "first_attempt_passed": null,
+    "attempt_count": null,
+    "verdict": null,
+    "evidence_ref": null
+  },
+  "gate": {
+    "applicability": "applicable",
+    "first_attempt_valid": null,
+    "attempt_count": null,
+    "final_verdict": "blocked",
+    "evidence_ref": "KYM CLI doctor: ready；supported_host.require_enabled_profile: blocked，缺少 governance/supported_host_registry_v1.json。"
+  },
+  "quality": {
+    "known": true,
+    "missing_evidence_blocker_count": 1,
+    "false_completion": false,
+    "unapproved_scope_narrowing": false,
+    "serious_regression": false,
+    "evidence_refs": [
+      "未生成候选，不声明通过或完成。"
+    ]
+  },
+  "comparator": {
+    "task_id": null,
+    "matched": false,
+    "reason": "未选择可比基线"
+  },
+  "metric_provenance": {},
+  "sources": [
+    {
+      "path": "/Users/xiaomei/.codex/skills/build-kym/SKILL.md",
+      "sha256": "dfb75289ee17702e2a98a981b32d1540eda40a1c847e81842cc14bd4a41accfd",
+      "kind": "skill_requirement"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/SKILL.md",
+      "sha256": "c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+      "kind": "governance_skill"
+    },
+    {
+      "path": ".kym-tco/dataease/config.json",
+      "sha256": null,
+      "kind": "task_workspace_configuration",
+      "locator": "coverage_mode=repo; evidence_roots=[core,sdk,.]"
+    },
+    {
+      "path": "kb/data/*.json",
+      "sha256": null,
+      "kind": "source_integrity_check",
+      "locator": "285条证据/159个源码文件；SHA-256和旧行号均匹配当前工作区文件；KB内source_revision与HEAD不一致"
+    }
+  ],
+  "data_gaps": [
+    "原任务首次实质执行时间未捕获，task_started_at保持null。",
+    "当前平台无启用的supported-host注册表；DataEase也没有仓库内src/kym_tco/tco_cli.py；技能要求的确定性宿主流水线无法执行。",
+    "未生成KYM草稿或候选包；本次预备的source snapshots不构成候选交付。",
+    "kb/tools/kb.py validate与check-render均因KB metadata source_revision不匹配当前HEAD而失败；手工摘要核对只验证了证据文件hash与行范围，不替代KB canonical validator。"
+  ],
+  "notes": [
+    "CLI 版本为 0.4.2；doctor 返回 workspace_invalid，工作区未初始化。",
+    "supported_host.require_enabled_profile 失败：宿主注册表不存在。",
+    "必需本地 build-kym/build-tco-coverage Skill 文件与 src/kym_tco/tco_cli.py 也不存在。",
+    "未安装依赖、未修改 Skill、未初始化 .kym-tco、未生成 KYM 或 accepted state。",
+    "记录自身为轻量观测日志，不作为候选完成或语义验收证据。",
+    "v002记录用户重新发起同一目标后的继续尝试；v001原样保留。",
+    "在停止前创建了本地KYM workspace并采集4份KB JSON及151个core/sdk源码文件，另采集README和LICENSE；所有快照位于.kym-tco/dataease/，仅供后续诊断/恢复。",
+    "doctor报告ready只表示CLI、skill和workspace配置可用；不表示supported-host就绪。"
+  ]
+}

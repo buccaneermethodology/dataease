@@ -1,0 +1,319 @@
+                }
+
+            }
+        }
+        if (apiDefinitionRequest.getAuthManager() != null
+            && StringUtils.isNotBlank(apiDefinitionRequest.getAuthManager().getUsername())
+            && StringUtils.isNotBlank(apiDefinitionRequest.getAuthManager().getPassword())
+            && apiDefinitionRequest.getAuthManager().getVerification().equals("Basic Auth")) {
+            String authValue = "Basic " + Base64.getUrlEncoder().encodeToString((apiDefinitionRequest.getAuthManager().getUsername()
+                + ":" + apiDefinitionRequest.getAuthManager().getPassword()).getBytes());
+            httpClientConfig.addHeader("Authorization", authValue);
+        }
+
+        List<String> params = new ArrayList<>();
+        for (Map<String, String> argument : apiDefinition.getRequest().getArguments()) {
+            if (StringUtils.isNotEmpty(argument.get("name")) && StringUtils.isNotEmpty(argument.get("value"))) {
+                if (argument.get("nameType") != null && argument.get("nameType").toString().equalsIgnoreCase("params")) {
+                    String param = argument.get("value").toString();
+                    for (ApiDefinition definition : paramsList) {
+                        for (int i = 0; i < definition.getFields().size(); i++) {
+                            TableField field = definition.getFields().get(i);
+                            if (isParamFieldMatched(definition.getFields(), field, param)) {
+                                String resultStr = execHttpRequest(true, definition, definition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), paramsList);
+                                List<String[]> dataList = fetchResult(resultStr, definition);
+                                if (dataList.size() > 0) {
+                                    params.add(argument.get("name") + "=" + dataList.get(0)[i]);
+                                }
+                            }
+                        }
+                    }
+                } else if (argument.get("nameType") != null && argument.get("nameType").toString().equalsIgnoreCase("custom")) {
+                    List<String> arrayList = new ArrayList<>();
+                    String regex = "\\$\\{(.*?)\\}";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(argument.get("value").toString());
+                    while (matcher.find()) {
+                        arrayList.add(matcher.group(1));
+                    }
+                    String result = argument.get("value").toString();
+                    for (String param : arrayList) {
+                        for (ApiDefinition definition : paramsList) {
+                            for (int i = 0; i < definition.getFields().size(); i++) {
+                                TableField field = definition.getFields().get(i);
+                                if (isParamFieldMatched(definition.getFields(), field, param)) {
+                                    String resultStr = execHttpRequest(true, definition, definition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), paramsList);
+                                    List<String[]> dataList = fetchResult(resultStr, definition);
+                                    if (dataList.size() > 0) {
+                                        result = result.replace("${" + param + "}", dataList.get(0)[i]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    params.add(argument.get("name") + "=" + result);
+                } else if (argument.get("nameType") != null && argument.get("nameType").toString().equalsIgnoreCase("timeFun")) {
+                    String timeValue = formatTimeFunctionValue(argument.get("value").toString());
+                    if (StringUtils.isNotEmpty(timeValue)) {
+                        params.add(argument.get("name") + "=" + timeValue);
+                    }
+                } else {
+                    params.add(argument.get("name") + "=" + URLEncoder.encode(argument.get("value")));
+                }
+            }
+        }
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(params)) {
+            apiDefinition.setUrl(apiDefinition.getUrl() + "?" + StringUtils.join(params, "&"));
+        }
+        switch (apiDefinition.getMethod()) {
+            case "GET":
+                response = HttpClientUtil.get(apiDefinition.getUrl().trim(), httpClientConfig);
+                break;
+            case "POST":
+                if (!apiDefinitionRequest.getBody().keySet().contains("type")) {
+                    DEException.throwException("请求类型不能为空");
+                }
+                String type = apiDefinitionRequest.getBody().get("type").toString();
+                if (StringUtils.equalsAny(type, "JSON", "XML", "Raw")) {
+                    String raw = null;
+                    if (apiDefinitionRequest.getBody().get("raw") != null) {
+                        raw = apiDefinitionRequest.getBody().get("raw").toString();
+
+                        List<String> bodYparams = new ArrayList<>();
+                        String regex = "\\$\\{(.*?)\\}";
+                        Pattern pattern = Pattern.compile(regex);
+                        Matcher matcher = pattern.matcher(raw);
+                        while (matcher.find()) {
+                            bodYparams.add(matcher.group(1));
+                        }
+                        for (String param : bodYparams) {
+                            if (param.equalsIgnoreCase("currentTimestamp")) {
+                                raw = raw.replace("${" + param + "}", String.valueOf(System.currentTimeMillis()));
+                                continue;
+                            }
+                            for (ApiDefinition definition : paramsList) {
+                                for (int i = 0; i < definition.getFields().size(); i++) {
+                                    TableField field = definition.getFields().get(i);
+                                    if (isParamFieldMatched(definition.getFields(), field, param)) {
+                                        String resultStr = execHttpRequest(false, definition, definition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), paramsList);
+                                        List<String[]> dataList = fetchResult(resultStr, definition);
+                                        if (dataList.size() > 0) {
+                                            if (dataList.size() == 1) {
+                                                raw = raw.replace("${" + param + "}", dataList.get(0)[i]);
+                                            } else {
+                                                List<String> datas = new ArrayList<>();
+                                                for (String[] data : dataList) {
+                                                    datas.add(data[i]);
+                                                }
+                                                raw = raw.replace("${" + param + "}", JsonUtil.toJSONString(datas).toString());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        response = HttpClientUtil.post(apiDefinition.getUrl(), raw, httpClientConfig);
+                    }
+                }
+                if (StringUtils.equalsAny(type, "Form_Data", "WWW_FORM")) {
+                    if (apiDefinitionRequest.getBody().get("kvs") != null) {
+                        Map<String, String> body = new HashMap<>();
+                        TypeReference<List<JsonNode>> listTypeReference = new TypeReference<List<JsonNode>>() {
+                        };
+                        List<JsonNode> rootNode = null;
+                        try {
+                            rootNode = objectMapper.readValue(JsonUtil.toJSONString(apiDefinition.getRequest().getBody().get("kvs")).toString(), listTypeReference);
+                        } catch (Exception e) {
+                            LogUtil.error(e);
+                            DEException.throwException(e);
+                        }
+                        for (JsonNode jsonNode : rootNode) {
+                            if (jsonNode.has("name") && jsonNode.has("value")) {
+                                if (jsonNode.get("value") != null && StringUtils.isNotEmpty(jsonNode.get("value").asText())) {
+                                    if (jsonNode.get("nameType") != null && jsonNode.get("nameType").asText().equalsIgnoreCase("params")) {
+                                        String param = jsonNode.get("value").asText();
+                                        for (ApiDefinition definition : paramsList) {
+                                            for (int i = 0; i < definition.getFields().size(); i++) {
+                                                TableField field = definition.getFields().get(i);
+                                                if (isParamFieldMatched(definition.getFields(), field, param)) {
+                                                    String resultStr = execHttpRequest(false, definition, definition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), paramsList);
+                                                    List<String[]> dataList = fetchResult(resultStr, definition);
+                                                    if (dataList.size() > 0) {
+                                                        if (dataList.size() == 1) {
+                                                            body.put(jsonNode.get("name").asText(), dataList.get(0)[i]);
+                                                        } else {
+                                                            List<String> datas = new ArrayList<>();
+                                                            for (String[] data : dataList) {
+                                                                datas.add(data[i]);
+                                                            }
+                                                            body.put(jsonNode.get("name").asText(), JsonUtil.toJSONString(datas).toString());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else if (jsonNode.get("nameType") != null && jsonNode.get("nameType").asText().equalsIgnoreCase("custom")) {
+                                        List<String> bodYparams = new ArrayList<>();
+                                        String regex = "\\$\\{(.*?)\\}";
+                                        Pattern pattern = Pattern.compile(regex);
+                                        Matcher matcher = pattern.matcher(jsonNode.get("value").asText());
+                                        while (matcher.find()) {
+                                            bodYparams.add(matcher.group(1));
+                                        }
+                                        String result = jsonNode.get("value").asText();
+                                        for (String param : bodYparams) {
+                                            for (ApiDefinition definition : paramsList) {
+                                                for (int i = 0; i < definition.getFields().size(); i++) {
+                                                    TableField field = definition.getFields().get(i);
+                                                    if (isParamFieldMatched(definition.getFields(), field, param)) {
+                                                        String resultStr = execHttpRequest(false, definition, definition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), paramsList);
+                                                        List<String[]> dataList = fetchResult(resultStr, definition);
+                                                        if (dataList.size() > 0) {
+                                                            if (dataList.size() == 1) {
+                                                                result = result.replace("${" + param + "}", dataList.get(0)[i]);
+                                                            } else {
+                                                                List<String> datas = new ArrayList<>();
+                                                                for (String[] data : dataList) {
+                                                                    datas.add(data[i]);
+                                                                }
+                                                                result = result.replace("${" + param + "}", JsonUtil.toJSONString(datas).toString());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        body.put(jsonNode.get("name").asText(), result);
+                                    } else if (jsonNode.get("nameType") != null && jsonNode.get("nameType").asText().equalsIgnoreCase("timeFun")) {
+                                        String timeValue = formatTimeFunctionValue(jsonNode.get("value").asText());
+                                        if (StringUtils.isNotEmpty(timeValue)) {
+                                            body.put(jsonNode.get("name").asText(), timeValue);
+                                        }
+                                    } else {
+                                        body.put(jsonNode.get("name").asText(), jsonNode.get("value").asText());
+                                    }
+                                }
+                            }
+                        }
+                        response = HttpClientUtil.post(apiDefinition.getUrl(), body, httpClientConfig);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return response;
+    }
+
+    private static void previewNum(List<Map<String, Object>> fields, String response) {
+        int previewNum = 100;
+        for (Map<String, Object> field : fields) {
+            JSONArray newArray = new JSONArray();
+            if (field.get("value") != null) {
+                Object object = JsonPath.using(jsonPathConf).parse(response).read(field.get("jsonPath").toString());
+                int i = 0;
+                if (object instanceof List) {
+                    for (Object o : (List<String>) object) {
+                        if (Objects.isNull(o)) {
+                            newArray.add("");
+                        } else {
+                            newArray.add(o.toString());
+                        }
+                        i++;
+                        if (i >= previewNum) {
+                            break;
+                        }
+                    }
+                } else {
+                    if (object != null) {
+                        newArray.add(object.toString());
+                    }
+                }
+                field.put("value", newArray);
+            } else {
+                List<Map<String, Object>> childrenFields = (List<Map<String, Object>>) field.get("children");
+                previewNum(childrenFields, response);
+            }
+        }
+    }
+
+    public static ApiDefinition checkApiDefinition(DatasourceRequest datasourceRequest) throws DEException {
+        ApiDefinition apiDefinition = new ApiDefinition();
+        TypeReference<List<ApiDefinition>> listTypeReference = new TypeReference<List<ApiDefinition>>() {
+        };
+        List<ApiDefinition> apiDefinitionList = JsonUtil.parseList(datasourceRequest.getDatasource().getConfiguration(), listTypeReference);
+        if (!CollectionUtils.isEmpty(apiDefinitionList)) {
+            for (ApiDefinition definition : apiDefinitionList) {
+                if (definition != null && (definition.getType() == null || !definition.getType().equalsIgnoreCase("params"))) {
+                    apiDefinition = definition;
+                }
+            }
+        }
+        String response = execHttpRequest(true, apiDefinition, apiDefinition.getApiQueryTimeout() == null || apiDefinition.getApiQueryTimeout() <= 0 ? 10 : apiDefinition.getApiQueryTimeout(), params(datasourceRequest));
+        return checkApiDefinition(apiDefinition, response);
+    }
+
+    private static ApiDefinition checkApiDefinition(ApiDefinition apiDefinition, String response) throws DEException {
+        if (StringUtils.isEmpty(response)) {
+            DEException.throwException("该请求返回数据为空");
+        }
+        List<Map<String, Object>> fields = new ArrayList<>();
+        if (apiDefinition.isShowApiStructure() || !apiDefinition.isUseJsonPath()) {
+            String rootPath;
+            if (response.startsWith("[")) {
+                rootPath = "$[*]";
+                JsonNode jsonArray = null;
+                try {
+                    jsonArray = objectMapper.readTree(response);
+                } catch (Exception e) {
+                    DEException.throwException(e);
+                }
+                for (Object o : jsonArray) {
+                    handleStr(apiDefinition, o.toString(), fields, rootPath);
+                }
+            } else {
+                rootPath = "$";
+                handleStr(apiDefinition, response, fields, rootPath);
+            }
+            previewNum(fields, response);
+            apiDefinition.setJsonFields(fields);
+            return apiDefinition;
+        } else {
+            List<LinkedHashMap> currentData = new ArrayList<>();
+            try {
+                Object object = JsonPath.read(response, apiDefinition.getJsonPath());
+                if (object instanceof List) {
+                    currentData = (List<LinkedHashMap>) object;
+                } else {
+                    currentData.add((LinkedHashMap) object);
+                }
+            } catch (Exception e) {
+                DEException.throwException(e);
+            }
+            int i = 0;
+            try {
+                LinkedHashMap data = currentData.get(0);
+            } catch (Exception e) {
+                DEException.throwException("数据不符合规范, " + e.getMessage());
+            }
+            for (LinkedHashMap data : currentData) {
+                if (i >= apiDefinition.getPreviewNum()) {
+                    break;
+                }
+                if (i == 0) {
+                    for (Object o : data.keySet()) {
+                        Map<String, Object> field = new HashMap<>();
+                        field.put("originName", o.toString());
+                        field.put("name", o.toString());
+                        field.put("type", "STRING");
+                        field.put("checked", true);
+                        field.put("size", 65535);
+                        field.put("deExtractType", 0);
+                        field.put("deType", 0);
+                        field.put("extField", 0);
+                        fields.add(field);
+                    }
+                }
+                for (Map<String, Object> field : fields) {
+                    JSONArray array = new JSONArray();
+                    String value = Optional.ofNullable(data.get(field.get("originName"))).orElse("").toString();

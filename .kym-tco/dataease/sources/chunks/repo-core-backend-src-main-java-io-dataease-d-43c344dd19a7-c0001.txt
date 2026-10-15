@@ -1,0 +1,426 @@
+# Repo evidence: core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java
+package io.dataease.datasource.provider;
+import io.dataease.utils.LogUtil;
+
+import com.jcraft.jsch.*;
+import io.dataease.constant.SQLConstants;
+import io.dataease.dao.auto.entity.CoreDatasource;
+import io.dataease.dataset.utils.FieldUtils;
+import io.dataease.datasource.dao.auto.repository.CoreDatasourceRepository;
+import io.dataease.datasource.manage.EngineManage;
+import io.dataease.datasource.type.*;
+import io.dataease.exception.DEException;
+import io.dataease.extensions.datasource.dto.*;
+import io.dataease.extensions.datasource.provider.DriverShim;
+import io.dataease.extensions.datasource.provider.ExtendedJdbcClassLoader;
+import io.dataease.extensions.datasource.provider.Provider;
+import io.dataease.extensions.datasource.vo.DatasourceConfiguration;
+import io.dataease.i18n.Translator;
+import io.dataease.utils.*;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import org.apache.calcite.adapter.jdbc.JdbcSchema;
+import org.apache.calcite.config.CalciteConnectionProperty;
+import org.apache.calcite.config.Lex;
+import org.apache.calcite.config.NullCollation;
+import org.apache.calcite.jdbc.CalciteConnection;
+import org.apache.calcite.schema.Schema;
+import org.apache.calcite.schema.SchemaPlus;
+import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.parser.SqlParser;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static io.dataease.engine.utils.Utils.validateSqlInjectionRisk;
+
+
+@Component("calciteProvider")
+public class CalciteProvider extends Provider {
+
+    @Autowired
+    private CoreDatasourceRepository coreDatasourceRepository;
+    @Resource
+    private EngineManage engineManage;
+    protected ExtendedJdbcClassLoader extendedJdbcClassLoader;
+    private Map<Long, ExtendedJdbcClassLoader> customJdbcClassLoaders = new HashMap<>();
+    @Value("${dataease.path.driver:/opt/dataease3.0/drivers}")
+    private String FILE_PATH;
+    @Value("${dataease.path.custom-drivers:/opt/dataease3.0/custom-drivers/}")
+    private String CUSTOM_PATH;
+    private static String split = "DE";
+
+    private record QueryAndParams(String sql, List<String> params) {
+    }
+
+    private static final Pattern ILLEGAL_IDENTIFIER_CHAR = Pattern.compile("[\\u0000-\\u001f\"'`\\[\\];\\\\]");
+
+    private String quoteName(String value, char quoteChar) {
+        String name = StringUtils.defaultString(value);
+        if (StringUtils.isBlank(name) || name.length() > 64 || ILLEGAL_IDENTIFIER_CHAR.matcher(name).find()) {
+            DEException.throwException("Illegal identifier: " + value);
+        }
+        String quote = String.valueOf(quoteChar);
+        return quote + name + quote;
+    }
+
+    private String bindQuery(String template, List<String> bindParams, String... values) {
+        StringBuilder sql = new StringBuilder();
+        int valueIndex = 0;
+        for (int i = 0; i < template.length(); i++) {
+            char c = template.charAt(i);
+            if (c == '%' && i + 1 < template.length()) {
+                char next = template.charAt(i + 1);
+                if (next == 's') {
+                    if (valueIndex >= values.length) {
+                        DEException.throwException("SQL bind parameter mismatch");
+                    }
+                    sql.append('?');
+                    bindParams.add(values[valueIndex++]);
+                    i++;
+                    continue;
+                }
+                if (next == '%') {
+                    sql.append('%');
+                    i++;
+                    continue;
+                }
+            }
+            sql.append(c);
+        }
+        if (valueIndex != values.length) {
+            DEException.throwException("SQL bind parameter mismatch");
+        }
+        return sql.toString();
+    }
+
+    /**
+     * 根据实际执行引擎和数据库版本判断是否可下推箱线图统计 SQL。
+     * 跨数据源查询由内置 Calcite 执行，可直接使用窗口函数；单数据源查询读取 JDBC 版本后按保守白名单判断。
+     * 无法识别能力时返回 false，由箱线图处理器切换到有样本上限的 Java 计算，不在这里吞掉后续查询异常。
+     */
+    @Override
+    public boolean supportsWindowFunctions(DatasourceRequest datasourceRequest) {
+        if (Boolean.TRUE.equals(datasourceRequest.getIsCross())) {
+            // 跨数据源 SQL 由内置 Calcite 引擎执行，不依赖外部数据库的窗口函数版本。
+            return true;
+        }
+        if (datasourceRequest.getDsList() == null || datasourceRequest.getDsList().size() != 1) {
+            return false;
+        }
+        DatasourceSchemaDTO datasource = datasourceRequest.getDsList().values().iterator().next();
+        try (Connection connection = getConnectionFromPool(datasource.getId())) {
+            DatabaseMetaData metadata = connection.getMetaData();
+            int major = metadata.getDatabaseMajorVersion();
+            int minor = metadata.getDatabaseMinorVersion();
+            datasource.setDsVersion(major);
+            datasourceRequest.setDsVersion(major);
+            return supportsWindowFunctions(datasource.getType(), major, minor);
+        } catch (Exception e) {
+            LogUtil.debug("无法识别数据源窗口函数能力，将由业务处理器执行兼容回退：" + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 窗口函数版本白名单只包含已确认能覆盖当前统计 SQL 的数据库版本，未知类型保守回退。
+     */
+    static boolean supportsWindowFunctions(String datasourceType, int major, int minor) {
+        if (StringUtils.isBlank(datasourceType)) {
+            return false;
+        }
+        return switch (datasourceType.toLowerCase(Locale.ROOT)) {
+            case "mysql" -> major >= 8;
+            case "mariadb" -> major > 10 || major == 10 && minor >= 2;
+            case "oracle" -> major >= 9;
+            case "pg" -> major > 8 || major == 8 && minor >= 4;
+            case "kingbase" -> major >= 8;
+            case "sqlserver" -> major >= 9;
+            case "h2" -> major >= 2;
+            case "tidb" -> major >= 3;
+            default -> false;
+        };
+    }
+
+    @Resource
+    private CommonThreadPool commonThreadPool;
+
+    @PostConstruct
+    public void init() throws Exception {
+        try {
+            String jarPath = FILE_PATH;
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            extendedJdbcClassLoader = new ExtendedJdbcClassLoader(new URL[]{new File(jarPath).toURI().toURL()}, classLoader);
+            File file = new File(jarPath);
+            File[] array = file.listFiles();
+            Optional.ofNullable(array).ifPresent(files -> {
+                for (File tmp : array) {
+                    if (tmp.getName().endsWith(".jar")) {
+                        try {
+                            extendedJdbcClassLoader.addFile(tmp);
+                        } catch (IOException e) {
+                            LogUtil.error(e);
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public List<String> getSchema(DatasourceRequest datasourceRequest) {
+        List<String> schemas = new ArrayList<>();
+        String queryStr = getSchemaSql(datasourceRequest.getDatasource());
+        if (datasourceRequest.getDatasource().getType().equalsIgnoreCase("db2")) {
+            Db2 db2 = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Db2.class);
+            String username = resolveDb2Username(db2);
+            try (ConnectionObj con = getConnection(datasourceRequest.getDatasource()); PreparedStatement statement = con.getConnection().prepareStatement(queryStr)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        schemas.add(resultSet.getString(1));
+                    }
+                }
+            } catch (Exception e) {
+                DEException.throwException(e.getMessage());
+            }
+        } else {
+            try (ConnectionObj con = getConnection(datasourceRequest.getDatasource()); Statement statement = getStatement(con.getConnection(), 30); ResultSet resultSet = statement.executeQuery(queryStr)) {
+                while (resultSet.next()) {
+                    schemas.add(resultSet.getString(1));
+                }
+            } catch (Exception e) {
+                DEException.throwException(e.getMessage());
+            }
+        }
+        if (datasourceRequest.getDatasource().getType().equalsIgnoreCase(DatasourceConfiguration.DatasourceType.pg.name())
+                || datasourceRequest.getDatasource().getType().equalsIgnoreCase(DatasourceConfiguration.DatasourceType.kingbase.name())
+                || datasourceRequest.getDatasource().getType().equalsIgnoreCase(DatasourceConfiguration.DatasourceType.gaussdb.name())) {
+            Set<String> SYSTEM_SCHEMAS = new HashSet<>(Arrays.asList("information_schema", "pg_catalog", "pg_temp_1", "pg_toast", "pg_toast_temp_1"));
+            return schemas.stream().filter(schema -> !SYSTEM_SCHEMAS.contains(schema)).collect(Collectors.toList());
+        }
+        return schemas;
+    }
+
+    @Override
+    public String checkStatus(DatasourceRequest datasourceRequest) throws Exception {
+        DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(datasourceRequest.getDatasource().getType());
+        switch (datasourceType) {
+            case pg:
+                DatasourceConfiguration configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Pg.class);
+                List<String> schemas = getSchema(datasourceRequest);
+                if (CollectionUtils.isEmpty(schemas) || !schemas.contains(configuration.getSchema())) {
+                    DEException.throwException("无效的 schema！");
+                }
+                break;
+            case kingbase:
+                DatasourceConfiguration kingbaseConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Kingbase.class);
+                List<String> kingbaseSchemas = getSchema(datasourceRequest);
+                if (CollectionUtils.isEmpty(kingbaseSchemas) || !kingbaseSchemas.contains(kingbaseConfiguration.getSchema())) {
+                    DEException.throwException("无效的 schema！");
+                }
+                break;
+            case gaussdb:
+                DatasourceConfiguration gaussdbConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), GaussDB.class);
+                List<String> gaussdbSchemas = getSchema(datasourceRequest);
+                if (CollectionUtils.isEmpty(gaussdbSchemas) || !gaussdbSchemas.contains(gaussdbConfiguration.getSchema())) {
+                    DEException.throwException("无效的 schema！");
+                }
+                break;
+            default:
+                break;
+        }
+
+        try (ConnectionObj con = getConnection(datasourceRequest.getDatasource())) {
+            datasourceRequest.setDsVersion(con.getConnection().getMetaData().getDatabaseMajorVersion());
+            String querySql = getTablesSql(datasourceRequest).get(0);
+            Statement statement = getStatement(con.getConnection(), 30);
+            ResultSet resultSet = statement.executeQuery(querySql);
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return "Success";
+    }
+
+    @Override
+    public List<DatasetTableDTO> getTables(DatasourceRequest datasourceRequest) {
+        List<DatasetTableDTO> tables = new ArrayList<>();
+        try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId()); Statement statement = getStatement(con, 30)) {
+            datasourceRequest.setDsVersion(con.getMetaData().getDatabaseMajorVersion());
+            List<String> tablesSqls = getTablesSql(datasourceRequest);
+            for (String tablesSql : tablesSqls) {
+                ResultSet resultSet = statement.executeQuery(tablesSql);
+                while (resultSet.next()) {
+                    tables.add(getTableDesc(datasourceRequest, resultSet));
+                }
+            }
+        } catch (Exception e) {
+            DEException.throwException(e.getMessage());
+        }
+        return tables;
+    }
+
+    @Override
+    public Map<String, Object> fetchResultField(DatasourceRequest datasourceRequest) throws DEException {
+        // 不跨数据源
+        if (datasourceRequest.getIsCross() == null || !datasourceRequest.getIsCross()) {
+            return jdbcFetchResultField(datasourceRequest);
+        }
+
+        List<TableField> datasetTableFields = new ArrayList<>();
+        List<String[]> list = new LinkedList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = take();
+        try {
+            CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+            statement = calciteConnection.prepareStatement(datasourceRequest.getQuery());
+            bindPreparedStatementValues(statement, datasourceRequest.getTableFieldWithValues(), null, null, null);
+            resultSet = statement.executeQuery();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                TableField tableField = new TableField();
+                tableField.setOriginName(metaData.getColumnLabel(i));
+                tableField.setType(metaData.getColumnTypeName(i));
+                tableField.setPrecision(metaData.getPrecision(i));
+                int deType = transType2DeType(tableField.getType(), datasourceRequest);
+                tableField.setDeExtractType(deType);
+                tableField.setDeType(deType);
+                tableField.setScale(metaData.getScale(i));
+                datasetTableFields.add(tableField);
+            }
+            list = getDataResult(resultSet);
+        } catch (Exception | AssertionError e) {
+            String msg;
+            if (e.getCause() != null && e.getCause().getCause() != null) {
+                msg = e.getMessage() + " [" + e.getCause().getCause().getMessage() + "]";
+            } else {
+                msg = e.getMessage();
+            }
+            DEException.throwException(Translator.get("i18n_fetch_error") + msg);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+            } catch (Exception e) {
+            }
+        }
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("fields", datasetTableFields);
+        map.put("data", list);
+        return map;
+    }
+
+    @Override
+    public String transSqlDialect(String sql, Map<Long, DatasourceSchemaDTO> dsMap) throws DEException {
+        DatasourceSchemaDTO value = dsMap.entrySet().iterator().next().getValue();
+        try (Connection connection = getConnectionFromPool(value.getId());) {
+            // 获取数据库version
+            if (connection != null) {
+                value.setDsVersion(connection.getMetaData().getDatabaseMajorVersion());
+            }
+            SqlParser parser = SqlParser.create(sql, SqlParser.Config.DEFAULT.withLex(Lex.JAVA));
+            SqlNode sqlNode = parser.parseStmt();
+            return sqlNode.toSqlString(getDialect(value)).toString();
+        } catch (Exception e) {
+            LogUtil.error(e);
+            DEException.throwException(e.getMessage());
+        }
+        return null;
+    }
+
+    private List<TableField> fetchResultField(ResultSet rs) throws Exception {
+        List<TableField> fieldList = new ArrayList<>();
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int j = 0; j < columnCount; j++) {
+            String columnName = metaData.getColumnName(j + 1);
+            String label = StringUtils.isNotEmpty(metaData.getColumnLabel(j + 1)) ? metaData.getColumnLabel(j + 1) : columnName;
+            TableField tableField = new TableField();
+            tableField.setOriginName(columnName);
+            tableField.setName(label);
+            tableField.setType(metaData.getColumnTypeName(j + 1));
+            tableField.setFieldType(tableField.getType());
+            int deType = FieldUtils.transType2DeType(tableField.getType());
+            tableField.setDeExtractType(deType);
+            tableField.setDeType(deType);
+            fieldList.add(tableField);
+        }
+        return fieldList;
+    }
+
+    private Map<String, Integer> getTableTypeMap(DatasourceRequest datasourceRequest, DatasourceConfiguration datasourceConfiguration, String tableName) throws DEException {
+        Map<String, Integer> map = new HashMap<>();
+        String schemaTable = StringUtils.isNotBlank(datasourceConfiguration.getSchema())
+                ? quoteName(datasourceConfiguration.getSchema(), '`') + "." + quoteName(tableName, '`')
+                : quoteName(tableName, '`');
+        String sql = "SELECT * FROM " + schemaTable + " LIMIT 0 OFFSET 0";
+        sql = transSqlDialect(sql, datasourceRequest.getDsList());
+        ResultSet resultSet = null;
+        try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId()); Statement statement = getStatement(con, 30)) {
+            resultSet = statement.executeQuery(sql);
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int j = 0; j < columnCount; j++) {
+                String name = StringUtils.lowerCase(metaData.getColumnName(j + 1));
+                Integer type = metaData.getColumnType(j + 1);
+                map.put(name, type);
+            }
+        } catch (Exception e) {
+            LogUtil.error(e);
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LogUtil.error(e);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public List<TableField> fetchTableField(DatasourceRequest datasourceRequest) throws DEException {
+        if (datasourceRequest.getIsCross() != null && datasourceRequest.getIsCross()) {
+            List<TableField> datasetTableFields = new ArrayList<>();
+            PreparedStatement statement = null;
+            ResultSet resultSet = null;
+            Connection connection = take();
+            try {
+                CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+                statement = calciteConnection.prepareStatement(datasourceRequest.getQuery());
+                bindPreparedStatementValues(statement, datasourceRequest.getTableFieldWithValues(), null, null, null);
+                resultSet = statement.executeQuery();
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    TableField tableField = new TableField();
+                    tableField.setOriginName(metaData.getColumnLabel(i));
+                    tableField.setType(metaData.getColumnTypeName(i));

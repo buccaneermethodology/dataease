@@ -1,0 +1,542 @@
+{
+  "doc_id": "access",
+  "title": "分享、嵌入、导出与权限",
+  "domains": [
+    "K03",
+    "K04",
+    "K05",
+    "K07",
+    "K09",
+    "K10"
+  ],
+  "facts": [
+    {
+      "id": "ACCESS-001",
+      "statement": "分享管理要求登录身份且拒绝公共链接身份；资源须是未删除的 dashboard/dataV leaf；管理员代理另外通过 InteractiveAuthApi.checkAuth。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareAuthorizationManage.java",
+          "start_line": 29,
+          "end_line": 61,
+          "symbol": "requireManage/resource",
+          "sha256": "71213691df0e2ba7d5fe4ee570032653c40e4ec37aba2003dce1fe391743e223"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-002",
+      "statement": "既有分享访问重新验证创建者、资源类型和组织绑定；权限服务存在时检查用户启用及 checkShareAuth；无服务时仅允许 uid=1、无注册资源且存在替补登录而无企业登录 Bean 的分支。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareAuthorizationManage.java",
+          "start_line": 43,
+          "end_line": 97,
+          "symbol": "requireValidShare/checkSubject",
+          "sha256": "71213691df0e2ba7d5fe4ee570032653c40e4ec37aba2003dce1fe391743e223"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-003",
+      "statement": "保存 Ticket 要求 UUID 非空且分享属于当前用户并通过管理权限；替换 Ticket 可删除旧记录生成新值，持久化 args、exp、uuid；删除也检查拥有者。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareTicketManage.java",
+          "start_line": 55,
+          "end_line": 132,
+          "symbol": "saveTicket/deleteTicket/isShareOwner",
+          "sha256": "3f9efa733e7b9e1503b6e770c5d378d45223bc75cbff9c6f306890153b77577a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-004",
+      "statement": "Ticket 验证对缺失、未知或 UUID 不符分别返回有效标记；首次访问持久化 accessTime 并视为未过期，后续按 exp 分钟计算，null/0 不过期，超过而非等于时过期。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareTicketManage.java",
+          "start_line": 191,
+          "end_line": 225,
+          "symbol": "validateTicket",
+          "sha256": "3f9efa733e7b9e1503b6e770c5d378d45223bc75cbff9c6f306890153b77577a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-005",
+      "statement": "proxyInfo 检查全局分享禁用、iframe 许可、分享存在及创建者授权、密码有效期策略；只有链接未过期、密码与 Ticket 有效且 Ticket 未过期才签发 Token，否则返回不含资源/创建者/Ticket参数的挑战信息。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 318,
+          "end_line": 368,
+          "symbol": "proxyInfo",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-006",
+      "statement": "validatePwd 仅比较解密的 UUID/密码并重验分享授权，不签发 Token；签发函数通过响应头返回 LinkTokenUtil 生成的链接 Token。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 392,
+          "end_line": 422,
+          "symbol": "validatePwd/generateLinkToken",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-007",
+      "statement": "链接 JWT 要求 issuer=dataease、audience=share、purpose=link、version=3，绑定分享/创建者/资源/组织；寿命最多八小时且不超过分享有效期；签名派生绑定 UUID、密码、期限、Ticket要求及访客权限等当前设置。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/util/LinkTokenUtil.java",
+          "start_line": 16,
+          "end_line": 62,
+          "symbol": "generate/verify/algorithm",
+          "sha256": "cc48908c7b6c7143538da931cb26af4e8b37156334ec9c99add8326588e5985d"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-008",
+      "statement": "链接请求仅允许 GET/POST，限定显式通用路径或带 DeLinkPermit 的匹配接口；指定资源类型查询须匹配链接资源；静态资源须在分享画布配置中且文件名不能含目录穿越结构。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/LinkTokenValidationManage.java",
+          "start_line": 58,
+          "end_line": 108,
+          "symbol": "checkRequestPath/checkStaticResource",
+          "sha256": "598ce091284863a7bb43675ba855da8a7b536531c205359dbfc235550cac1e97"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-009",
+      "statement": "链接请求路径验证抛 IllegalArgumentException 时拦截器返回 HTTP 403 与 DE-FORBIDDEN-FLAG。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/interceptor/LinkInterceptor.java",
+          "start_line": 10,
+          "end_line": 24,
+          "symbol": "preHandle",
+          "sha256": "5160721de3c6f6daaa1e45e1286b984cd2c7a3e168bc47b5da57ff242b2c8853"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-010",
+      "statement": "DeLinkAop 对链接身份拒绝编辑快照/main-edit；图表须与持久化 chart 的 sceneId、tableId 匹配；资源ID须匹配Token，只有 subResource=true 且父画布包含子screenId才允许子资源。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/interceptor/DeLinkAop.java",
+          "start_line": 49,
+          "end_line": 130,
+          "symbol": "logAround/checkChart/isSubResourceOf",
+          "sha256": "5e75a4e44d8a5440859eae80837c83f3d9a2c92916e733435b51c199f4c22de0"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-011",
+      "statement": "分享访客位权限定义明细=1、数据导出=2、图片导出=4；有许可时有效权限为分享设置与创建者权限交集，无许可的现有链接分支返回7；require 位不满足时抛异常。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareVisitorPermissionManage.java",
+          "start_line": 15,
+          "end_line": 59,
+          "symbol": "currentPermissions/require",
+          "sha256": "eab3c908c1b51570afcfbfcc2c18644520d057f626f7e3d200cf4a22e9d255cb"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-012",
+      "statement": "Axios 请求优先发送 X-DE-LINK-TOKEN，否则发送嵌入 X-EMBEDDED-TOKEN；响应中的 x-de-link-token 写入链接 Store。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/config/axios/service.ts",
+          "start_line": 126,
+          "end_line": 130,
+          "symbol": "request interceptor",
+          "sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c"
+        },
+        {
+          "path": "core/core-frontend/src/config/axios/service.ts",
+          "start_line": 175,
+          "end_line": 183,
+          "symbol": "response interceptor",
+          "sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-013",
+      "statement": "EmbeddedApi 仅声明 XpackResource 嵌入管理契约：分页、创建/编辑/删除/重置、域名集合、initIframe、Token参数及注销；创建编辑删除重置标有 m:read。",
+      "kind": "implemented",
+      "scope": "仅SDK接口声明，不证明企业后端实现",
+      "evidence": [
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/embedded/api/EmbeddedApi.java",
+          "start_line": 29,
+          "end_line": 92,
+          "symbol": "EmbeddedApi",
+          "sha256": "31803d2c656f9a9da7133ea02e302e273aa855e4a8e30a5a782be0a0398b442a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-014",
+      "statement": "嵌入 Store 保存 token、busiFlag、outerParams、资源/图表ID等；setIframeData 把宿主消息字段写入状态，getIframeData 输出 embeddedToken 等字段。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/embedded.ts",
+          "start_line": 108,
+          "end_line": 121,
+          "symbol": "getIframeData",
+          "sha256": "fd45f7d0fac71e59a7d55c0285d54936e682ccde426c915faa3b24843c48a079"
+        },
+        {
+          "path": "core/core-frontend/src/store/modules/embedded.ts",
+          "start_line": 188,
+          "end_line": 200,
+          "symbol": "setIframeData",
+          "sha256": "fd45f7d0fac71e59a7d55c0285d54936e682ccde426c915faa3b24843c48a079"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-015",
+      "statement": "嵌入 iframe 的 initApi 向 /embedded/initIframe POST token 与 origin。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/embedded.ts",
+          "start_line": 1,
+          "end_line": 3,
+          "symbol": "initApi",
+          "sha256": "678632f03905500c327463aa8b37844f98b924059be83a250951076dc14e4826"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-016",
+      "statement": "嵌入交互函数在宿主窗口存在且传 eventName 时，以 dataease-embedded-interactive 消息类型向宿主 postMessage；methodName 分支直接返回。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/EmbeddedIntractive.ts",
+          "start_line": 1,
+          "end_line": 25,
+          "symbol": "interactive",
+          "sha256": "1bc75f4f5a17b7cfc6d8b42ade8bd48dfbc2cef6ce8e7a3682042d5f5a0ee694"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-017",
+      "statement": "图表明细导出首先要求访客 EXPORT_DATA；有链接Token且非DataEaseBi，或DataEaseBi无链接Token且配置非async时同步写Excel，其余分支加入导出任务。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 257,
+          "end_line": 265,
+          "symbol": "innerExportDetails",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 360,
+          "end_line": 381,
+          "symbol": "innerExportDetails",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-018",
+      "statement": "创建图表/数据集导出任务绑定当前 uid，记录 PENDING、进度0、参数、来源、文件名、时间和机器名；数据集先调用 getDatasetGroupInfoDTO，再交给对应异步执行器。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 253,
+          "end_line": 288,
+          "symbol": "addTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-019",
+      "statement": "数据集异步导出捕获 uid、代理组织、IP 并在线程中恢复，保存任务且校验许可；执行列过滤、行权限与导出筛选树，字段为空或无列权限时报错；结束记录成功/失败并 finally 清理 IP 和用户上下文。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 309,
+          "end_line": 391,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 510,
+          "end_line": 521,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-020",
+      "statement": "导出任务分页按当前 uid 和状态查询；删除及重试检查任务属于当前用户，重试仅允许 FAILED 并重设 PENDING 与进度0后按来源分发。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 103,
+          "end_line": 187,
+          "symbol": "delete/retry/pager",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-021",
+      "statement": "下载URI只能为当前用户任务生成；数据库记录下载创建时间，新记录有效期5分钟；JWT绑定 taskId、uid、ts与有效期。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 343,
+          "end_line": 367,
+          "symbol": "generateDownloadUri/getCurrentUserExportTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 527,
+          "end_line": 549,
+          "symbol": "buildDownloadTicket/resolveTicketSecret",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-022",
+      "statement": "下载校验要求Ticket与下载/导出记录存在，校验签名、任务ID、所有者UID、签发时间与有效期；通过后删除下载记录再返回任务。该方法未以当前登录UID代替Ticket绑定验证。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 478,
+          "end_line": 508,
+          "symbol": "validateDownloadTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-023",
+      "statement": "列权限把启用且选中的规则按用户/角色分组，用户规则优先；字段匹配项中任一opt为Desensitization就保留字段，但登记到脱敏映射的是该组匹配项的第一项get(0)，不保证是触发判断的脱敏项；无脱敏匹配则去除字段，无任何匹配则保留。规则查询在行/列API缺失或系统管理员时返回空规则。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 58,
+          "end_line": 141,
+          "symbol": "filterColumnPermissions/columnPermissions",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-024",
+      "statement": "行权限入口获取规则后解析字段，applyRowPermissions 将当前用户规则交给 WhereTree2Str；按角色入口过滤角色白名单；rowPermissionsTree 对系统管理员直接返回空规则，否则读取用户角色并查询启用规则。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 144,
+          "end_line": 210,
+          "symbol": "getRowPermissionsTree/applyRowPermissions/rowPermissionsTree",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-025",
+      "statement": "InteractiveAuthApi 声明资源登记/编辑/删除、checkAuth与queryAuth；checkShareAuth默认实现抛 UnsupportedOperationException，旧实现不能靠默认方法通过分享授权。",
+      "kind": "implemented",
+      "scope": "公共接口及默认方法，不证明企业实现",
+      "evidence": [
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/InteractiveAuthApi.java",
+          "start_line": 44,
+          "end_line": 86,
+          "symbol": "InteractiveAuthApi/checkShareAuth",
+          "sha256": "4689e9ec1eaf1c9573462de71e4290a2b0e0ce464094fff21f2da36cf01fe63d"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-026",
+      "statement": "替补登录 Bean 仅在缺少 loginServer 时启用，只接受 admin 名称与配置密码，返回uid=1的签名Token；不能由该实现推出企业用户登录行为。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/login/SubstituleLoginServer.java",
+          "start_line": 19,
+          "end_line": 57,
+          "symbol": "SubstituleLoginServer",
+          "sha256": "88bc3cd9e72697e72726f25dfde3adaae9d2331ffc8902356a316fd08c383ad4"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-027",
+      "statement": "前端用户API封装查询、创建、编辑、删除、角色绑定与组织切换；SDK UserApi 对详情、编辑、删除声明菜单/资源级 DePermit，具体企业持久化不由此接口证明。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/user.ts",
+          "start_line": 3,
+          "end_line": 56,
+          "symbol": "user API",
+          "sha256": "3da26d76b63181f545c530c4172362d273c320ccb4a3b552871729b57c5e8706"
+        },
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/user/api/UserApi.java",
+          "start_line": 53,
+          "end_line": 100,
+          "symbol": "UserApi",
+          "sha256": "d8609182c9d3a660af3007e8e5f880a0a45e84b9ec536ba4336cc456977a5ab3"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-028",
+      "statement": "登录或桌面模式前端从 getRoleRouters 生成并动态加入可访问路由；路径不可访问时转首个授权菜单或404，组织无权时回工作台。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/permission.ts",
+          "start_line": 95,
+          "end_line": 150,
+          "symbol": "router guard",
+          "sha256": "4eb7df67800cfbe0e577d6d4fec67be5f24ce178c8119d35552842f3d791f46b"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-029",
+      "statement": "后端 standalone Profile 默认激活；distributed 引入 distributed 依赖并在编译时排除 io/dataease/substitute/**。",
+      "kind": "configured",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 134,
+          "end_line": 147,
+          "symbol": "profiles",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        },
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 272,
+          "end_line": 299,
+          "symbol": "distributed profile",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-030",
+      "statement": "前端图表导出经统一 request POST innerExportDetails/innerExportDataSetDetails 并请求 blob；SDK 对两者分别声明 export_view/export_detail 资源权限，参数为 ChartExcelRequest。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/chart.ts",
+          "start_line": 118,
+          "end_line": 136,
+          "symbol": "innerExportDetails/innerExportDataSetDetails",
+          "sha256": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/chart/ChartDataApi.java",
+          "start_line": 35,
+          "end_line": 43,
+          "symbol": "ChartDataApi",
+          "sha256": "e422b3c5c89892f37d6a16ed79bda3c01e268e36f2975a4e4460c6d4dadcd4d1"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-031",
+      "statement": "导出中心 SDK 声明分页记录、删除、下载、生成下载URI、重试与导出限制接口，分页声明 m:read，下载Ticket请求参数声明可选但业务管理器会拒绝空值。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/exportCenter/ExportCenterApi.java",
+          "start_line": 24,
+          "end_line": 59,
+          "symbol": "ExportCenterApi",
+          "sha256": "8e0db91b6886b23293998d3c3d799d765b15d6c882e657fb74f5b356145f3a1a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-032",
+      "statement": "分享开关先查管理权限，以uid:resourceId为键在JVM内加锁再调用事务方法；已有记录则删除当前创建者资源的全部分享和各UUID Ticket；新建记录包含Snowflake ID、创建者、组织、资源、随机8位UUID及访客权限0，并按资源类型设置1/2后saveAndFlush。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 119,

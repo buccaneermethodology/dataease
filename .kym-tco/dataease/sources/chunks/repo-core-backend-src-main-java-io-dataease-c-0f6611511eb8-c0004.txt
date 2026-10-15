@@ -1,0 +1,383 @@
+        if (ObjectUtils.isNotEmpty(fieldMap.get("labelAxis"))) {
+            fieldMap.get("labelAxis").forEach(field -> {
+                Integer deType = field.getDeType();
+                if (deType == 2 || deType == 3) {
+                    yfields.add(field);
+                } else {
+                    fields.add(field);
+                }
+            });
+        }
+        if (ObjectUtils.isNotEmpty(fieldMap.get("yAxis"))) fields.addAll(fieldMap.get("yAxis"));
+        if (ObjectUtils.isNotEmpty(yfields)) fields.addAll(yfields);
+        return transTableNormal(fields, view, data, desensitizationList);
+    }
+
+    public static String desensitizationValue(ColumnPermissionItem columnPermissionItem, String originStr) {
+        String desensitizationStr = "";
+        if (!columnPermissionItem.getDesensitizationRule().getBuiltInRule().toString().equalsIgnoreCase("custom")) {
+            switch (columnPermissionItem.getDesensitizationRule().getBuiltInRule()) {
+                case CompleteDesensitization:
+                    desensitizationStr = ColumnPermissionItem.CompleteDesensitization;
+                    break;
+                case KeepMiddleThreeCharacters:
+                    if (StringUtils.isEmpty(originStr) || originStr.length() < 4) {
+                        desensitizationStr = ColumnPermissionItem.KeepMiddleThreeCharacters;
+                    } else {
+                        desensitizationStr = "***" + StringUtils.substring(originStr, originStr.length() / 2 - 1, originStr.length() / 2 + 2) + "***";
+                    }
+                    break;
+                case KeepFirstAndLastThreeCharacters:
+                    if (StringUtils.isEmpty(originStr) || originStr.length() < 7) {
+                        desensitizationStr = ColumnPermissionItem.KeepFirstAndLastThreeCharacters;
+                    } else {
+                        desensitizationStr = StringUtils.substring(originStr, 0, 3) + "***" + StringUtils.substring(originStr, originStr.length() - 3, originStr.length());
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+        } else {
+            switch (columnPermissionItem.getDesensitizationRule().getCustomBuiltInRule()) {
+                case RetainBeforeMAndAfterN:
+                    if (StringUtils.isEmpty(originStr) || originStr.length() < columnPermissionItem.getDesensitizationRule().getM() + columnPermissionItem.getDesensitizationRule().getN()) {
+                        desensitizationStr = String.join("", Collections.nCopies(columnPermissionItem.getDesensitizationRule().getM(), "X")) + "***" + String.join("", Collections.nCopies(columnPermissionItem.getDesensitizationRule().getN(), "X"));
+                    } else {
+                        desensitizationStr = StringUtils.substring(originStr, 0, columnPermissionItem.getDesensitizationRule().getM()) + "***" + StringUtils.substring(originStr, originStr.length() - columnPermissionItem.getDesensitizationRule().getN(), originStr.length());
+                    }
+                    break;
+                case RetainMToN:
+                    if (columnPermissionItem.getDesensitizationRule().getM() > columnPermissionItem.getDesensitizationRule().getN()) {
+                        desensitizationStr = "*** ***";
+                        break;
+                    }
+                    if (StringUtils.isEmpty(originStr) || originStr.length() < columnPermissionItem.getDesensitizationRule().getM()) {
+                        desensitizationStr = "*** ***";
+                        break;
+                    }
+                    if (columnPermissionItem.getDesensitizationRule().getM() == 1) {
+                        desensitizationStr = StringUtils.substring(originStr, columnPermissionItem.getDesensitizationRule().getM() - 1, columnPermissionItem.getDesensitizationRule().getN()) + "***";
+                        break;
+                    } else {
+                        desensitizationStr = "***" + StringUtils.substring(originStr, columnPermissionItem.getDesensitizationRule().getM() - 1, columnPermissionItem.getDesensitizationRule().getN()) + "***";
+                        break;
+                    }
+                default:
+                    break;
+
+            }
+        }
+        return desensitizationStr;
+    }
+
+    public static Map<String, Object> transTableNormal(List<ChartViewFieldDTO> fields, ChartViewDTO view, List<String[]> data, Map<String, ColumnPermissionItem> desensitizationList) {
+        Map<String, Object> map = new TreeMap<>();
+        List<Map<String, Object>> tableRow = new ArrayList<>();
+        data.forEach(ele -> {
+            Map<String, Object> d = new HashMap<>();
+            for (int i = 0; i < fields.size(); i++) {
+                if (ObjectUtils.isNotEmpty(desensitizationList.keySet()) && desensitizationList.containsKey(fields.get(i).getDataeaseName())) {
+                    String desensitizationValue = desensitizationValue(desensitizationList.get(fields.get(i).getDataeaseName()), String.valueOf(ele[i]));
+                    ele[i] = desensitizationValue;
+                    d.put(fields.get(i).getDataeaseName(), desensitizationValue);
+                    continue;
+                }
+                if (i == ele.length) break;
+                ChartViewFieldDTO chartViewFieldDTO = fields.get(i);
+                if (chartViewFieldDTO.getDeType() == 0 || chartViewFieldDTO.getDeType() == 1 || chartViewFieldDTO.getDeType() == 5 || chartViewFieldDTO.getDeType() == 7) {
+                    d.put(fields.get(i).getDataeaseName(), StringUtils.isEmpty(ele[i]) ? "" : ele[i]);
+                } else if (chartViewFieldDTO.getDeType() == 2 || chartViewFieldDTO.getDeType() == 3 || chartViewFieldDTO.getDeType() == 4) {
+                    // 如果是在维度中展示，导出excel时展示为字符串，其它情况展示为数值类型
+                    if (view.getIsExcelExport() || StringUtils.equalsIgnoreCase(chartViewFieldDTO.getGroupType(), "d")) {
+                        d.put(fields.get(i).getDataeaseName(), StringUtils.isEmpty(ele[i]) ? "" : ele[i]);
+                    } else {
+                        d.put(fields.get(i).getDataeaseName(), StringUtils.isEmpty(ele[i]) ? null : new BigDecimal(ele[i]).setScale(8, RoundingMode.HALF_UP));
+                    }
+                }
+            }
+            tableRow.add(d);
+        });
+        map.put("fields", fields);
+        map.put("tableRow", tableRow);
+        return map;
+    }
+
+    public static Map<String, Object> transGroupStackDataAntV(List<ChartViewFieldDTO> xAxisBase, List<ChartViewFieldDTO> xAxis, List<ChartViewFieldDTO> xAxisExt, List<ChartViewFieldDTO> yAxis, List<ChartViewFieldDTO> extStack, List<String[]> data, ChartViewDTO view, boolean isDrill) {
+        // 堆叠柱状图
+        if (ObjectUtils.isEmpty(xAxisExt)) {
+            return transStackChartDataAntV(xAxisBase, xAxis, yAxis, view, data, extStack, isDrill);
+            //  分组柱状图
+        } else if (ObjectUtils.isNotEmpty(xAxisExt) && ObjectUtils.isEmpty(extStack)) {
+            return transBaseGroupDataAntV(xAxisBase, xAxis, xAxisExt, yAxis, view, data, isDrill);
+            // 分组堆叠柱状图
+        } else {
+            Map<String, Object> map = new HashMap<>();
+
+            List<AxisChartDataAntVDTO> dataList = new ArrayList<>();
+            for (int i1 = 0; i1 < data.size(); i1++) {
+                String[] row = data.get(i1);
+
+                StringBuilder xField = new StringBuilder();
+                if (isDrill) {
+                    xField.append(row[xAxis.size() - 1]);
+                } else {
+                    for (int i = 0; i < xAxisBase.size(); i++) {
+                        if (i == xAxisBase.size() - 1) {
+                            xField.append(row[i]);
+                        } else {
+                            xField.append(row[i]).append("\n");
+                        }
+                    }
+                }
+
+                StringBuilder groupField = new StringBuilder();
+                for (int i = xAxisBase.size(); i < xAxisBase.size() + xAxisExt.size(); i++) {
+                    if (i == xAxisBase.size() + xAxisExt.size() - 1) {
+                        groupField.append(row[i]);
+                    } else {
+                        groupField.append(row[i]).append("\n");
+                    }
+                }
+
+                StringBuilder stackField = new StringBuilder();
+                for (int i = xAxisBase.size() + xAxisExt.size(); i < xAxisBase.size() + xAxisExt.size() + extStack.size(); i++) {
+                    if (i == xAxisBase.size() + xAxisExt.size() + extStack.size() - 1) {
+                        stackField.append(row[i]);
+                    } else {
+                        stackField.append(row[i]).append("\n");
+                    }
+                }
+
+                AxisChartDataAntVDTO axisChartDataDTO = new AxisChartDataAntVDTO();
+                axisChartDataDTO.setField(xField.toString());
+                axisChartDataDTO.setName(xField.toString());
+
+                List<ChartDimensionDTO> dimensionList = new ArrayList<>();
+                List<io.dataease.extensions.view.dto.ChartQuotaDTO> quotaList = new ArrayList<>();
+
+                for (int j = 0; j < xAxis.size(); j++) {
+                    ChartDimensionDTO chartDimensionDTO = new ChartDimensionDTO();
+                    chartDimensionDTO.setId(xAxis.get(j).getId());
+                    chartDimensionDTO.setValue(row[j]);
+                    dimensionList.add(chartDimensionDTO);
+                }
+
+                axisChartDataDTO.setDimensionList(dimensionList);
+
+                if (ObjectUtils.isNotEmpty(yAxis)) {
+                    int valueIndex = xAxis.size();
+                    ChartQuotaDTO chartQuotaDTO = new ChartQuotaDTO();
+                    chartQuotaDTO.setId(yAxis.get(0).getId());
+                    quotaList.add(chartQuotaDTO);
+                    axisChartDataDTO.setQuotaList(quotaList);
+                    try {
+                        axisChartDataDTO.setValue(StringUtils.isEmpty(row[valueIndex]) ? null : new BigDecimal(row[valueIndex]));
+                    } catch (Exception e) {
+                        axisChartDataDTO.setValue(new BigDecimal(0));
+                    }
+                } else {
+                    axisChartDataDTO.setQuotaList(quotaList);
+                    axisChartDataDTO.setValue(new BigDecimal(0));
+                }
+                axisChartDataDTO.setGroup(groupField.toString());
+                axisChartDataDTO.setCategory(stackField.toString());
+                dataList.add(axisChartDataDTO);
+            }
+            map.put("data", dataList);
+            return map;
+        }
+    }
+
+    // AntV multi-scatter
+    public static Map<String, Object> transMultiScatterDataAntV(List<ChartViewFieldDTO> extColor, List<ChartViewFieldDTO> xAxisQuota, List<ChartViewFieldDTO> yAxisQuota, List<ChartViewFieldDTO> extBubble, List<ChartViewFieldDTO> yAxisExt, ChartViewDTO view, List<String[]> data, boolean isDrill) {
+        Map<String, Object> map = new HashMap<>();
+        List<AxisChartDataAntVDTO> dataList = new ArrayList<>();
+
+        int colorSize = ObjectUtils.isNotEmpty(extColor) ? extColor.size() : 0;
+        int xQuotaSize = ObjectUtils.isNotEmpty(xAxisQuota) ? xAxisQuota.size() : 0;
+        int yQuotaSize = ObjectUtils.isNotEmpty(yAxisQuota) ? yAxisQuota.size() : 0;
+        int bubbleSize = ObjectUtils.isNotEmpty(extBubble) ? extBubble.size() : 0;
+        int lightnessSize = ObjectUtils.isNotEmpty(yAxisExt) ? yAxisExt.size() : 0;
+        int extLabelSize = ObjectUtils.isNotEmpty(view.getExtLabel()) ? view.getExtLabel().size() : 0;
+        int extTooltipSize = ObjectUtils.isNotEmpty(view.getExtTooltip()) ? view.getExtTooltip().size() : 0;
+
+        int xQuotaStart = colorSize;
+        int yQuotaStart = xQuotaStart + xQuotaSize;
+        int bubbleStart = yQuotaStart + yQuotaSize;
+        int lightnessStart = bubbleStart + bubbleSize;
+        int extLabelStart = lightnessStart + lightnessSize;
+        int extTooltipStart = extLabelStart + extLabelSize;
+
+        for (String[] row : data) {
+            AxisChartDataAntVDTO dto = new AxisChartDataAntVDTO();
+
+            StringBuilder category = new StringBuilder();
+            List<ChartDimensionDTO> dimensionList = new ArrayList<>();
+            for (int i = 0; i < colorSize && i < row.length; i++) {
+                if (isDrill && i < colorSize - 1) {
+                    continue;
+                }
+                if (!category.isEmpty()) {
+                    category.append("\n");
+                }
+                category.append(row[i]);
+                ChartDimensionDTO dimensionDTO = new ChartDimensionDTO();
+                dimensionDTO.setId(extColor.get(i).getId());
+                dimensionDTO.setValue(row[i]);
+                dimensionList.add(dimensionDTO);
+            }
+            String categoryValue = category.isEmpty() ? "default" : category.toString();
+            dto.setField(categoryValue);
+            dto.setName(categoryValue);
+            dto.setCategory(categoryValue);
+            dto.setDimensionList(dimensionList);
+
+            List<ChartQuotaDTO> quotaList = new ArrayList<>();
+            if (xQuotaSize > 0 && xQuotaStart < row.length) {
+                ChartQuotaDTO quotaDTO = new ChartQuotaDTO();
+                quotaDTO.setId(xAxisQuota.getFirst().getId());
+                quotaList.add(quotaDTO);
+                ChartViewFieldDTO xField = xAxisQuota.getFirst();
+                boolean isTimeDimension = StringUtils.equalsIgnoreCase(xField.getGroupType(), "d") || (xField.getDeType() != null && xField.getDeType() == 1);
+                if (isTimeDimension) {
+                    dto.setXLabel(row[xQuotaStart]);
+                    dto.setX(null);
+                } else {
+                    try {
+                        dto.setX(StringUtils.isEmpty(row[xQuotaStart]) ? null : new BigDecimal(row[xQuotaStart]));
+                    } catch (Exception e) {
+                        dto.setXLabel(row[xQuotaStart]);
+                        dto.setX(null);
+                    }
+                }
+            }
+
+            if (yQuotaSize > 0 && yQuotaStart < row.length) {
+                ChartQuotaDTO quotaDTO = new ChartQuotaDTO();
+                quotaDTO.setId(yAxisQuota.getFirst().getId());
+                quotaList.add(quotaDTO);
+                try {
+                    BigDecimal yValue = StringUtils.isEmpty(row[yQuotaStart]) ? null : new BigDecimal(row[yQuotaStart]);
+                    dto.setY(yValue);
+                    dto.setValue(yValue);
+                } catch (Exception e) {
+                    dto.setY(null);
+                    dto.setValue(null);
+                }
+            }
+
+            if (bubbleSize > 0 && bubbleStart < row.length) {
+                ChartQuotaDTO quotaDTO = new ChartQuotaDTO();
+                quotaDTO.setId(extBubble.getFirst().getId());
+                quotaList.add(quotaDTO);
+                try {
+                    dto.setPopSize(StringUtils.isEmpty(row[bubbleStart]) ? null : new BigDecimal(row[bubbleStart]));
+                } catch (Exception e) {
+                    dto.setPopSize(null);
+                }
+            }
+
+            if (lightnessSize > 0 && lightnessStart < row.length) {
+                ChartQuotaDTO quotaDTO = new ChartQuotaDTO();
+                quotaDTO.setId(yAxisExt.getFirst().getId());
+                quotaList.add(quotaDTO);
+                try {
+                    dto.setLightness(StringUtils.isEmpty(row[lightnessStart]) ? null : new BigDecimal(row[lightnessStart]));
+                } catch (Exception e) {
+                    dto.setLightness(null);
+                }
+            }
+            dto.setQuotaList(quotaList);
+
+            dto.setDynamicLabelValue(buildMultiScatterDynamicValue(view.getExtLabel(), row, extLabelStart, extLabelSize));
+            dto.setDynamicTooltipValue(buildMultiScatterDynamicValue(view.getExtTooltip(), row, extTooltipStart, extTooltipSize));
+            dataList.add(dto);
+        }
+
+        map.put("data", dataList);
+        return map;
+    }
+
+    private static List<DynamicValueDTO> buildMultiScatterDynamicValue(List<ChartViewFieldDTO> fields, String[] row, int start, int size) {
+        List<DynamicValueDTO> valueList = new ArrayList<>();
+        if (ObjectUtils.isEmpty(fields)) {
+            return valueList;
+        }
+        for (int i = 0; i < size && i < fields.size(); i++) {
+            int index = start + i;
+            if (index >= row.length) {
+                break;
+            }
+            DynamicValueDTO valueDTO = new DynamicValueDTO();
+            valueDTO.setFieldId(fields.get(i).getId());
+            valueDTO.setStringValue(row[index]);
+            try {
+                valueDTO.setValue(StringUtils.isEmpty(row[index]) ? null : new BigDecimal(row[index]));
+            } catch (Exception e) {
+                valueDTO.setValue(null);
+            }
+            valueList.add(valueDTO);
+        }
+        return valueList;
+    }
+
+    // 计算动态标签和提示
+    private static void buildDynamicValue(ChartViewDTO view, AxisChartDataAntVDTO axisChartDataDTO, String[] row, int size, int extSize) {
+        List<DynamicValueDTO> dynamicLabelValue = new ArrayList<>();
+        List<DynamicValueDTO> dynamicTooltipValue = new ArrayList<>();
+        // 计算动态标签和提示
+        if (ObjectUtils.isNotEmpty(view.getExtLabel())) {
+            for (int ii = 0; ii < view.getExtLabel().size(); ii++) {
+                DynamicValueDTO valueDTO = new DynamicValueDTO();
+                ChartViewFieldDTO chartViewFieldDTO = view.getExtLabel().get(ii);
+                BigDecimal value = StringUtils.isEmpty(row[ii + (size - extSize)]) ? null : new BigDecimal(row[ii + (size - extSize)]);
+                valueDTO.setFieldId(chartViewFieldDTO.getId());
+                valueDTO.setValue(value);
+                dynamicLabelValue.add(valueDTO);
+            }
+        }
+        if (ObjectUtils.isNotEmpty(view.getExtTooltip())) {
+            for (int ii = 0; ii < view.getExtTooltip().size(); ii++) {
+                DynamicValueDTO valueDTO = new DynamicValueDTO();
+                ChartViewFieldDTO chartViewFieldDTO = view.getExtTooltip().get(ii);
+                BigDecimal value = StringUtils.isEmpty(row[ii + (size - extSize) + view.getExtLabel().size()]) ? null : new BigDecimal(row[ii + (size - extSize) + view.getExtLabel().size()]);
+                valueDTO.setFieldId(chartViewFieldDTO.getId());
+                valueDTO.setValue(value);
+                dynamicTooltipValue.add(valueDTO);
+            }
+        }
+
+        axisChartDataDTO.setDynamicLabelValue(dynamicLabelValue);
+        axisChartDataDTO.setDynamicTooltipValue(dynamicTooltipValue);
+    }
+
+    //AntV quadrant
+    public static Map<String, Object> transQuadrantDataAntV(List<ChartViewFieldDTO> xAxis, List<ChartViewFieldDTO> yAxis, ChartViewDTO view, List<String[]> data, List<ChartViewFieldDTO> extBubble, boolean isDrill) {
+        Map<String, Object> map = new HashMap<>();
+
+        List<AxisChartDataAntVDTO> dataList = new ArrayList<>();
+        for (int i1 = 0; i1 < data.size(); i1++) {
+            String[] row = data.get(i1);
+
+            StringBuilder a = new StringBuilder();
+            if (isDrill) {
+                a.append(row[xAxis.size() - 1]);
+            } else {
+                for (int i = 0; i < xAxis.size(); i++) {
+                    if (i == xAxis.size() - 1) {
+                        a.append(row[i]);
+                    } else {
+                        a.append(row[i]).append("\n");
+                    }
+                }
+            }
+            for (int i = 0; i < xAxis.size() + yAxis.size(); i++) {
+                AxisChartDataAntVDTO axisChartDataDTO = new AxisChartDataAntVDTO();
+                axisChartDataDTO.setField(a.toString());
+                axisChartDataDTO.setName(a.toString());
+
+                List<ChartDimensionDTO> dimensionList = new ArrayList<>();
+                List<ChartQuotaDTO> quotaList = new ArrayList<>();
+
+

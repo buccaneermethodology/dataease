@@ -1,0 +1,198 @@
+        :request="request"
+        :emitter="emitter"
+        :store="store"
+        :suffixId="suffixId"
+        ref="chartComponent"
+        @onChartClick="chartClick"
+        @onPointClick="onPointClick"
+        @onDrillFilters="onDrillFilters"
+        @onJumpClick="jumpClick"
+        @resetLoading="() => (loading = false)"
+      />
+      <de-picture-group
+        v-else-if="showChartView(ChartLibraryType.PICTURE_GROUP)"
+        :themes="canvasStyleData.dashboard.themeColor"
+        ref="chartComponent"
+        :element="element"
+        :active="active"
+        :view="view"
+        :show-position="showPosition"
+        :suffixId="suffixId"
+      >
+      </de-picture-group>
+      <de-rich-text-view
+        v-else-if="showChartView(ChartLibraryType.RICH_TEXT)"
+        :scale="scale"
+        :themes="canvasStyleData.dashboard.themeColor"
+        ref="chartComponent"
+        :element="element"
+        :disabled="!['canvas', 'canvasDataV'].includes(showPosition) || disabled"
+        :active="active"
+        :show-position="showPosition"
+        :edit-mode="editMode"
+        :suffixId="suffixId"
+      />
+      <de-indicator
+        :scale="scale"
+        v-else-if="showChartView(ChartLibraryType.INDICATOR)"
+        :themes="canvasStyleData.dashboard.themeColor"
+        ref="chartComponent"
+        :view="view"
+        :element="element"
+        :show-position="showPosition"
+        :suffixId="suffixId"
+        :font-family="fontFamily"
+        :common-params="commonParams"
+        @touchstart="clearG2Tooltip"
+        @onChartClick="chartClick"
+        @onPointClick="onPointClick"
+        @onDrillFilters="onDrillFilters"
+        @onJumpClick="jumpClick"
+        @onComponentEvent="() => emit('onComponentEvent')"
+      />
+      <chart-component-g2-plot
+        :scale="scale"
+        :dynamic-area-id="dynamicAreaId"
+        :view="view"
+        :show-position="showPosition"
+        :element="element"
+        :suffixId="suffixId"
+        :font-family="fontFamily"
+        :active="active"
+        v-else-if="
+          showChartView(ChartLibraryType.G2, ChartLibraryType.L7_PLOT, ChartLibraryType.L7)
+        "
+        ref="chartComponent"
+        @onChartClick="chartClick"
+        @onPointClick="onPointClick"
+        @onDrillFilters="onDrillFilters"
+        @onJumpClick="jumpClick"
+        @resetLoading="() => (loading = false)"
+      />
+      <chart-component-s2
+        :view="view"
+        :scale="scale"
+        :show-position="showPosition"
+        :element="element"
+        :drill-length="drillClickLength"
+        :font-family="fontFamily"
+        v-else-if="showChartView(ChartLibraryType.S2)"
+        ref="chartComponent"
+        @onPointClick="onPointClick"
+        @onChartClick="chartClick"
+        @onDrillFilters="onDrillFilters"
+        @onJumpClick="jumpClick"
+        :suffixId="suffixId"
+      />
+    </div>
+    <chart-empty-info
+      v-if="(!chartAreaShow || showEmpty) && !allEmptyCheck"
+      :themes="canvasStyleData.dashboard.themeColor"
+      :view-icon="view.type"
+      @touchstart="clearG2Tooltip"
+    ></chart-empty-info>
+    <drill-path
+      :disabled="optType === 'enlarge'"
+      :drill-filters="state.drillFilters"
+      @onDrillJump="drillJump"
+    />
+    <OpenHandler v-if="appStore.getXpackValid" ref="openHandler" />
+    <ViewCategoryHandler
+      v-if="appStore.getXpackValid && !pluginLoaded && view.isPlugin"
+      @load-plugin-category="loadPluginCategory"
+    >
+    </ViewCategoryHandler>
+    <DePreviewPopDialog ref="dePreviewPopDialogRef"></DePreviewPopDialog>
+  </div>
+</template>
+
+<style lang="less" scoped>
+.chart-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // hover 后图标参与 flex 宽度计算，隐藏时不占标题空间
+  &:hover {
+    .icons-container-out {
+      display: flex;
+    }
+  }
+}
+.title-container {
+  position: relative;
+  margin: 0;
+  width: 100%;
+
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+
+  gap: 8px;
+
+  .title-content {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+
+    &.is-editing {
+      width: 100%;
+    }
+  }
+
+  .icons-container-out {
+    position: relative;
+    display: none;
+    align-items: center;
+    flex: 0 0 auto;
+    max-width: 100%;
+    height: 100%;
+    margin-right: 16px;
+
+    .icons-container {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      gap: 8px;
+      height: 100%;
+      white-space: nowrap;
+
+      color: #646a73;
+
+      &.icons-container__dark {
+        color: #a6a6a6;
+      }
+
+      &.is-editing {
+        gap: 6px;
+      }
+
+      .inner-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.ellipsis {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  line-height: inherit;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

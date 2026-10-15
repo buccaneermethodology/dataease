@@ -1,0 +1,355 @@
+                    tableField.setPrecision(metaData.getPrecision(i));
+                    int deType = transType2DeType(tableField.getType(), datasourceRequest);
+                    tableField.setDeExtractType(deType);
+                    tableField.setDeType(deType);
+                    tableField.setScale(metaData.getScale(i));
+                    datasetTableFields.add(tableField);
+                }
+            } catch (Exception e) {
+                throw DEException.getException(e.getMessage());
+            }
+            return datasetTableFields;
+        }
+        List<TableField> datasetTableFields = new ArrayList<>();
+        DatasourceSchemaDTO datasourceSchemaDTO = datasourceRequest.getDsList().entrySet().iterator().next().getValue();
+        datasourceRequest.setDatasource(datasourceSchemaDTO);
+
+        DatasourceConfiguration datasourceConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+
+        String table = datasourceRequest.getTable();
+        if (StringUtils.isEmpty(table)) {
+            ResultSet resultSet = null;
+            String oracleCharset = normalizeOracleCharset(datasourceConfiguration.getCharset());
+            String oracleTargetCharset = normalizeOracleCharset(datasourceConfiguration.getTargetCharset());
+            try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId())) {
+                Statement statement = getStatement(datasourceSchemaDTO, con, datasourceRequest, datasourceConfiguration, null);
+                bindPreparedStatementValues(statement, datasourceRequest.getTableFieldWithValues(), DatasourceConfiguration.DatasourceType.valueOf(datasourceSchemaDTO.getType()), oracleCharset, oracleTargetCharset);
+                resultSet = executeQuery(statement, datasourceRequest.getQuery());
+                datasetTableFields.addAll(getField(resultSet, datasourceRequest));
+            } catch (Exception e) {
+                DEException.throwException(e.getMessage());
+            } finally {
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (SQLException e) {
+                        LogUtil.error(e);
+                    }
+                }
+            }
+        } else {
+            ResultSet resultSet = null;
+            PreparedStatement preparedStatement = null;
+            validateTableAndSchema(datasourceRequest, datasourceConfiguration);
+            try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId())) {
+                datasourceRequest.setDsVersion(con.getMetaData().getDatabaseMajorVersion());
+                if (datasourceRequest.getDatasource().getType().equalsIgnoreCase("mongo")) {
+                    try (Statement statement = getStatement(con, 30)) {
+                        resultSet = statement.executeQuery("select * from " + quoteName(table, '`') + " limit 0 offset 0 ");
+                        return fetchResultField(resultSet);
+                    }
+                }
+                if (isDorisCatalog(datasourceRequest)) {
+                    try (Statement statement = getStatement(con, 30)) {
+                        resultSet = statement.executeQuery("desc " + quoteName(table, '`'));
+                    }
+                } else {
+                    QueryAndParams queryAndParams = getTableFiledSql(datasourceRequest);
+                    preparedStatement = con.prepareStatement(queryAndParams.sql());
+                    for (int i = 0; i < queryAndParams.params().size(); i++) {
+                        preparedStatement.setString(i + 1, queryAndParams.params().get(i));
+                    }
+                    resultSet = preparedStatement.executeQuery();
+                }
+
+                Map<String, Integer> tableTypeMap = getTableTypeMap(datasourceRequest, datasourceConfiguration, table);
+
+                while (resultSet.next()) {
+                    TableField tableFieldDesc = getTableFieldDesc(datasourceRequest, resultSet, 3, tableTypeMap);
+                    boolean repeat = false;
+                    for (TableField ele : datasetTableFields) {
+                        if (StringUtils.equalsIgnoreCase(ele.getOriginName(), tableFieldDesc.getOriginName())) {
+                            repeat = true;
+                            break;
+                        }
+                    }
+                    if (!repeat) {
+                        datasetTableFields.add(tableFieldDesc);
+                    }
+                }
+            } catch (Exception e) {
+                DEException.throwException(e.getMessage());
+            } finally {
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (SQLException e) {
+                        LogUtil.error(e);
+                    }
+                }
+                if (preparedStatement != null) {
+                    try {
+                        preparedStatement.close();
+                    } catch (SQLException e) {
+                        LogUtil.error(e);
+                    }
+                }
+            }
+        }
+
+        return datasetTableFields;
+    }
+
+    private void bindPreparedStatementValues(Statement statement, List<TableFieldWithValue> tableFieldWithValues,
+                                             DatasourceConfiguration.DatasourceType datasourceType,
+                                             String oracleCharset, String oracleTargetCharset) throws SQLException {
+        if (!(statement instanceof PreparedStatement preparedStatement) || CollectionUtils.isEmpty(tableFieldWithValues)) {
+            return;
+        }
+        for (int i = 0; i < tableFieldWithValues.size(); i++) {
+            TableFieldWithValue tableFieldWithValue = tableFieldWithValues.get(i);
+            try {
+                Object valueObject = tableFieldWithValue.getValue();
+                if (valueObject instanceof String
+                        && datasourceType == DatasourceConfiguration.DatasourceType.oracle
+                        && StringUtils.isNotEmpty(oracleCharset)
+                        && StringUtils.isNotEmpty(oracleTargetCharset)) {
+                    valueObject = convertOracleText((String) valueObject, oracleTargetCharset, oracleCharset);
+                }
+                if (tableFieldWithValue.getType() != null && tableFieldWithValue.getType().equals(Types.CLOB) && valueObject instanceof String stringValue) {
+                    Reader reader = new StringReader(stringValue);
+                    preparedStatement.setCharacterStream(i + 1, reader, stringValue.length());
+                } else if (tableFieldWithValue.getType() != null) {
+                    preparedStatement.setObject(i + 1, valueObject, tableFieldWithValue.getType());
+                } else {
+                    preparedStatement.setObject(i + 1, valueObject);
+                }
+            } catch (SQLException | UnsupportedEncodingException e) {
+                throw new SQLException(e.getMessage() + ". VALUE: " + String.valueOf(tableFieldWithValue.getValue()) + " , TARGET TYPE: " + tableFieldWithValue.getColumnTypeName(), e);
+            }
+        }
+    }
+
+    private ResultSet executeQuery(Statement statement, String query) throws SQLException {
+        if (statement instanceof PreparedStatement preparedStatement) {
+            return preparedStatement.executeQuery();
+        }
+        return statement.executeQuery(query);
+    }
+
+    private boolean isDorisCatalog(DatasourceRequest datasourceRequest) {
+        if (!datasourceRequest.getDatasource().getType().equalsIgnoreCase("doris")) {
+            return false;
+        }
+        DatasourceConfiguration configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Mysql.class);
+        String database = "";
+        if (StringUtils.isEmpty(configuration.getUrlType()) || configuration.getUrlType().equalsIgnoreCase("hostName")) {
+            database = configuration.getDataBase();
+        } else {
+            if (configuration.getJdbcUrl().startsWith("jdbc:mysql")) {
+                Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mysql://(.*):(\\d+)/(.*)");
+                Matcher matcher = WITH_SQL_FRAGMENT.matcher(configuration.getJdbcUrl());
+                matcher.find();
+                String[] databasePrams = matcher.group(3).split("\\?");
+                database = databasePrams[0];
+            } else {
+                Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mariadb://(.*):(\\d+)/(.*)");
+                Matcher matcher = WITH_SQL_FRAGMENT.matcher(configuration.getJdbcUrl());
+                matcher.find();
+                String[] databasePrams = matcher.group(3).split("\\?");
+                database = databasePrams[0];
+            }
+
+        }
+        return database.contains(".");
+    }
+
+    @Override
+    public ConnectionObj getConnection(DatasourceDTO coreDatasource) throws Exception {
+        ConnectionObj connectionObj = new ConnectionObj();
+        DatasourceConfiguration configuration = null;
+        DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(coreDatasource.getType());
+
+        switch (datasourceType) {
+            case mysql, StarRocks, doris, TiDB, mariadb, mongo: {
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Mysql.class);
+                configuration.setDriver("org.mariadb.jdbc.Driver");
+            }
+            break;
+            case impala:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Impala.class);
+                break;
+            case sqlServer:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Sqlserver.class);
+                break;
+            case oracle:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Oracle.class);
+                break;
+            case db2:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Db2.class);
+                break;
+            case pg:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Pg.class);
+                break;
+            case kingbase:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Kingbase.class);
+                break;
+            case gaussdb:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), GaussDB.class);
+                break;
+            case redshift:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Redshift.class);
+                break;
+            case h2:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), H2.class);
+                break;
+            case ck:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), CK.class);
+                break;
+            default:
+                configuration = JsonUtil.parseObject(coreDatasource.getConfiguration(), Mysql.class);
+        }
+        startSshSession(configuration, connectionObj, null);
+        Properties props = new Properties();
+        if (StringUtils.isNotBlank(configuration.getUsername())) {
+            props.setProperty("user", configuration.getUsername());
+        }
+        if (StringUtils.isNotBlank(configuration.getPassword())) {
+            props.setProperty("password", configuration.getPassword());
+        }
+        String driverClassName = configuration.getDriver();
+        ExtendedJdbcClassLoader jdbcClassLoader = extendedJdbcClassLoader;
+        Connection conn = null;
+        try {
+            Driver driverClass = (Driver) jdbcClassLoader.loadClass(driverClassName).newInstance();
+            conn = driverClass.connect(configuration.getJdbc(), props);
+
+        } catch (Exception e) {
+            LogUtil.error(e);
+            DEException.throwException(e.getMessage());
+        }
+        connectionObj.setConnection(conn);
+        return connectionObj;
+    }
+
+    private DatasetTableDTO getTableDesc(DatasourceRequest datasourceRequest, ResultSet resultSet) throws SQLException {
+        DatasetTableDTO tableDesc = new DatasetTableDTO();
+        tableDesc.setDatasourceId(datasourceRequest.getDatasource().getId());
+        tableDesc.setType("db");
+        tableDesc.setTableName(resultSet.getString(1));
+        if (resultSet.getMetaData().getColumnCount() > 1) {
+            tableDesc.setName(resultSet.getString(2));
+        } else {
+            tableDesc.setName(resultSet.getString(1));
+        }
+        return tableDesc;
+    }
+
+    private List<String> getDriver() {
+        List<String> drivers = new ArrayList<>();
+        Map<String, DatasourceConfiguration> beansOfType = CommonBeanFactory.getApplicationContext().getBeansOfType((DatasourceConfiguration.class));
+        beansOfType.keySet().forEach(key -> drivers.add(beansOfType.get(key).getDriver()));
+        return drivers;
+    }
+
+    public Map<String, Object> jdbcFetchResultField(DatasourceRequest datasourceRequest) throws DEException {
+        DatasourceSchemaDTO value = datasourceRequest.getDsList().entrySet().iterator().next().getValue();
+        datasourceRequest.setDatasource(value);
+
+        DatasourceConfiguration datasourceConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+
+        Map<String, Object> map = new LinkedHashMap<>();
+        List<TableField> fieldList = new ArrayList<>();
+        List<String[]> dataList = new LinkedList<>();
+
+        // schema
+        ResultSet resultSet = null;
+
+        try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId())) {
+
+            Statement statement = getStatement(value, con, datasourceRequest, datasourceConfiguration, null);
+
+            if (CollectionUtils.isNotEmpty(datasourceRequest.getTableFieldWithValues())) {
+                LogUtil.info("execWithPreparedStatement sql: " + datasourceRequest.getQuery());
+                for (int i = 0; i < datasourceRequest.getTableFieldWithValues().size(); i++) {
+                    try {
+                        Object valueObject = datasourceRequest.getTableFieldWithValues().get(i).getValue();
+
+                        if (valueObject instanceof String && DatasourceConfiguration.DatasourceType.valueOf(value.getType()) == DatasourceConfiguration.DatasourceType.oracle) {
+                            if (StringUtils.isNotEmpty(datasourceConfiguration.getCharset()) && StringUtils.isNotEmpty(datasourceConfiguration.getTargetCharset())) {
+                                //转换为数据库的字符集
+                                valueObject = new String(((String) valueObject).getBytes(datasourceConfiguration.getTargetCharset()), datasourceConfiguration.getCharset());
+                            }
+                            if (datasourceRequest.getTableFieldWithValues().get(i).getType().equals(Types.CLOB)) {
+                                Reader reader = new StringReader((String) valueObject);
+                                ((PreparedStatement) statement).setCharacterStream(i + 1, reader, ((String) valueObject).length());
+                            } else {
+                                ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                            }
+                        } else {
+                            ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                        }
+                        LogUtil.info("execWithPreparedStatement param[" + (i + 1) + "](" + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName() + "): " + datasourceRequest.getTableFieldWithValues().get(i).getValue());
+                    } catch (SQLException e) {
+                        throw new SQLException(e.getMessage() + ". VALUE: " + datasourceRequest.getTableFieldWithValues().get(i).getValue().toString() + " , TARGET TYPE: " + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName());
+                    }
+                }
+                resultSet = ((PreparedStatement) statement).executeQuery();
+            } else {
+                resultSet = statement.executeQuery(datasourceRequest.getQuery());
+            }
+            fieldList = getField(resultSet, datasourceRequest);
+            dataList = getData(resultSet, datasourceRequest);
+        } catch (SQLException e) {
+            LogUtil.error(e);
+            DEException.throwException("SQL ERROR: " + e.getMessage());
+        } catch (Exception e) {
+            DEException.throwException("Datasource connection exception: " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LogUtil.error(e);
+                }
+            }
+        }
+
+        map.put("fields", fieldList);
+        map.put("data", dataList);
+        return map;
+    }
+
+    @Override
+    public void exec(DatasourceRequest datasourceRequest) throws DEException {
+        DatasourceSchemaDTO value = datasourceRequest.getDsList().entrySet().iterator().next().getValue();
+        datasourceRequest.setDatasource(value);
+        DatasourceConfiguration datasourceConfiguration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), DatasourceConfiguration.class);
+        // schema
+        ResultSet resultSet = null;
+
+        try (Connection con = getConnectionFromPool(datasourceRequest.getDatasource().getId())) {
+
+            Statement statement = getStatement(value, con, datasourceRequest, datasourceConfiguration, null);
+
+            if (CollectionUtils.isNotEmpty(datasourceRequest.getTableFieldWithValues())) {
+                LogUtil.info("execWithPreparedStatement sql: " + datasourceRequest.getQuery());
+                for (int i = 0; i < datasourceRequest.getTableFieldWithValues().size(); i++) {
+                    try {
+                        Object valueObject = datasourceRequest.getTableFieldWithValues().get(i).getValue();
+                        if (valueObject instanceof String && DatasourceConfiguration.DatasourceType.valueOf(value.getType()) == DatasourceConfiguration.DatasourceType.oracle) {
+                            if (StringUtils.isNotEmpty(datasourceConfiguration.getCharset()) && StringUtils.isNotEmpty(datasourceConfiguration.getTargetCharset())) {
+                                //转换为数据库的字符集
+                                valueObject = new String(((String) valueObject).getBytes(datasourceConfiguration.getTargetCharset()), datasourceConfiguration.getCharset());
+                            }
+                            if (datasourceRequest.getTableFieldWithValues().get(i).getType().equals(Types.CLOB)) {
+                                Reader reader = new StringReader((String) valueObject);
+                                ((PreparedStatement) statement).setCharacterStream(i + 1, reader, ((String) valueObject).length());
+                            } else {
+                                ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                            }
+                        } else {
+                            ((PreparedStatement) statement).setObject(i + 1, valueObject, datasourceRequest.getTableFieldWithValues().get(i).getType());
+                        }
+                        LogUtil.info("execWithPreparedStatement param[" + (i + 1) + "](" + datasourceRequest.getTableFieldWithValues().get(i).getColumnTypeName() + "): " + datasourceRequest.getTableFieldWithValues().get(i).getValue());
+                    } catch (SQLException e) {

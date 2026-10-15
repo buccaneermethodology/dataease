@@ -1,0 +1,144 @@
+        return new ExportTaskFileTarget(taskId, resolveExportTaskFilePath(taskId));
+    }
+
+    private ExportTaskFileTarget resolveDownloadTarget(String taskId, CoreExportTask exportTask) {
+        if (exportTask.getExportTime() < 1730277243491L) {
+            return new ExportTaskFileTarget(taskId, resolveExportTaskFilePath(taskId, resolveDownloadFileName(exportTask)));
+        }
+        return resolveExportTaskFileTarget(taskId);
+    }
+
+    private Path resolveExportTaskFilePath(String taskId, String fileName) {
+        FileUtils.validateUploadFilename(fileName);
+        Path exportTaskDirectory = resolveExportTaskDirectory(taskId);
+        Path exportFilePath = exportTaskDirectory.resolve(fileName).normalize();
+        if (!exportFilePath.startsWith(exportTaskDirectory)) {
+            DEException.throwException("Invalid export task file path");
+        }
+        return exportFilePath;
+    }
+
+    private String resolveDownloadFileName(CoreExportTask exportTask) {
+        String fileName = exportTask.getFileName();
+        FileUtils.validateUploadFilename(fileName);
+        return fileName;
+    }
+
+    private String validateExportTaskId(String taskId) {
+        if (StringUtils.isBlank(taskId)) {
+            DEException.throwException("任务不存在");
+        }
+        return taskId;
+    }
+
+    private void deleteExportTaskDirectory(Path exportTaskPath) {
+        Path exportBasePath = resolveExportBasePath();
+        if (Files.notExists(exportTaskPath)) {
+            return;
+        }
+        try {
+            Files.walkFileTree(exportTaskPath, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws java.io.IOException {
+                    validateExportPath(exportBasePath, file);
+                    Files.deleteIfExists(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, java.io.IOException exc) throws java.io.IOException {
+                    if (exc != null) {
+                        throw exc;
+                    }
+                    validateExportPath(exportBasePath, dir);
+                    Files.deleteIfExists(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (java.io.IOException e) {
+            DEException.throwException(e);
+        }
+    }
+
+    private void validateExportPath(Path exportBasePath, Path targetPath) {
+        Path normalizedPath = targetPath.toAbsolutePath().normalize();
+        if (!normalizedPath.startsWith(exportBasePath)) {
+            DEException.throwException("Invalid export task path");
+        }
+    }
+
+    public CoreExportTask validateDownloadTask(String id, String ticket) {
+        if (StringUtils.isBlank(ticket)) {
+            DEException.throwException(Translator.get("i18n_download_link_invalid"));
+        }
+        CoreExportDownloadTask coreExportDownloadTask = coreExportDownloadTaskRepository.findById(id).orElse(null);
+        if (coreExportDownloadTask == null) {
+            DEException.throwException(Translator.get("i18n_download_link_invalid"));
+        }
+        CoreExportTask exportTask = coreExportTaskRepository.findById(id).orElse(null);
+        if (exportTask == null) {
+            DEException.throwException(Translator.get("i18n_download_link_invalid"));
+        }
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(resolveTicketSecret(exportTask.getUserId()));
+            Verification verification = JWT.require(algorithm);
+            JWTVerifier verifier = verification.build();
+            DecodedJWT jwt = verifier.verify(ticket);
+            String taskId = jwt.getClaim("taskId").asString();
+            Long uid = jwt.getClaim("uid").asLong();
+            Long ticketTime = jwt.getClaim("ts").asLong();
+            if (!StringUtils.equals(id, taskId)
+                    || !Objects.equals(uid, exportTask.getUserId())
+                    || !Objects.equals(ticketTime, coreExportDownloadTask.getCreateTime())
+                    || System.currentTimeMillis() - coreExportDownloadTask.getCreateTime() > coreExportDownloadTask.getValidTime() * 60 * 1000) {
+                DEException.throwException(Translator.get("i18n_download_link_invalid"));
+            }
+        } catch (Exception e) {
+            DEException.throwException(Translator.get("i18n_download_link_invalid"));
+        }
+        coreExportDownloadTaskRepository.deleteById(id);
+        return exportTask;
+    }
+
+    @Scheduled(fixedRate = 60 * 60 * 1000)
+    public void checkDownLoadInfos() {
+        coreExportDownloadTaskRepository.findAll().forEach(downLoadInfo -> {
+            if (System.currentTimeMillis() - downLoadInfo.getCreateTime() > downLoadInfo.getValidTime() * 60 * 1000) {
+                coreExportDownloadTaskRepository.deleteById(downLoadInfo.getId());
+            }
+        });
+    }
+
+    @Data
+    public class DownLoadInfo {
+        String id;
+        Long validTime; // 单位：minutes
+        Long createTime;
+    }
+
+    private String buildDownloadTicket(CoreExportTask exportTask, long createTime, Long validTime) {
+        Algorithm algorithm = Algorithm.HMAC256(resolveTicketSecret(exportTask.getUserId()));
+        return JWT.create()
+                .withClaim("taskId", exportTask.getId())
+                .withClaim("uid", exportTask.getUserId())
+                .withClaim("ts", createTime)
+                .withExpiresAt(new Date(createTime + validTime * 60 * 1000))
+                .sign(algorithm);
+    }
+
+    private String resolveTicketSecret(Long userId) {
+        String secret = null;
+        if (ObjectUtils.isEmpty(CommonBeanFactory.getBean("loginServer"))) {
+            secret = io.dataease.auth.config.SubstituleLoginConfig.getTokenSecret();
+        } else {
+            V3BaseUser user = V3UserUtil.getUser(userId);
+            secret = user.getPwd() + RsaUtils.publicKey();
+
+        }
+        if (StringUtils.isBlank(secret)) {
+            DEException.throwException(Translator.get("i18n_download_link_invalid"));
+        }
+        return secret;
+    }
+
+}

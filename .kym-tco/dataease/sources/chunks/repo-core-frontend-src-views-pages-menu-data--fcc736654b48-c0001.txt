@@ -1,0 +1,771 @@
+# Repo evidence: core/core-frontend/src/views/pages/menu/data/data-filling/manage/index.vue
+<script lang="tsx" setup>
+import icon_intoItem_outlined from '@/assets/svg/icon_into-item_outlined.svg'
+import icon_rename_outlined from '@/assets/svg/icon_rename_outlined.svg'
+import icon_deleteTrash_outlined from '@/assets/svg/icon_delete-trash_outlined.svg'
+import icon_download_outlined from '@/assets/svg/icon_download_outlined.svg'
+import icon_dataset from '@/assets/svg/icon_dataset.svg'
+import dvNewFolder from '@/assets/svg/dv-new-folder.svg'
+import icon_fileAdd_outlined from '@/assets/svg/icon_file-add_outlined.svg'
+import icon_searchOutline_outlined from '@/assets/svg/icon_search-outline_outlined.svg'
+import dvFolder from '@/assets/svg/dv-folder.svg'
+import icon_file_doc_colorful from '@/assets/svg/icon_file-doc_colorful.svg'
+import dvSortAsc from '@/assets/svg/dv-sort-asc.svg'
+import dvSortDesc from '@/assets/svg/dv-sort-desc.svg'
+import icon_add_outlined from '@/assets/svg/icon_add_outlined.svg'
+import icon_info_outlined from '@/assets/svg/icon_info_outlined.svg'
+import icon_edit_outlined from '@/assets/svg/icon_edit_outlined.svg'
+import icon_upload_outlined from '@/assets/svg/icon_upload_outlined.svg'
+import icon_describe_outlined from '@/assets/svg/icon_describe_outlined.svg'
+import icon_copy_filled from '@/assets/svg/icon_copy_filled.svg'
+import { computed, h, nextTick, onBeforeUnmount, onMounted, reactive, ref, unref, watch } from 'vue'
+import {
+  ElButton,
+  ElDrawer,
+  ElIcon,
+  ElMessage,
+  ElMessageBox,
+  ElMessageBoxOptions,
+  ElScrollbar,
+  TabPaneName
+} from 'element-plus-secondary'
+import CreatDsGroup from '@/views/menu/data/data-filling/manage/CreatDsGroup.vue'
+import RowDataForm from '@/views/menu/data/data-filling/manage/form/RowDataForm.vue'
+import FilterSearchDrawer from '@/views/menu/data/data-filling/manage/FilterSearchDrawer.vue'
+import ArrowSide from '@/views/common/DeResourceArrow.vue'
+import { HandleMore } from '@/components/handle-more'
+import { Icon } from '@/components/icon-custom'
+import {
+  batchDeleteRowData,
+  ColumnItem,
+  deleteById,
+  deleteRowData,
+  DfFormItem,
+  DfFormSetting,
+  formatDate,
+  getDataFilling,
+  innerExport,
+  searchTable,
+  Tree,
+  truncateRowData
+} from '@/views/menu/data/data-filling/data-filling'
+import { useI18n } from '@/hooks/web/useI18n'
+import router from '@/router'
+import EmptyBackground from '@/components/empty-background/src/EmptyBackground.vue'
+import { useAppStoreWithOut } from '@/store/modules/app'
+import type { BusiTreeNode } from '@/models/tree/TreeNode'
+import { useMoveLine } from '@/hooks/web/useMoveLine'
+import { cloneDeep, filter, forEach, forIn, includes, join, map, some } from 'lodash-es'
+import treeSort from '@/utils/treeSortUtils'
+import { useCache } from '@/hooks/web/useCache'
+import InfoDetail from '@/views/menu/data/data-filling/manage/InfoDetail.vue'
+import GridTable from '@/components/grid-table/src/GridTable.vue'
+import TaskGrid from '@/views/menu/data/data-filling/manage/TaskGrid.vue'
+import LogGrid from '@/views/menu/data/data-filling/manage/LogGrid.vue'
+import ExcelBatchUpload from '@/views/menu/data/data-filling/manage/ExcelBatchUpload.vue'
+import {
+  initModuleAuth,
+  InnerInteractive
+} from '@/views/menu/data/data-filling/manage/DataFillAuth'
+import { RefreshLeft } from '@element-plus/icons-vue'
+import { useEmitt } from '@/hooks/web/useEmitt'
+import { useEmbedded } from '@/store/modules/embedded'
+import iconFilter from '@/assets/svg/icon-filter.svg'
+import dayjs from 'dayjs'
+
+const { wsCache } = useCache()
+const { t } = useI18n()
+const appStore = useAppStoreWithOut()
+const state = reactive({
+  datasourceTree: [] as BusiTreeNode[],
+  dfTableData: [],
+  multipleSelection: [],
+  paginationConfig: {
+    currentPage: 1,
+    pageSize: 10,
+    total: 0,
+    key: ''
+  },
+  curSortType: 'time_desc',
+  filterTable: []
+})
+const moduleAuthData = ref<InnerInteractive>({
+  rootManage: false,
+  anyManage: false,
+  treeNodes: [],
+  leafNodeCount: 0,
+  menuAuth: true
+})
+const emptyDesc = ref('')
+const imgType = ref('noneWhite')
+
+const embeddedStore = useEmbedded()
+const isEmbedded = computed(() => appStore.getIsDataEaseBi || appStore.getIsIframe)
+const embeddedSyncExport = computed(() => wsCache.get('embeddedExportMode-backend') !== 'async')
+
+const isDataEaseBi = computed(() => appStore.getIsDataEaseBi)
+const isIframe = computed(() => appStore.getIsIframe)
+const datasourceManageRef = ref<HTMLElement | null>(null)
+const datasourceContentHeight = ref<number | undefined>()
+let datasourceManageResizeObserver: ResizeObserver | undefined
+
+const updateDatasourceContentHeight = () => {
+  if (!isIframe.value && !isDataEaseBi.value) {
+    datasourceContentHeight.value = undefined
+    return
+  }
+
+  const containerHeight = datasourceManageRef.value?.clientHeight
+  if (!containerHeight) {
+    return
+  }
+
+  datasourceContentHeight.value = Math.max(containerHeight, 0)
+}
+
+const datasourceContentStyle = computed(() => {
+  if (!isIframe.value && !isDataEaseBi.value) {
+    return undefined
+  }
+
+  if (typeof datasourceContentHeight.value !== 'number') {
+    return undefined
+  }
+
+  return {
+    height: `${datasourceContentHeight.value}px`
+  }
+})
+
+const customTreeStyle = computed(() => {
+  if (!isIframe.value && !isDataEaseBi.value) {
+    return undefined
+  }
+
+  if (typeof datasourceContentHeight.value !== 'number') {
+    return undefined
+  }
+
+  return {
+    height: `${datasourceContentHeight.value - 105}px`
+  }
+})
+
+const showDownloadDrawer = ref(false)
+
+const { width, node } = useMoveLine('DATA-FILLING')
+
+const rootManage = ref(false)
+const disabledMove = ref(true)
+const dsName = ref('')
+const rawDatasourceList = ref([])
+
+const menuList = [
+  {
+    label: t('data_fill.move_to'),
+    svgName: icon_intoItem_outlined,
+    command: 'move'
+  },
+  {
+    label: t('data_fill.rename'),
+    svgName: icon_rename_outlined,
+    command: 'rename'
+  },
+  {
+    label: t('data_fill.delete'),
+    divided: true,
+    svgName: icon_deleteTrash_outlined,
+    command: 'delete'
+  }
+]
+
+const timestampFormatDate = (timestamp, showMs?: boolean) => {
+  if (!timestamp || timestamp === -1) {
+    return '-'
+  }
+
+  const date = new Date(timestamp)
+
+  const y = date.getFullYear()
+
+  let MM = date.getMonth() + 1
+  MM = (MM < 10 ? '0' + MM : MM) as number
+
+  let d = date.getDate()
+  d = (d < 10 ? '0' + d : d) as number
+
+  let h = date.getHours()
+  h = (h < 10 ? '0' + h : h) as number
+
+  let m = date.getMinutes()
+  m = (m < 10 ? '0' + m : m) as number
+
+  let s = date.getSeconds()
+  s = (s < 10 ? '0' + s : s) as number
+
+  let format = y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+
+  if (showMs === true) {
+    const ms = date.getMilliseconds()
+    format += ':' + ms
+  }
+
+  return format
+}
+
+const addOptionTypeList = computed(() => {
+  return [
+    {
+      label: t('data_fill.create_form'),
+      svgName: icon_dataset,
+      command: 'data-filling'
+    },
+    {
+      label: t('data_fill.create_folder'),
+      divided: true,
+      svgName: dvFolder,
+      command: 'folder'
+    }
+  ]
+})
+
+let originResourceTree = []
+const handleSortTypeChange = sortType => {
+  state.datasourceTree = treeSort(originResourceTree, sortType)
+  state.curSortType = sortType
+  wsCache.set('TreeSort-dataFillingForm', state.curSortType)
+}
+
+const sortTypeChange = sortType => {
+  state.datasourceTree = treeSort(originResourceTree, sortType)
+  state.curSortType = sortType
+}
+
+let listScrollTop = 0
+const handleScroll = val => {
+  listScrollTop = val.scrollTop
+}
+
+const scrollbarRef = ref()
+
+const getDsIconName = data => {
+  if (!data.leaf) return dvFolder
+  return icon_file_doc_colorful
+}
+
+const selectedItemId = ref<string | undefined>()
+
+const selectedItem = ref<DfFormSetting | undefined>()
+
+const dsLoading = ref(false)
+const mounted = ref(false)
+
+const listDf = () => {
+  rawDatasourceList.value = []
+  dsLoading.value = true
+  initModuleAuth({ busiFlag: 'data_filling' })
+    .then(res => {
+      moduleAuthData.value = res
+
+      rootManage.value = moduleAuthData.value.rootManage
+      const nodeData = (moduleAuthData.value.treeNodes as unknown as BusiTreeNode[]) || []
+      if (nodeData.length && nodeData[0]['id'] === '0' && nodeData[0]['name'] === 'root') {
+        state.datasourceTree = nodeData[0]['children'] || []
+      } else {
+        state.datasourceTree = moduleAuthData.value.treeNodes
+      }
+      originResourceTree = cloneDeep(unref(state.datasourceTree))
+      let curSortType = sortList[Number(wsCache.get('TreeSort-backend')) ?? 1].value
+      curSortType = wsCache.get('TreeSort-dataFillingForm') ?? curSortType
+      sortTypeChange(curSortType)
+    })
+    .finally(() => {
+      mounted.value = true
+      dsLoading.value = false
+      updateTreeExpand()
+      const id = selectedItemId.value
+      if (!!id) {
+        const pid = selectedItem.value?.pid
+        dfsDatasourceTree(state.datasourceTree, id)
+        setTimeout(() => {
+          if (pid) {
+            const node = dsListTree.value.getNode(pid)
+            if (node && !node.expanded) {
+              node.expand()
+            }
+          }
+          dsListTree.value.setCurrentKey(id, true)
+        }, 100)
+      }
+    })
+}
+
+const dfsDatasourceTree = (ds, id) => {
+  const has = findNode(ds, id)
+  if (has) {
+    selectedItemId.value = id
+  } else {
+    selectedItemId.value = undefined
+  }
+}
+
+function findNode(ds, id) {
+  return some(ds, ele => {
+    if (ele.id === id) {
+      handleNodeClick(ele)
+      return true
+    } else if (ele.children?.length > 0) {
+      return findNode(ele.children, id)
+    }
+    return false
+  })
+}
+
+const creatDsFolder = ref()
+const rowDataFormRef = ref()
+
+function onCloseToRefresh() {
+  search(searchConditions.value)
+}
+
+const sortList = [
+  {
+    name: t('visualization.time_asc'),
+    value: 'time_asc'
+  },
+  {
+    name: t('visualization.time_desc'),
+    value: 'time_desc',
+    divided: true
+  },
+  {
+    name: t('visualization.name_asc'),
+    value: 'name_asc'
+  },
+  {
+    name: t('visualization.name_desc'),
+    value: 'name_desc'
+  }
+]
+
+const sortTypeTip = computed(() => {
+  return sortList.find(ele => ele.value === state.curSortType)?.name
+})
+
+const mainLoading = ref(false)
+
+const handleNodeClick = data => {
+  try {
+    if (router.currentRoute.value.query?.id) {
+      //清理url路径上的id
+      router.replace({ name: 'data-filling-manage' })
+    }
+  } catch (e) {}
+
+  if (!data.leaf) {
+    dsListTree.value.setCurrentKey(null)
+    return
+  }
+
+  if (selectedItemId.value !== data.id) {
+    state.dfTableData = []
+    searchConditions.value = []
+  }
+
+  selectedItemId.value = data.id
+  selectedItem.value = undefined
+
+  mainLoading.value = true
+  return getDataFilling(data.id)
+    .then(res => {
+      const {
+        id,
+        name,
+        pid,
+        datasource,
+        datasourceName,
+        tableName,
+        forms,
+        creator,
+        updater,
+        createTime,
+        updateTime
+      } = res
+
+      const obj = {
+        id,
+        name,
+        pid,
+        datasource,
+        datasourceName,
+        tableName,
+        forms: JSON.parse(forms),
+        creator,
+        updater,
+        createTime,
+        updateTime,
+        weight: data.weight
+      }
+
+      selectedItem.value = obj
+
+      state.paginationConfig.currentPage = 1
+
+      activeName.value = 'dataPreview'
+      state.multipleSelection = []
+      handleClick('dataPreview')
+    })
+    .finally(() => {
+      mainLoading.value = false
+    })
+}
+
+const dsListTree = ref()
+const expandedKey = ref([])
+const dsListTreeShow = ref(true)
+watch(dsName, (val: string) => {
+  dsListTree.value.filter(val)
+})
+const updateTreeExpand = () => {
+  dsListTreeShow.value = false
+  nextTick(() => {
+    dsListTreeShow.value = true
+    nextTick(() => {
+      scrollbarRef.value?.setScrollTop(listScrollTop)
+    })
+  })
+}
+
+const nodeExpand = data => {
+  if (data.id) {
+    expandedKey.value.push(data.id)
+  }
+}
+
+const nodeCollapse = data => {
+  if (data.id) {
+    expandedKey.value.splice(expandedKey.value.indexOf(data.id), 1)
+  }
+}
+
+const filterNode = (value: string, data: BusiTreeNode) => {
+  if (!value) return true
+  return data.name?.toLowerCase().includes(value.toLowerCase())
+}
+
+const handleEdit = async data => {
+  await handleNodeClick(data)
+  editForm(data.id)
+}
+
+const createForm = (data?: Tree) => {
+  if (isEmbedded.value) {
+    embeddedStore.clearState()
+    embeddedStore.setOpt('create')
+    embeddedStore.setDfId(undefined)
+    embeddedStore.setPid(data?.id)
+    useEmitt().emitter.emit('changeCurrentComponent', 'DataFillingEditor')
+    return
+  }
+  router.push({
+    path: '/df-form',
+    query: {
+      pid: data?.id
+    }
+  })
+}
+
+function editForm(id) {
+  if (isEmbedded.value) {
+    embeddedStore.clearState()
+    embeddedStore.setOpt('edit')
+    embeddedStore.setDfId(id)
+    useEmitt().emitter.emit('changeCurrentComponent', 'DataFillingEditor')
+    return
+  }
+  router.push({
+    path: '/df-form',
+    query: {
+      id: id
+    }
+  })
+}
+
+function copyForm(id) {
+  if (isEmbedded.value) {
+    embeddedStore.clearState()
+    embeddedStore.setOpt('copy')
+    embeddedStore.setDfId(id)
+    useEmitt().emitter.emit('changeCurrentComponent', 'DataFillingEditor')
+    return
+  }
+  router.push({
+    path: '/df-form',
+    query: {
+      copyId: id
+    }
+  })
+}
+
+const handleCopy = async data => {
+  await handleNodeClick(data)
+  copyForm(data.id)
+}
+
+const handleFormTree = (cmd: string, data?: Tree) => {
+  if (cmd === 'data-filling') {
+    createForm(data)
+  }
+  if (cmd === 'folder') {
+    creatDsFolder.value.createInit(cmd, data || {})
+  }
+}
+const operation = (cmd: string, data: Tree, nodeType: string) => {
+  if (cmd === 'copy') {
+    handleCopy(data)
+  } else if (cmd === 'delete') {
+    let options = {
+      confirmButtonText: t('common.sure'),
+      cancelButtonText: t('common.cancel'),
+      confirmButtonType: 'danger',
+      type: 'warning',
+      tip: '',
+      autofocus: false,
+      showClose: false
+    }
+    if (data?.orgRoot) {
+      options.tip = t('common.org_root_delete_tips', [data.name])
+    } else if (!!data.children?.length) {
+      options.tip = t('data_fill.delete_folder_hint')
+    } else {
+      delete options.tip
+    }
+    ElMessageBox.confirm(
+      nodeType === 'folder'
+        ? t('data_fill.confirm_delete_folder')
+        : t('data_fill.confirm_delete_form'),
+      options as ElMessageBoxOptions
+    ).then(() => {
+      deleteById({ id: data.id as string, rootOrgNode: !!data.orgRoot }).then(() => {
+        listDf()
+        ElMessage.success(t('dataset.delete_success'))
+      })
+    })
+  } else {
+    creatDsFolder.value.createInit(nodeType, data, cmd)
+  }
+}
+
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+  disabled: data => !data.weight
+}
+
+const sortInit = () => {
+  const historyTreeSort = wsCache.get('TreeSort-dataFillingForm')
+  if (historyTreeSort) {
+    state.curSortType = historyTreeSort
+  }
+}
+
+onMounted(async () => {
+  sortInit()
+  listDf()
+  selectedItemId.value = router.currentRoute.value.query?.id
+
+  nextTick(() => {
+    updateDatasourceContentHeight()
+    if (typeof ResizeObserver !== 'undefined' && datasourceManageRef.value) {
+      datasourceManageResizeObserver = new ResizeObserver(() => {
+        updateDatasourceContentHeight()
+      })
+      datasourceManageResizeObserver.observe(datasourceManageRef.value)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  datasourceManageResizeObserver?.disconnect()
+})
+
+watch([isIframe, isDataEaseBi], () => {
+  nextTick(() => {
+    updateDatasourceContentHeight()
+  })
+})
+
+const sideTreeStatus = ref(true)
+const changeSideTreeStatus = val => {
+  sideTreeStatus.value = val
+}
+
+const mouseenter = () => {
+  appStore.setArrowSide(true)
+}
+
+const mouseleave = () => {
+  appStore.setArrowSide(false)
+}
+
+const getMenuList = (val: boolean, data?: any) => {
+  let list = !val
+    ? menuList
+    : [
+        {
+          label: t('common.copy'),
+          svgName: icon_copy_filled,
+          command: 'copy'
+        }
+      ].concat(menuList)
+  return list.filter(item => {
+    if (disabledMove.value && item.command === 'move') return false
+    if (data?.orgRoot && item.command === 'move') return false
+    return true
+  })
+}
+
+const activeName = ref('dataPreview')
+
+const handleClick = (tabName: TabPaneName) => {
+  switch (tabName) {
+    case 'dataPreview':
+      search(searchConditions.value)
+      break
+    case 'record':
+      state.multipleSelection = []
+      break
+    case 'task':
+      state.multipleSelection = []
+      break
+  }
+}
+
+const existsForms = computed<Array<DfFormItem>>(() => {
+  return filter(selectedItem.value?.forms, f => !f.removed)
+})
+
+const columns = computed<Array<ColumnItem>>(() => {
+  const _list: Array<ColumnItem> = []
+  forEach(existsForms.value, f => {
+    if (f.type === 'dateRange') {
+      _list.push({
+        id: f.id,
+        props: f.settings?.mapping?.columnName1,
+        label: f.settings?.name,
+        date: true,
+        number: false,
+        dateType: f.settings?.dateType,
+        type: f.type,
+        multiple: !!f.settings.multiple,
+        rangeIndex: 0
+      } as ColumnItem)
+      _list.push({
+        id: f.id,
+        props: f.settings?.mapping?.columnName2,
+        label: f.settings?.name,
+        date: true,
+        number: false,
+        dateType: f.settings?.dateType,
+        type: f.type,
+        multiple: !!f.settings.multiple,
+        rangeIndex: 1
+      } as ColumnItem)
+    } else {
+      _list.push({
+        id: f.id,
+        props: f.settings?.mapping?.columnName,
+        label: f.settings?.name,
+        date: f.type === 'date',
+        number: f.settings.inputType === 'number',
+        dateType: f.settings?.dateType,
+        type: f.type,
+        multiple: !!f.settings.multiple,
+        asyncOptions: f.settings.optionSourceType === 2,
+        asyncOptionSetting: {
+          optionDatasource: f.settings.optionDatasource,
+          optionTable: f.settings.optionTable,
+          optionColumn: f.settings.optionColumn,
+          optionOrder: f.settings.optionOrder
+        },
+        options: f.settings.options,
+        tempId:
+          f.settings.optionDatasource +
+          '_' +
+          f.settings.optionTable +
+          '_' +
+          f.settings.optionColumn +
+          '_' +
+          f.settings.optionOrder
+      } as ColumnItem)
+    }
+  })
+  return _list
+})
+
+const dateFormatColumns = computed(() => {
+  return map(
+    filter(columns.value, c => c.date),
+    'props'
+  )
+})
+
+function getCondition() {
+  const _condition: Array<any> = []
+  for (let i = 0; i < searchConditions.value.length; i++) {
+    const c = searchConditions.value[i]
+    if (c.date) {
+      if (c.term === 'between') {
+        _condition.push({
+          field: c.column,
+          value: undefined,
+          values: [dayjs(c.values[0]).toDate().getTime(), dayjs(c.values[1]).toDate().getTime()],
+          term: c.term,
+          multiple: c.multiple
+        })
+      } else {
+        _condition.push({
+          field: c.column,
+          value: dayjs(c.value).toDate().getTime(),
+          values: [],
+          term: c.term,
+          multiple: c.multiple
+        })
+      }
+    } else {
+      _condition.push({
+        field: c.column,
+        value: c.value,
+        values: c.values,
+        term: c.term,
+        multiple: c.multiple
+      })
+    }
+  }
+  return _condition
+}
+
+const search = (condition = []) => {
+  searchConditions.value = condition
+  if (!selectedItem.value?.id) {
+    return
+  }
+  dsLoading.value = true
+
+  const _condition: Array<any> = getCondition()
+
+  searchTable(selectedItem.value.id, {
+    currentPage: state.paginationConfig.currentPage,
+    pageSize: state.paginationConfig.pageSize,
+    searchParams: _condition
+  })
+    .then(res => {
+      if (res.data) {
+        state.paginationConfig.key = res.data.key
+        state.paginationConfig.total = res.data.total
+        state.paginationConfig.currentPage = res.data.currentPage
+        const _data = []
+        forEach(res.data.data, d => {
+          const obj = {}
+          forIn(d.data, (value, key) => {
+            if (includes(dateFormatColumns.value, key)) {

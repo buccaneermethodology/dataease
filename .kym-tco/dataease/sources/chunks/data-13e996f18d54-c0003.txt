@@ -1,0 +1,716 @@
+          "start_line": 26,
+          "end_line": 54,
+          "symbol": "getSchema/getTables/getConnection",
+          "sha256": "299d491eb78627d2c162e1d75af881ddd1902763a99837e4e7bba7413adc5944"
+        }
+      ]
+    },
+    {
+      "id": "DATA-064",
+      "statement": "引擎Provider选择器按 datasourceType+Engine 查Bean；类型为空才回退MysqlEngineProvider，不能把全部查询数据源类型等同于已实现的存储引擎类型。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ProviderUtil.java",
+          "start_line": 6,
+          "end_line": 16,
+          "symbol": "getEngineProvider",
+          "sha256": "ac9fc5f9a6a2b19bcc9fbff4b546853f15009c946c095e1eed968d6b27f72c02"
+        }
+      ]
+    },
+    {
+      "id": "DATA-065",
+      "statement": "mysqlEngine；反引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 23,
+          "end_line": 28,
+          "symbol": "MysqlEngineProvider",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 93,
+          "end_line": 95,
+          "symbol": "needCheckExistTable",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 114,
+          "end_line": 118,
+          "symbol": "createTableSql",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        }
+      ]
+    },
+    {
+      "id": "DATA-066",
+      "statement": "pgEngine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 22,
+          "end_line": 27,
+          "symbol": "PgEngineProvider",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 97,
+          "end_line": 99,
+          "symbol": "needCheckExistTable",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 118,
+          "end_line": 122,
+          "symbol": "createTableSql",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        }
+      ]
+    },
+    {
+      "id": "DATA-067",
+      "statement": "h2Engine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 15,
+          "end_line": 20,
+          "symbol": "H2EngineProvider",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 70,
+          "end_line": 72,
+          "symbol": "needCheckExistTable",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 91,
+          "end_line": 95,
+          "symbol": "createTableSql",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        }
+      ]
+    },
+    {
+      "id": "DATA-068",
+      "statement": "oracleEngine；双引号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 18,
+          "end_line": 21,
+          "symbol": "OracleEngineProvider",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 30,
+          "end_line": 32,
+          "symbol": "needCheckExistTable",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 110,
+          "end_line": 114,
+          "symbol": "createTableSql",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-069",
+      "statement": "dmEngine；双引号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 18,
+          "end_line": 21,
+          "symbol": "DmEngineProvider",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 30,
+          "end_line": 32,
+          "symbol": "needCheckExistTable",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 110,
+          "end_line": 114,
+          "symbol": "createTableSql",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        }
+      ]
+    },
+    {
+      "id": "DATA-070",
+      "statement": "sqlServerEngine；方括号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 24,
+          "end_line": 29,
+          "symbol": "SqlServerEngineProvider",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 107,
+          "end_line": 109,
+          "symbol": "needCheckExistTable",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 128,
+          "end_line": 131,
+          "symbol": "createTableSql",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        }
+      ]
+    },
+    {
+      "id": "DATA-071",
+      "statement": "kingbaseEngine直接继承PgEngineProvider且本类无方法覆盖；StarRocksEngine继承MysqlEngineProvider并覆盖建表，DDL包含HASH分布、10个bucket和replication_num=1。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/KingbaseEngineProvider.java",
+          "start_line": 10,
+          "end_line": 12,
+          "symbol": "KingbaseEngineProvider",
+          "sha256": "6832768676e7f84e0daa1207720dc8f42f5fc727eba49e89ff8c3c9de34cf77f"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/StarRocksEngineProvider.java",
+          "start_line": 19,
+          "end_line": 42,
+          "symbol": "StarRocksEngineProvider/createTableSql",
+          "sha256": "c2684489a5d125ce06aa06aa5d56297b1a8e7032dd415938b6e5609157db4b77"
+        }
+      ]
+    },
+    {
+      "id": "DATA-072",
+      "statement": "Excel文件访问Regression是独立main资产，构造用户101/202临时文件并断言跨用户、新建认领历史文件、越界/相对/穿越/非法文件名/符号链接拒绝，另调用真实ExcelUtils.fetchDataList；本轮只读未执行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "tests/excel-file-access/Regression.java",
+          "start_line": 36,
+          "end_line": 104,
+          "symbol": "Regression.main",
+          "sha256": "25dd12696643c0cd2d91b86f1b00bcaaf0da13ee58d4ddb199384d1f507c047e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-073",
+      "statement": "remote-response Regression搭建本地随机端口HTTP服务，断言声明/分块/gzip超量、错误状态、慢响应与响应头时限、API配置传递、部分文件清理、CSV引号及100行预览、双sheet XLS/XLSX全量与预览、ZIP压缩比拒绝；本轮未执行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "tests/remote-response/Regression.java",
+          "start_line": 21,
+          "end_line": 92,
+          "symbol": "Regression.main",
+          "sha256": "25fdd2474c11bc26aab32de5a5a7f1da147e0f29fa0438cf56f3535adc723758"
+        }
+      ]
+    },
+    {
+      "id": "DATA-074",
+      "statement": "后端SmbFileDownloaderRegression验证domain序列化与旧配置兼容、非法SMB地址/扩展名/空用户名拒绝；真实下载及错误密码/不存在文件测试仅在SMB_TEST_URL存在时执行，否则明确SKIP。本轮没有运行任何分支。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/test/java/io/dataease/datasource/provider/SmbFileDownloaderRegression.java",
+          "start_line": 20,
+          "end_line": 104,
+          "symbol": "SmbFileDownloaderRegression.main",
+          "sha256": "a2b54a371b3659de81600366169d3d06c4ff2eced50c058cf58f027901c9e704"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F01",
+      "name": "创建和管理数据源",
+      "depth": "core",
+      "summary": "创建和管理数据源的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-001",
+          "DATA-002"
+        ],
+        "inputs": [
+          "DATA-002",
+          "DATA-003"
+        ],
+        "outputs": [
+          "DATA-005",
+          "DATA-008"
+        ],
+        "preconditions": [
+          "DATA-004",
+          "DATA-007",
+          "DATA-061"
+        ],
+        "state_changes": [
+          "DATA-003",
+          "DATA-009",
+          "DATA-010",
+          "DATA-012"
+        ],
+        "postconditions": [
+          "DATA-003",
+          "DATA-004",
+          "DATA-005"
+        ],
+        "invariants": [
+          "DATA-004",
+          "DATA-009",
+          "DATA-011",
+          "DATA-059"
+        ],
+        "failures": [
+          "DATA-003",
+          "DATA-006",
+          "DATA-007",
+          "DATA-008"
+        ],
+        "permissions": [
+          "DATA-002"
+        ],
+        "implementation": [
+          "DATA-003",
+          "DATA-004",
+          "DATA-006",
+          "DATA-007",
+          "DATA-008",
+          "DATA-009",
+          "DATA-010",
+          "DATA-062",
+          "DATA-063"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-039",
+          "DATA-040",
+          "DATA-042",
+          "DATA-043",
+          "DATA-057",
+          "DATA-058",
+          "DATA-064"
+        ],
+        "data": [
+          "DATA-011",
+          "DATA-012",
+          "DATA-060"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。"
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "文件/API 数据接入",
+      "depth": "core",
+      "summary": "文件/API 数据接入的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-013",
+          "DATA-015",
+          "DATA-017"
+        ],
+        "inputs": [
+          "DATA-013",
+          "DATA-015",
+          "DATA-016",
+          "DATA-022",
+          "DATA-052"
+        ],
+        "outputs": [
+          "DATA-013",
+          "DATA-014",
+          "DATA-023",
+          "DATA-024",
+          "DATA-049"
+        ],
+        "preconditions": [
+          "DATA-013",
+          "DATA-016",
+          "DATA-017",
+          "DATA-044"
+        ],
+        "state_changes": [
+          "DATA-014",
+          "DATA-017",
+          "DATA-018",
+          "DATA-019",
+          "DATA-020",
+          "DATA-021",
+          "DATA-055"
+        ],
+        "postconditions": [
+          "DATA-020",
+          "DATA-021",
+          "DATA-023",
+          "DATA-024"
+        ],
+        "invariants": [
+          "DATA-016",
+          "DATA-018",
+          "DATA-022",
+          "DATA-045",
+          "DATA-048",
+          "DATA-054"
+        ],
+        "failures": [
+          "DATA-013",
+          "DATA-017",
+          "DATA-020",
+          "DATA-021",
+          "DATA-023",
+          "DATA-024",
+          "DATA-047",
+          "DATA-051",
+          "DATA-053"
+        ],
+        "permissions": [
+          "DATA-002",
+          "DATA-046"
+        ],
+        "implementation": [
+          "DATA-013",
+          "DATA-014",
+          "DATA-015",
+          "DATA-016",
+          "DATA-017",
+          "DATA-018",
+          "DATA-019",
+          "DATA-020",
+          "DATA-021",
+          "DATA-022",
+          "DATA-023",
+          "DATA-024"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-018",
+          "DATA-019",
+          "DATA-040",
+          "DATA-050",
+          "DATA-056",
+          "DATA-064",
+          "DATA-065",
+          "DATA-066",
+          "DATA-067",
+          "DATA-068",
+          "DATA-069",
+          "DATA-070",
+          "DATA-071"
+        ],
+        "data": [
+          "DATA-011",
+          "DATA-014",
+          "DATA-022"
+        ],
+        "tests": [
+          "DATA-072",
+          "DATA-073",
+          "DATA-074"
+        ]
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。",
+        "已补读文件解析、HTTP限额/时限及现有回归；真实FTP/SMB网络、所有API参数组合与方言运行行为仍未验证。"
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "建立和管理数据集",
+      "depth": "core",
+      "summary": "建立和管理数据集的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-025",
+          "DATA-026",
+          "DATA-027",
+          "DATA-031"
+        ],
+        "inputs": [
+          "DATA-025",
+          "DATA-026",
+          "DATA-028",
+          "DATA-034"
+        ],
+        "outputs": [
+          "DATA-031",
+          "DATA-033",
+          "DATA-035",
+          "DATA-038"
+        ],
+        "preconditions": [
+          "DATA-028",
+          "DATA-030",
+          "DATA-032",
+          "DATA-034"
+        ],
+        "state_changes": [
+          "DATA-028",
+          "DATA-029",
+          "DATA-030"
+        ],
+        "postconditions": [
+          "DATA-028",
+          "DATA-029",
+          "DATA-033"
+        ],
+        "invariants": [
+          "DATA-029",
+          "DATA-030",
+          "DATA-031",
+          "DATA-038",
+          "DATA-039",
+          "DATA-059"
+        ],
+        "failures": [
+          "DATA-028",
+          "DATA-030",
+          "DATA-032",
+          "DATA-035",
+          "DATA-036",
+          "DATA-037"
+        ],
+        "permissions": [
+          "DATA-026",
+          "DATA-031",
+          "DATA-032",
+          "DATA-035"
+        ],
+        "implementation": [
+          "DATA-027",
+          "DATA-028",
+          "DATA-029",
+          "DATA-031",
+          "DATA-032",
+          "DATA-033",
+          "DATA-034",
+          "DATA-036",
+          "DATA-037"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-039",
+          "DATA-040",
+          "DATA-041",
+          "DATA-042",
+          "DATA-043",
+          "DATA-057",
+          "DATA-058"
+        ],
+        "data": [
+          "DATA-038"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "DATA-R001",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-001",
+      "evidence_fact_ids": [
+        "DATA-001"
+      ]
+    },
+    {
+      "id": "DATA-R002",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-002",
+      "evidence_fact_ids": [
+        "DATA-002"
+      ]
+    },
+    {
+      "id": "DATA-R003",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-003",
+      "evidence_fact_ids": [
+        "DATA-003"
+      ]
+    },
+    {
+      "id": "DATA-R004",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-004",
+      "evidence_fact_ids": [
+        "DATA-004"
+      ]
+    },
+    {
+      "id": "DATA-R005",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-005",
+      "evidence_fact_ids": [
+        "DATA-005"
+      ]
+    },
+    {
+      "id": "DATA-R006",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-006",
+      "evidence_fact_ids": [
+        "DATA-006"
+      ]
+    },
+    {
+      "id": "DATA-R007",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-007",
+      "evidence_fact_ids": [
+        "DATA-007"
+      ]
+    },
+    {
+      "id": "DATA-R008",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-008",
+      "evidence_fact_ids": [
+        "DATA-008"
+      ]
+    },
+    {
+      "id": "DATA-R009",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-009",
+      "evidence_fact_ids": [
+        "DATA-009"
+      ]
+    },
+    {
+      "id": "DATA-R010",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-010",
+      "evidence_fact_ids": [
+        "DATA-010"
+      ]
+    },
+    {
+      "id": "DATA-R011",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-011",
+      "evidence_fact_ids": [
+        "DATA-011"
+      ]
+    },
+    {
+      "id": "DATA-R012",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-012",
+      "evidence_fact_ids": [
+        "DATA-012"
+      ]
+    },
+    {
+      "id": "DATA-R013",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-039",
+      "evidence_fact_ids": [
+        "DATA-039"
+      ]
+    },
+    {
+      "id": "DATA-R014",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-040",
+      "evidence_fact_ids": [
+        "DATA-040"
+      ]
+    },
+    {
+      "id": "DATA-R015",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-042",
+      "evidence_fact_ids": [
+        "DATA-042"
+      ]
+    },
+    {
+      "id": "DATA-R016",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-043",
+      "evidence_fact_ids": [
+        "DATA-043"
+      ]
+    },
+    {
+      "id": "DATA-R017",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-002",
+      "evidence_fact_ids": [
+        "DATA-002"
+      ]
+    },
+    {
+      "id": "DATA-R018",
