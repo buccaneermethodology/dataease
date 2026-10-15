@@ -11,3 +11,5 @@
 | DE-EXEC-D007 | SGE 收益评估每5个任务一轮，统计原分母、质量与采集成本；不把诊断案例当可比基线 | done | 用户明确指定报告节奏；长期观察状态不因 setup 完成而关闭；修改 Skill 需单独任务 |
 
 | DE-EXEC-D008 | 初始KB位于根目录kb/；全部SP-001执行中间件留Artifacts/SP-001；产品全景Dashboard仅References | done | 用户明确目录更正；不得把执行状态、审查、临时推断放入正式知识；不改变既有全景文档 |
+
+| DE-EXEC-D009 | SGE 收益观察改为逐任务报告 | active | 用户于2026-10-14明确更正；每个新增终态任务单独报告并展示累计趋势，量化阈值仍按协议执行；旧 setup 验收材料保留为历史快照，详见 `Dashboard/Artifacts/Goal-DE-GOV-003/amendment-v2.md` |

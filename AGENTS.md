@@ -13,8 +13,8 @@
 
 ### 本地 SGE 优化的持续观察
 
-- 后续使用本地 SGE 的非平凡 DataEase 任务，按 `Dashboard/Artifacts/Goal-DE-GOV-003/protocol.md` 在任务开始登记类别、复杂度和 Skill 版本，并在收尾记录可追溯的时间点、返工与验收结果；模板为同目录 `task-record.template.json`。未知值保留 null，不从文件 mtime 或印象估计耗时。
-- 测量记录只追加到该 Goal 的 `data/tasks/`，不改写任务已冻结的证据。每5个已结束任务由观察者出一轮报告；任务的重试和子 Agent 不重复计数。采集复用已有验收并记录自身成本，不为写测量记录额外启动 review 或 Goal。
+- 后续使用本地 SGE 的非平凡 DataEase 任务，按 `Dashboard/Artifacts/Goal-DE-GOV-003/protocol-v2.md` 在任务开始登记类别、复杂度和 Skill 版本，并在收尾记录可追溯的时间点、返工与验收结果；模板为同目录 `task-record.template.json`。未知值保留 null，不从文件 mtime 或印象估计耗时。
+- 测量记录只追加到该 Goal 的 `data/tasks/`，不改写任务已冻结的证据。每新增1个已结束任务由观察者出一份报告；任务的重试和子 Agent 不重复计数。采集复用已有验收并记录自身成本，不为写测量记录额外启动 review 或 Goal。
 
 ## 0. 产品版本、开源边界与协作分支
 
