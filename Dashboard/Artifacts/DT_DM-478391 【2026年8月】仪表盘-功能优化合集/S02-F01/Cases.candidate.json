@@ -1,0 +1,333 @@
+{
+  "contract_id": "DE-S02-F01",
+  "revision": "design-r001",
+  "frozen_for_builder": false,
+  "reason": "设计预审及S01输入稳定后冻结实现边界；未执行RED/GREEN",
+  "axes": [
+    "source_kind",
+    "target_kind",
+    "dataset_identity",
+    "field_capability",
+    "user_session",
+    "permissions",
+    "time",
+    "serialized_bytes",
+    "leaf_count",
+    "confirmation",
+    "payload_integrity",
+    "save_result"
+  ],
+  "invariants": [
+    "失败或取消：目标/预览/P0不变且零新过滤刷新",
+    "复制失败不破坏上次有效剪贴内容",
+    "不复制结果、布局、样式",
+    "不把schema有效或mock运行等同真实权限验证",
+    "所有必须项保留至最终验收"
+  ],
+  "cases": [
+    {
+      "case_id": "TC-AC-F01-Q004",
+      "ac_ids": [
+        "AC-F01-Q004"
+      ],
+      "title": "类别四方向",
+      "positive_oracle": "chart→chart/query→query同集通过，chart↔query拒绝",
+      "negative_oracle": "target不变且无刷新",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q005",
+      "ac_ids": [
+        "AC-F01-Q005"
+      ],
+      "title": "同浏览器跨标签",
+      "positive_oracle": "A复制B读取同配置，跨仪表盘",
+      "negative_oracle": "刷新不续期",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q006",
+      "ac_ids": [
+        "AC-F01-Q006"
+      ],
+      "title": "数据集身份",
+      "positive_oracle": "D1通过，同名D2/已删除/ID不明拒绝",
+      "negative_oracle": "不按字段同名映射",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q007",
+      "ac_ids": [
+        "AC-F01-Q007"
+      ],
+      "title": "覆盖事务",
+      "positive_oracle": "旧树确认后完全替换T，空目标直应用",
+      "negative_oracle": "取消旧树/预览不变",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q008",
+      "ac_ids": [
+        "AC-F01-Q008"
+      ],
+      "title": "时间与重复",
+      "positive_oracle": "1799秒可用，1801秒过期；多次/刷新不续期，重复制重计",
+      "negative_oracle": "1800秒等待设计精确冻结",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q009",
+      "ac_ids": [
+        "AC-F01-Q009"
+      ],
+      "title": "身份与权限",
+      "positive_oracle": "U退出/换V再U旧载荷不可恢复，粘贴重验数据权和编辑权",
+      "negative_oracle": "跨标签旧认证不可复活",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q010",
+      "ac_ids": [
+        "AC-F01-Q010"
+      ],
+      "title": "内部共享",
+      "positive_oracle": "DataEase按钮跨标签，系统已有文字保持",
+      "negative_oracle": "不增加OS粘贴入口",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q011",
+      "ac_ids": [
+        "AC-F01-Q011"
+      ],
+      "title": "空配置",
+      "positive_oracle": "空/最后条件删除复制禁用",
+      "negative_oracle": "原有效剪贴T与删除/清空能力保留",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q012",
+      "ac_ids": [
+        "AC-F01-Q012"
+      ],
+      "title": "完整性与动态",
+      "positive_oracle": "AND/OR嵌套、字段/算子/值、动态规则保留，命中2/3/5",
+      "negative_oracle": "截断/缺结构/非过滤载荷全部拒绝，不刷新、不改P0与旧树，提示不匹配",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q013",
+      "ac_ids": [
+        "AC-F01-Q013"
+      ],
+      "title": "容量与叶子",
+      "positive_oracle": "50允许、51拒绝；组合节点不计；1001枚举合法且未超限可用",
+      "negative_oracle": "B-1/B/B+1实际UTF8字节；失败保留T",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q014",
+      "ac_ids": [
+        "AC-F01-Q014"
+      ],
+      "title": "预览与持久化",
+      "positive_oracle": "成功提示过滤条件已应用，预览命中2/3/5，正常保存重开一致",
+      "negative_oracle": "不自动保存；取消/失败零刷新；保存失败另一会话仍P0",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-Q015",
+      "ac_ids": [
+        "AC-F01-Q015"
+      ],
+      "title": "图表兼容",
+      "positive_oracle": "普通图/普通表/透视表通用树全量复制",
+      "negative_oracle": "无法完整承载整次拒绝，不带维度/指标/排序/样式",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-ORIG-01",
+      "ac_ids": [
+        "AC-F01-ORIG-01"
+      ],
+      "title": "只读访问",
+      "positive_oracle": "U_editor正常；U_view无配置查看/复制/粘贴",
+      "negative_oracle": "直接接口绕过不能获取配置或修改",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F01-ORIG-02",
+      "ac_ids": [
+        "AC-F01-ORIG-02"
+      ],
+      "title": "既有回归",
+      "positive_oracle": "原组件复制后改类型入口仍可用，保留配置兼容证据",
+      "negative_oracle": "不能据此代替专用复制实现",
+      "fixture": "FX-COPY",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F04-Q066",
+      "ac_ids": [
+        "AC-F04-Q066"
+      ],
+      "title": "查询组件结构",
+      "positive_oracle": "嵌套/动态/级联同集完整复制，旧配置确认",
+      "negative_oracle": "缺字段/引用/不承载/成环整次拒绝",
+      "fixture": "FX-COPY + FX-CASCADE",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "TC-AC-F04-Q067",
+      "ac_ids": [
+        "AC-F04-Q067"
+      ],
+      "title": "独立副本",
+      "positive_oracle": "A→B复制后双方修改互不影响，跨仪表盘保存重开",
+      "negative_oracle": "无共享模板引用",
+      "fixture": "FX-COPY + FX-CASCADE",
+      "layers": [
+        "pure_logic",
+        "real_UI",
+        "API_permission_or_persistence_when_applicable"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "evidence_refs": []
+    }
+  ]
+}

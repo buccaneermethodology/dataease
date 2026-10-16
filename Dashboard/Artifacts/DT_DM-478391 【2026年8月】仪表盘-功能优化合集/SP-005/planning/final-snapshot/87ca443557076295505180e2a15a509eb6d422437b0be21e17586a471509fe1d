@@ -1,0 +1,44 @@
+{
+  "scope": "5001行基础运行fixture，不替代FX-EXPORT的10000/500000行等全规格",
+  "rules": {
+    "id": "1..5001",
+    "org": "ORG_A偶数，ORG_B奇数",
+    "region": "前5华东/华东/华南/华北/华南，其余枚举区",
+    "category": "前5 A/B/A/C/A，其余 id%3 的A/B/C",
+    "enum_text": "E00001..E05001唯一",
+    "nullable_text": "id%3=0为NULL，1为空串，2为DUP",
+    "qty": "id%10",
+    "amount": "前5为100,200,300,50,0，其余id",
+    "denominator": "id%7",
+    "date": "2026-08-15"
+  },
+  "expected": {
+    "count": 5001,
+    "distinct_enum": 5001,
+    "null_count": 1667,
+    "empty_count": 1667,
+    "duplicate_text_count": 1667,
+    "amount_sum": 12508136,
+    "FX_COPY_first5_match_ids": [
+      2,
+      3,
+      5
+    ],
+    "first5_amount_sum": 650,
+    "id_le_10_amount_sum": 690,
+    "first5_region_sums": {
+      "华东": 300,
+      "华南": 300,
+      "华北": 50
+    }
+  },
+  "case_bindings": [
+    "RT-F01基础树",
+    "RT-F03基础全量导出",
+    "RT-F04/RT-F07枚举边界",
+    "RT-F05基础条件样式",
+    "RT-F06字段拖放",
+    "RT-F08基础汇总",
+    "RT-PERSIST"
+  ]
+}

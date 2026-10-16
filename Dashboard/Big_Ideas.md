@@ -14,3 +14,9 @@
 | SP-002 | DE-KNOW-BI01 | DT_DM-478391 需求 KYM 首稿 | 以已批准需求基线为新增权威输入；基于现有 KYM r001 追加需求语义，不核定代码实现 | 让需求角色、范围、规则和未决事项可追溯地进入 KYM | doing | [Goal](Artifacts/Goal-DE-KYM-001/goal.md)、[Stage Plan](Artifacts/SP-002/stage-plan.md) | 产出 candidate r002；保持未审批并明确来源与语义审阅边界 |
 | SP-003 | DE-KNOW-BI01 | DT_DM-478391 KYM r004 到 TCO 首版 | KYM r004 需求与 Repo 证据的能力分层、Coverage 提案和交互预览 | 提供可追溯的需求—能力—代码证据初始映射 | doing | [Goal](Artifacts/Goal-DE-TCO-001/goal.md)、[Stage Plan](Artifacts/SP-003/stage-plan.md) | 候选 TCO 和 Coverage，不代表 accepted state、产品验收或发布就绪 |
 | SP-004 | DE-REQ-BI01 | F01–F08 S00需求核对 | S00.1–S00.7；不改代码、不做跨功能冲突检测 | 建立来源与验收合同 | done | [Goal与进度](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/README.md>) | 原题已齐；S00文档完成，技术依赖留后续授权调查 |
+
+## S01技术调查批次（不改写S00历史）
+
+| ID | 归属 | Topic | Scope | Purpose | Status | Evidence | Next |
+|---|---|---|---|---|---|---|---|
+| SP-005 | DE-KNOW-BI01 | S01代码连接点与技术影响 | 八功能静态链路及关键运行证据，不实施新功能 | 为后续Slice提供真实技术输入 | done | [Goal与进度](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/README.md>) | 调查修复复核完成；第二批清理/归档暂停，按批准范围有条件完成，终态见SP-005结果 |

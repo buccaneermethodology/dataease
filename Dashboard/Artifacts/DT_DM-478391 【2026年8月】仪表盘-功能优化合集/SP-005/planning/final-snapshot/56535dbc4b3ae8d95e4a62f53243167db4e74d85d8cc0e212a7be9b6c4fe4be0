@@ -1,0 +1,177 @@
+# S00 验收项到 S01 验证方法映射（候选）
+
+完整Given/When/Then及来源保存在TestabilityMatrix.json，171个唯一AC不遗漏。当前只是候选验证层级，逐条源码claim及实际命令尚未绑定，因此AC-S01-06未通过。全部产品运行NOT_RUN。
+
+| AC | 功能 | 决策/问题 | Fixture | 候选验证层级 | 状态 |
+|---|---|---|---|---|---|
+| AC-GLOBAL-Q001 | GLOBAL | Q001,DEC-001 | FX-SCOPE | 文档来源与覆盖对账 | 未运行；待入口/oracle实例化 |
+| AC-GLOBAL-Q002 | GLOBAL | Q002,DEC-002 | FX-SCOPE | 文档来源与覆盖对账 | 未运行；待入口/oracle实例化 |
+| AC-GLOBAL-Q003 | GLOBAL | Q003,DEC-003 | FX-SCOPE | 文档来源与覆盖对账 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q004 | F01 | Q004,DEC-004 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q005 | F01 | Q005,DEC-005 | FX-COPY | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q006 | F01 | Q006,DEC-006 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q007 | F01 | Q007,DEC-007 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q008 | F01 | Q008,DEC-008 | FX-COPY | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q009 | F01 | Q009,DEC-009 | FX-COPY | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q010 | F01 | Q010,DEC-010 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q011 | F01 | Q011,DEC-011 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q012 | F01 | Q012,DEC-012 | FX-COPY | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q013 | F01 | Q013,DEC-013 | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q014 | F01 | Q014,DEC-014 | FX-COPY | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F01-Q015 | F01 | Q015,DEC-015 | FX-COPY | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q016 | F02 | Q016,DEC-016 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q017 | F02 | Q017,DEC-017 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q018 | F02 | Q018,DEC-018 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q019 | F02 | Q019,DEC-019 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q020 | F02 | Q020,DEC-020 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q021 | F02 | Q021,DEC-021 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q022 | F02 | Q022,DEC-022 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q023 | F02 | Q023,DEC-023 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q024 | F02 | Q024,DEC-024 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q025 | F02 | Q025,DEC-025 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q026 | F02 | Q026,DEC-026 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F02-Q027 | F02 | Q027,DEC-027 | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q028 | F03 | Q028,DEC-028 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q029 | F03 | Q029,DEC-029 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q030 | F03 | Q030,DEC-030 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q031 | F03 | Q031,DEC-031 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q032 | F03 | Q032,DEC-032 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q033 | F03 | Q033,DEC-033 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q034 | F03 | Q034,DEC-034 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q035 | F03 | Q035,DEC-035 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q036 | F03 | Q036,DEC-036 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q037 | F03 | Q037,DEC-037 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q038 | F03 | Q038,DEC-038 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q039 | F03 | Q039,DEC-039 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q040 | F03 | Q040,DEC-040 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q041 | F03 | Q041,DEC-041 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q042 | F03 | Q042,DEC-042 | FX-EXPORT,FX-FORMAT | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q043 | F03 | Q043,DEC-043 | FX-EXPORT,FX-FORMAT | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q044 | F03 | Q044,DEC-044 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q045 | F03 | Q045,DEC-045 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q046 | F03 | Q046,DEC-046 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q047 | F03 | Q047,DEC-047 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q048 | F03 | Q048,DEC-048 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F03-Q049 | F03 | Q049,DEC-049 | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q050 | F04 | Q050,DEC-050 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q051 | F04 | Q051,DEC-051 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q052 | F04 | Q052,DEC-052 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q053 | F04 | Q053,DEC-053 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q054 | F04 | Q054,DEC-054 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q055 | F04 | Q055,DEC-055 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q056 | F04 | Q056,DEC-056 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q057 | F04 | Q057,DEC-057 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q058 | F04 | Q058,DEC-058 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q059 | F04 | Q059,DEC-059 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q060 | F04 | Q060,DEC-060 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q061 | F04 | Q061,DEC-061 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q062 | F04 | Q062,DEC-062 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q063 | F04 | Q063,DEC-063 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q064 | F04 | Q064,DEC-064 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q065 | F04 | Q065,DEC-065 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q066 | F04 | Q066,DEC-066 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q067 | F04 | Q067,DEC-067 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q068 | F04 | Q068,DEC-068 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-Q069 | F04 | Q069,DEC-069 | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q070 | F05 | Q070,DEC-070 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q071 | F05 | Q071,DEC-071 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q072 | F05 | Q072,DEC-072 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q073 | F05 | Q073,DEC-073 | FX-STYLE,FX-LABEL | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q074 | F05 | Q074,DEC-074 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q075 | F05 | Q075,DEC-075 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q076 | F05 | Q076,DEC-076 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q077 | F05 | Q077,DEC-077 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q078 | F05 | Q078,DEC-078 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q079 | F05 | Q079,DEC-079 | FX-STYLE,FX-FORMAT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q080 | F05 | Q080,DEC-080 | FX-STYLE,FX-FORMAT | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q081 | F05 | Q081,DEC-081 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q082 | F05 | Q082,DEC-082 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q083 | F05 | Q083,DEC-083 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q084 | F05 | Q084,DEC-084 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q085 | F05 | Q085,DEC-085 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q086 | F05 | Q086,DEC-086 | FX-STYLE,FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q087 | F05 | Q087,DEC-087 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q088 | F05 | Q088,DEC-088 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q089 | F05 | Q089,DEC-089 | FX-STYLE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F05-Q090 | F05 | Q090,DEC-090 | FX-STYLE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q091 | F06 | Q091,DEC-091 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q092 | F06 | Q092,DEC-092 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q093 | F06 | Q093,DEC-093 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q094 | F06 | Q094,DEC-094 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q095 | F06 | Q095,DEC-095 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q096 | F06 | Q096,DEC-096 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q097 | F06 | Q097,DEC-097 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q098 | F06 | Q098,DEC-098 | FX-DRAG | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q099 | F06 | Q099,DEC-099 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q100 | F06 | Q100,DEC-100 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q101 | F06 | Q101,DEC-101 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q102 | F06 | Q102,DEC-102 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q103 | F06 | Q103,DEC-103 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q104 | F06 | Q104,DEC-104 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q105 | F06 | Q105,DEC-105 | FX-DRAG | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q106 | F06 | Q106,DEC-106 | FX-DRAG | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q107 | F06 | Q107,DEC-107 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F06-Q108 | F06 | Q108,DEC-108 | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q109 | F07 | Q109,DEC-109 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q110 | F07 | Q110,DEC-110 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q111 | F07 | Q111,DEC-111 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q112 | F07 | Q112,DEC-112 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q113 | F07 | Q113,DEC-113 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q114 | F07 | Q114,DEC-114 | FX-ENUM,FX-QUOTE | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q115 | F07 | Q115,DEC-115 | FX-ENUM,FX-QUOTE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q116 | F07 | Q116,DEC-116 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q117 | F07 | Q117,DEC-117 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q118 | F07 | Q118,DEC-118 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q119 | F07 | Q119,DEC-119 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q120 | F07 | Q120,DEC-120 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q121 | F07 | Q121,DEC-121 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q122 | F07 | Q122,DEC-122 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q123 | F07 | Q123,DEC-123 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q124 | F07 | Q124,DEC-124 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q125 | F07 | Q125,DEC-125 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q126 | F07 | Q126,DEC-126 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q127 | F07 | Q127,DEC-127 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q128 | F07 | Q128,DEC-128 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q129 | F07 | Q129,DEC-129 | FX-ENUM,FX-TYPES | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q130 | F07 | Q130,DEC-130 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q131 | F07 | Q131,DEC-131 | FX-ENUM | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q132 | F07 | Q132,DEC-132 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F07-Q133 | F07 | Q133,DEC-133 | FX-ENUM | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q134 | F08 | Q134,DEC-134 | FX-AGG | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q135 | F08 | Q135,DEC-135 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q136 | F08 | Q136,DEC-136 | FX-AGG,FX-EXPR | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q137 | F08 | Q137,DEC-137 | FX-AGG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q138 | F08 | Q138,DEC-138 | FX-AGG,FX-WEIGHT | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q139 | F08 | Q139,DEC-139 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q140 | F08 | Q140,DEC-140 | FX-AGG,FX-NULL | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q141 | F08 | Q141,DEC-141 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q142 | F08 | Q142,DEC-142 | FX-AGG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q143 | F08 | Q143,DEC-143 | FX-AGG | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q144 | F08 | Q144,DEC-144 | FX-AGG | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q145 | F08 | Q145,DEC-145 | FX-AGG,FX-HIER | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q146 | F08 | Q146,DEC-146 | FX-AGG | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q147 | F08 | Q147,DEC-147 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q148 | F08 | Q148,DEC-148 | FX-AGG | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q149 | F08 | Q149,DEC-149 | FX-AGG | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q150 | F08 | Q150,DEC-150 | FX-AGG | 实际UI与对应HTTP/数据链路观察；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q151 | F08 | Q151,DEC-151 | FX-AGG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q152 | F08 | Q152,DEC-152 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q153 | F08 | Q153,DEC-153 | FX-AGG,FX-EXPORT-AGG | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q154 | F08 | Q154,DEC-154 | FX-AGG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q155 | F08 | Q155,DEC-155 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读；固定环境/数据规模的计时或收益研究 | 未运行；待入口/oracle实例化 |
+| AC-F08-Q156 | F08 | Q156,DEC-156 | FX-AGG | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验 | 未运行；待入口/oracle实例化 |
+| AC-F01-ORIG-01 | F01 |  | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F02-ORIG-01 | F02 |  | FX-MOBILE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-ORIG-01 | F03 |  | FX-EXPORT | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F03-ORIG-02 | F03 |  | FX-EXPORT | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F04-ORIG-01 | F04 |  | FX-CASCADE | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-F05-ORIG-01 | F05 |  | FX-STYLE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F05-ORIG-02 | F05 |  | FX-STYLE | 实际UI与对应HTTP/数据链路观察；真实渲染/交互检查 | 未运行；待入口/oracle实例化 |
+| AC-F06-ORIG-01 | F06 |  | FX-DRAG | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-ORIG-01 | F08 |  | FX-AGG | 实际UI与对应HTTP/数据链路观察；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-GLOBAL-ORIG-01 | GLOBAL |  | FX-SCOPE | 文档来源与覆盖对账 | 未运行；待入口/oracle实例化 |
+| AC-F01-ORIG-02 | F01 |  | FX-COPY | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-F08-D11-COUNT | F08 | DEC-SUP-D11 | FX-FORMULA-LIMIT | 实际UI与对应HTTP/数据链路观察；真实身份允许/拒绝与受限数据校验；持久化后新会话回读；独立手算/参考查询结果对照 | 未运行；待入口/oracle实例化 |
+| AC-F08-D11-SLOTS | F08 | DEC-SUP-D11 | FX-FORMULA-LIMIT | 实际UI与对应HTTP/数据链路观察；持久化后新会话回读 | 未运行；待入口/oracle实例化 |
+| AC-SCOPE-D07 | F07 | DEC-SUP-SCOPE78 | FX-SCOPE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |
+| AC-SCOPE-D08 | F08 | DEC-SUP-SCOPE78 | FX-SCOPE | 实际UI与对应HTTP/数据链路观察 | 未运行；待入口/oracle实例化 |

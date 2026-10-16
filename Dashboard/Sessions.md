@@ -33,4 +33,12 @@
 | DE-EXEC-S022 | S00.6 完整S00独立审查 | F01–F08；按Final Goal对应工作包 | 完成可追溯需求基线 | Stage Plan `SP-004` | done | 本工作包文档已完成独立审查 | 仅文档证据，不代表需求冻结或产品验收 | D11与D07/D08已裁定；技术证据依赖保留 | [最终独立审查](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/ReviewFindings-final.md>)；终态见SP-004入口 | S00结束，不自动执行S01 |
 | DE-EXEC-S023 | S00.7 对账与收尾 | F01–F08；按Final Goal对应工作包 | 完成可追溯需求基线 | Stage Plan `SP-004` | done | 本工作包文档已完成独立审查 | 仅文档证据，不代表需求冻结或产品验收 | D11与D07/D08已裁定；技术证据依赖保留 | [最终独立审查](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/ReviewFindings-final.md>)；终态见SP-004入口 | S00结束，不自动执行S01 |
 
+| DE-EXEC-S024 | S00成果同步KYM与TCO | KYM候选修订、TCO及Coverage候选；不启动S01 | 保持需求裁定与模型一致 | Big Idea `DE-REQ-BI01` | candidate_ready | r007/r003 CLI候选包已生成；独立结论见review-final | candidate_not_approved；无产品运行升级 | 用户授权普通CLI；原Profile分母保留 | [交付与审查](Artifacts/S00-KYM-TCO-Update/Closeout.md) | 下游预览/审查，不自动批准或执行S01 |
+
 ## Next-session scan
+
+## SP-005：S01技术调查
+
+| ID | Topic | Scope | Purpose | Belongs To | Status | Delivery State | Claim Ceiling | Authority / Blocker | Evidence | Next |
+|---|---|---|---|---|---|---|---|---|---|---|
+| DE-EXEC-S025 | S01代码连接点与技术影响调查 | F01–F08静态调查、171AC映射及获批本机运行见证；两项外部验证延期 | 为S02–S09提供可复核技术输入 | Stage Plan `SP-005` | Done | 局部运行及依赖调查完成，修复独立复核通过；仅第一批已清理，第二批暂停 | 调查有条件有效；产品AC未整体验收，终态见最终结果与Gate | 两次范围调整有真实用户来源；第二批清理及新增F05归档暂停 | [Goal与进度](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/README.md>) | 按批准范围有条件完成；终态见SP-005/planning/final-result.json，暂停项待用户恢复 |

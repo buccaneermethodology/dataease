@@ -1,0 +1,47 @@
+{
+  "schema": "kym_tco.tco_package_manifest.v1",
+  "package_id": "tco-package-010f52bb7973",
+  "product_id": "dataease",
+  "state_axes": {
+    "environment_status": "ready",
+    "package_execution_status": "blocked",
+    "candidate_status": "not_generated",
+    "verification_status": "not_run",
+    "audit_status": "not_run",
+    "approval_status": "not_requested"
+  },
+  "result": "policy_blocked",
+  "finding_code": "PACKAGE_PROTECTED_READ_FORBIDDEN",
+  "command_evidence": [
+    {
+      "step": "package",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r002.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r006-r002.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 1,
+      "summary": "verification argv path 不得读取 approval/receipt/authorization 或治理真源 surface",
+      "evidence_path": "package-manifest.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    }
+  ],
+  "artifact_index": {
+    "path": "artifact-index.json",
+    "digest": "sha256:5eec4c6761500504fce02a6b5e157f0dc0926da5d0341546f25aa9650540d136"
+  },
+  "self_integrity": {
+    "path": "package-manifest.json",
+    "digest": "sha256:c36f4b7c70ebd60f1077cbab78d74065a7249945270716466a64abda4591046d",
+    "digest_algorithm": "sha256_canonical_json_without_self_integrity_digest",
+    "checksum_ref": "package-manifest.sha256"
+  },
+  "claim_ceiling": "repo-local TCO v4 + Coverage v3 candidate package only; candidate_not_approved; no semantic correctness, approval, receipt, release, implementation completion, or production readiness"
+}

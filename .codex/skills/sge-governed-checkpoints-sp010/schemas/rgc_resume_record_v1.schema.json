@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgc_resume_record_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_id", "record_revision", "recorded_at_utc", "supervisor_instance_id", "goal_binding", "runtime_profile", "execution_thread", "execution_unit", "executor_lease", "last_progress", "open_items", "next_action", "repository", "continuation", "checkpoint_state", "idempotency_state"],
+  "properties": {
+    "schema_version": {"const": "rgc_resume_record_v1"},
+    "record_id": {"type": "string", "minLength": 1},
+    "record_revision": {"type": "integer", "minimum": 0},
+    "recorded_at_utc": {"type": "string", "format": "date-time"},
+    "supervisor_instance_id": {"type": "string", "minLength": 1},
+    "goal_binding": {"$ref": "#/$defs/goal_binding"},
+    "runtime_profile": {"$ref": "#/$defs/runtime_profile"},
+    "execution_thread": {"$ref": "#/$defs/execution_thread"},
+    "execution_unit": {"$ref": "#/$defs/execution_unit"},
+    "executor_lease": {"$ref": "#/$defs/executor_lease"},
+    "last_progress": {"$ref": "#/$defs/last_progress"},
+    "open_items": {"type": "array", "items": {"$ref": "#/$defs/open_item"}},
+    "next_action": {"$ref": "#/$defs/next_action"},
+    "repository": {"$ref": "#/$defs/repository"},
+    "continuation": {"$ref": "#/$defs/continuation"},
+    "checkpoint_state": {"$ref": "#/$defs/checkpoint_state"},
+    "idempotency_state": {"$ref": "#/$defs/idempotency_state"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nullable_string": {"type": ["string", "null"]},
+    "goal_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["goal_id", "goal_ref", "goal_sha256", "completion_predicate_id", "completion_predicate_ref", "completion_predicate_sha256", "authority_id", "authority_ref", "authority_sha256", "authority_status", "authority_revision", "control_revision"],
+      "properties": {
+        "goal_id": {"type": "string"}, "goal_ref": {"type": "string"}, "goal_sha256": {"$ref": "#/$defs/sha"},
+        "completion_predicate_id": {"type": "string"}, "completion_predicate_ref": {"type": "string"}, "completion_predicate_sha256": {"$ref": "#/$defs/sha"},
+        "authority_id": {"type": "string"}, "authority_ref": {"type": "string"}, "authority_sha256": {"$ref": "#/$defs/sha"},
+        "authority_status": {"enum": ["valid", "revoked", "expired", "unknown"]}, "authority_revision": {"type": "integer", "minimum": 0}, "control_revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "runtime_profile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile_id", "host_identity", "codex_version", "protocol_digest", "adapter_revision"],
+      "properties": {"profile_id": {"type": "string"}, "host_identity": {"type": "string"}, "codex_version": {"type": "string"}, "protocol_digest": {"$ref": "#/$defs/sha"}, "adapter_revision": {"type": "string"}}
+    },
+    "execution_thread": {
+      "type": "object", "additionalProperties": false,
+      "required": ["thread_id", "turn_id", "thread_state", "turn_state", "last_host_event_sequence"],
+      "properties": {"thread_id": {"type": "string"}, "turn_id": {"type": "string"}, "thread_state": {"type": "string"}, "turn_state": {"enum": ["absent", "pending", "in_progress", "interrupted", "completed", "failed", "unknown"]}, "last_host_event_sequence": {"type": "integer", "minimum": 0}}
+    },
+    "execution_unit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unit_id", "unit_type", "state", "ready", "dependency_ids", "action_id", "action_kind", "action_target"],
+      "properties": {"unit_id": {"type": "string"}, "unit_type": {"type": "string"}, "state": {"enum": ["absent", "ready", "executing", "blocked", "completed", "failed", "unknown"]}, "ready": {"type": "boolean"}, "dependency_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "action_id": {"type": "string"}, "action_kind": {"type": "string"}, "action_target": {"type": "string"}}
+    },
+    "executor_lease": {
+      "type": "object", "additionalProperties": false,
+      "required": ["owner_id", "owner_role", "lease_id", "owner_epoch", "fencing_token", "issued_at_utc", "expires_at_utc", "state"],
+      "properties": {"owner_id": {"type": "string"}, "owner_role": {"type": "string"}, "lease_id": {"type": "string"}, "owner_epoch": {"type": "integer", "minimum": 0}, "fencing_token": {"type": "string"}, "issued_at_utc": {"type": "string", "format": "date-time"}, "expires_at_utc": {"type": "string", "format": "date-time"}, "state": {"enum": ["active", "expired", "fenced", "released"]}}
+    },
+    "last_progress": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "evidence_type", "evidence_ref", "evidence_sha256", "source_event_id", "action_token", "observed_at_utc", "supervisor_monotonic_sequence"],
+      "properties": {"evidence_id": {"type": "string"}, "evidence_type": {"type": "string"}, "evidence_ref": {"type": "string"}, "evidence_sha256": {"$ref": "#/$defs/sha"}, "source_event_id": {"type": "string"}, "action_token": {"type": "string"}, "observed_at_utc": {"type": "string", "format": "date-time"}, "supervisor_monotonic_sequence": {"type": "integer", "minimum": 0}}
+    },
+    "open_item": {"type": "object", "additionalProperties": false, "required": ["item_id", "state"], "properties": {"item_id": {"type": "string"}, "state": {"type": "string"}}},
+    "next_action": {"type": "object", "additionalProperties": false, "required": ["action_id", "action_kind", "action_target", "semantic_input_sha256"], "properties": {"action_id": {"type": "string"}, "action_kind": {"type": "string"}, "action_target": {"type": "string"}, "semantic_input_sha256": {"$ref": "#/$defs/sha"}}},
+    "repository": {
+      "type": "object", "additionalProperties": false,
+      "required": ["realpath", "worktree_identity", "head", "dirty", "index_tree_sha256", "tracked_content_manifest_ref", "tracked_content_manifest_sha256", "tracked_change_manifest_sha256", "untracked_inventory_sha256", "untracked_content_manifest_sha256", "worktree_content_identity_sha256", "worktree_state_sha256", "observed_at_utc"],
+      "properties": {"realpath": {"type": "string"}, "worktree_identity": {"type": "string"}, "head": {"type": "string"}, "dirty": {"type": "boolean"}, "index_tree_sha256": {"$ref": "#/$defs/sha"}, "tracked_content_manifest_ref": {"type": "string"}, "tracked_content_manifest_sha256": {"$ref": "#/$defs/sha"}, "tracked_change_manifest_sha256": {"$ref": "#/$defs/sha"}, "untracked_inventory_sha256": {"$ref": "#/$defs/sha"}, "untracked_content_manifest_sha256": {"$ref": "#/$defs/sha"}, "worktree_content_identity_sha256": {"$ref": "#/$defs/sha"}, "worktree_state_sha256": {"$ref": "#/$defs/sha"}, "observed_at_utc": {"type": "string", "format": "date-time"}}
+    },
+    "continuation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eligible", "state", "reason_codes", "action_token", "token_control_revision", "token_record_revision", "stop_reason"],
+      "properties": {"eligible": {"type": "boolean"}, "state": {"enum": ["unknown", "eligible", "ineligible", "recovering", "handoff_pending", "stopped"]}, "reason_codes": {"type": "array", "items": {"type": "string"}}, "action_token": {"$ref": "#/$defs/nullable_string"}, "token_control_revision": {"type": "integer", "minimum": 0}, "token_record_revision": {"type": "integer", "minimum": 0}, "stop_reason": {"$ref": "#/$defs/nullable_string"}}
+    },
+    "checkpoint_state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["round", "first_checkpoint_at_utc", "second_checkpoint_at_utc", "last_query_id", "last_meaningful_response_id", "long_running_extensions"],
+      "properties": {"round": {"type": "integer", "minimum": 0, "maximum": 2}, "first_checkpoint_at_utc": {"$ref": "#/$defs/nullable_string"}, "second_checkpoint_at_utc": {"$ref": "#/$defs/nullable_string"}, "last_query_id": {"$ref": "#/$defs/nullable_string"}, "last_meaningful_response_id": {"$ref": "#/$defs/nullable_string"}, "long_running_extensions": {"type": "integer", "minimum": 0, "maximum": 2}}
+    },
+    "idempotency_state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["logical_actions", "logical_action_id", "logical_action_request_sha256", "execution_state", "current_owner_attempt_id", "ack_id", "result_ref", "result_sha256", "reconciliation_status", "caller_idempotency_capability"],
+      "properties": {"logical_actions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/logical_action"}}, "logical_action_id": {"type": "string"}, "logical_action_request_sha256": {"$ref": "#/$defs/sha"}, "execution_state": {"enum": ["planned", "started", "acknowledged", "completed", "uncertain"]}, "current_owner_attempt_id": {"type": "string"}, "ack_id": {"$ref": "#/$defs/nullable_string"}, "result_ref": {"$ref": "#/$defs/nullable_string"}, "result_sha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]}, "reconciliation_status": {"type": "string"}, "caller_idempotency_capability": {"type": "string"}}
+    },
+    "logical_action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["execution_state"],
+      "properties": {"execution_state": {"enum": ["planned", "started", "acknowledged", "completed", "uncertain"]}, "ack_id": {"$ref": "#/$defs/nullable_string"}, "result_ref": {"$ref": "#/$defs/nullable_string"}, "result_sha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]}, "side_effect_count": {"type": ["integer", "string"]}, "owner_attempt_token": {"type": "string"}}
+    }
+  }
+}

@@ -27,3 +27,19 @@
 ## S00追加范围裁定与文档收尾
 
 用户明确每表10条公式，小计/总计分别计数；D07/D08仅复用已有能力，缺失不新增并记录Scope Delta。156原题不改，171 AC/19组fixture规格独立审查通过；仅S00文档完成，基线有条件有效，S01进入建议为有条件、未获执行授权。最终审查与Stop Gate见SP-004入口。
+
+## S00成果同步模型的执行边界
+
+用户授权覆盖Skill的supported-host流程限制，改用普通CLI更新KYM/TCO。r007/r003继承W0–W4 Profile分母2/5/5/4/10；文档完成不提升产品运行Coverage，保持candidate_not_approved。当前材料与独立审查见[更新收尾](Artifacts/S00-KYM-TCO-Update/Closeout.md)。
+
+## S01定稿与运行确认边界（2026-10-15）
+
+用户授权S01审查定稿、登记和执行，并明确必须补齐关键运行证据，先调查再提交具体环境操作确认；环境参考Dashboard/debugging_env.md。S00历史已完成不重写，S01参照其Final结构并使用r004最新结论。独立预审及修订复核通过，只允许先静态调查。正式Session为DE-EXEC-S025，S024由并行模型同步任务占用。XPack未独立初始化，不冒用主仓库版本。[定稿](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/LoopGoal_Final_r001.md>)。
+
+## S01 外部验证延期与B2c结果
+
+用户明确同意scope delta：RT-AUTH真实权限实例与RT-F02指定App/真设备验证延期出本轮完成条件，保留原需求分母及后续验证责任，不计通过。本机七功能局部链路与保存重开已取证，第一批合成对象已清理；第二批按后续用户指令暂停。详见 [范围差异](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/ScopeDelta-r001.md>) 和 [运行报告](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/B2c-Runtime-Result.md>)。
+
+## S01 后续清理暂停与来源绑定
+
+用户明确先完成依赖合并/独立复核，暂停第二批清理及新增F05归档，再完成协议、Dashboard、Gate；不是暂停整个Goal。残留及恢复责任见[ScopeDelta-r002](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/ScopeDelta-r002.md>)。独立r002核实原始消息、关闭F-01/F-02。采用现有Stop Gate范围差异绑定，不改原root，不把程序PASS替代语义授权。

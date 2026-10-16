@@ -1,0 +1,142 @@
+{
+  "schema": "kym_tco.tco_package_manifest.v1",
+  "package_id": "tco-package-eb682e010e7f",
+  "product_id": "dataease",
+  "state_axes": {
+    "environment_status": "ready",
+    "package_execution_status": "completed",
+    "candidate_status": "candidate_not_approved",
+    "verification_status": "passed",
+    "audit_status": "passed",
+    "approval_status": "not_requested"
+  },
+  "result": "candidate_package_ready",
+  "finding_code": null,
+  "command_evidence": [
+    {
+      "step": "validate",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "TCO v4 与 Coverage v3 validation passed",
+      "evidence_path": "inputs/model.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    },
+    {
+      "step": "reader-language-audit",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "v4 M1 reader-language audit passed; candidate-only authority retained",
+      "evidence_path": "reader-language-audit.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    },
+    {
+      "step": "verify",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "verification passed",
+      "evidence_path": "verification.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    },
+    {
+      "step": "capability-claim-audit",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "runtime operation/output/effect witnesses matched bounded Coverage claims",
+      "evidence_path": "capability-claim-audit.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    },
+    {
+      "step": "audit",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "shared semantic audit passed",
+      "evidence_path": "audit.json",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    },
+    {
+      "step": "render",
+      "argv": [
+        "tco",
+        "package-candidate",
+        "--product-id",
+        "dataease",
+        "--model",
+        ".kym-tco/dataease/tco/models/tco-r003.json",
+        "--coverage",
+        ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json"
+      ],
+      "cwd": "workspace",
+      "exit_code": 0,
+      "summary": "candidate preview rendered in run-owned staging",
+      "evidence_path": "preview/tco-preview.html",
+      "engine_identity": "in_process_shared_function",
+      "shell": false
+    }
+  ],
+  "artifact_index": {
+    "path": "artifact-index.json",
+    "digest": "sha256:7da99d77b33c4b146cc49ed4704f383cf7c77c156e1b5d9695d314be9da94753"
+  },
+  "self_integrity": {
+    "path": "package-manifest.json",
+    "digest": "sha256:278e5a66d526d1be35474345b2bce3705a857871a64ccfa7b877c17ea6bd1c4e",
+    "digest_algorithm": "sha256_canonical_json_without_self_integrity_digest",
+    "checksum_ref": "package-manifest.sha256"
+  },
+  "claim_ceiling": "repo-local TCO v4 + Coverage v3 candidate package only; candidate_not_approved; no semantic correctness, approval, receipt, release, implementation completion, or production readiness"
+}

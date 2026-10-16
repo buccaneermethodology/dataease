@@ -1,0 +1,2 @@
+# 独立Goal预审任务
+读取卡片绑定的原用户意图、S01原草案、S00 Final和r004最新审查/进入包、开发计划、定稿候选与intake。审查是否完整承接S00而非复制过期状态、原S01十项AC与八功能固定字段是否保留、用户关键运行证据要求是否可执行、是否扩大或缩小范围、关键运行最小分母是否合理。仅写 planning/GoalPreReview.md，保留稳定编号finding、severity/evidence/impact/recommendation/disposition；给Design Freeze Validity/Investigation Entry Readiness双判定。不要执行调查/产品测试或编辑输入。写输出前生成绑定当前卡片/goal/context/design/topology的execution_admission并验证；允许仅额外写planning/reviewer-admission.json和其验证日志。所有输出中文。主代理定稿后还需检查处置，当前不为未来证据背书。

@@ -1,0 +1,5 @@
+# F01/F02运行入口细化
+
+10条既有claim的当前源码摘要复核一致。增加6条F01、4条F02具体运行映射，累计49项部分绑定、122项待绑定。已有过滤树编辑/JSON保存不等于专门共享剪贴板；已有PC放大弹窗不等于指定App独立单表全屏。未从关键字无匹配推断全仓库不存在。
+
+本轮在filter、v-query与store/modules检索copyFilter/pasteFilter/filterClipboard/BroadcastChannel/clipboard/localStorage/sessionStorage，只见snapshot使用localStorage；移动页面及mobile路由中未见orientation/requestFullscreen/enlarge相应实现关键字。检索证据仅用于继续调查，不替代真实入口与运行结论。实际设备矩阵及B2a授权仍缺。
