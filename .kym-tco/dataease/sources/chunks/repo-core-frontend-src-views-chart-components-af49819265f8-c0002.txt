@@ -1,0 +1,612 @@
+    ...defaultsDeep(view, cloneDeep(BASE_VIEW_CONFIG)),
+    data: chartData.value,
+    ...(props.fontFamily && props.fontFamily !== 'inherit' ? { fontFamily: props.fontFamily } : {})
+  })
+  const chartView = chartViewManager.getChartView(view.render, view.type)
+  recursionTransObj(customAttrTrans, chart.customAttr, scale.value, terminal.value)
+  recursionTransObj(customStyleTrans, chart.customStyle, scale.value, terminal.value)
+  switch (chartView.library) {
+    case ChartLibraryType.L7_PLOT:
+      await renderL7Plot(chart, chartView as L7PlotChartView<any, any>, callback)
+      break
+    case ChartLibraryType.L7:
+      await renderL7(chart, chartView as L7ChartView<any, any>, callback)
+      break
+    case ChartLibraryType.G2:
+      await renderG2(chart, chartView as G2ChartView<any, any>, autoRefresh)
+      callback?.()
+      break
+    default:
+      break
+  }
+}
+let myChart = null
+let g2Timer: number
+let finishG2Schedule: (() => void) | undefined
+let g2RenderQueue = Promise.resolve()
+let g2RenderVersion = 0
+let g2SliderCleanup: (() => void) | undefined
+let assistLineCleanup: (() => void) | undefined
+let g2TiledLegendCleanup: (() => void) | undefined
+let g2LegendPaginationCleanup: (() => void) | undefined
+const clearG2SliderAdapter = () => {
+  g2SliderCleanup?.()
+  g2SliderCleanup = undefined
+}
+const clearG2LegendPaginationAdapter = () => {
+  assistLineCleanup?.()
+  assistLineCleanup = undefined
+  g2TiledLegendCleanup?.()
+  g2TiledLegendCleanup = undefined
+  g2LegendPaginationCleanup?.()
+  g2LegendPaginationCleanup = undefined
+}
+const installG2SvgCoordinateScaleAdapter = chartInstance => {
+  const canvas = chartInstance?.getContext?.()?.canvas
+  const svg = canvas?.getContextService?.()?.getDomElement?.()
+  if (!(svg instanceof SVGSVGElement)) {
+    return
+  }
+  const scalableSvg = svg as SVGSVGElement & {
+    offsetWidth?: number
+    offsetHeight?: number
+  }
+  const dimensions = [
+    ['offsetWidth', 'width'],
+    ['offsetHeight', 'height']
+  ] as const
+  dimensions.forEach(([offsetKey, sizeKey]) => {
+    if (Number(scalableSvg[offsetKey]) > 0) {
+      return
+    }
+    // SVG 节点没有 HTMLElement 的 offsetWidth/offsetHeight，补齐逻辑尺寸供 AntV G 识别外层 transform 缩放
+    Reflect.defineProperty(scalableSvg, offsetKey, {
+      configurable: true,
+      get: () =>
+        Number(canvas.getConfig?.()?.[sizeKey]) ||
+        Number.parseFloat(svg.getAttribute(sizeKey) || '') ||
+        svg.getBoundingClientRect()[sizeKey]
+    })
+  })
+}
+/**
+ * 串行执行 G2 绘制，丢弃过期调度并在卸载后停止操作实例
+ * 定时刷新优先尝试已注册的局部更新，不支持时回退完整绘制
+ * 返回的 Promise 在本轮绘制结束或调度取消后完成，供调用方释放加载状态
+ */
+const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = false) => {
+  if (
+    !chart.customAttr?.tooltip?.carousel?.enable &&
+    G2TooltipCarousel.getInstanceByContainerId(containerId)
+  ) {
+    // 关闭轮播时立即释放当前实例，不等待防抖重绘
+    G2TooltipCarousel.destroyByContainer(containerId, true)
+    replayLinkageActive()
+  }
+  const version = ++g2RenderVersion
+  g2Timer && clearTimeout(g2Timer)
+  finishG2Schedule?.()
+  return new Promise<void>(resolve => {
+    finishG2Schedule = resolve
+    g2Timer = setTimeout(() => {
+      finishG2Schedule = undefined
+      g2RenderQueue = g2RenderQueue
+        .then(async () => {
+          if (chartComponentUnmounted || version !== g2RenderVersion) return
+          try {
+            // 仅在移动端配置右侧缩略区域隐藏图表文本
+            let dashboardHidden = props.element.dashboardHidden
+            if (dvMainStore.mobileInPc) {
+              dashboardHidden = !!document
+                .getElementById(containerId)
+                ?.closest('.mobile-wrapper-inner-adaptor')
+            }
+            const tScale = dvMainStore.canvasStyleData?.tScale
+            const isDataV = !isDashboard()
+            const drawOptions = {
+              chartObj: myChart,
+              container: containerId,
+              chart: {
+                ...chart,
+                container: containerId,
+                dashboardHidden,
+                tScale,
+                isDataV,
+                themes: isDataV ? 'dark' : dvMainStore.canvasStyleData?.dashboard?.themeColor
+              },
+              scale: scale.value,
+              action,
+              quadrantDefaultBaseline
+            }
+            if (
+              autoRefresh &&
+              myChart &&
+              (await chartView.updateData(drawOptions, () => {
+                assistLineCleanup?.()
+                assistLineCleanup = installG2AssistLineVisibility(myChart, chart)
+              }))
+            ) {
+              if (!chartComponentUnmounted && version === g2RenderVersion) replayLinkageActive()
+              return
+            }
+            // 在这里清理掉之前图表的空dom
+            configEmptyDataStyle([1], containerId)
+            // G2 重绘前先停掉 tooltip 轮播，避免旧实例残留高亮背景
+            G2TooltipCarousel.destroyByContainer(containerId)
+            clearG2SliderAdapter()
+            clearG2LegendPaginationAdapter()
+            myChart?.destroy()
+            myChart = await chartView.drawChart(drawOptions)
+            // 固定本轮创建的实例，避免等待异步渲染期间新一轮 renderG2 替换全局 myChart 后误操作新实例
+            const chartInstance = myChart
+            if (!chartInstance) return
+            if (chartComponentUnmounted) {
+              chartInstance.destroy()
+              return
+            }
+            // 数据 tooltip 的缩放补偿统一在公共入口接入，幂等保护避免轮播图重复绑定
+            listenerTooltipShow(chartInstance, { ...chart, container: containerId })
+            configAxisTitleOverflowTooltip(
+              {
+                ...chart,
+                container: containerId
+              },
+              chartInstance
+            )
+            // 此时 drawChart 已经完成最终 Spec 装配，但 G2 尚未开始首次绘制
+            // 主题字体在公共入口注入，让坐标轴、图例、标签和特殊文本使用同一字体
+            chartView.applyThemeFont(chartInstance, chart.fontFamily)
+            // 在这里统一应用性能策略，可以避免大数据首次进入页面时创建海量标签并执行昂贵动画
+            // 优化后的 options 会保留在当前实例中，刷新和容器调整触发 forceFit 时也会直接复用
+            chartView.optimizeLargeData(chartInstance)
+            const legendContainer = document.getElementById(containerId)
+            chartInstance.options(
+              applyG2TiledLegend(
+                chartInstance.options(),
+                chart.customStyle?.legend,
+                legendContainer?.clientWidth || 1,
+                legendContainer?.clientHeight || 1,
+                (event, payload) => chartInstance.emit(event, payload),
+                !isDashboard() || dvMainStore.canvasStyleData?.dashboard?.themeColor === 'dark'
+                  ? 'dark'
+                  : 'light'
+              )
+            )
+            if (chart.customStyle?.legend?.displayMode === 'tile') {
+              g2TiledLegendCleanup = installG2TiledLegendStateAdapter(chartInstance)
+            }
+            assistLineCleanup = installG2AssistLineVisibility(chartInstance, chart)
+            // 等待 G2 完成包含轴边界校正的最终布局
+            await chartInstance?.render()
+            installG2SvgCoordinateScaleAdapter(chartInstance)
+            // 双向条形图、象限图仍依赖首次布局，必须等待其专属处理后再恢复联动状态
+            await chartView.afterRender?.(chartInstance)
+            // 异步等待期间若图表已被新实例替换，本轮旧实例不再回放联动状态，避免污染当前画布
+            if (!chartComponentUnmounted && chartInstance && chartInstance === myChart) {
+              g2SliderCleanup = installG2SliderAdapter(chartInstance)
+              // 侧边图例翻页后重新计算整体占宽，并在 Plot 重排完成后恢复联动选中态
+              g2LegendPaginationCleanup = installG2SideLegendPaginationAdapter(chartInstance, {
+                afterPageLayout: replayLinkageActive
+              })
+              replayLinkageActive()
+            }
+          } catch (e) {
+            console.error('renderG2Plot error', e)
+          }
+        })
+        .finally(resolve)
+    }, 300)
+  })
+}
+
+const dynamicAreaId = ref('')
+const country = ref('')
+const appStore = useAppStoreWithOut()
+let gadmName
+const chartContainer = ref<HTMLElement>(null)
+let scope
+let mapTimer: number
+const renderL7Plot = async (chart: ChartObj, chartView: L7PlotChartView<any, any>, callback) => {
+  const map = parseJson(chart.customAttr).map
+  let areaId = map.id
+  country.value = areaId.slice(0, 3)
+  if (dynamicAreaId.value) {
+    // 世界下钻到国家，切换路径
+    if (country.value === '000' && dynamicAreaId.value.startsWith('000')) {
+      country.value = dynamicAreaId.value.slice(3)
+      areaId = country.value
+    } else {
+      areaId = dynamicAreaId.value
+    }
+  }
+  mapTimer && clearTimeout(mapTimer)
+  mapTimer = setTimeout(async () => {
+    try {
+      clearG2SliderAdapter()
+      clearG2LegendPaginationAdapter()
+      myChart?.destroy()
+      if (chartContainer.value) {
+        chartContainer.value.textContent = ''
+      }
+      myChart = await chartView.drawChart({
+        chartObj: myChart,
+        container: containerId,
+        chart,
+        areaId,
+        action,
+        scope,
+        gadmName
+      })
+      callback?.()
+    } catch (e) {
+      console.error('renderL7Plot error', e)
+      callback?.()
+    } finally {
+      emit('resetLoading')
+    }
+  }, 500)
+}
+
+let mapL7Timer: number
+const renderL7 = async (chart: ChartObj, chartView: L7ChartView<any, any>, callback) => {
+  mapL7Timer && clearTimeout(mapL7Timer)
+  mapL7Timer = setTimeout(async () => {
+    try {
+      myChart = await chartView.drawChart({
+        chartObj: myChart,
+        container: containerId,
+        chart: chart,
+        action
+      })
+      myChart?.render()
+      callback?.()
+    } catch (e) {
+      console.error('renderL7 error', e)
+      callback?.()
+    } finally {
+      emit('resetLoading')
+    }
+  }, 500)
+}
+
+const pointClickTrans = () => {
+  if (embeddedCallBack.value === 'yes') {
+    trackClick('pointClick')
+  }
+}
+
+const actionDefault = param => {
+  if (param.from === 'map') {
+    emitter.emit('map-default-range', param)
+  }
+  if (param.from === 'word-cloud') {
+    emitter.emit('word-cloud-default-data-range', param)
+  }
+  if (param.from === 'gauge' || param.from === 'liquid') {
+    emitter.emit('gauge-liquid-y-value', param)
+  }
+}
+
+const action = param => {
+  if (param.from) {
+    actionDefault(param)
+    return
+  }
+  if (view.value.type === 'map') {
+    if (!(param?.data?.data?.quotaList && param?.data?.data?.quotaList.length > 0)) {
+      return
+    }
+  }
+  state.pointParam = param.data
+  // 点击
+  pointClickTrans()
+  // 保留嵌入点击回调，放大和复用视图沿用禁用交互的规则，避免误报最后一级
+  if (['multiplexing', 'viewDialog'].includes(showPosition.value)) return
+  // 下钻 联动 跳转
+  state.linkageActiveParam = {
+    ...(view.value.type === 'box-plot'
+      ? { dimensionList: cloneDeep(state.pointParam.data.dimensionList) }
+      : {}),
+    category: state.pointParam.data.category ? state.pointParam.data.category : 'NO_DATA',
+    name: state.pointParam.data.name ? state.pointParam.data.name : 'NO_DATA',
+    group: state.pointParam.data.group ? state.pointParam.data.group : 'NO_DATA'
+  }
+  if (trackMenu.value.length < 2) {
+    if (view.value.drillFields.length > 0 && trackMenu.value.length === 0) {
+      ElMessage.error(t('chart.last_layer'))
+      return
+    }
+    // 只有一个事件直接调用
+    trackClick(trackMenu.value[0])
+  } else {
+    // 图表关联多个事件
+    const pointX = param.x ?? param?.canvas?.x ?? 0
+    const pointY = param.y ?? param?.canvas?.y ?? 0
+    const barStyleTemp = {
+      left: pointX - 50,
+      top: pointY + 10
+    }
+    trackBarStyleCheck(props.element, barStyleTemp, props.scale, trackMenu.value.length)
+    const trackBarX = barStyleTemp.left
+    let trackBarY = 50
+    state.trackBarStyle.left = barStyleTemp.left + 'px'
+    if (curView.type === 'symbolic-map') {
+      trackBarY = pointY + 10
+      state.trackBarStyle.top = pointY + 10 + 'px'
+    } else {
+      trackBarY = barStyleTemp.top
+      state.trackBarStyle.top = barStyleTemp.top + 'px'
+    }
+    if (dataVMobile) {
+      state.trackBarStyle.left = trackBarX + 40 + 'px'
+      state.trackBarStyle.top = trackBarY + 70 + 'px'
+    } else {
+      state.trackBarStyle.left = trackBarX + 'px'
+      state.trackBarStyle.top = trackBarY + 'px'
+    }
+
+    viewTrack.value.trackButtonClick(view.value.id)
+  }
+}
+
+const trackClick = trackAction => {
+  const param = state.pointParam
+  if (!param?.data?.dimensionList) {
+    return
+  }
+  let checkName = undefined
+  if (param.data.dimensionList.length > 1) {
+    // 分组堆叠处理 去能比较出来值的那个维度
+    if (view.value.type === 'bar-group-stack') {
+      const length = param.data.dimensionList.length
+      // 存在最后一个id
+      if (param.data.dimensionList[length - 1].id === param.data.dimensionList[length - 2].id) {
+        param.data.dimensionList.pop()
+      }
+      param.data.dimensionList.forEach(dimension => {
+        if (dimension.value === param.data.category) {
+          checkName = dimension.id
+        }
+      })
+    }
+    if (!checkName) {
+      // 对多维度的处理 取第一个
+      checkName = param.data.dimensionList[0].id
+    }
+  }
+  if (!checkName) {
+    checkName = param.data.name
+  }
+  // 跳转字段处理
+  let jumpName = state.pointParam.data.name
+  if (state.pointParam.data.dimensionList.length > 1) {
+    const fieldIds = []
+    // 优先下钻字段
+    if (curView.drill) {
+      const curFiled = curView.drillFields[curView.drillFilters.length]
+      fieldIds.push(curFiled.id)
+    }
+    if (curView.type.includes('chart-mix')) {
+      const mixFields = [
+        ...(chartData.value?.left?.fields || []),
+        ...(chartData.value?.right?.fields || [])
+      ]
+      // 左右轴子类别不同，只匹配当前点击数据实际包含的维度，避免选中另一侧的跳转配置。
+      mixFields.forEach(field => {
+        const hasDimension = param.data.dimensionList.some(dimension => dimension.id === field.id)
+        if (hasDimension && !fieldIds.includes(field.id)) {
+          fieldIds.push(field.id)
+        }
+      })
+    } else {
+      chartData.value?.fields?.forEach(field => {
+        if (!fieldIds.includes(field.id)) {
+          fieldIds.push(field.id)
+        }
+      })
+    }
+    for (let i = 0; i < fieldIds.length; i++) {
+      const id = fieldIds[i]
+      const sourceInfo = view.value.id + '#' + id
+      if (nowPanelJumpInfo.value[sourceInfo]) {
+        jumpName = id
+        break
+      }
+    }
+  }
+  let quotaList = state.pointParam.data.quotaList
+  if (['bar-range', 'bullet-graph'].includes(curView.type)) {
+    quotaList = state.pointParam.data.dimensionList
+  } else if (curView.type === 'multi-scatter') {
+    const dynamicValueMap = {}
+    ;[
+      ...(state.pointParam.data.dynamicLabelValue || []),
+      ...(state.pointParam.data.dynamicTooltipValue || [])
+    ].forEach(item => {
+      dynamicValueMap[item.fieldId] = item.stringValue ?? item.value
+    })
+    const multiScatterValueMap = {
+      [curView.xAxis?.[0]?.id]: state.pointParam.data.x,
+      [curView.yAxis?.[0]?.id]: state.pointParam.data.y,
+      [curView.extBubble?.[0]?.id]: state.pointParam.data.popSize,
+      [curView.yAxisExt?.[0]?.id]: state.pointParam.data.lightness,
+      ...dynamicValueMap
+    }
+    quotaList = quotaList.map(item => ({
+      ...item,
+      value: multiScatterValueMap[item.id]
+    }))
+  } else {
+    quotaList[0]['value'] = state.pointParam.data.value
+  }
+  const linkageParam = {
+    option: 'linkage',
+    name: checkName,
+    viewId: view.value.id,
+    dimensionList: state.pointParam.data.dimensionList,
+    quotaList: quotaList
+  }
+  const jumpParam = {
+    option: 'jump',
+    name: jumpName,
+    viewId: view.value.id,
+    dimensionList: state.pointParam.data.dimensionList,
+    quotaList: quotaList
+  }
+
+  const clickParams = {
+    option: 'pointClick',
+    name: checkName,
+    viewId: view.value.id,
+    dimensionList: state.pointParam.data.dimensionList,
+    quotaList: quotaList
+  }
+  if (view.value.type === 'box-plot' && ['linkage', 'linkageAndDrill'].includes(trackAction)) {
+    // 与提交过滤条件使用同一份原始维度，后续点击和下钻参数的修改不影响回放
+    boxPlotLinkageData.value = cloneDeep(state.pointParam.data)
+  }
+  switch (trackAction) {
+    case 'pointClick':
+      emit('onPointClick', clickParams)
+      break
+    case 'linkageAndDrill':
+      if (view.value.type === 'box-plot') {
+        linkageActivePre()
+      }
+      dvMainStore.addViewTrackFilter(linkageParam)
+      emit('onChartClick', param)
+      break
+    case 'drill':
+      emit('onChartClick', param)
+      break
+    case 'linkage':
+      linkageActivePre()
+      dvMainStore.addViewTrackFilter(linkageParam)
+      break
+    case 'jump':
+      if (mobileInPc.value && !inMobile.value) return
+      emit('onJumpClick', jumpParam)
+      break
+    default:
+      clearLinkage()
+      break
+  }
+}
+
+const trackMenu = computed(() => {
+  let trackMenuInfo = []
+  // 复用、放大状态的仪表板不进行联动、跳转和下钻的动作
+  if (!['multiplexing', 'viewDialog'].includes(showPosition.value)) {
+    let drillFields =
+      curView?.drill && curView?.drillFilters?.length
+        ? curView.drillFilters.map(item => item.fieldId)
+        : []
+    let linkageCount = 0
+    let jumpCount = 0
+    if (curView?.type?.includes('chart-mix')) {
+      Array.of('left', 'right').forEach(side => {
+        chartData.value?.[side]?.fields
+          ?.filter(item => !drillFields.includes(item.id))
+          .forEach(item => {
+            const sourceInfo = view.value.id + '#' + item.id
+            if (nowPanelTrackInfo.value[sourceInfo]) {
+              linkageCount++
+            }
+            if (nowPanelJumpInfo.value[sourceInfo]) {
+              jumpCount++
+            }
+          })
+      })
+    } else {
+      chartData.value?.fields
+        ?.filter(item => !drillFields.includes(item.id))
+        .forEach(item => {
+          const sourceInfo = view.value.id + '#' + item.id
+          if (nowPanelTrackInfo.value[sourceInfo]) {
+            linkageCount++
+          }
+          if (nowPanelJumpInfo.value[sourceInfo]) {
+            jumpCount++
+          }
+        })
+    }
+    jumpCount &&
+      view.value?.jumpActive &&
+      (!mobileInPc.value || inMobile.value) &&
+      trackMenuInfo.push('jump')
+    linkageCount && view.value?.linkageActive && trackMenuInfo.push('linkage')
+    view.value.drillFields.length && trackMenuInfo.push('drill')
+    // 如果同时配置jump linkage drill 切配置联动时同时下钻 在实际只显示两个 '跳转' '联动和下钻'
+    if (trackMenuInfo.length === 3 && props.element.actionSelection.linkageActive === 'auto') {
+      trackMenuInfo = ['jump', 'linkageAndDrill']
+    } else if (
+      trackMenuInfo.length === 2 &&
+      props.element.actionSelection.linkageActive === 'auto' &&
+      !trackMenuInfo.includes('jump')
+    ) {
+      trackMenuInfo = ['linkageAndDrill']
+    }
+  }
+  return trackMenuInfo
+})
+const quadrantDefaultBaseline = defaultQuadrant => {
+  emitter.emit('quadrant-default-baseline', defaultQuadrant)
+}
+
+const canvas2Picture = (pictureData, online) => {
+  const mapDom = document.getElementById(containerId)
+  const childNodeList = mapDom.querySelectorAll('.l7-scene')
+  if (childNodeList?.length) {
+    childNodeList.forEach(child => {
+      child['style'].display = 'none'
+    })
+  }
+  if (online) {
+    const canvasContainerList = mapDom.querySelectorAll('.amap-maps')
+    canvasContainerList?.forEach(canvasContainer => {
+      canvasContainer['style'].display = 'none'
+    })
+  }
+  const imgDom = document.createElement('img')
+  imgDom.style.width = '100%'
+  imgDom.style.height = '100%'
+  imgDom.style.position = 'absolute'
+  imgDom.style.objectFit = 'cover'
+  imgDom.style['z-index'] = '2'
+  imgDom.classList.add('prepare-picture-img')
+  imgDom.src = pictureData
+  mapDom?.appendChild(imgDom)
+}
+const preparePicture = id => {
+  if (id !== curView?.id) {
+    return
+  }
+  const chartView = chartViewManager.getChartView(curView.render, curView.type)
+  if (chartView.library === ChartLibraryType.L7_PLOT) {
+    myChart
+      .getScene()
+      .exportMap('png')
+      .then(res => canvas2Picture(res, false))
+  } else if (chartView.library === ChartLibraryType.L7) {
+    const scene = myChart.getScene()
+    const zoom = new ExportImage({
+      onExport: (base64: string) => {
+        canvas2Picture(base64, true)
+      }
+    })
+    let getTmapImage
+    if (scene) {
+      scene.addControl(zoom)
+      zoom.hide()
+      // 天地图
+      getTmapImage = async () => {
+        const res = await scene.exportPng('png')
+        canvas2Picture(res, true)
+      }
+    }
+    zoom
+      .getImage()
+      .then(res => {
+        canvas2Picture(res, true)
+      })
+      .catch(() => {

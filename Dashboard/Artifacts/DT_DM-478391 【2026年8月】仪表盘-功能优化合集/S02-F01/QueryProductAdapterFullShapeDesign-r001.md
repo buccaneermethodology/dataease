@@ -1,0 +1,244 @@
+# Query Product Adapter 全形态设计候选 r001
+
+状态：candidate；`frozen_for_builder=false`。Scope Delta：none。保留 10 Goal AC / 26 must-have / 16 产品义务；16 项全部 NOT_RUN。S01 独立，F01 Packet NOT_AVAILABLE；真实权限 BLOCKED / NOT_RUN。当前不是 Design Freeze、产品通过或 Builder 准入。
+
+本文件与同目录 QueryProductAdapterFullShapeCases-r001.json 配套。JSON包含完整source_manifest、逐字段矩阵、九项disposition、32项候选Cases和全分母映射；所有fixture_payload=null、oracle_status=NOT_READY，无执行证据。候选场景描述不等于可执行冻结fixture。
+
+## 来源与边界
+
+绑定 card canonical SHA `efb76498cad3b962bcd5699396fe719340c6975afff455fbc668cadcc76c1bc5`；Context raw SHA `5f8056a4db0b44e5e54a6bdf800bd3be861a603aa50339d36d1229f2fa0c6464`。写前复核全部required-read摘要一致。源码证据只覆盖卡片列明七文件及既有设计/AC来源，未自行扩大到时间工具、参数DTO、目录遍历、保存owner。以下未决项是具体取证待办，不是对合法形态的永久禁止。
+
+QueryCascade.vue:142–148 创建节点只有 datasetId/fieldId/placeholder/id；47–59 确认时增加 selectValue=[]。DynamicTimeRange.vue:95–100 同时回写 defaultValue/selectValue。TextSearch.vue:81–91 从默认字段拷贝运行字段。QueryConditionConfiguration.vue:599–635 根据 componentId 与双端Map选取参数，仍不足以定义完整DTO。这些反例说明不能按字段前缀或某一阶段对象构造统一schema。
+
+## 来源阶段与隔离协议
+
+候选流水线：可信配置原件＋阶段＋版本＋owner → 纯extract与schema检查 → 完整目录闭包校验/重绑 → 隔离runtime hydrate → 逐次权限与代际重验 → 单aggregate发布 → 一次逻辑预览 → 用户正常保存。每个箭头仍需产品owner和测试证明。live propValue被运行consumer污染时不可作为可信设计原件；不能通过清空运行字段后保留其他JSON冒充extract。
+
+KEEP保留规则；REBIND仅转换有类型证据的引用；RESET仅在运行副本按shape初始化；REMOVE仅从新carrier排除已确认非设计数据；NOT_READY保留原输入并阻止整次发布。多动作行是条件分支，不授权任意选一个动作。所有未知字段/未知版本/缺失历史来源须报告具体路径，不静默剥离或补默认；不得调用带状态写入的parameterCompletion当迁移。
+
+## 全形态及跨轴矩阵
+
+|形态|displayType / 变化轴|来源|尚未冻结|
+|---|---|---|---|
+|SH-SELECT-TEXT|0；single/multiple / default off/explicit/first-item / manual/field optionValueSource|core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084|首项回写来源、remote/optionFilter与手工值编码；optionValueSource全枚举及缺省未冻结|
+|SH-SELECT-NUM|2,5；single/multiple / default off/explicit/first-item / manual/field optionValueSource|core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1084|数值类型、0/空值/字符串数字及两种显示类型差异的完整schema|
+|SH-TEXT|8；conditionType 0/1/2 / F/S eq/like / default/current|core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,58-91,179|连接语义与全部操作符由生产查询consumer补证；不可仅凭两个UI选项冻结完整schema|
+|SH-NUM-RANGE|22；start/end/both / 0/负值/空值 / parameter/nonparameter|core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:219-247,364-386|范围开闭及缺端语义、默认到运行值映射的完整consumer证据|
+|SH-FIXED-TIME|1,7；single/range / year/month/date/datetime / fixed|core/core-frontend/src/custom-component/v-query/FilterTime.vue:54-66|固定值序列化、时区、端点粒度与显示类型组合合法性|
+|SH-DYNAMIC-TIME|1,7；today/custom/relative window / single/range / year/month/date/datetime|core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,95-155|time-format与time-format-dayjs真实计算、单日期consumer、首次查询回写与时区oracle|
+|SH-TREE|9；1/2/3/4/5层 / single/multiple / 混深/分隔符/空值 / optionFilter缺失/[]/非空|core/core-frontend/src/custom-component/v-query/Tree.vue:95-147|路径编码/解码、混深选择及自过滤结果集oracle；不得以层关系验证替代|
+|AX-TIME-RESTRICTION|1,7；setTimeRange / timeRange fixed/dynamic / start/end/timeInterval|core/core-frontend/src/custom-component/v-query/FilterTime.vue:40-64,78-175|限制规则与默认规则区分、边界日期/Date与dayjs转换|
+|AX-PARAMETER|；scalar/time range/numeric range / mixed field+parameter / duplicate/multi-target / searchQuery|core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|完整SqlVariableDetails DTO、|DE|身份编码、端点方向和类型兼容|
+|AX-CASCADE|；same-dataset/cross-dataset internal edge / 多链/共享节点/环/悬空|core/core-frontend/src/custom-component/v-query/QueryCascade.vue:47-81,142-164|跨dataset连接字段身份和消费语义、缺省selectValue=[]是否为确认阶段专属|
+|AX-OPTIONS|；remote/field/manual / optionFilter/firstItem/sortList|core/core-frontend/src/custom-component/v-query/Select.vue:476-560,731-751,848-877,1084|选项provider、迟回包、排序字段是否过滤语义及完整白名单|
+|AX-HISTORY-NESTING|；new carrier/legacy absent/unknown version / Group/DeTabs/multiplexing / save/load/undo/redo|Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md#R4-06/R4-08|完整画布路径目录、迁移策略、绑定代际与持久化owner尚需证据|
+
+所有行均覆盖创建、确认、运行、保存、恢复五阶段，当前只有局部源码证据；阶段完整性均NOT_READY。没有声明上述轴的笛卡尔积全部合法，合法组合和schema必须由生产路径证明。
+
+## 逐字段责任矩阵
+
+|字段路径（条件对象内，另注除外）|动作|来源阶段/形态|处理与历史缺省|
+|---|---|---|---|
+|id|REBIND|可信设计条件/级联节点；ALL|生成新条件/级联节点身份并建立全图映射；目标组件自身id保持。所有引用解析完毕后才发布。 目标/条件身份类型不明则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-148|
+|checkedFields|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMap|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|treeCheckedList|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapArr|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapStart|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapEnd|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapArrNum|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapStartNum|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|checkedFieldsMapEndNum|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|parametersArr|REBIND|可信设计绑定；ALL,AX-PARAMETER|以componentId目录重绑组件引用；dataset/field/parameter精确身份分别核对，双端方向保留，禁止按名称猜映射。 不可把缺Map自动补{}；历史版本迁移证据不足则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:364-475,599-635|
+|datasetId|KEEP/REBIND|设计身份/树层序；ALL,SH-TREE,AX-CASCADE|dataset/field身份KEEP，仅明确组件/query引用REBIND；树层序完整保留。cascade复合dataset引用需分段类型模型后才转换。 复合编码或缺字段无法证明完整性则NOT_READY；不得删除合法跨dataset边 来源：core/core-frontend/src/custom-component/v-query/QueryCascade.vue:68-81,142-164；core/core-frontend/src/custom-component/v-query/Tree.vue:127-147|
+|fieldId|KEEP/REBIND|设计身份/树层序；ALL,SH-TREE,AX-CASCADE|dataset/field身份KEEP，仅明确组件/query引用REBIND；树层序完整保留。cascade复合dataset引用需分段类型模型后才转换。 复合编码或缺字段无法证明完整性则NOT_READY；不得删除合法跨dataset边 来源：core/core-frontend/src/custom-component/v-query/QueryCascade.vue:68-81,142-164；core/core-frontend/src/custom-component/v-query/Tree.vue:127-147|
+|treeDatasetId|KEEP/REBIND|设计身份/树层序；ALL,SH-TREE,AX-CASCADE|dataset/field身份KEEP，仅明确组件/query引用REBIND；树层序完整保留。cascade复合dataset引用需分段类型模型后才转换。 复合编码或缺字段无法证明完整性则NOT_READY；不得删除合法跨dataset边 来源：core/core-frontend/src/custom-component/v-query/QueryCascade.vue:68-81,142-164；core/core-frontend/src/custom-component/v-query/Tree.vue:127-147|
+|treeFieldList|KEEP/REBIND|设计身份/树层序；ALL,SH-TREE,AX-CASCADE|dataset/field身份KEEP，仅明确组件/query引用REBIND；树层序完整保留。cascade复合dataset引用需分段类型模型后才转换。 复合编码或缺字段无法证明完整性则NOT_READY；不得删除合法跨dataset边 来源：core/core-frontend/src/custom-component/v-query/QueryCascade.vue:68-81,142-164；core/core-frontend/src/custom-component/v-query/Tree.vue:127-147|
+|displayType|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|multiple|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|optionValueSource|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|defaultValueCheck|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|defaultValueFirstItem|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|conditionType|KEEP|可信设计规则；ALL|按已识别shape保持规则；首项默认保存规则，不捕获首项运行结果。 未枚举合法值/历史缺省NOT_READY，不按truthy或统一默认转换 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560,1048-1084；core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32|
+|defaultValue|KEEP/REMOVE/NOT_READY|必须区分配置编辑确认与运行consumer回写；SH-SELECT-TEXT,SH-SELECT-NUM,SH-FIXED-TIME,SH-DYNAMIC-TIME,SH-TREE|可信显式默认KEEP；动态/首项派生值从新carrier中REMOVE但原输入不修改；仅有live propValue且无法区分来源时NOT_READY。 不能由default前缀推定是设计值；迁移不得从current反推default 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560；core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:95-100；core/core-frontend/src/custom-component/v-query/Tree.vue:95-143|
+|defaultMapValue|KEEP/REMOVE/NOT_READY|必须区分配置编辑确认与运行consumer回写；SH-SELECT-TEXT,SH-SELECT-NUM,SH-FIXED-TIME,SH-DYNAMIC-TIME,SH-TREE|可信显式默认KEEP；动态/首项派生值从新carrier中REMOVE但原输入不修改；仅有live propValue且无法区分来源时NOT_READY。 不能由default前缀推定是设计值；迁移不得从current反推default 来源：core/core-frontend/src/custom-component/v-query/Select.vue:476-560；core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:95-100；core/core-frontend/src/custom-component/v-query/Tree.vue:95-143|
+|selectValue|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|mapValue|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|conditionValueF|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|conditionValueS|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|conditionValueOperatorF|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|conditionValueOperatorS|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|numValueStart|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|numValueEnd|RESET|运行副本；ALL|不进入设计carrier；在隔离runtime副本按可信默认/规则hydrate；RESET不是统一赋[]，须shape专属空态。 空态undefined/[]/空字符串/0按shape取证；不明确则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:81-91；core/core-frontend/src/custom-component/v-query/Select.vue:1048-1054；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:58|
+|defaultConditionValueF|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|defaultConditionValueS|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|defaultConditionValueOperatorF|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|defaultConditionValueOperatorS|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|defaultNumValueStart|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|defaultNumValueEnd|KEEP|配置默认规则；SH-TEXT,SH-NUM-RANGE|保持可信默认值与操作符；数值0有效，不用||替换。运行编辑与设计默认分离。 缺失和空值不能合并；数值完整consumer尚待取证 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:18-32,81-91；Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md|
+|timeType|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|timeGranularity|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|timeGranularityMultiple|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|relativeToCurrentRange|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|timeNum|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|relativeToCurrentType|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|around|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|arbitraryTime|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|timeNumRange|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|relativeToCurrentTypeRange|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|aroundRange|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|arbitraryTimeRange|KEEP|动态表达式设计规则；SH-DYNAMIC-TIME|保持相对规则及显式锚点，运行计算写runtime副本；固定now/timezone计算预期值。 Date/字符串的序列化与历史迁移未证据化则NOT_READY 来源：core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue:8-46,54-82,110-155|
+|setTimeRange|KEEP|可选时间限制规则；AX-TIME-RESTRICTION|限制与默认规则独立建模，限制内每个键仍需schema和时间consumer证明。 缺失≠关闭；不能默默移除不理解的限制 来源：core/core-frontend/src/custom-component/v-query/FilterTime.vue:40-64,78-175|
+|timeRange|KEEP|可选时间限制规则；AX-TIME-RESTRICTION|限制与默认规则独立建模，限制内每个键仍需schema和时间consumer证明。 缺失≠关闭；不能默默移除不理解的限制 来源：core/core-frontend/src/custom-component/v-query/FilterTime.vue:40-64,78-175|
+|optionFilter|NOT_READY|规则/运行缓存混合需逐shape确认；AX-OPTIONS,SH-TREE|缺失、[]、非空分别建fixture；只有确认语义后KEEP规则、REMOVE运行缓存。 当前不能统一清空或透传 来源：core/core-frontend/src/custom-component/v-query/Select.vue:731-751,848-877；core/core-frontend/src/custom-component/v-query/Tree.vue|
+|remote|NOT_READY|规则/运行缓存混合需逐shape确认；AX-OPTIONS,SH-TREE|缺失、[]、非空分别建fixture；只有确认语义后KEEP规则、REMOVE运行缓存。 当前不能统一清空或透传 来源：core/core-frontend/src/custom-component/v-query/Select.vue:731-751,848-877；core/core-frontend/src/custom-component/v-query/Tree.vue|
+|sortList|NOT_READY|规则/运行缓存混合需逐shape确认；AX-OPTIONS,SH-TREE|缺失、[]、非空分别建fixture；只有确认语义后KEEP规则、REMOVE运行缓存。 当前不能统一清空或透传 来源：core/core-frontend/src/custom-component/v-query/Select.vue:731-751,848-877；core/core-frontend/src/custom-component/v-query/Tree.vue|
+|field|NOT_READY|元数据或加载缓存；ALL|签名目录提供完整身份与类型；只能在白名单证明后重建元数据或移除缓存。 元数据白名单未冻结，禁止凭UI字段集合认定完整 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue；core/core-frontend/src/custom-component/v-query/Tree.vue:147|
+|dataset.fields|NOT_READY|元数据或加载缓存；ALL|签名目录提供完整身份与类型；只能在白名单证明后重建元数据或移除缓存。 元数据白名单未冻结，禁止凭UI字段集合认定完整 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue；core/core-frontend/src/custom-component/v-query/Tree.vue:147|
+|parametersList|NOT_READY|元数据或加载缓存；ALL|签名目录提供完整身份与类型；只能在白名单证明后重建元数据或移除缓存。 元数据白名单未冻结，禁止凭UI字段集合认定完整 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue；core/core-frontend/src/custom-component/v-query/Tree.vue:147|
+|oldTreeLoad|NOT_READY|元数据或加载缓存；ALL|签名目录提供完整身份与类型；只能在白名单证明后重建元数据或移除缓存。 元数据白名单未冻结，禁止凭UI字段集合认定完整 来源：core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue；core/core-frontend/src/custom-component/v-query/Tree.vue:147|
+|name|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|visible|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|showError|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|sort|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|sortId|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|placeholder|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|queryConditionWidth|NOT_READY|条件语义与展示边界未完全裁决；ALL|外层样式布局不复制；条件内字段逐项判断是否影响过滤/顺序/必填，不能统一剥离。 保留原输入，阻止全形态发布，待source/业务边界审查 来源：core/core-frontend/src/custom-component/v-query/TextSearch.vue:22-26,96-107；core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-164|
+|查询结果|REMOVE|非过滤配置；ALL|仅从新carrier排除，不修改源对象；目标样式布局保持。 未知键不自动归为此类 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#sections.scope|
+|外层样式|REMOVE|非过滤配置；ALL|仅从新carrier排除，不修改源对象；目标样式布局保持。 未知键不自动归为此类 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#sections.scope|
+|外层布局|REMOVE|非过滤配置；ALL|仅从新carrier排除，不修改源对象；目标样式布局保持。 未知键不自动归为此类 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#sections.scope|
+|未知字段|NOT_READY|未识别来源；ALL|保留输入原件；整次不发布并报告具体路径；后续扩展/迁移可解除，非永久unsupported。 不得执行会写状态的parameterCompletion作为迁移；不得JSON序列化静默丢undefined后宣称等价 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md#R4-02|
+|未知schema版本|NOT_READY|未识别来源；ALL|保留输入原件；整次不发布并报告具体路径；后续扩展/迁移可解除，非永久unsupported。 不得执行会写状态的parameterCompletion作为迁移；不得JSON序列化静默丢undefined后宣称等价 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md#R4-02|
+|无版本历史对象|NOT_READY|未识别来源；ALL|保留输入原件；整次不发布并报告具体路径；后续扩展/迁移可解除，非永久unsupported。 不得执行会写状态的parameterCompletion作为迁移；不得JSON序列化静默丢undefined后宣称等价 来源：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md#R4-02|
+
+## R4-01..09 disposition
+
+九项均已拆为责任和证据请求，均未宣称语义缺口关闭。
+
+### R4-01 提取与runtime隔离
+
+可信设计来源必须带阶段/版本/owner；提取不读被consumer污染的live默认；runtime深副本hydrate。
+
+尚需：来源阶段证明；显式默认/首项/动态回写的差异fixture；保存重开保真。
+
+映射：AC-F01-Q012, AC-F04-Q066, AC-F04-Q067；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-02 全shape与schema
+
+每shape×optionValueSource×创建/确认/保存/恢复独立schema；不把options并集当schema。
+
+尚需：全部创建工厂、保存/恢复路径、元数据白名单、缺省迁移和undefined口径。
+
+映射：AC-F01-Q012, AC-F04-Q066；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-03 树与内部跨dataset级联
+
+源目标复制兼容dataset ID必须相同；合法级联内部跨dataset边独立验证完整连接图，不全局禁止。
+
+尚需：树编码及混深/空值/分隔符消费者；跨dataset字段关系/闭环检测与查询结果。
+
+映射：AC-F01-Q006, AC-F04-Q066, AC-F04-Q067；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-04 参数与双端
+
+field和parameter分型；六range Map与parametersArr联动重绑；保持start/end方向及完整参数对象。
+
+尚需：SqlVariableDetails DTO、|DE|编码、端点类型范围、混合目标/searchQuery消费路径。
+
+映射：AC-F01-Q006, AC-F04-Q066；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-05 动态日期与限制
+
+规则KEEP，计算值仅runtime；固定时钟/时区/粒度比较命中ID；限制规则单独校验。
+
+尚需：真实时间函数、DST/月末/闰日边界精确oracle；Date/dayjs序列化。
+
+映射：AC-F01-Q012, AC-F01-Q014；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-06 目标目录与闭包
+
+签名目录绑定画布/组件/数据集/字段/参数/版本/身份代际；嵌套路径和全部活动引用保持。
+
+尚需：Group/DeTabs/multiplexing遍历；重名/重复/多目标/编辑变更检测；权限授权来源。
+
+映射：AC-F01-Q006, AC-F04-Q066；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-07 单次发布与副作用
+
+prepare纯函数；授权后再验代际；单aggregate publish与watch门控候选；不能把多个setter叫原子事务。
+
+尚需：产品真实publish owner、watch/nextTick边界；预览异常时回滚范围与成功提示时点须审查。
+
+映射：AC-F01-Q007, AC-F01-Q014；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-08 保存与历史carrier
+
+只正常保存持久化，既有undo/redo回归；旧历史无carrier不从live猜建；保存失败保留旧已存版本。
+
+尚需：旧历史迁移、嵌套定位、样式编辑与并发保存冲突、迟回包/undo/redo owner。
+
+映射：AC-F01-Q014, AC-F04-Q067；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+### R4-09 权限时钟外部前置
+
+DG-01/02保持真实环境阻塞；每次权限重验/撤权/身份换代；S01独立。
+
+尚需：真实角色与数据集权限、跨标签失效/可信时钟；S01 F01 Packet NOT_AVAILABLE；禁止mock替代。
+
+映射：AC-F01-Q005, AC-F01-Q008, AC-F01-Q009, AC-F01-ORIG-01, AC-F01-ORIG-02；Goal AC-S02-02/03/04/05/06/07/08/09。状态：候选责任已分解；语义缺口仍NOT_READY。
+
+## 失败原子性与副作用oracle
+
+每个案例记录发布前目标完整树、carrier、运行副本、已存版本、预览记录ID、身份/目录代际，以及publish/preview意图/新过滤请求/快照/保存/成功提示计数。prepare或授权等待中故障、撤权、代际改变、缺字段、环、未知shape、确认取消均应零发布且上述状态不变；错误提示不计成功副作用。复制失败也须保留上次有效内部共享树；不接触系统剪贴板。
+
+成功候选oracle：完整替换而非逐片段应用，旧条件消失；源对象与目标无共享引用；仅一次逻辑预览意图，不能要求只有一次底层网络请求；不自动保存。多Pinia setter、nextTick前清空、validate写runtime都不能直接证明此原子边界。预览在发布后失败的回滚/补偿范围尚未裁定；不能声称已发网络请求可抹除，也不能把错误结果包装成成功。需先确定真实owner和watch门控，再冻结产品oracle。
+
+时间fixture必须同时给now、timezone、粒度、完整规则、预期起止和命中记录ID；DST/月末/闰日不得只断言“结果存在”。树fixture必须有层序、原始路径值、编码、选项过滤与预期记录ID。参数fixture必须有完整DTO及双端身份/类型/方向。当前这些精确payload/结果未取得，因此均NOT_READY。
+
+## Cases与完整分母
+
+|Case|目标|R4|状态|
+|---|---|---|---|
+|FS-001|可信默认与runtime污染对照|R4-01|candidate / NOT_READY / NOT_RUN|
+|FS-002|全部选择组合|R4-02|candidate / NOT_READY / NOT_RUN|
+|FS-003|文本F/S和数值双端|R4-01,R4-02|candidate / NOT_READY / NOT_RUN|
+|FS-004|树路径完整矩阵|R4-03|candidate / NOT_READY / NOT_RUN|
+|FS-005|内部跨dataset合法级联|R4-03|candidate / NOT_READY / NOT_RUN|
+|FS-006|级联失败原子性|R4-03,R4-07|candidate / NOT_READY / NOT_RUN|
+|FS-007|参数双端和混合目录|R4-04,R4-06|candidate / NOT_READY / NOT_RUN|
+|FS-008|固定日期与时间限制|R4-05|candidate / NOT_READY / NOT_RUN|
+|FS-009|动态today/custom和日历边界|R4-01,R4-05|candidate / NOT_READY / NOT_RUN|
+|FS-010|创建确认保存恢复全阶段|R4-02,R4-08|candidate / NOT_READY / NOT_RUN|
+|FS-011|目录嵌套与代际|R4-06|candidate / NOT_READY / NOT_RUN|
+|FS-012|prepare和授权等待注入|R4-07,R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-013|单次发布和preview故障|R4-07|candidate / NOT_READY / NOT_RUN|
+|FS-014|正常保存与失败重开|R4-08|candidate / NOT_READY / NOT_RUN|
+|FS-015|独立副本与既有undo/redo|R4-01,R4-08|candidate / NOT_READY / NOT_RUN|
+|FS-016|跨标签身份权限有效期|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q004|原始产品义务保留：AC-F01-Q004||candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q005|原始产品义务保留：AC-F01-Q005|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q006|原始产品义务保留：AC-F01-Q006|R4-03,R4-04,R4-06|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q007|原始产品义务保留：AC-F01-Q007|R4-07|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q008|原始产品义务保留：AC-F01-Q008|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q009|原始产品义务保留：AC-F01-Q009|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q010|原始产品义务保留：AC-F01-Q010||candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q011|原始产品义务保留：AC-F01-Q011||candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q012|原始产品义务保留：AC-F01-Q012|R4-01,R4-02,R4-05|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q013|原始产品义务保留：AC-F01-Q013||candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q014|原始产品义务保留：AC-F01-Q014|R4-05,R4-07,R4-08|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-Q015|原始产品义务保留：AC-F01-Q015||candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-ORIG-01|原始产品义务保留：AC-F01-ORIG-01|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F01-ORIG-02|原始产品义务保留：AC-F01-ORIG-02|R4-09|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F04-Q066|原始产品义务保留：AC-F04-Q066|R4-01,R4-02,R4-03,R4-04,R4-06|candidate / NOT_READY / NOT_RUN|
+|FS-BASE-AC-F04-Q067|原始产品义务保留：AC-F04-Q067|R4-01,R4-03,R4-08|candidate / NOT_READY / NOT_RUN|
+
+Goal十项逐一保留：AC-S02-01, AC-S02-02, AC-S02-03, AC-S02-04, AC-S02-05, AC-S02-06, AC-S02-07, AC-S02-08, AC-S02-09, AC-S02-10。26项must-have直接投影自Goal.final.json，不修改其pending状态。16项产品义务各有FS-BASE行，包含图表路径、只读、系统剪贴板、容量、原组件复制/改类型回归；这些保留行不能计为已覆盖执行。完整原始期望见JSON oracle及其source_manifest。
+
+Q013保持50叶子/1MB与1001枚举合法条件，不另加1000枚举限制；恰30min和字节口径遵循现有工程提案及待裁状态，本候选不独立冻结。Q066/Q067保留完整自过滤/动态/级联和独立副本，不扩建F04规则引擎。ORIG-02不把历史线索变新入口，S01 Packet仍NOT_AVAILABLE。
+
+## 后续准入
+
+1. 对每个NOT_READY补齐指定来源、完整版本/阶段fixture、精确oracle；需要扩大read-set时由控制面显式更新卡片与Context。
+2. 独立review核对全形态责任、参数/树/级联闭包、unknown迁移及发布后失败语义。
+3. 合同/Cases冻结、可信RED、真实权限/S01前置与产品admission有效后，才允许Builder写产品入口。
+4. 本轮仅JSON解析、唯一ID、九项/形态/10-26-16分母等静态校验；它们不构成行为测试或独立验收。

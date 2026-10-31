@@ -1,0 +1,93 @@
+{
+  "schema_version": "sge_observation_task_v1",
+  "task_id": "dataease-s00-s01-tco-progress",
+  "revision": 2,
+  "thread_id": null,
+  "session_id": "DE-EXEC-S034",
+  "eligibility": {
+    "eligible": true,
+    "reason": "使用本地SGE的非平凡候选更新"
+  },
+  "task_family": "tco_candidate_update",
+  "complexity_at_intake": "medium",
+  "risk": "semantic_evidence_mapping",
+  "model": null,
+  "reasoning_effort": null,
+  "lanes": [
+    "primary_candidate_builder",
+    "independent_validation",
+    "primary_closure"
+  ],
+  "cohort_id": null,
+  "skill_manifest_ref": "Dashboard/Artifacts/S00-S01-TCO-Update/planning/skill-manifest.json",
+  "outcome": "completed",
+  "observed_at": "2026-10-21T13:03:03.489648+00:00",
+  "observation_sequence": null,
+  "timestamps": {
+    "task_started_at": null,
+    "delivery_candidate_ready_at": null,
+    "first_final_review_submitted_at": null,
+    "terminal_receipt_at": null,
+    "final_readback_at": "2026-10-21T13:03:03.489648+00:00",
+    "ended_at": "2026-10-21T13:03:03.489648+00:00"
+  },
+  "governance_intervals": [],
+  "external_wait_intervals": [],
+  "measurement_inline_intervals": [],
+  "rework_events": [
+    {
+      "type": "cli_environment_path",
+      "description": "旧解释器路径失效，读取当前tco shebang修复后重跑"
+    },
+    {
+      "type": "semantic_wording",
+      "description": "独立审查发现W0历史时态未同步，修复并重新打包复核"
+    }
+  ],
+  "final_review": {
+    "applicability": "applicable",
+    "first_attempt_passed": false,
+    "attempt_count": 2,
+    "verdict": "PASS_WITH_BOUNDS",
+    "evidence_ref": "Dashboard/Artifacts/S00-S01-TCO-Update/IndependentReview.md"
+  },
+  "gate": {
+    "applicability": "not_applicable",
+    "first_attempt_valid": null,
+    "attempt_count": 0,
+    "final_verdict": null,
+    "evidence_ref": null,
+    "reason": "普通CLI候选维护；未重开历史Loop，独立复核与只读读回作为本任务完成证据，未借用旧Goal回执"
+  },
+  "quality": {
+    "known": false,
+    "missing_evidence_blocker_count": null,
+    "false_completion": null,
+    "unapproved_scope_narrowing": null,
+    "serious_regression": null,
+    "evidence_refs": []
+  },
+  "comparator": {
+    "task_id": null,
+    "matched": false,
+    "reason": "未选择可比基线"
+  },
+  "metric_provenance": {},
+  "sources": [
+    {
+      "path": "Dashboard/Artifacts/S00-S01-TCO-Update/IndependentReview.md",
+      "sha256": "2d92a3df8e76a305e76a39767665a31e1a3194e0355fffc5b3c734cd16ada49e"
+    },
+    {
+      "path": "Dashboard/Artifacts/S00-S01-TCO-Update/final-readback.json",
+      "sha256": "a813b13aee7e64e4b9a1da3eabef782d00cddc62e9e2c45f6b53f1633cbe0ddb"
+    }
+  ],
+  "data_gaps": [
+    "开始时点未单独计时，保留null；当前登记时间不冒充授权后首次实质执行时间"
+  ],
+  "notes": [
+    "未可靠采集首次审阅提交和首次交付时点，保留null；不以mtime推断耗时。",
+    "未编辑observer共享state/census，不重复计数子代理。"
+  ]
+}

@@ -1,0 +1,14 @@
+# r004当前裁定与后续依赖
+
+COV-D11已resolved：用户保留每表最多10条，小计与总计表达式分别计数。详见user-decision.md、DecisionSupplement.md；原156题不改写。不能再请求用户回答同一数量问题。
+
+D01–D06保持未批准的原检查建议，未加入强制交付亦未宣称用户排除；D09保持选填/条件适用；D10先技术计时口径核查。D07一键清除已选、D08公式辅助/模板复用保留完整原范围和未知状态，沿r003独立审查后的blocks_document_work=false、requires_user_decision_now=false记录：当前足以继续S00文档规格编制，不足以承诺这些能力已实现或已批准新增。后续技术调查应逐项确认已有能力，若缺失且需要新增则明确范围；不能用清空搜索词代替清除已选，不能用表达式引擎代替模板库。
+
+原Goal S00.5允许有效规则映射具体AC或明确测试设计阻塞，因此工程oracle未定不自动要求本轮越权S01。上述范围保留能否满足原Goal最终Success，须由本轮独立review核对，不由Builder将未闭合事项改名为已排除。当前无新的即时用户问题；若review确认仍有必须由用户行使的范围authority，保留阻塞而非推定批准。
+
+AcceptanceIssues保留原12项并增加ISS-AC-14异常/历史计数工程状态；不影响已确认的正常数量判据。文件永久保留与日志政策不同，技术证据不伪造。
+
+
+## 当前范围裁定阻塞（r004独立审查后的修订）
+
+COV-D11已解决。COV-D07一键清除已选值、COV-D08函数提示/自动补全、字段点选、语法高亮及跨表模板复用的最终范围仍需用户决定。V1.0 L356/L400/L413及L447–459保留了这些待裁事项；原Goal第9节要求必要裁定完成。可继续编制文档不等于Goal Success。已向用户询问全部纳入、仅复用既有并记范围差异、或明确允许S00条件收尾且S01调查后再裁；未答复不采用默认方案。当前S01 Entry Readiness = BLOCKED；Requirements Baseline Validity = VALID_WITH_CONDITIONS。最终有效独立复核见ReviewFindings-final.md；终态见receipt-final.json。

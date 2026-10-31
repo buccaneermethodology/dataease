@@ -1,0 +1,294 @@
+{
+  "schema_version": "query_tree_relation_rebinding_fixtures_v1",
+  "status": "candidate; not executed; only the exact relation-shape transformation is in scope",
+  "max_levels": 5,
+  "cases": [
+    {
+      "id": "TC-QTR-001",
+      "topic": "two_level_exact_mapping",
+      "input": {
+        "treeFieldIds": [
+          "f-province",
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-province"
+            }
+          },
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          {
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-province"
+            }
+          },
+          {
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-city"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-QTR-002",
+      "topic": "multiple_source_components_map_one_to_one",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A",
+              "chart-C"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city",
+              "chart-C": "f-city"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ],
+          "chart-C": [
+            "chart-D"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          {
+            "checkedFields": [
+              "chart-B",
+              "chart-D"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-city",
+              "chart-D": "f-city"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-QTR-003",
+      "topic": "missing_component_map",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city"
+            }
+          }
+        ],
+        "componentMap": {}
+      },
+      "expected": {
+        "ok": false,
+        "reason": "MISSING_COMPONENT_MAP"
+      }
+    },
+    {
+      "id": "TC-QTR-004",
+      "topic": "ambiguous_component_map",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B",
+            "chart-C"
+          ]
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "AMBIGUOUS_COMPONENT_MAP"
+      }
+    },
+    {
+      "id": "TC-QTR-005",
+      "topic": "field_does_not_match_level",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-province"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ]
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "FIELD_MISMATCH"
+      }
+    },
+    {
+      "id": "TC-QTR-006",
+      "topic": "multiple_source_components_map_to_distinct_targets",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A",
+              "chart-C"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city",
+              "chart-C": "f-city"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ],
+          "chart-C": [
+            "chart-B-alt"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          {
+            "checkedFields": [
+              "chart-B",
+              "chart-B-alt"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-city",
+              "chart-B-alt": "f-city"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-QTR-007",
+      "topic": "target_component_collision_same_field_deduplicates",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A",
+              "chart-C"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city",
+              "chart-C": "f-city"
+            }
+          }
+        ],
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ],
+          "chart-C": [
+            "chart-B"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          {
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-city"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-QTR-008",
+      "topic": "empty_selected_level_rejected",
+      "input": {
+        "treeFieldIds": [
+          "f-city"
+        ],
+        "treeCheckedList": [
+          {
+            "checkedFields": [],
+            "checkedFieldsMap": {}
+          }
+        ],
+        "componentMap": {}
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_INPUT"
+      }
+    }
+  ],
+  "oracle_policy": "Exact output or exact failure reason; no partial value; preserve level and source order; input is immutable.",
+  "evidence_ceiling": "Synthetic pure transformation only; source and target component authorization, real directories, Vue, searchQuery, SQL and Goal acceptance are not tested."
+}

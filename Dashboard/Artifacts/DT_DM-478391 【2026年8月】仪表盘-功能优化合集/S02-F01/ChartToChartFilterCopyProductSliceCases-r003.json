@@ -1,0 +1,788 @@
+{
+  "schema_version": "s02_chart_to_chart_filter_copy_product_cases_v1",
+  "case_set_id": "S02-F01-CHART-TO-CHART-PRODUCT-001",
+  "revision": "r003",
+  "design_ref": "ChartToChartFilterCopyProductSliceDesign-r003.md",
+  "frozen_for_builder": false,
+  "status": "CANDIDATE_FOR_FINAL_INDEPENDENT_REVIEW",
+  "goal_digest_ref": "Goal.final.json",
+  "scope_delta": "none",
+  "mvp_matrix": {
+    "source_type": "ordinary-bar",
+    "target_type": "ordinary-line",
+    "target_must_be_empty": true,
+    "dataset_must_match": true
+  },
+  "fixture": {
+    "identity": {
+      "uid": "user-A",
+      "oid": "org-A"
+    },
+    "dataset": {
+      "id": "dataset-1",
+      "fields": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0,
+          "name": "Region"
+        }
+      ]
+    },
+    "source": {
+      "id": "BAR-1",
+      "type": "ordinary-bar",
+      "tableId": "dataset-1",
+      "customFilter": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "tree",
+            "subTree": {
+              "logic": "or",
+              "items": [
+                {
+                  "type": "item",
+                  "fieldId": "FIELD_REGION",
+                  "filterType": "enum",
+                  "term": "in",
+                  "enumValue": [
+                    "North"
+                  ],
+                  "timeType": "year",
+                  "value": "",
+                  "filterTypeTime": "dateValue",
+                  "timeValue": "",
+                  "dynamicTimeSetting": {},
+                  "subTree": null
+                },
+                {
+                  "type": "item",
+                  "fieldId": "FIELD_REGION",
+                  "filterType": "enum",
+                  "term": "in",
+                  "enumValue": [
+                    "Central"
+                  ],
+                  "timeType": "year",
+                  "value": "",
+                  "filterTypeTime": "dateValue",
+                  "timeValue": "",
+                  "dynamicTimeSetting": {},
+                  "subTree": null
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "fieldList": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0,
+          "name": "Region"
+        }
+      ]
+    },
+    "target": {
+      "id": "LINE-1",
+      "type": "ordinary-line",
+      "tableId": "dataset-1",
+      "fields": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0
+        }
+      ],
+      "customFilter": {
+        "logic": "and",
+        "items": []
+      }
+    },
+    "expected_rows": [
+      "row-North-1",
+      "row-Central-1"
+    ],
+    "unexpected_rows": [
+      "row-South-1"
+    ],
+    "expected_filter_payload": {
+      "schemaVersion": 1,
+      "logic": "and",
+      "items": [
+        {
+          "type": "tree",
+          "subTree": {
+            "logic": "or",
+            "items": [
+              {
+                "type": "item",
+                "fieldId": "FIELD_REGION",
+                "filterType": "enum",
+                "term": "in",
+                "enumValue": [
+                  "North"
+                ],
+                "timeType": "year",
+                "value": "",
+                "filterTypeTime": "dateValue",
+                "timeValue": "",
+                "dynamicTimeSetting": {},
+                "subTree": null
+              },
+              {
+                "type": "item",
+                "fieldId": "FIELD_REGION",
+                "filterType": "enum",
+                "term": "in",
+                "enumValue": [
+                  "Central"
+                ],
+                "timeType": "year",
+                "value": "",
+                "filterTypeTime": "dateValue",
+                "timeValue": "",
+                "dynamicTimeSetting": {},
+                "subTree": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "environment_status": "scenario-only; IDs and rows below are illustrative, not an installed DataEase fixture",
+    "field_id_status": "FIELD_REGION is a symbolic fixture key; executable E2E must bind it to a real dataset field and observed deType"
+  },
+  "cases": [
+    {
+      "id": "MVP-E2E-001",
+      "kind": "product-ui-scenario-specification",
+      "executable": false,
+      "title": "柱图配置→复制→同数据集空折线图粘贴→预览→保存重开",
+      "setup": {
+        "environment": "isolated non-production DataEase instance with the real dashboard editor; must be identified before execution",
+        "dashboard": "create or identify one persisted editable dashboard containing one ordinary bar and one ordinary line chart on the same dataset",
+        "dataset": "prepare a real text field with rows yielding North, Central and South; bind actual field id/type and row ids in the execution record",
+        "source": "UI-configure two static enum leaves FIELD_REGION in North OR FIELD_REGION in Central",
+        "target": "ordinary line chart on same dataset with empty customFilter",
+        "baseline": "capture source/target saved state, target query payload, render row ids, current dashboard contentId and request counters"
+      },
+      "actions": [
+        "configure source in the actual chart editor",
+        "copy through the feature button",
+        "select the same-dashboard empty ordinary line target",
+        "paste through the feature button",
+        "wait for the target query and render completion",
+        "save the dashboard through the normal Save action and record success",
+        "close and reopen the saved dashboard without changing it"
+      ],
+      "expected": {
+        "source_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "target_tree_equals_after_apply": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "target_query_payload_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "normalization": [
+          "compare the complete filter tree projection only; field catalog metadata such as deType is outside that projection and must not be injected into it"
+        ],
+        "target_source_tree_deep_independent": true,
+        "same_dataset_api_calls": 1,
+        "same_dataset_api_result": true,
+        "target_logical_calcdata_dispatches": 1,
+        "rendered_row_ids": {
+          "includes": [
+            "row-North-1",
+            "row-Central-1"
+          ],
+          "excludes": [
+            "row-South-1"
+          ]
+        },
+        "system_clipboard_writes": 0,
+        "persistent_clipboard_writes": 0,
+        "autosave_requests": 0,
+        "explicit_save_successes": 1,
+        "source_and_other_charts_unchanged": true,
+        "reopened_target_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "execution_gate": "Do not label/run as E2E until real dashboard/dataset/chart IDs, route, save target, field type, row evidence and cleanup/reset procedure are recorded. Until then this is an executable scenario specification only, not RED/GREEN or runtime evidence."
+    },
+    {
+      "id": "MVP-NEG-001",
+      "kind": "product-contract-case",
+      "title": "本地 dataset ID 不同：不调用兼容 API",
+      "setup": {
+        "source_dataset_id": "dataset-A",
+        "target_dataset_id": "dataset-B",
+        "target_filter": "empty",
+        "clipboard": "valid same-user in-memory envelope",
+        "dashboard_permission": "manage preflight succeeds"
+      },
+      "actions": [
+        "attempt paste on target"
+      ],
+      "variants": [
+        "strict dataset ID mismatch"
+      ],
+      "expected": {
+        "same_dataset_api_calls": 0,
+        "target_tree_unchanged": true,
+        "clipboard_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null
+      }
+    },
+    {
+      "id": "MVP-NEG-002",
+      "kind": "product-contract-case",
+      "title": "同数据集 API 非成功响应：分别 fail closed",
+      "setup": {
+        "source_and_target_dataset_id": "dataset-A",
+        "target_filter": "empty",
+        "valid_payload": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "dashboard_permission": "manage preflight succeeds"
+      },
+      "actions": [
+        "stub only the same-dataset API outcome for the individual run",
+        "attempt paste and observe counters"
+      ],
+      "variants": [
+        "explicit NO response",
+        "HTTP reject",
+        "timeout",
+        "malformed response",
+        "empty response"
+      ],
+      "expected": {
+        "target_tree_unchanged": true,
+        "clipboard_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null,
+        "error_message": "过滤条件不匹配，请重新复制"
+      }
+    },
+    {
+      "id": "MVP-NEG-003",
+      "kind": "product-contract-case",
+      "title": "支持域形状与拒绝形状：合法两叶 OR 接受，非法形状拒绝",
+      "setup": {
+        "allowed_fixture": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "target_filter": "empty",
+        "source_and_target_field_catalogs": {
+          "FIELD_REGION": "same text field id and same observed type"
+        }
+      },
+      "actions": [
+        "run each variant independently from the stated initial state",
+        "for positive variant assert complete tree equality; for negative variants attempt paste"
+      ],
+      "variants": [
+        "positive: one AND root with nested OR group and two text enum leaves (North, Central)",
+        "negative: empty root",
+        "negative: empty group",
+        "negative: missing fieldId",
+        "negative: target field missing",
+        "negative: source/target type mismatch",
+        "negative: non-enum leaf",
+        "negative: dynamic time leaf",
+        "negative: unknown node shape",
+        "negative: invalid JSON"
+      ],
+      "expected": {
+        "positive_variant": "accept full tree; no leaf/group removal",
+        "negative_variants": "reject before target mutation",
+        "forbidden": "do not classify a valid multi-leaf nested OR as unsupported",
+        "negative_side_effects": {
+          "target_tree_unchanged": true,
+          "snapshot_delta": 0,
+          "query_delta": 0,
+          "save_delta": 0,
+          "success_message": null
+        }
+      }
+    },
+    {
+      "id": "MVP-NEG-004",
+      "kind": "product-contract-case",
+      "title": "同页身份变化/重载/登出使内存剪贴内容失效",
+      "setup": {
+        "clipboard": "valid envelope captured in editor-page runtime under uid-A/oid-A",
+        "target_filter": "empty"
+      },
+      "actions": [
+        "run each variant independently; change event/state then attempt paste"
+      ],
+      "variants": [
+        "uid changes to user-B",
+        "oid changes to org-B",
+        "logout event",
+        "page reload/navigation creates a new runtime",
+        "editor closes"
+      ],
+      "expected": {
+        "reject": true,
+        "clipboard_not_restored": true,
+        "target_tree_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null
+      }
+    },
+    {
+      "id": "MVP-NEG-005",
+      "kind": "pure-contract-test-specification",
+      "title": "单调 TTL 边界与失效后回拨不可复活",
+      "setup": {
+        "clock": "inject editor runtime monotonic elapsed-time source; copiedAt=0 for each independent run",
+        "payload": "valid supported tree"
+      },
+      "actions": [
+        "capture at t=0",
+        "advance monotonic clock to variant elapsed time",
+        "attempt paste"
+      ],
+      "variants": [
+        "0ms: accept",
+        "1799999ms: accept",
+        "1800000ms: reject",
+        "1800001ms: reject",
+        "after expiration, alter wall clock backward while monotonic clock stays advanced: reject"
+      ],
+      "expected": {
+        "at_or_over_ttl": "reject and clear in-memory envelope",
+        "before_ttl": "accept if other predicates pass",
+        "wall_clock_change_effect": "none",
+        "target_unchanged_on_reject": true,
+        "snapshot_delta_on_reject": 0,
+        "query_delta_on_reject": 0,
+        "save_delta_on_reject": 0
+      }
+    },
+    {
+      "id": "MVP-NEG-006",
+      "kind": "pure-contract-test-specification",
+      "title": "1–50 叶与 UTF-8 载荷大小正交边界",
+      "setup": {
+        "serializer": "fixed projection {schemaVersion:1,logic,items} serialized with JSON.stringify and measured with TextEncoder",
+        "initial_clipboard": "prior valid envelope",
+        "exact_byte_fixture_algorithm": [
+          "start from a valid supported payload with fewer than 50 leaves and enumValue[0] equal to the single ASCII character x",
+          "serialize the fixed projection and measure baseBytes with TextEncoder",
+          "replace enumValue[0] with x followed by exactly (1000000 - baseBytes) ASCII x characters; reserialize and assert measured bytes equal exactly 1000000 before invoking the cap guard",
+          "for 1000001 bytes, append one additional ASCII x; keep leaf count below 50 so the byte axis is isolated",
+          "for 50/51 leaf tests, use short ASCII values and assert serialized bytes remain below 1000000 so the leaf axis is isolated",
+          "for multi-byte coverage, use a non-ASCII enum value and assert TextEncoder byte count, independent of JavaScript string length"
+        ]
+      },
+      "actions": [
+        "construct independently valid payloads and assert leaf count and encoded byte length before invoking guard",
+        "run copy validation independently for each point"
+      ],
+      "variants": [
+        "50 leaves and <=1000000 bytes: accept",
+        "51 leaves and below byte cap: reject",
+        "under 50 leaves and exactly 1000000 bytes: accept",
+        "under 50 leaves and 1000001 bytes: reject",
+        "multibyte enum text: byte count uses UTF-8"
+      ],
+      "expected": {
+        "no_truncation": true,
+        "reject_copy_preserves_previous_clipboard": true,
+        "accept_boundary_requires_both_predicates": true
+      }
+    },
+    {
+      "id": "MVP-NEG-007",
+      "kind": "product-contract-case",
+      "title": "目标预览请求拒绝、超时或过期响应",
+      "setup": {
+        "target": "ordinary line; saved/current target baseline captured",
+        "target_filter": "empty",
+        "valid clipboard": "two-leaf OR tree",
+        "same-dataset and manage checks": "success"
+      },
+      "actions": [
+        "paste and capture complete target tree before query settles",
+        "resolve query variant and inspect latest chart result"
+      ],
+      "variants": [
+        "query reject",
+        "query timeout",
+        "stale response after active target chart changes"
+      ],
+      "expected": {
+        "applied_tree": "complete and unsaved only if synchronous apply succeeded",
+        "success_message": null,
+        "error_feedback": "query failure through existing feedback mechanism",
+        "autosave_requests": 0,
+        "save_requests": 0,
+        "no_mixed_new_tree_old_chart_result": true,
+        "stale_response_must_not_render_into_new_target": true
+      }
+    },
+    {
+      "id": "MVP-NEG-008",
+      "kind": "product-contract-case",
+      "title": "显式保存失败或未保存关闭",
+      "setup": {
+        "target": "successfully applied two-leaf OR tree with preview success",
+        "save_method": "existing dashboard canvas save/update API",
+        "durable_baseline": "last confirmed persisted target tree captured"
+      },
+      "actions": [
+        "run each variant independently",
+        "variant A: save API rejects; variant B: close without save",
+        "reopen only after the expected navigation step"
+      ],
+      "variants": [
+        "save failure",
+        "leave without save"
+      ],
+      "expected": {
+        "durable_claim": null,
+        "existing_save_error_visible_on_failure": true,
+        "reopen_equals_last_confirmed_saved_baseline": true,
+        "autosave_requests": 0,
+        "do_not_claim_new_tree_persisted": true
+      }
+    },
+    {
+      "id": "MVP-NEG-009",
+      "kind": "permission-runtime-case-blocked",
+      "title": "现有 Dashboard MANAGE 门槛在复制与粘贴动作前复验",
+      "setup": {
+        "dashboard": "persisted dashboard with current contentId",
+        "clipboard": "valid in-memory envelope",
+        "real_permission_environment": "not available; runtime permission case blocked"
+      },
+      "actions": [
+        "before source copy call existing findResourceName READ path and checkCanvasChange MANAGE/contentId path; deny if either fails",
+        "before target paste call existing checkCanvasChange MANAGE/contentId path; deny if it fails",
+        "if preflight passes, use same-dataset compatibility API then normal calcData and normal save; do not write directly to backend"
+      ],
+      "variants": [
+        "edit/manage permission revoked before copy",
+        "edit/manage permission revoked after copy but before paste",
+        "permission endpoint rejects or is unavailable",
+        "dashboard contentId is stale (existing checkCanvasChange returns Repeat)"
+      ],
+      "expected": {
+        "deny_before_local_mutation": true,
+        "target_tree_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null,
+        "no_ui_only_fallback": true,
+        "real_permission_status": "BLOCKED_NOT_RUN",
+        "standalone_admin_mock_not_an_oracle": true,
+        "checkCanvasChange_expected_success_value": "Success only; Repeat, rejected request, timeout or malformed response denies before local mutation",
+        "stale_content_id_denied_before_mutation": true
+      }
+    }
+  ],
+  "blocked_claims": [
+    "真实只读用户不得读取/复制/粘贴",
+    "来源读取授权",
+    "目标编辑权实时重验",
+    "撤权与恢复",
+    "真实权限模块",
+    "S01 ORIG-02",
+    "其他图表组合",
+    "非空目标覆盖确认",
+    "普通表/透视表/查询组件",
+    "完整F01 AC",
+    "完整S02 Goal",
+    "非文本/非枚举/动态过滤树"
+  ],
+  "trust_requirements": {
+    "same_identity_red_green": true,
+    "product_ui_e2e_required": true,
+    "builder_must_not_edit_frozen_cases": true,
+    "unit_or_helper_harness_not_sufficient": true
+  },
+  "clipboard_lifecycle": {
+    "mvp_scope": "same editor page and browser tab only; module-memory envelope, never localStorage/sessionStorage/OS clipboard",
+    "clock": "performance.now()-based monotonic elapsed time captured by the editor-page runtime; no wall-clock comparison",
+    "loss_conditions": [
+      "page reload/navigation/close",
+      "logout",
+      "uid or oid change",
+      "source or target dashboard edit permission preflight rejection",
+      "ttl expiry",
+      "malformed/corrupt in-memory envelope",
+      "document becomes hidden (conservative fail-closed to cover browser sleep/background lifecycle uncertainty)",
+      "pagehide event"
+    ],
+    "later_scope": "same-browser cross-tab sharing remains in original Goal and a later Slice; it is not implemented or accepted by this MVP"
+  },
+  "case_axes": {
+    "positive_filter_shape": "the same two-leaf nested OR tree is used for source, applied target, query payload and normalized saved/reopened target",
+    "negative_axes": [
+      "dataset mismatch/API outcome",
+      "shape/field support",
+      "identity/lifecycle",
+      "TTL monotonic boundary",
+      "leaf count",
+      "UTF-8 byte count",
+      "async query",
+      "save/persistence",
+      "dashboard permission recheck"
+    ],
+    "case_execution_rule": "Each variant starts from its own setup/baseline; do not reuse state unless a case explicitly requires a sequential transition."
+  }
+}

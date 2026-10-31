@@ -1,0 +1,348 @@
+        String prefix = "";
+        String suffix = "";
+        if (Arrays.stream(DatasourceConfiguration.DatasourceType.values()).map(DatasourceConfiguration.DatasourceType::getType).toList().contains(dsType)) {
+            DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(dsType);
+            prefix = datasourceType.getPrefix();
+            suffix = datasourceType.getSuffix();
+        } else {
+            if (LicenseUtil.licenseValid()) {
+                List<XpackPluginsDatasourceVO> xpackPluginsDatasourceVOS = pluginManage.queryPluginDs();
+                List<XpackPluginsDatasourceVO> list = xpackPluginsDatasourceVOS.stream().filter(ele -> StringUtils.equals(ele.getType(), dsType)).toList();
+                if (ObjectUtils.isNotEmpty(list)) {
+                    XpackPluginsDatasourceVO first = list.getFirst();
+                    prefix = first.getPrefix();
+                    suffix = first.getSuffix();
+                } else {
+                    DEException.throwException("当前数据源插件不存在");
+                }
+            }
+        }
+
+        List<String> fieldList = new ArrayList<>();
+        for (int i = 0; i < assistFields.size(); i++) {
+            ChartViewFieldDTO dto = assistFields.get(i);
+            if (StringUtils.equalsIgnoreCase(dto.getSummary(), "last_item")) {
+                continue;
+            }
+            String summary = FunctionConstant.resolveAssistAggregation(dto.getSummary());
+            if (crossDs) {
+                fieldList.add(summary + "(" + dto.getOriginName() + ")");
+            } else {
+                fieldList.add(summary + "(" + prefix + dto.getOriginName() + suffix + ")");
+            }
+        }
+        return "SELECT " + Strings.join(",", fieldList) + " FROM (" + sql + ") tmp";
+    }
+
+    protected String assistSQLOriginList(String sql, List<ChartViewFieldDTO> assistFields, Map<Long, DatasourceSchemaDTO> dsMap, boolean crossDs) {
+        // get datasource prefix and suffix
+        String dsType = dsMap.entrySet().iterator().next().getValue().getType();
+        String prefix = "";
+        String suffix = "";
+        if (Arrays.stream(DatasourceConfiguration.DatasourceType.values()).map(DatasourceConfiguration.DatasourceType::getType).toList().contains(dsType)) {
+            DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(dsType);
+            prefix = datasourceType.getPrefix();
+            suffix = datasourceType.getSuffix();
+        } else {
+            if (LicenseUtil.licenseValid()) {
+                List<XpackPluginsDatasourceVO> xpackPluginsDatasourceVOS = pluginManage.queryPluginDs();
+                List<XpackPluginsDatasourceVO> list = xpackPluginsDatasourceVOS.stream().filter(ele -> StringUtils.equals(ele.getType(), dsType)).toList();
+                if (ObjectUtils.isNotEmpty(list)) {
+                    XpackPluginsDatasourceVO first = list.getFirst();
+                    prefix = first.getPrefix();
+                    suffix = first.getSuffix();
+                } else {
+                    DEException.throwException("当前数据源插件不存在");
+                }
+            }
+        }
+
+        List<String> fieldList = new ArrayList<>();
+        for (int i = 0; i < assistFields.size(); i++) {
+            ChartViewFieldDTO dto = assistFields.get(i);
+            if (StringUtils.equalsIgnoreCase(dto.getSummary(), "last_item")) {
+                if (crossDs) {
+                    fieldList.add(dto.getOriginName());
+                } else {
+                    fieldList.add(prefix + dto.getOriginName() + suffix);
+                }
+            }
+        }
+        return "SELECT " + Strings.join(",", fieldList) + " FROM (" + sql + ") tmp";
+    }
+
+    protected List<String> mergeIds(List<ChartViewFieldDTO> xAxisExt, List<ChartViewFieldDTO> extStack) {
+        Set<String> idSet = new HashSet<>();
+        if (xAxisExt != null) {
+            xAxisExt.forEach(field -> idSet.add(String.valueOf(field.getId())));
+        }
+        if (extStack != null) {
+            extStack.forEach(field -> idSet.add(String.valueOf(field.getId())));
+        }
+        return new ArrayList<>(idSet);
+    }
+
+    protected void quickCalc(List<ChartViewFieldDTO> xAxis, List<ChartViewFieldDTO> yAxis
+            , List<ChartViewFieldDTO> xAxisExt, List<ChartViewFieldDTO> extStack, String chartType, List<String[]> data) {
+        for (int i = 0; i < yAxis.size(); i++) {
+            ChartViewFieldDTO chartViewFieldDTO = yAxis.get(i);
+            ChartFieldCompareDTO compareCalc = chartViewFieldDTO.getCompareCalc();
+            if (ObjectUtils.isEmpty(compareCalc)) {
+                continue;
+            }
+            if (StringUtils.isNotEmpty(compareCalc.getType())
+                    && !StringUtils.equalsIgnoreCase(compareCalc.getType(), "none")) {
+                Long compareFieldId = compareCalc.getField();// 选中字段
+                // 数据字段下标
+                int dataIndex = xAxis.size() + i;
+                if (Arrays.asList(ChartConstants.M_Y).contains(compareCalc.getType())) {
+                    String resultData = compareCalc.getResultData();// 数据设置
+                    // 获取选中字段以及下标
+                    List<ChartViewFieldDTO> checkedField = new ArrayList<>(xAxis);
+                    int timeIndex = 0;// 时间字段下标
+                    ChartViewFieldDTO timeField = null;
+                    for (int j = 0; j < checkedField.size(); j++) {
+                        if (Objects.equals(checkedField.get(j).getId(), compareFieldId)) {
+                            timeIndex = j;
+                            timeField = checkedField.get(j);
+                        }
+                    }
+                    // 无选中字段，或者选中字段已经不在维度list中，或者选中字段日期格式不符合对比类型的，直接将对应数据置为null
+                    if (ObjectUtils.isEmpty(timeField) || !checkCalcType(timeField.getDateStyle(), compareCalc.getType())) {
+                        // set null
+                        for (String[] item : data) {
+                            item[dataIndex] = null;
+                        }
+                    } else {
+                        // 计算 同比/环比
+                        // 1，处理当期数据；2，根据type计算上一期数据；3，根据resultData计算结果
+                        Map<String, String> currentMap = new LinkedHashMap<>();
+                        for (String[] item : data) {
+                            String[] dimension = Arrays.copyOfRange(item, 0, checkedField.size());
+                            currentMap.put(StringUtils.join(dimension, "-"), item[dataIndex]);
+                        }
+
+                        for (int index = 0; index < data.size(); index++) {
+                            String[] item = data.get(index);
+                            String cTime = item[timeIndex];
+                            String cValue = item[dataIndex];
+
+                            // 获取计算后的时间，并且与所有维度拼接
+                            String lastTime = calcLastTime(cTime, compareCalc.getType(), timeField.getDateStyle(), timeField.getDatePattern());
+                            String[] dimension = Arrays.copyOfRange(item, 0, checkedField.size());
+                            dimension[timeIndex] = lastTime;
+
+                            String lastValue = currentMap.get(StringUtils.join(dimension, "-"));
+                            if (StringUtils.isEmpty(cValue) || StringUtils.isEmpty(lastValue)) {
+                                item[dataIndex] = null;
+                            } else {
+                                if (StringUtils.equalsIgnoreCase(resultData, "sub")) {
+                                    item[dataIndex] = new BigDecimal(cValue).subtract(new BigDecimal(lastValue)).toString();
+                                } else if (StringUtils.equalsIgnoreCase(resultData, "percent")) {
+                                    if (new BigDecimal(lastValue).compareTo(BigDecimal.ZERO) == 0) {
+                                        item[dataIndex] = null;
+                                    } else {
+                                        BigDecimal numerator = new BigDecimal(cValue).subtract(new BigDecimal(lastValue));
+                                        BigDecimal denominator = new BigDecimal(lastValue).abs();
+                                        item[dataIndex] = numerator
+                                                .divide(denominator, 8, RoundingMode.HALF_UP)
+                                                .toString();
+                                    }
+                                } else if (StringUtils.equalsIgnoreCase(resultData, "pre")) {
+                                    item[dataIndex] = new BigDecimal(lastValue).toString();
+                                }
+                            }
+                        }
+                    }
+                } else if (StringUtils.equalsIgnoreCase(compareCalc.getType(), "percent")) {
+                    // 求和
+                    BigDecimal sum = new BigDecimal(0);
+                    for (int index = 0; index < data.size(); index++) {
+                        String[] item = data.get(index);
+                        String cValue = item[dataIndex];
+                        if (StringUtils.isEmpty(cValue)) {
+                            continue;
+                        }
+                        sum = sum.add(new BigDecimal(cValue));
+                    }
+                    // 计算占比
+                    for (int index = 0; index < data.size(); index++) {
+                        String[] item = data.get(index);
+                        String cValue = item[dataIndex];
+                        if (StringUtils.isEmpty(cValue)) {
+                            continue;
+                        }
+                        item[dataIndex] = new BigDecimal(cValue)
+                                .divide(sum, 8, RoundingMode.HALF_UP)
+                                .toString();
+                    }
+                } else if (StringUtils.equalsIgnoreCase(compareCalc.getType(), "accumulate")) {
+                    // 累加
+                    if (CollectionUtils.isEmpty(data)) {
+                        break;
+                    }
+                    if (Objects.isNull(extStack)) {
+                        extStack = Arrays.asList();
+                    }
+                    if (Objects.isNull(xAxisExt)) {
+                        xAxisExt = Arrays.asList();
+                    }
+                    boolean isStack = StringUtils.containsIgnoreCase(chartType, "stack") && CollectionUtils.isNotEmpty(extStack);
+                    boolean isGroup = StringUtils.containsIgnoreCase(chartType, "group")
+                            || (CollectionUtils.isNotEmpty(xAxisExt));
+                    if (isStack || isGroup) {
+                        if (CollectionUtils.isEmpty(xAxis)) {
+                            break;
+                        }
+                        final Map<String, Integer> mainIndexMap = new HashMap<>();
+                        final List<List<String[]>> mainMatrix = new ArrayList<>();
+                        // 排除group和stack的字段
+                        List<String> groupStackAxisIds = mergeIds(xAxisExt, extStack);
+                        List<ChartViewFieldDTO> xAxisBase = xAxis.stream().filter(ele -> !groupStackAxisIds.contains(String.valueOf(ele.getId()))).collect(Collectors.toList());
+                        if (CollectionUtils.isEmpty(xAxisBase) && CollectionUtils.isNotEmpty(xAxis)) {
+                            xAxisBase.add(xAxis.get(0));
+                        }
+                        data.forEach(item -> {
+                            String[] mainAxisArr = Arrays.copyOfRange(item, 0, xAxisBase.size());
+                            String mainAxis = StringUtils.join(mainAxisArr, '-');
+                            Integer index = mainIndexMap.get(mainAxis);
+                            if (index == null) {
+                                mainIndexMap.put(mainAxis, mainMatrix.size());
+                                List<String[]> tmp = new ArrayList<>();
+                                tmp.add(item);
+                                mainMatrix.add(tmp);
+                            } else {
+                                List<String[]> tmp = mainMatrix.get(index);
+                                tmp.add(item);
+                            }
+                        });
+                        int finalDataIndex = dataIndex;
+                        int subEndIndex = xAxisBase.size();
+                        if (CollectionUtils.isNotEmpty(xAxisExt)
+                                || StringUtils.containsIgnoreCase(chartType, "group")
+                                || StringUtils.containsIgnoreCase(chartType, "-mix")) {
+                            subEndIndex += xAxisExt.size();
+                        }
+                        if (StringUtils.containsIgnoreCase(chartType, "stack")) {
+                            subEndIndex += extStack.size();
+                        }
+                        int finalSubEndIndex = subEndIndex;
+                        // 存储上次的值
+                        Map<String, BigDecimal> preDataMap = new HashMap<>();
+                        //滑动累加
+                        for (int k = 1; k < mainMatrix.size(); k++) {
+                            List<String[]> preDataItems = mainMatrix.get(k - 1);
+                            List<String[]> curDataItems = mainMatrix.get(k);
+                            preDataItems.forEach(preDataItem -> {
+                                String[] groupStackAxisArr = Arrays.copyOfRange(preDataItem, xAxisBase.size(), finalSubEndIndex);
+                                String groupStackAxis = StringUtils.join(groupStackAxisArr, '-');
+                                String preVal = preDataItem[finalDataIndex];
+                                if (StringUtils.isBlank(preVal)) {
+                                    // 空值保留显示，不覆盖该系列之前的累计值
+                                    return;
+                                }
+                                preDataMap.put(groupStackAxis, new BigDecimal(preVal));
+                            });
+                            curDataItems.forEach(curDataItem -> {
+                                String[] groupStackAxisArr = Arrays.copyOfRange(curDataItem, xAxisBase.size(), finalSubEndIndex);
+                                String groupStackAxis = StringUtils.join(groupStackAxisArr, '-');
+                                BigDecimal preValue = preDataMap.get(groupStackAxis);
+                                var curValue = curDataItem[finalDataIndex];
+                                if (StringUtils.isBlank(curValue)) {
+                                    return;
+                                }
+                                if (preValue != null) {
+                                    curDataItem[finalDataIndex] = new BigDecimal(curValue)
+                                            .add(preValue)
+                                            .toString();
+                                } else {
+                                    if (preDataMap.containsKey(groupStackAxis)) {
+                                        curDataItem[finalDataIndex] = new BigDecimal(curValue)
+                                                .add(preDataMap.get(groupStackAxis))
+                                                .toString();
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        final int index = dataIndex;
+                        final AtomicReference<BigDecimal> accumValue = new AtomicReference<>(new BigDecimal(0));
+                        data.forEach(item -> {
+                            String val = item[index];
+                            BigDecimal curAccumValue = accumValue.get();
+                            if (!StringUtils.isBlank(val)) {
+                                BigDecimal curVal = new BigDecimal(val);
+                                curAccumValue = curAccumValue.add(curVal);
+                                accumValue.set(curAccumValue);
+                            }
+                            item[index] = curAccumValue.toString();
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    private String calcLastTime(String cTime, String type, String dateStyle, String datePattern) {
+        try {
+            String lastTime = null;
+            Calendar calendar = Calendar.getInstance();
+            if (StringUtils.equalsIgnoreCase(type, ChartConstants.YEAR_MOM)) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+                Date date = simpleDateFormat.parse(cTime);
+                calendar.setTime(date);
+                calendar.add(Calendar.YEAR, -1);
+                lastTime = simpleDateFormat.format(calendar.getTime());
+            } else if (StringUtils.equalsIgnoreCase(type, ChartConstants.MONTH_MOM)) {
+                SimpleDateFormat simpleDateFormat = null;
+                if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                    simpleDateFormat = new SimpleDateFormat("yyyy/MM");
+                } else {
+                    simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+                }
+                Date date = simpleDateFormat.parse(cTime);
+                calendar.setTime(date);
+                calendar.add(Calendar.MONTH, -1);
+                lastTime = simpleDateFormat.format(calendar.getTime());
+            } else if (StringUtils.equalsIgnoreCase(type, ChartConstants.YEAR_YOY)) {
+                SimpleDateFormat simpleDateFormat = null;
+                if (StringUtils.equalsIgnoreCase(dateStyle, "y_M")) {
+                    if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                        simpleDateFormat = new SimpleDateFormat("yyyy/MM");
+                    } else {
+                        simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+                    }
+                } else if (StringUtils.equalsIgnoreCase(dateStyle, "y_M_d")) {
+                    if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                        simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    } else {
+                        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    }
+                }
+                Date date = simpleDateFormat.parse(cTime);
+                calendar.setTime(date);
+                calendar.add(Calendar.YEAR, -1);
+                lastTime = simpleDateFormat.format(calendar.getTime());
+            } else if (StringUtils.equalsIgnoreCase(type, ChartConstants.DAY_MOM)) {
+                SimpleDateFormat simpleDateFormat = null;
+                if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                    simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                } else {
+                    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                }
+                Date date = simpleDateFormat.parse(cTime);
+                calendar.setTime(date);
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                lastTime = simpleDateFormat.format(calendar.getTime());
+            } else if (StringUtils.equalsIgnoreCase(type, ChartConstants.MONTH_YOY)) {
+                SimpleDateFormat simpleDateFormat = null;
+                if (StringUtils.equalsIgnoreCase(dateStyle, "y_M")) {
+                    if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                        simpleDateFormat = new SimpleDateFormat("yyyy/MM");
+                    } else {
+                        simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+                    }
+                } else if (StringUtils.equalsIgnoreCase(dateStyle, "y_M_d")) {
+                    if (StringUtils.equalsIgnoreCase(datePattern, "date_split")) {
+                        simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    } else {

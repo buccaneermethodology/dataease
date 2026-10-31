@@ -1,0 +1,402 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "继续DE-S02-F01 Goal；独立复核VQuery字段生命周期矩阵与fixtures候选。审查字段覆盖、KEEP/REBIND/RESET/REMOVE/REJECT语义、身份完整性、unknown政策、原子提交和Scope/权限分母。只写review报告，不修改设计/fixtures/源码/测试/Goal；发现问题指出最小修订。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "对候选字段生命周期矩阵作独立语义审查，核对源码证据与完整父Goal边界，给出设计可审结论及是否可进入精确子合同/Builder准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySchemaLifecycleMatrixDesignReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改设计作者文件、fixtures、产品源码或测试",
+      "把候选矩阵称为已冻结白名单/已实现/已验收",
+      "缩减Goal原10项AC、26项must-have或16项产品义务",
+      "以standalone、admin、mock或静态代码替代真实权限验收",
+      "签发本review未定义的产品Builder admission"
+    ],
+    "maximum_claim": "独立判断候选矩阵/fixtures是否充分及其有界准入；不证明产品实现、运行、权限或完整Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ScopeDeltaAudit-r001.md",
+      "revision": "73a4144097f0ded056d2ac3adfb502bd796a2d318662e81dde56f9e30a5ee278",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGaps.json",
+      "revision": "0a6e1718b0cad911c479ed7faef73664d0bf9d565383d36e226df23f93ec410c",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r002.md",
+      "revision": "b8b88c2817c1e616dcce6319e9c59fb90123bc4e4c5a22774326acd3c5f883ea",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaDiscovery-r002.md",
+      "revision": "f3cdef883e90eea8750f97c511a6a1960868296d7dc28355c0e471c89045afb9",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGapReconciliation-r001.md",
+      "revision": "3a6668aad38a2ee40fe695de2cda77f031d6968255d5b2005c4046255869455d",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesign-r007.md",
+      "revision": "bf67232e7a54d7a92e7eff866182298fe0b151f01edec5293286add96aeee47f",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeMatrix-r002.md",
+      "revision": "04656b366beffab8f99826efcf2a835d24c7a6ee1f53ea911896b9702a046804",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaLifecycleMatrix-r001.md",
+      "revision": "7bb9fdf62b2dbd93ccd3a530db0fcc4a9970cf4df84701fe17707e21aa5784b7",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaLifecycleMatrixFixtures-r001.json",
+      "revision": "53821f57f0ed21d52466ceb30f07d7bb41db736c83bd4b3ac5fa9232a0fe9051",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "528ad3e3674e495587fad7fb797c0f6ceaa601ef40a0dd7b9683e7e99fbff417",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus.md",
+      "revision": "2eee09e097b52c49ba6effd671b6d00997c28c2c536f9126d66485a4a6d4365e",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r165.json",
+      "revision": "d3443727dcc0baf205070c1d0e01e266ae0422f9bf932329bf597f84c5c60a6a",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "revision": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/copy.ts",
+      "revision": "0586a15314c00206be53f585d598204cc481f5d6cd48e3699c681a27b8b4ce16",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-REVIEW-r001",
+      "reason": "独立复核字段生命周期分类、字段/组件身份闭包、失败关闭和原子提交边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    }
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "保留10项Goal AC、26项must-have、16项产品义务；真实权限相关验收BLOCKED/NOT_RUN。"
+  },
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "高语义风险字段合同和原子提交边界需独立审查",
+    "route": "independent_semantic_review"
+  },
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "all fields listed in candidate matrix",
+    "fixtures identity and expected action coverage",
+    "source line evidence and claim ceiling",
+    "permission denominator remains blocked"
+  ],
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": false,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "condition": "a pinned source or candidate digest differs at review time",
+      "mode": "deterministic",
+      "action": "stop and rebaseline before concluding",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "unsupported-historical-semantics",
+      "condition": "source does not determine persistence or restore behavior for a field/shape",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "record unknown and withhold freeze/admission for that shape",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "skipped_reads": []
+}

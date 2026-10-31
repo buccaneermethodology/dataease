@@ -1,0 +1,27 @@
+{
+  "schema_version": "manual_post_closeout_reconciliation_v1",
+  "phase": "post_closeout_manual_readback_after_stop_gate",
+  "result": "pass_with_limits",
+  "checks": {
+    "sge_package_path_and_sha256_parity": "pass: 63 source files match 63 installed files",
+    "literal_user_intent_projection": "pass: current context-bootstrap.json matches the original user message including the skill markdown reference",
+    "legacy_dashboard_semantic_inventory": "pass_with_limits: 2 Big Ideas, 5 original Sessions, 3 original Decisions represented; inventory is not a byte snapshot",
+    "dashboard_current_session": "pass: DE-EXEC-S006 records completed implementation and links to Goal materials",
+    "artifact_batch_index": "pass: authority-correction.md is listed with the Goal artifacts",
+    "markdown_local_links": "pass: independent readback found 0 missing local Markdown links in Dashboard",
+    "execution_admission_historical_digest": "unverifiable: execution-admission.json references the pre-install context digest d1e43efd..., while the current reconstructed admission-context-baseline.json has a different digest; current validator reports ADMISSION_CONTEXT_DIGEST_MISMATCH",
+    "registry_reconcile_validate": "not_available: project has no Session registry/reconcile/validate tool",
+    "dataease_runtime": "not_in_scope",
+    "stop_gate": "pass: provisional valid receipt reports GOAL_COMPLETE and final_allowed=true with matching state/evidence digests; final receipt is regenerated after the final independent review digest is bound"
+  },
+  "claim_ceiling": "Manual consistency/readback only; historical admission digest is not currently reproducible, and this is not a programmatic Dashboard registry reconciliation, byte-exact legacy comparison, or product runtime check.",
+  "final_reviewer_binding": "The final independent-review.md digest is bound by stop-gate/evidence/independent_validation.json and loop-state.json; the terminal receipt is rerun after that binding is refreshed.",
+  "source_authority": [
+    "Dashboard/Artifacts/Goal-DE-GOV-001/context-bootstrap.json",
+    "Dashboard/Artifacts/Goal-DE-GOV-001/authority-correction.md",
+    "Dashboard/Artifacts/Goal-DE-GOV-001/completion-contract.json",
+    "Dashboard/Artifacts/Goal-DE-GOV-001/legacy-dashboard-inventory.json",
+    "Dashboard/README.md",
+    "Dashboard/Sessions.md"
+  ]
+}

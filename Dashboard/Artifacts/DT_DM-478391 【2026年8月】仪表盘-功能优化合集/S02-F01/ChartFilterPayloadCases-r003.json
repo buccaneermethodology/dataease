@@ -1,0 +1,1165 @@
+{
+  "schema_version": "chart_filter_payload_cases_v3",
+  "artifact_id": "S02-F01-chart-filter-payload-cases",
+  "round": "3/3",
+  "contract_ref": "ChartFilterPayloadDesign-r003.md#候选纯函数合同",
+  "scope": "detached JSON-shaped chart customFilter copy and source-compatible leaf field handling only",
+  "fixture_protocol": {
+    "pointer": "Runtime pointers follow RFC 6901. A pointer to a not-yet-existing final own property may be used by define/set operations; all intermediate parents must exist.",
+    "runtime_setup": "Execute operations in listed order on a fresh JSON.parse-created fixture. Supported ops: set_special (value_kind from the closed enum in this file), link_reference, define_symbol_key, define_accessor, attach_array_extra_key, define_non_enumerable_key, and define_own_string_key. No eval, imports, or arbitrary source strings.",
+    "special_value_kinds": [
+      "undefined",
+      "function",
+      "symbol",
+      "bigint",
+      "nan",
+      "positive_infinity",
+      "negative_infinity",
+      "sparse_array",
+      "date",
+      "map",
+      "set",
+      "class_instance",
+      "array_with_group_keys",
+      "negative_infinity"
+    ],
+    "literal_values": "All fixture JSON values are literal business data. Strings/objects named $fixture have no special meaning.",
+    "snapshot": "After runtime_setup and before invocation, create a cycle-safe graph snapshot retaining primitives (including NaN semantics), prototypes, own keys/descriptors, array holes, aliases, and reference edges. Equality uses a visited pair table and must terminate on cycles. Do not use JSON.stringify.",
+    "mutation_probe": "For each detached assertion, run a fresh setup and invocation, mutate only the selected side at probe_pointer to sentinel, then verify the opposite side equals its pre-mutation graph value.",
+    "failure_shape": "Failure result must be an object with exactly keys [ok, reason], ok=false and expected reason; payload must be absent.",
+    "accessor_observation": "define_accessor increments case-local getter_call_count if invoked; throwing_getter throws only if invoked. Every accessor case expects getter_call_count=0 after helper returns."
+  },
+  "cases": [
+    {
+      "id": "TC-CFP-001",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-1",
+            "field": {
+              "name": "Revenue"
+            },
+            "term": "gt",
+            "value": 10,
+            "type": "item",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-1",
+              "term": "gt",
+              "value": 10,
+              "type": "item",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached"
+      ],
+      "probe": {
+        "side": "output",
+        "pointer": "/items/0/value",
+        "sentinel": 11,
+        "opposite_pointer": "/items/0/value"
+      }
+    },
+    {
+      "id": "TC-CFP-002",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "field": "group-meta",
+            "subTree": {
+              "logic": "or",
+              "items": [
+                {
+                  "fieldId": "f-2",
+                  "field": false,
+                  "value": [
+                    {
+                      "x": 1
+                    }
+                  ],
+                  "subTree": null
+                }
+              ]
+            }
+          },
+          {
+            "field": "empty-group-truthy",
+            "subTree": {
+              "logic": "and",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "field": "group-meta",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "fieldId": "f-2",
+                    "field": false,
+                    "value": [
+                      {
+                        "x": 1
+                      }
+                    ],
+                    "subTree": null
+                  }
+                ]
+              }
+            },
+            {
+              "subTree": {
+                "logic": "and",
+                "items": []
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached",
+        "input_to_output_detached"
+      ],
+      "probes": [
+        {
+          "side": "output",
+          "pointer": "/items/0/subTree/items/0/value/0/x",
+          "sentinel": 2,
+          "opposite_pointer": "/items/0/subTree/items/0/value/0/x"
+        },
+        {
+          "side": "input",
+          "pointer": "/items/0/subTree/items/0/value/0/x",
+          "sentinel": 3,
+          "opposite_pointer": "/items/0/subTree/items/0/value/0/x"
+        }
+      ]
+    },
+    {
+      "id": "TC-CFP-003",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-3",
+            "field": null,
+            "custom": {
+              "field": "business-data"
+            },
+            "subTree": {
+              "logic": "and",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-3",
+              "field": null,
+              "custom": {
+                "field": "business-data"
+              },
+              "subTree": {
+                "logic": "and",
+                "items": []
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-004",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-4",
+            "field": 0,
+            "value": 0,
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "fieldId": "f-4",
+              "field": 0,
+              "value": 0,
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-005",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-5",
+            "field": "",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-5",
+              "field": "",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-006",
+      "input": {
+        "items": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-007",
+      "input": {
+        "logic": "and",
+        "items": {}
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-008",
+      "input": {
+        "logic": "xor",
+        "items": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-009",
+      "input": {
+        "logic": "and",
+        "items": [
+          null
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-010",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-10",
+            "subTree": {
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-011",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-11",
+            "subTree": {
+              "logic": "xor",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-012",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-12",
+            "subTree": []
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "attach_array_extra_key",
+          "pointer": "/items/0/subTree",
+          "key": "logic",
+          "value": "and"
+        },
+        {
+          "op": "attach_array_extra_key",
+          "pointer": "/items/0/subTree",
+          "key": "items",
+          "value": []
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-013",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-13",
+            "value": [
+              {
+                "k": 1
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-13",
+              "value": [
+                {
+                  "k": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached"
+      ],
+      "probe": {
+        "side": "output",
+        "pointer": "/items/0/value/0/k",
+        "sentinel": 2,
+        "opposite_pointer": "/items/0/value/0/k"
+      }
+    },
+    {
+      "id": "TC-CFP-014",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "field": "drop-empty-subtree",
+            "subTree": {
+              "logic": "and",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "subTree": {
+                "logic": "and",
+                "items": []
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-015",
+      "input": {
+        "logic": "and",
+        "items": [],
+        "__proto__": {
+          "polluted": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [],
+          "__proto__": {
+            "polluted": true
+          }
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload",
+        "output_proto_unchanged",
+        "output_own_key_present"
+      ],
+      "runtime_setup": [
+        {
+          "op": "define_own_string_key",
+          "pointer": "",
+          "key": "__proto__",
+          "value": {
+            "polluted": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "TC-CFP-016",
+      "source_refs": [
+        "core/core-frontend/src/views/chart/components/editor/filter/auth-tree-chart/RowAuth.vue:232-245",
+        "core/core-frontend/src/views/chart/components/editor/filter/FilterTree.vue:59-68"
+      ],
+      "fixture_note": "RowAuth leaf carrier plus a synthetic truthy field metadata value representing FilterTree computedFiledList[fieldId] injection; field shape is intentionally minimal and is not claimed to reproduce production metadata.",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "enumValue": [
+              "North",
+              "South"
+            ],
+            "field": "synthetic-transient-field-metadata",
+            "fieldId": "region-id",
+            "timeValue": null,
+            "filterType": "enum",
+            "filterTypeTime": null,
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeNum": 2
+            },
+            "term": "in",
+            "timeType": null,
+            "value": [
+              "North"
+            ],
+            "type": "item",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "enumValue": [
+                "North",
+                "South"
+              ],
+              "fieldId": "region-id",
+              "timeValue": null,
+              "filterType": "enum",
+              "filterTypeTime": null,
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeNum": 2
+              },
+              "term": "in",
+              "timeType": null,
+              "value": [
+                "North"
+              ],
+              "type": "item",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached",
+        "input_to_output_detached"
+      ],
+      "probes": [
+        {
+          "side": "output",
+          "pointer": "/items/0/enumValue/0",
+          "sentinel": "changed-output",
+          "opposite_pointer": "/items/0/enumValue/0"
+        },
+        {
+          "side": "input",
+          "pointer": "/items/0/dynamicTimeSetting/timeNum",
+          "sentinel": 99,
+          "opposite_pointer": "/items/0/dynamicTimeSetting/timeNum"
+        }
+      ]
+    },
+    {
+      "id": "TC-CFP-017",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-17",
+            "subTree": null,
+            "runtime": {
+              "$fixture": "literal"
+            }
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/runtime",
+          "value_kind": "undefined"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-018",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "nan"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-019",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "sparse_array"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-020",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "function"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-021",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "bigint"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-022",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "symbol"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-023",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "positive_infinity"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-024",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "date"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-025",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "map"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-026",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "set"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-027",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "class_instance"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-028",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "define_symbol_key",
+          "pointer": "/items/0",
+          "value": "x"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-029",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "define_accessor",
+          "pointer": "/items/0/value",
+          "behavior": "return"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE",
+        "getter_call_count": 0
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys",
+        "getter_not_invoked"
+      ]
+    },
+    {
+      "id": "TC-CFP-030",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "define_accessor",
+          "pointer": "/items/0/value",
+          "behavior": "throw"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE",
+        "getter_call_count": 0
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys",
+        "getter_not_invoked"
+      ]
+    },
+    {
+      "id": "TC-CFP-031",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-31",
+            "subTree": null,
+            "nested": {
+              "x": 1
+            }
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "link_reference",
+          "from_pointer": "",
+          "to_pointer": "/items/0/nested/self"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-032",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "define_non_enumerable_key",
+          "pointer": "/items/0",
+          "key": "hidden",
+          "value": 1
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-033",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-034",
+      "input": [],
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-035",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f",
+            "subTree": {
+              "logic": "and"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-036",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f",
+            "subTree": {
+              "logic": "and",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "fieldId": "f",
+              "subTree": {
+                "logic": "and",
+                "items": []
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-037",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f",
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "negative_infinity"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-038",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f",
+            "subTree": null
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_special",
+          "pointer": "/items/0/value",
+          "value_kind": "array_with_group_keys"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_graph_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    }
+  ],
+  "design_sha256": "5ad93fdd9147fbfa2385f5c05ed302825b6926f89efb663f43cb62f7f6bc7006",
+  "forbidden_claims": [
+    "product_chart_copy_paste_pass",
+    "permission_verified",
+    "source_read_authorized",
+    "target_commit_atomic",
+    "goal_ac_accepted"
+  ]
+}

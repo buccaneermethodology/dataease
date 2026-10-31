@@ -1,0 +1,60 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "DE-GOV-003-SETUP-COMPLETION-V1",
+  "source_completion_rule_id": "DE-GOV-003-SETUP-RULE-V1",
+  "source_completion_rule_ref": "Dashboard/Artifacts/Goal-DE-GOV-003/stop-gate/completion-rule.md",
+  "source_completion_rule_sha256": "f6b473ca8d0b8dc05fef4251a8ba8690f7736ae8829ef4c773b902d001a1f619",
+  "issued_by_authority_ref": "Dashboard/Artifacts/Goal-DE-GOV-003/stop-gate/goal-authority.json",
+  "issued_by_authority_sha256": "d58dfb319870dfae8bbb117a46242b955c026f93711f08dec6e823446d3e76d6",
+  "issued_by_authority_id": "DE-GOV-003-SETUP-USER-REQUEST",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "DE-GOV-003-SETUP-FINAL-CLOSEOUT"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "human_decisions",
+          "operator": "none_pending_admissible"
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "goal",
+            "completion_rule",
+            "obligation_inventory",
+            "final_diff",
+            "independent_validation",
+            "closeout",
+            "dashboard_state",
+            "kb_disposition",
+            "original_plan_coverage",
+            "scope_delta_audit",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

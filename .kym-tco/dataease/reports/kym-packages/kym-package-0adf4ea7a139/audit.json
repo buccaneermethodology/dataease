@@ -1,0 +1,99 @@
+{
+  "report_kind": "kym_candidate_semantic_risk",
+  "candidate_only": true,
+  "artifact_kind": "kym",
+  "artifact_digest": "sha256:662e539ecc12692db6c81afcdb9760334278eade67e70f009d902fe47010a6ae",
+  "base_digest": "sha256:639e1a8f76aee387fcc7c5d9c34558dc078d3fc290141c96a17beab548e666df",
+  "error_count": 0,
+  "warning_count": 4,
+  "findings": [
+    {
+      "code": "KYM_DOCUMENTS_TYPE_MISMATCH",
+      "severity": "warning",
+      "artifact_kind": "kym",
+      "path": "/statements/s00_source_recovered",
+      "subject_ids": [
+        "s00_source_recovered"
+      ],
+      "message": "Documents 应标识参考材料，不应承载材料中的规则或产品能力。",
+      "evidence": {
+        "text": "S00已核验156题完整原题、选项和最终回答，来源为交叉恢复而非原生逐字导出；原题台账保持不变。"
+      },
+      "confidence": "high",
+      "resolution_required": true,
+      "current_node_ids": [
+        "documents"
+      ],
+      "suggested_node_ids": [
+        "business_rules",
+        "info"
+      ]
+    },
+    {
+      "code": "KYM_SCHEDULE_TIME_SEMANTICS_MISSING",
+      "severity": "warning",
+      "artifact_kind": "kym",
+      "path": "/statements/s00_w0_remaining",
+      "subject_ids": [
+        "s00_w0_remaining"
+      ],
+      "message": "Schedule 应包含时间、阶段、顺序、里程碑或持续更新语义。",
+      "evidence": {
+        "text": "S00文档已完成，W0原分母仍包含S01现状与技术风险调查；156项映射完成不能替代S01或证明所有影响实现的技术问题已关闭。"
+      },
+      "confidence": "low",
+      "resolution_required": false,
+      "current_node_ids": [
+        "schedule"
+      ],
+      "suggested_node_ids": [
+        "deliverables",
+        "equipments_and_tools",
+        "team"
+      ]
+    },
+    {
+      "code": "KYM_SCOPE_EXCLUSION_POLARITY",
+      "severity": "warning",
+      "artifact_kind": "kym",
+      "path": "/statements/s00_baseline_bounds",
+      "subject_ids": [
+        "s00_baseline_bounds"
+      ],
+      "message": "Scope 中出现排除或禁止极性，请确认是否应进入 Exclusions。",
+      "evidence": {
+        "text": "S00需求基线有条件有效，S01进入建议为有条件；原始建议不自动纳入，技术、性能、环境及实际能力证据依赖保留，产品实现和运行验证未完成。"
+      },
+      "confidence": "high",
+      "resolution_required": true,
+      "current_node_ids": [
+        "scope"
+      ],
+      "suggested_node_ids": [
+        "exclusions"
+      ]
+    },
+    {
+      "code": "KYM_SCOPE_EXCLUSION_POLARITY",
+      "severity": "warning",
+      "artifact_kind": "kym",
+      "path": "/statements/s00_reuse_scope",
+      "subject_ids": [
+        "s00_reuse_scope"
+      ],
+      "message": "Scope 中出现排除或禁止极性，请确认是否应进入 Exclusions。",
+      "evidence": {
+        "text": "一键清除全部已选枚举，以及公式函数提示/自动补全、字段点选、语法高亮、跨透视表模板复用，仅复用已有能力；缺失部分不新增并记录范围差异。"
+      },
+      "confidence": "high",
+      "resolution_required": true,
+      "current_node_ids": [
+        "scope"
+      ],
+      "suggested_node_ids": [
+        "exclusions"
+      ]
+    }
+  ],
+  "authority_note": "该只读报告只标识候选风险，不创建批准或 receipt，也不证明业务语义正确。"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "SP-001-C1",
+  "goal": "goal.md",
+  "acceptance_criteria": [
+    {
+      "id": "AC01",
+      "requirement": "基线与全仓盘点完整，读取/排除/不可访问分开",
+      "required": true
+    },
+    {
+      "id": "AC02",
+      "requirement": "K00-K11及F01-F18逐项对账；新增能力不漏",
+      "required": true
+    },
+    {
+      "id": "AC03",
+      "requirement": "全部核心能力的语义、异常、权限、数据链证据",
+      "required": true
+    },
+    {
+      "id": "AC04",
+      "requirement": "JSON合同与正式事实准入；不混执行面和未证实片段",
+      "required": true
+    },
+    {
+      "id": "AC05",
+      "requirement": "确定性生成、引用检查、失效检测、影响关系",
+      "required": true
+    },
+    {
+      "id": "AC06",
+      "requirement": "独立核心逐项及非核心逐域语义复核",
+      "required": true
+    },
+    {
+      "id": "AC07",
+      "requirement": "目录分离、无产品修改/秘密/专有实现",
+      "required": true
+    },
+    {
+      "id": "AC08",
+      "requirement": "原始目标完整性、最终diff/状态绑定与收尾",
+      "required": true
+    }
+  ],
+  "frozen_denominator": "核心6类＋F01–F18＋P0新增可访问能力；Inventory不等于read",
+  "claim_ceiling": "静态核实知识；无runtime保证",
+  "cases": [
+    {
+      "id": "N01",
+      "case": "正式知识引用执行Dashboard",
+      "expected": "拒绝"
+    },
+    {
+      "id": "N02",
+      "case": "来源摘要失效",
+      "expected": "拒绝并报告影响"
+    },
+    {
+      "id": "N03",
+      "case": "推断或未知标正式事实",
+      "expected": "拒绝"
+    },
+    {
+      "id": "N04",
+      "case": "仅接口推出功能实现",
+      "expected": "语义复核拒绝"
+    },
+    {
+      "id": "P01",
+      "case": "冻结源码支持的事实和关系",
+      "expected": "可生成且字节稳定"
+    }
+  ]
+}

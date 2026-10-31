@@ -1,0 +1,52 @@
+{
+  "schema_version": "goal_patch_v1",
+  "patch_id": "S02-GP-SEQ-001",
+  "base_goal_id": "DE-S02-F01",
+  "base_revision": "review-r001",
+  "base_digest": "bc968cc4d44787dd139b92b3af2a1baf464c56f092262afa110cacceeee92d24",
+  "sequence": 1,
+  "target_section": "sections",
+  "replacement": {
+    "source_baseline": {
+      "draft": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md",
+        "sha256": "118986e578d3afd19548abf45836a6f4d03cd70323b6edd4625d2c3cd468e8b9"
+      },
+      "acceptance": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md",
+        "sha256": "e07eba2e04340d2aecb97ab063bcbc4a9efe81d5026f30ea04fe1aee74f3cab0"
+      },
+      "user_intent": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md"
+    },
+    "scope": "F01通用过滤配置、查询组件自过滤及级联依赖的完整独立副本；不复制样式、布局、结果，跨类别拒绝。不开发F02–F08的新功能；Q066/Q067作为F01复制兼容约束保留，不借此扩建F04规则引擎。不自动新增撤销、批量粘贴、字段映射、共享模板或跨功能冲突分析；保留既有撤销与复制组件/改类型回归。",
+    "entry": "待Goal审查后确定分阶段进入规则；当前仅规划设计。",
+    "business_rules": "同用户同浏览器跨标签内部共享，不使用系统剪贴板；数据集ID相同且可验证；字段ID及目标完整承载、身份/数据权/编辑权每次重验。旧目标确认后整树覆盖，取消/失败不变且不触发查询。空源禁用；复制失败保留上次有效树。30分钟有效，不消耗、不续期，新复制重置，登出/换用户后旧树不可恢复。50叶子且不超1MB允许，51或超限拒绝；组合节点不计叶子，不增1000枚举限制。动态表达式保持规则而非计算结果；成功提示过滤条件已应用，格式/结构不符提示过滤条件不匹配，请重新复制。只读用户不可查看配置/复制/粘贴，不能以隐藏UI替代鉴权。",
+    "engineering_boundaries": "ISS-AC-01/02在Slice Design明确并独立审查；建议有效区间[0,1800000ms)，容量采用UTF-8完整版本化过滤配置载荷的未压缩序列化字节，1MB=1000000字节，等于上限允许。当前是工程提案，未作为最终冻结产品事实；若来源存在冲突须升级裁定。不得将此F01口径自动推广F03导出。",
+    "evidence": "完整14项F01 AC + F01关联Q066/Q067（16条产品义务），加原10项Goal AC；GLOBAL来源权威、范围不丢项作为过程不变量。逐条映射、冻结oracle、可信RED、同identity GREEN、真实入口端到端及独立验证；无权限/真实身份缺失则保留NOT_RUN。",
+    "sessions_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+    "continuation": "规划设计可先行；S01进入资料稳定且相关阻塞解除后重新固定摘要、重核实际工作树和测试环境，生成产品Builder admission才执行代码。已有实施授权持续有效。依赖未满足不关闭原分母，不抢占S01环境、修改SP-005或伪造ready。",
+    "termination": "原草稿Completion Predicate所有项成立、10项Goal AC与产品义务有证据、独立审查/最终状态对账及Stop Gate均有效，才允许完整Goal完成。双结论分别为F01实现有效性及S10进入就绪性；规划定稿不改变这两项为已通过。",
+    "roles": "主代理控制面；独立Design；独立Semantic/Validation；产品Builder于准入后独立委派；Closure绑定最终证据。当前Builder未启动是依赖门槛，非单Agent替代。",
+    "truth_placement": "稳定产品真源不在本轮规划阶段改写；本目录仅执行与设计候选。共享Dashboard四面待S01收尾稳定后增量登记；当前本地Session台账为完整计划入口，非已注册宣称。项目无registry validator。",
+    "implementation_phasing": {
+      "authority": "2026-10-27 user instruction: “先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减。”",
+      "sequence": [
+        {
+          "phase": "P1 UI MVP",
+          "purpose": "先交付真实界面的基本过滤复制粘贴路径，逐步覆盖受支持图表，并运行真实查询及保存重开。",
+          "acceptance_effect": "阶段性进展，不构成 S02 Goal 完成，不豁免任何 must-have。"
+        },
+        {
+          "phase": "P2 remaining complete acceptance",
+          "purpose": "继续完成同一 Goal 原有全部权限、复杂过滤、组件类别、边界、回归、独立验收及最终对账要求。",
+          "acceptance_effect": "所有原始 must-have 与完成谓词仍须全部满足。"
+        }
+      ],
+      "denominator_rule": "保持 Goal.base.json 中 26 项 must-have 和 S02_COMPLETE 完成谓词；MVP 仅调整实施顺序，不把 approved_deferred、迁出 Session 或阶段完成等同于通过。"
+    }
+  },
+  "reason": "按用户最新指示添加 MVP 优先、复杂场景随后完成的实施顺序；不修改原验收分母、authority、claim ceiling 或 completion rule。",
+  "scope_delta": "none",
+  "approval_ref": null,
+  "conflicts_with": []
+}

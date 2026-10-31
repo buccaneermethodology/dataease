@@ -1,0 +1,133 @@
+--- .codex/skills/sge-governed-checkpoints/SKILL.md (写前)
++++ .codex/skills/sge-governed-checkpoints/SKILL.md (当前)
+@@ -39,6 +39,8 @@
+ G01-G12 的文档路由不自动授权副作用。任何 Builder、install、upgrade、release 或 deploy 入口在第一次写入/外部动作前，必须消费并验证 `schemas/execution_admission_v1.schema.json` 对应的 admission；admission 必须绑定 Goal、Completion Contract、Context Bootstrap、Design/Pre-review 和实际 topology 的摘要、action 与 canonical target。缺失、过期、摘要漂移或 action/target 不匹配时，入口必须 fail closed。
+ 
+ ## 不可违反的 execution invariants
++
++持久写入前与最终审阅前，按 [写前保全与收尾冻结](references/baseline-and-closeout.md) 完成对应检查。复用已有材料，先齐备再冻结；审阅时点与后续 receipt 终态分别记录，避免为状态推进重写历史证据。
+ 
+ 1. 每个请求先做 proportional Intake，再构造 profile-specific Context Bootstrap；digest 未变化也要 refresh objective、authority、claim ceiling 与 critical dependencies。
+ 2. Context Optimization 只减少重复读取，不得缩小完成任务所需的 epistemic search space。required domain 缺失时扩读或报告 evidence gap。
+--- .codex/skills/sge-governed-checkpoints/references/checklists.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/checklists.md (当前)
+@@ -1,4 +1,7 @@
+ # Checklists
++
++持久写入与最终 review 使用 [写前保全与收尾冻结](baseline-and-closeout.md)；详细模板复用其中的完整性与单向顺序约束，review 的 as-of 状态不要求等于后续 receipt 终态。
++
+ 
+ ## Phase Workflow Runner
+ 
+--- .codex/skills/sge-governed-checkpoints/references/recipes/closeout.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/recipes/closeout.md (当前)
+@@ -1,11 +1,13 @@
+ # Closeout、KB/Dashboard 与 BDD recipe
++
++最终独立审阅前，先完成以下材料及 [候选包预检与冻结](../baseline-and-closeout.md#审阅前齐备与冻结)。审阅后仅按 [单向顺序](../baseline-and-closeout.md#单向收尾与时点) 绑定结果和运行 Gate；本清单不要求在 Gate 后改写已绑定正文。
+ 
+ 1. 写中文 closeout：落地范围、非目标、lanes/例外、Design/Validation handoff、verdict、证据、gates、Semantic、延后范围、KB/Dashboard 与 next candidate。
+ 2. 证据正文使用可点击 Markdown 源文件链接；hash 留给 machine artifact，不作为唯一人类入口。
+ 3. 运行 closeout-language；H1/H2 中文且英文状态有中文解释。
+ 4. stable rule 做 Contract Delta Scan 并落 canonical KB JSON；state/decision/blocker/closeout/follow-on 落 Dashboard。
+ 5. maintained behavior gate 变化同步 BDD；reader cards 写入受版本控制路径。
+-6. 更新 Session registry 后运行 reconcile check 与 validate；可重建 drift 才 apply 后复验。
++6. 项目有 Session registry 时，更新后运行 reconcile check 与 validate；可重建 drift 才 apply 后复验。没有该工具时记录 not_available，并做手工一致性复核，不能声称程序化校验通过。
+ 7. final-state Validation 与 post-closeout reconciliation 后再决定 terminal；随后执行 next-session scan。
+ 
+ closeout、handoff、Dashboard Agent 模板扩读 `../checklists.md`。
+--- .codex/skills/sge-governed-checkpoints/references/recipes/validation.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/recipes/validation.md (当前)
+@@ -1,4 +1,6 @@
+ # 独立 Validation recipe
++
++最终 review 的输入须已通过 [候选包完整性预检](../baseline-and-closeout.md#审阅前齐备与冻结)。缺项退回补齐，不能用“先审后补”把预审冒充最终审阅。报告注明 `reviewed_at`、`snapshot_id`、`as_of_state` 和 verdict；审阅之后的当前终态按 [单向收尾](../baseline-and-closeout.md#单向收尾与时点) 读回，不回写旧 review。
+ 
+ 1. 保持 read-mostly；先建完整 Read Manifest，覆盖 Raw Prompt、Final Goal、original ledger/OPCM、Scope Delta、Design/implementation、closeout、logs、KB、Dashboard、tests 与完整 diff。
+ 2. 用中文先说明任务做什么、声称什么、不证明什么与主要风险。
+--- .codex/skills/sge-governed-checkpoints/references/recipes/intake-and-first-task.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/recipes/intake-and-first-task.md (当前)
+@@ -1,6 +1,7 @@
+ # Intake 与首任务 recipe
+ 
+ 1. 保存 Raw User Intent authority；判断目标、source authority、repo/KB/Dashboard 边界、风险、缺失信息与执行路线。
++   持久写入前按 [写前保全](../baseline-and-closeout.md#写前保全) 保存原文、完整状态清单和受影响未跟踪文件原始字节；admission 引用输入只增新版本，不覆盖旧版本。
+ 2. 使用 `first_task_router.py` 区分 trivial read-only、governed implementation/validation 与 Goal missing/existing/conflict。
+ 3. 构造 read_only、implementation 或 validation Context Bootstrap，验证 required/conditional reads、semantic refresh、epistemic domains、impact 与 topology。
+ 4. Goal missing 时先冻结 Goal；conflict 时请求人类 authority；只有 Goal existing 且合同 ready 才进入相应 lane。
+--- .codex/skills/sge-governed-checkpoints/references/recipes/delta-validation.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/recipes/delta-validation.md (当前)
+@@ -2,6 +2,7 @@
+ 
+ 1. 读取上一轮 Validation State Snapshot；验证 baseline revision、tracked/untracked/renamed/generated inventory。
+ 2. 只读取 changed files、受影响 gates、未关闭 blocker 与最终状态面。
++   已通过完整最终候选包的 review 后，若仅按预声明槽位生成同一报告的 wrapper/state/receipt，执行绑定和只读读回；不因历史 `CONTINUE` 推进到当前 `GOAL_COMPLETE` 而重写 review 或自动追加一轮 review。受审对象变化仍按第 3 项及 [收尾规则](../baseline-and-closeout.md#单向收尾与时点) 处理。
+ 3. user/Goal/governance/AC/authority/claim/truth/topology/threat/snapshot 或 inventory 变化立即 rebaseline。
+ 4. 默认 initial validation → blocker-fix delta validation → final-state reconciliation；第四轮起记录 blocker admissibility 或 rebaseline reason。
+ 5. 同一根因连续两轮新增 blocker 时升级 rebaseline、hardening Session 或人类 scope decision。
+--- .codex/skills/sge-governed-checkpoints/references/recipes/goal-and-loop.md (写前)
++++ .codex/skills/sge-governed-checkpoints/references/recipes/goal-and-loop.md (当前)
+@@ -11,7 +11,7 @@
+ 
+ ## Stop Gate 执行合同
+ 
+-输入遵守 `schemas/loop_state_v1.schema.json`；输出遵守 `schemas/stop_gate_receipt_v1.schema.json`。调用方管理 Goal authority root，显式传入 root 路径、source root 和预先固定的 SHA-256。state producer 不能自行替换可信 root。helper 只委托核心，不能保留平行终态判断。
++输入遵守 `schemas/loop_state_v1.schema.json`；输出遵守 `schemas/stop_gate_receipt_v1.schema.json`。调用方管理 Goal authority root，显式传入 root 路径、source root 和预先固定的 SHA-256。调用前按 [路径预检](../baseline-and-closeout.md#路径预检与能力边界) 核对解析后的绝对路径和授权 root；预检不替代 Gate。state producer 不能自行替换可信 root。helper 只委托核心，不能保留平行终态判断。
+ 
+ - `CONTINUE`：一行进度，执行 DISPATCH_NEXT_WORK、MATERIALIZE_NEXT_ENTRY、REPAIR、RETRY_RECOVERY 或 COMPLETE_FINAL_EVIDENCE；不得发送最终答复。
+ - `PAUSE_ALLOWED`：只请求真正的人类决策或报告已达恢复阈值的阻断；已授权事项不重复询问。
+--- /dev/null
++++ .codex/skills/sge-governed-checkpoints/references/baseline-and-closeout.md
+@@ -0,0 +1,52 @@
++# 写前保全与收尾冻结
++
++适用于持久编辑与 governed final closeout。复用本轮已有 Goal、合同、清单和快照，不按每个检查项增设文件或 reviewer。本文规定执行顺序；语义完整性仍由人和独立 Validation 判断，检查表不自动产生验收结论。
++
++## 写前保全
++
++在首次改变交付对象前完成：
++
++- 原样保存当前用户请求，包括链接、标点及约束；摘要另列为 projection。后续用户更正追加原文与影响，不覆盖先前 authority 记录。
++- 记录基线 commit（无 Git 则注明）、tracked/untracked 清单及修改、删除、重命名状态，区分 index 与 worktree。Git 可用 `git status --porcelain=v1 -z -uall`、`git ls-files -z` 保存机器清单；忽略但实际要改的路径另列，不能因 ignore 漏出分母。
++- 对将修改/删除/重命名的未跟踪文件保存原始字节副本、原路径及 SHA-256；已跟踪但有本地改动的文件也保存其写前内容，不能只依赖 HEAD。新文件记录原先不存在；符号链接保存链接信息，不盲目跟随到范围外。只备份受影响内容，避免搜集无关敏感文件。
++- admission 引用的 Goal、合同、Context、Design、topology 输入一经绑定保持原字节。修正时创建新版本，记录 supersedes/原因/受影响 AC，按影响重审并生成新 admission；保留旧文件与失败结果。重序列化也是字节变化。
++
++路径和摘要不能替代字节备份。已经缺失的历史字节不能用重建摘要伪装为原始快照；明确证据限制和适用验收边界。
++
++## 审阅前齐备与冻结
++
++最终 review 前逐项确认以下内容存在、可读、与本轮原始范围一致；可合并在已有 handoff/manifest 中：
++
++| 检查面 | 完整条件 |
++|---|---|
++| 原始范围 | 原文、Goal、原 must-have/AC、OPCM、Scope Delta 及其 authority 无遗漏 |
++| 实际交付 | 最终 diff inventory 包括 tracked/untracked、新增/删除/重命名，按路径绑定内容；声明范围和完整分母一致 |
++| 阅读入口 | Goal 索引、必要链接、Design 与验证交接可访问；缺失材料先补齐 |
++| 最终状态面 | closeout 候选正文、Dashboard/KB 的交付状态与声明边界已齐备；KB 不适用须说明 |
++| 复核与检查 | 手工或工具 reconciliation、已执行的适用 gate 结果、失败记录与限制齐全；缺 registry 工具须如实说明 |
++| 下游输出槽位 | 明确 review、结果 wrapper、最终 state、receipt 的输出位置与责任人；这些结果尚未产生不能伪填 PASS |
++
++先补缺项，再冻结候选包，保存 snapshot ID、时间、文件清单与摘要，提交独立最终 review。冻结的正文可写“交付已落地；验收和 Goal 终态见固定结果入口”，不提前写已通过，也不留下必须 Gate 后回填的结果占位句。确需由结果驱动的状态字段，预先列入下游槽位并由 reviewer 审查其更新规则。
++
++## 单向收尾与时点
++
++顺序固定为：**交付与最终状态面、closeout/reconciliation 候选 → 独立 review → review wrapper/final state → Stop Gate receipt → 只读读回**。
++
++1. review 绑定冻结 snapshot，记录 `reviewed_at`、`snapshot_id`、`as_of_state`、逐项 verdict 与限制。review 可以判定候选包通过而 Goal 尚未 terminal；不得预判未来 Gate 已通过。
++2. Closure 将该报告的实际摘要绑定到 wrapper/state。结果槽位引用上游，受审快照不把尚未产生的 review/receipt 摘要纳入自身。用来源路径保持导航即可，不为了消除摘要关系删除真实交付或减少验收项。
++3. Gate 使用调用方预先固定的 authority root 和当前实际输入；只有最新有效 receipt 明确允许 final 才作终态声明。
++4. Gate 后只读核对 state、引用文件摘要和最终材料。旧 review 的 `CONTINUE` 是审阅时点事实；后来有效 `GOAL_COMPLETE` 是状态推进。不要重写旧报告来制造“同步”，也不要仅因这次合法推进重启 reviewer。
++5. 已审内容、claim、交付或 AC 发生实质变化时，旧绑定不再覆盖新对象。保存新快照并按影响重审；authority、范围、合同、inventory 等改变按 delta recipe 触发 rebaseline。修复缺失交付优先于维持旧 receipt。Gate 后若确需写入受绑定文件，先失效旧结论，完成修复/适用验证，再重新绑定和运行 Gate。
++
++独立 reviewer 检查实际候选包和依赖顺序；最终只读读回检查绑定。两者职责均保留；不将一次任务的“无需追加 reviewer”决定扩展为通用豁免。
++
++## 路径预检与能力边界
++
++调用 Stop Gate 前，按工具的解析基准核对 `allowed-root`、`authority-source-root` 和 `authority-root`：
++
++- source root 与 allowed root 使用已授权位置的绝对路径；authority root 相对路径由 authority-source-root 解析，不能假定它相对于 shell 当前目录。
++- 用严格解析后的路径检查存在性、普通文件类型及 root 包含关系；同时按 Gate 规则拒绝 authority 文件本身为符号链接，检查父级符号链接解析后是否逃出 root。建议向 CLI 传入已核对的绝对路径。
++- authority root 内容摘要须与调用方先前固定的 expected SHA-256 一致；不得从待验 state 自动推导 trusted root，也不得为了让预检通过临时扩大 root、替换 expected digest 或放松 Gate。
++- 越界、缺失或摘要不符时保留失败结果，修正实际调用参数或合法输入来源后重试；预检不能代替既有 fail-closed 验证。
++
++依赖顺序采用人工/独立 Validation 检查。现有 Stop Gate 不因此获得任意语义依赖环检测、宿主自动拦截或自动保证快照语义完整的能力。未做测量时不声明节省比例或实际耗时下降。

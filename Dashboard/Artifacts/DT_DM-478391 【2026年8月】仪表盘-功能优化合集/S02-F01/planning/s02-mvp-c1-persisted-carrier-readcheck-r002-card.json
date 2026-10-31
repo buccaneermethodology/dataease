@@ -1,0 +1,62 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-C1-PERSISTED-CARRIER-READCHECK-r002",
+  "session_id": "DE-S02-F01",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-C1-PERSISTED-CARRIER-READCHECK-r002.json",
+      "sha256": "4292b06d63d5dd80ac3cda032a20ccb5ed3996efbf61a383fd81cab4f9f59973"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-C1-PERSISTED-CARRIER-READCHECK-r002",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/UiC1PersistedDbCheck-r001.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/UiC1PersistedDbCheck-r001.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "实际已保存过滤配置的独立DB读回；非图库结果/权限/49验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r002.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-C1-PERSISTED-CARRIER-READCHECK-r002",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r444.json",
+  "working_directory": ".",
+  "execution_command": "扩读实际save->updateCanvas->saveChartViewFromVisualization->ChartViewManege.save的snapshot repository；只读三个测试chart在published与draft两表的过滤，普通保存按snapshot三树应相等。初探published失配记录为错误carrier假设，未正常发布故不要求published更新；不改变Goal或执行发布。只写原尚未生成的UiC1PersistedDbCheck-r001.json，若断言失败仍记录实测且不写pass。",
+  "delta_read_set": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/UiC1FirstQuerySaveChain-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionPersisted-r001.json",
+    "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+    "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+    "core/core-backend/src/main/java/io/dataease/chart/manage/ChartViewManege.java",
+    "core/core-backend/src/main/java/io/dataease/visualization/dao/auto/entity/SnapshotCoreChartView.java"
+  ]
+}

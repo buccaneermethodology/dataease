@@ -1,0 +1,291 @@
+{
+  "status": "纯组合候选，待独立复核",
+  "card_sha256": "9d03c29bfd28201f00c66418ab9dc03607bcd454108e055648cac6ed43e5596e",
+  "interface": "prepareQueryReferencePipeline(input: {propValue:unknown,cascade?:unknown,sourceComponents:unknown,targetComponents:unknown,maps:{conditionMap:unknown,nodeMap:unknown}}): {ok:true,value:QueryReferencePlan}|{ok:false,stage:QPROJ|QMAP|QPREP,reason:原阶段reason}",
+  "composition": [
+    "QPROJ({...raw projection fields,maps:{conditionMap,nodeMap,componentMap:{}}})",
+    "失败立即返回QPROJ原reason",
+    "QMAP({references:projection.value.conditions.flatMap(c=>c.targetRefs),sourceComponents:input.sourceComponents,targetComponents:input.targetComponents})",
+    "失败立即返回QMAP原reason",
+    "QPREP({...projection.value,componentMap:mapping.componentMap})",
+    "失败立即返回QPREP原reason；成功原value返回"
+  ],
+  "cases": [
+    {
+      "id": "TC-QPIPE-001",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "201"
+            },
+            "field": {
+              "id": "province"
+            },
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "parameters": [],
+            "defaultValue": [
+              "浙江"
+            ],
+            "mapValue": [
+              "江苏"
+            ]
+          },
+          {
+            "id": "q2",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "201"
+            },
+            "field": {
+              "id": "city"
+            },
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "city"
+            },
+            "parameters": []
+          }
+        ],
+        "cascade": [
+          [
+            {
+              "id": "n1",
+              "datasetId": "201--q1--province",
+              "fieldId": "",
+              "placeholder": "首级"
+            },
+            {
+              "id": "n2",
+              "datasetId": "201--q2--city",
+              "fieldId": "",
+              "placeholder": "配置级联字段"
+            }
+          ]
+        ],
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "city"
+            ]
+          }
+        ],
+        "maps": {
+          "conditionMap": {
+            "q1": "q12",
+            "q2": "q22"
+          },
+          "nodeMap": {
+            "n1": "n12",
+            "n2": "n22"
+          }
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "city"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "conditions": [
+            {
+              "id": "q12",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            },
+            {
+              "id": "q22",
+              "datasetId": "201",
+              "fieldId": "city",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "city"
+                }
+              ]
+            }
+          ],
+          "chains": [
+            [
+              {
+                "nodeId": "n12",
+                "conditionId": "q12",
+                "datasetId": "201",
+                "fieldId": "province"
+              },
+              {
+                "nodeId": "n22",
+                "conditionId": "q22",
+                "datasetId": "201",
+                "fieldId": "city"
+              }
+            ]
+          ]
+        }
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP"
+      ]
+    },
+    {
+      "id": "TC-QPIPE-002",
+      "base": "TC-QPIPE-001",
+      "replace": {
+        "propValue": [],
+        "targetComponents": null
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QPROJ",
+        "reason": "INVALID_INPUT"
+      },
+      "expected_calls": [
+        "QPROJ"
+      ]
+    },
+    {
+      "id": "TC-QPIPE-003",
+      "base": "TC-QPIPE-001",
+      "replace": {
+        "targetComponents": []
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QMAP",
+        "reason": "MISSING_COMPONENT"
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP"
+      ]
+    },
+    {
+      "id": "TC-QPIPE-004",
+      "base": "TC-QPIPE-001",
+      "replace": {
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "city"
+            ]
+          },
+          {
+            "componentId": "chart-C",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "city"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QMAP",
+        "reason": "AMBIGUOUS_COMPONENT"
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP"
+      ]
+    },
+    {
+      "id": "TC-QPIPE-005",
+      "base": "TC-QPIPE-001",
+      "patch": {
+        "cascade[0][1].datasetId": "201--missing--city"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QPREP",
+        "reason": "MISSING_CONDITION"
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP"
+      ]
+    },
+    {
+      "id": "TC-QPIPE-006",
+      "base": "TC-QPIPE-001",
+      "append_chain": [
+        {
+          "id": "n3",
+          "datasetId": "201--q2--city",
+          "fieldId": "",
+          "placeholder": "首级"
+        },
+        {
+          "id": "n4",
+          "datasetId": "201--q1--province",
+          "fieldId": "",
+          "placeholder": "配置级联字段"
+        }
+      ],
+      "extend_nodeMap": {
+        "n3": "n32",
+        "n4": "n42"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QPREP",
+        "reason": "CYCLE"
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP"
+      ]
+    }
+  ],
+  "common_assertions": [
+    "深冻结输入可执行",
+    "输入调用前后深相等",
+    "错误结果无value/componentMap或任何部分产物",
+    "同输入确定输出；无权限/网络/Store/时钟/GUID/事件",
+    "stage只定位失败来源，不改reason字符串",
+    "只有三模块实际实现组合，不以stub替代行为验收；可用spy观察短路但不得改返回结果"
+  ],
+  "boundary": "输入目录合成/调用方提供不证明可信、权限或真实目标兼容；QPREP历史package部分验证限制原样保留，组合绿测不能追认旧RED/角色/时点证据",
+  "proposed_files": [
+    "core/core-frontend/src/custom-component/filter-copy/query-reference-pipeline.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-reference-pipeline.test.ts"
+  ],
+  "checks": "card/JSON/6 identity结构自检，未执行QPIPE",
+  "gaps": []
+}

@@ -1,0 +1,612 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-001-design-review-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立审查QSSDH-001设计事实正确性与有界可执行性，特别核对QSSDH-SOURCE-01是否足以阻断新产品生命周期实现；严格区分设计合同通过与实施准入。先准备card/context并待父流程校验后执行。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "准备独立Semantic Review，保留完整Goal分母；不预设唯一finding成立或审查结果。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignHydrationDesignReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品代码或作者设计/fixtures",
+      "改变Goal/权限分母",
+      "父流程校验前执行正式review"
+    ],
+    "maximum_claim": "仅独立设计事实与有界准入双结论，不证明产品/权限/Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ScopeDeltaAudit-r001.md",
+      "revision": "73a4144097f0ded056d2ac3adfb502bd796a2d318662e81dde56f9e30a5ee278",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus.md",
+      "revision": "b2ef6e4a380232c2780977da106eefaac3d6bb01ca2363c98ca75d639ee49c56",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "bf26046dc3ae908852ee0eebb0080aa12ca4abb708d85edda5bff0f60817a9bc",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGapReconciliation-r001.md",
+      "revision": "3a6668aad38a2ee40fe695de2cda77f031d6968255d5b2005c4046255869455d",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md",
+      "revision": "863357ddfbefdf55f715d0d6e9dd8b87f8fc6e5526c5317034822c8facce2044",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r004.json",
+      "revision": "9acbf272bbae793d0ccdee2131261d10ba85d256f69e6dfab761510fb9943f2b",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r004.md",
+      "revision": "49a51a7747207c3f4ea457cc6e8725aef294da2c5c496e95b87faa90c451395f",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectRebuildDesign-r001.md",
+      "revision": "6142d2605d596585d8dfb4859a6ffbfefdf0defe2ac9fc0cf1f5da12ed30c7a6",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSINGLE-REBUILD-001-Validation-r002.md",
+      "revision": "e96f4cc00c718af19c7954f7d150a59ec72db163a279eef68ddd5bb6148c7db0",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDefaultRebuildDesign-r003.md",
+      "revision": "d6fb3d4e78c60b2250635d6e88766ee8d7dc90d6f556630dd9bd0a49a912e5eb",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSINGLE-DEFAULT-COPY-001-Validation-r001.md",
+      "revision": "8889b96442ef13cf40806c3c70e49bf71bd3972756c07838bb5912ff485e424b",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QE2E-001-Validation-r001.md",
+      "revision": "8d0a516946871746464ddce613dd6c90526220e04ddf8db99645bd64e73e4cb1",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/ConditionDefaultConfiguration.vue",
+      "revision": "43f0b03937b3a71e1ede1337e10514674a1f12d50d1f0db8528cb89dce5afb66",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r106.json",
+      "revision": "abdf0753ba1aa4341c67a8b18b8cd18521079cb65001a6909822afa52d45ad07",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignHydrationDesign-r001.md",
+      "revision": "a94fb59549f28965d24c5500cc9010059be5abcbb713c1e9c24583e8465f9646",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignHydrationFixtures-r001.json",
+      "revision": "38c9ec999096dc9f3e3ce803f1e9266d90f38c1ea8a3bbf20ca05bf85f81ddbe",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/qssdh-001-design-card-r001.json",
+      "revision": "d5f98666c404034a9f5186972da06362a4bd6372fb765b89774060bfbcb35e11",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QSSDH-001-design-r001.json",
+      "revision": "bd5056604c196beafcd6b72b85fa02dbb1176192b92a9f9053ced79760f34720",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QCARRIER-001-Validation-r001.md",
+      "revision": "a3f107bcf0b829ee8817c34c653c9a2459a5169dcd6d19f89a5f032fb66c559c",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QCARRIER-001-Validation-r002.md",
+      "revision": "1e576e7aff21e497bcfdd903e9506f2fe9f227773fdacfb1b9a2ad5e2dd4fd66",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierDesign-r001.md",
+      "revision": "17f8f65d876b5f8eda0493b209687bf007e634743dc517363efe82a7c4f7ae32",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierFixtures-r001.json",
+      "revision": "03613abf4395405162baa736a7592dcaa1bc5be706b7b56960cd96860d93e371",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesign-r007.md",
+      "revision": "bf67232e7a54d7a92e7eff866182298fe0b151f01edec5293286add96aeee47f",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "86fddf5dc5a44dcdce0e0895b10ee22265490174fe3018e05ccca614cf35c1db",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-end-to-end.ts",
+      "revision": "230c23e2906c59dc88523f1d37bebbbbcd17c7927a9e8828bfbbfd06bcf720b8",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/references/recipes/semantic-review.md",
+      "revision": "7f4326d3b63c128076cef4c735c9e33faa8bc7f051ba62ab8663b4f28cb409ce",
+      "applicability": "QSSDH-001独立语义审查",
+      "reason": "核查源默认值写入及设计载体来源、完整oracle、既有验证边界与原Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-authority",
+      "condition": "QSSDH-SOURCE-01所指覆盖路径或来源不可辨识性缺少证据",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "扩读直接调用者/写入方，给出反例或保留证据缺口，不预设阻断成立",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "oracle-drift",
+      "condition": "完整oracle与真实源码或父模块不一致",
+      "mode": "deterministic",
+      "action": "记录具体差异与最小修复，分别裁定设计与实现准入",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_semantic_review",
+    "reason": "独立审查状态生命周期和source authority；准备阶段不创建结果或宣称已dispatch。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "来源捕获/更新/保存直接写入证据",
+    "完整oracle与查询消费者",
+    "QSSDH-SOURCE-01反例及生命周期实施前置",
+    "QE2E/QCARRIER既有验证claim ceiling"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10项AC、26项must-have、16项产品义务保持；真实权限BLOCKED/NOT_RUN；S01不在范围。"
+  },
+  "snapshot": {
+    "snapshot_id": "S02-QSSDH-001-design-review-r001",
+    "parent_snapshot_ref": null
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-F01-authority-materials-review-r001",
+  "session_id": "S02.1",
+  "lane": "authority materials package review round 1",
+  "role": "semantic",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-AuthorityMaterialsReview-r001.json",
+      "sha256": "bb7ad9345f515864e66dc9a80810e5787350e75e361ba72a120206eb263995e0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsRequest-r001.md",
+      "sha256": "06388f2def961067bace8057ace287c0cd6ee1b3aca03b3a4aca3e7790d138ae"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/AuthorityMaterialIntakeTemplate-r001.json",
+      "sha256": "8fe9cac74153f11321d63fae05a68fc5fe083b38163bf145911d128a6d308076"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-F01-authority-materials-review-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AM-COVERAGE",
+    "AM-AUTHORITY-LINEAGE",
+    "AM-UNKNOWN-PRESERVATION",
+    "AM-SECRET-BOUNDARY",
+    "AM-ISOLATED-ENVIRONMENT",
+    "AM-S01-SCOPE",
+    "AM-REVIEW-ROUND-BOUNDARY",
+    "AM-MAINTAINER-USABILITY"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "Review round 1 only: assess current package completeness, correctness, scope and usability. No authority acquisition, design freeze, implementation admission or product acceptance.",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-F01-authority-materials-review-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-AuthorityMaterialsPreparation-r001.json",
+  "working_directory": ".",
+  "execution_command": "请按完整 required read set 逐条读取并核验，检查全部未决 DG-02 场景及包内每项请求是否精确对应权威来源、证据类型、scope 和明确的不支持范围。一次性列出全部 findings，不要遇到首个阻断即停止；按 blocking/non-blocking/questions 分组，逐项给 ID、等级、位置、事实依据、影响、修复建议和 disposition。区分Goal已经冻结的要求与真正待维护者裁定；检查身份/组织/代理、撤权竞态、可信时间及边界、通知丢失乱序、存储故障、旧有效载荷、逻辑计数、重复请求、S01条件、秘密安全、source/owner/digest等模板字段、工作区当前修改。采用 per-artifact review cap：本 authority package 为 round 1/3；不得把 DG-02 的历史 review round数当成整个 S02 任务的上限。只写唯一指定 review 报告，不修复其他文件。"
+}

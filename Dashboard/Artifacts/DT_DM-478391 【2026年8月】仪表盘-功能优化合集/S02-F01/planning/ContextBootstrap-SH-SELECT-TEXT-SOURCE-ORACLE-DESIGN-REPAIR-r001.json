@@ -1,0 +1,157 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按独立审查 F-ST-SRC-ORACLE-001 (P2) 选择方案2：ST-SRC-004 CANCEL只验证handler数据/cascade状态转移，移除派生Promise rejection作为oracle；将未捕获UI Promise错误明确列为未验证。只产出Design/Cases r002及修订记录，不改产品源码、不冻结候选。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "修复测试设计中不可重复的派生Promise rejection oracle，不改产品语义或范围。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r002.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r002.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码或handler实际Promise行为",
+      "将ST-SRC-004 rejection写成已被handler/UI处理",
+      "扩展为完整合法组合/schema或产品接线",
+      "将006/007 NOT_READY改为ready",
+      "修改Goal分母、权限/S01状态或原r001候选"
+    ],
+    "maximum_claim": "仅冻结handler局部状态转移oracle，排除派生Promise拒绝结果；产品UI拒绝处理仍未验证。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "原始Goal和分母",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r001.md",
+      "revision": "92cdffa883d38bfd9bcf72c6ea6771c8e492070129eabab568a90f4125f4147c",
+      "domains": [
+        "design",
+        "claim_ceiling"
+      ],
+      "reason": "原始设计",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r001.json",
+      "revision": "ccfbb1e91853d5581be9b24db954473fb986bbf5672026bda1acbed256eab6cc",
+      "domains": [
+        "design",
+        "acceptance"
+      ],
+      "reason": "原始oracle/Cases",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r001.md",
+      "revision": "6a19df1c25de9ae19d7e299f73639bff6147e4281f9fe89e6d89b113715cb708",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "P2 finding和处置选择",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "CANCEL handler源码语义",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r279.json",
+      "revision": "741f84a412618e8b698efa087e975e5a699f4bfd042d8e19c37c9b4752d1dc8d",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "当前候选状态与准入边界",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-REPAIR-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_or_scope_drift",
+      "condition": "源码/Goal/阻塞状态与绑定摘要不同",
+      "mode": "deterministic",
+      "action": "停止并重基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "oracle_ambiguity",
+      "condition": "发现非唯一状态转移或歧义",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "保留NOT_READY并列出精确缺口",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal原10/26/16分母保持，Scope Delta none；产品义务NOT_RUN；S01 CONDITIONAL、真实权限BLOCKED/NOT_RUN；ST-SRC-006/007 NOT_READY。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_design_repair",
+    "reason": "按独立P2修复测试oracle边界；只改设计和Cases候选。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "finding F-ST-SRC-ORACLE-001",
+    "promise rejection observation boundary",
+    "case identity and oracle",
+    "claim ceiling"
+  ]
+}

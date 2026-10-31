@@ -1,0 +1,121 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-F01F08-S00",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "/goal 请review这个Goal，然后定稿，把Goal录入Dashboard，然后执行这个Goal：Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S00_Loop_Goal_Draft_r001.md\n\n有问题可以向我澄清",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "审查定稿并执行S00需求核对，保留缺输入停在S00.1的规则",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/**",
+      "Dashboard/Sessions.md",
+      "Dashboard/Big_Ideas.md",
+      "Dashboard/README.md",
+      "Dashboard/Decisions.md"
+    ],
+    "forbidden_actions": [
+      "修改权威需求",
+      "修改产品代码",
+      "安装构建启动",
+      "执行S01",
+      "提交推送部署"
+    ],
+    "maximum_claim": "S00文档审查与输入证据；缺原始决策不得宣称完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "required",
+      "reason": "原始范围与治理依据",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+      "applicability": "required",
+      "reason": "原始范围与治理依据",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S00_Loop_Goal_Draft_r001.md",
+      "revision": "8478760f3587f35836bdb868c49dfa8c5c6127c4fe24420beb9255829d53c255",
+      "applicability": "required",
+      "reason": "原始范围与治理依据",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "C-01",
+      "condition": "若新增项目级 Dashboard registry 或 canonical KB",
+      "action": "先读取对应工具/KB contract 并扩展 AC 与验证范围",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "C-02",
+      "condition": "若发生范围外行为、authority 或执行拓扑变化",
+      "action": "重新构造 Context Bootstrap 并触发 full rebaseline",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "governance"
+    ],
+    "preservation_statement": "覆盖F01–F08需求、原始决策、KYM目标、来源优先关系和验收边界；缺失完整问答时不从汇编重建。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design -> builder -> independent validation -> closure",
+    "reason": "主代理设计与文档整理，独立子Agent审查；保留已有工作区修改"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

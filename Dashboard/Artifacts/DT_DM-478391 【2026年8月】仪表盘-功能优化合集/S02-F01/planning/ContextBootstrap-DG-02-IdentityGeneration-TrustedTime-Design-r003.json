@@ -1,0 +1,234 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-DG-02-identity-time-design-correction-r003",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按 DG-02 independent Review r001 修正缓存作用域和S02 Entry Packet表述，分开generation与permission version，增加有序候选oracle；保留未知authority并不冻结。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "追加一版有界DG-02设计候选修正；不改产品代码、Goal或验收范围。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r003.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码",
+      "修改Goal/DesignGaps/冻结合同或Cases",
+      "认定身份、撤权、可信时间已有实现",
+      "宣称设计冻结、产品验收或Goal AC关闭"
+    ],
+    "maximum_claim": "只修正candidate中的来源描述并给出待审场景oracle；未知权限/时钟authority仍阻塞完整设计冻结与产品Builder。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGaps.json",
+      "revision": "0a6e1718b0cad911c479ed7faef73664d0bf9d565383d36e226df23f93ec410c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r001.md",
+      "revision": "03711b5b3b533c042e8f330872e1db61081d9e30fb6c6dfa09759902eea5399b",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r001.md",
+      "revision": "7ced2c1db1df264da65f2eebd2dae76199db39125ac57139708df093c74eeba5",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useCache.ts",
+      "revision": "cea005dca69db55d3e2661a3115acce2e83d2e368e3b61c73131aca94a55f647",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "core/core-frontend/src/utils/logout.ts",
+      "revision": "878cb98f412c6c9263d615aaa59a1b7eb6aeaa18c41259f09861a517897d3434",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "core/core-frontend/src/utils/resourceImages.ts",
+      "revision": "6de8490685e96d70a3f6036a52d13d978e7435ad6cbd22c2ab1a4e882a0097fa",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r310.json",
+      "revision": "a5757a851d5c6f1e3e6feae13a4e88aa9e09ae06134320d897c0f446d8b9c63f",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "review finding and source-grounded design correction",
+      "applicability": "DG-02 corrected candidate r003"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "entry_or_permission_source_change",
+      "mode": "deterministic",
+      "condition": "S01 packet或真实权限模块/隔离实例出现新证据",
+      "action": "重基线并重新核对会话、撤权、时间authority",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim_expansion",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "内容将候选提升为冻结合同或实现结论",
+      "action": "保持candidate与UNKNOWN并要求独立审查",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10/26/16、Scope Delta none；S02/F01 Entry Packet存在但标Conditional；真实权限blocked/not run；generation/time authority unknown。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_builder",
+    "reason": "仅新建受审设计candidate版本，不改产品/合同。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual source evidence",
+    "review findings",
+    "candidate state and claim ceiling"
+  ]
+}

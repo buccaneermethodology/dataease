@@ -1,3 +1,4 @@
+import { preparedMapKey } from './filter-paste-ready'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   L7ChartView,
@@ -101,12 +102,16 @@ export class SymbolicMap extends L7ChartView<Scene, L7Config> {
 
   async drawChart(drawOption: L7DrawConfig<L7Config>) {
     const { chart, container, action } = drawOption
+    if (drawOption.filterPaste && (!chart.xAxis || chart.xAxis.length < 2))
+      throw new Error('paste_map_axes_missing')
     const containerDom = document.getElementById(container)
     if (!containerDom) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_missing')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const rect = containerDom.getBoundingClientRect()
-    if (rect.height <= 0) {
+    if (rect.height <= 0 || (drawOption.filterPaste && rect.width <= 1)) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_empty')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const xAxis = deepCopy(chart.xAxis)
@@ -117,7 +122,7 @@ export class SymbolicMap extends L7ChartView<Scene, L7Config> {
       miscStyle = parseJson(chart.customAttr).misc
     }
 
-    const mapKey = await this.getMapKey()
+    const mapKey = drawOption.filterPaste ? preparedMapKey() : await this.getMapKey()
     const mapStyle = getMapStyle(mapKey, basicStyle)
 
     let center = getMapCenter(basicStyle)
@@ -146,7 +151,11 @@ export class SymbolicMap extends L7ChartView<Scene, L7Config> {
       center
     )
 
-    this.configZoomButton(chart, scene, mapKey)
+    if (drawOption.filterPaste) {
+      drawOption.filterPaste.addCleanup(() => scene.destroy())
+      if (!drawOption.filterPaste.check()) throw new Error('paste_map_cancelled')
+    }
+    if (!drawOption.filterPaste) this.configZoomButton(chart, scene, mapKey)
     if (xAxis?.length < 2) {
       return new L7Wrapper(scene, undefined)
     }
@@ -158,17 +167,27 @@ export class SymbolicMap extends L7ChartView<Scene, L7Config> {
       scene.addPopup(tooltipLayer)
     }
     this.buildLabel(chart, configList)
-    symbolicLayer.once('inited', () => {
-      mapRendered(container)
-    })
-    symbolicLayer.on('inited', () => {
+    symbolicLayer.once(
+      'inited',
+      drawOption.filterPaste
+        ? drawOption.filterPaste.callback(() => mapRendered(container))
+        : () => mapRendered(container)
+    )
+    const afterSymbolicInit = () => {
       chart.container = container
-      configCarouselTooltip(chart, symbolicLayer, symbolicLayer.sourceOption.data, scene)
+      if (!drawOption.filterPaste)
+        configCarouselTooltip(chart, symbolicLayer, symbolicLayer.sourceOption.data, scene)
       qqMapRendered(scene)
       if (tooltipLayer && mapKey.mapType === 'qq') {
         this.setTooltipPopupZIndex(scene)
       }
-    })
+    }
+    symbolicLayer.on(
+      'inited',
+      drawOption.filterPaste
+        ? drawOption.filterPaste.callback(afterSymbolicInit)
+        : afterSymbolicInit
+    )
     symbolicLayer.on('click', ev => {
       const data = ev.feature
       const dimensionList = []
@@ -207,7 +226,7 @@ export class SymbolicMap extends L7ChartView<Scene, L7Config> {
       })
     })
 
-    return new L7Wrapper(scene, configList)
+    return new L7Wrapper(scene, configList, drawOption.filterPaste)
   }
 
   /**

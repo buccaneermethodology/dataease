@@ -1,0 +1,263 @@
+                                    coreChartView.tableId.as("tableId"),
+                                    dataVisualizationInfo.id.as("resourceId"),
+                                    dataVisualizationInfo.name.as("resourceName"),
+                                    dataVisualizationInfo.type.as("resourceType"),
+                                    coreChartView.xAxis.as("xAxis"),
+                                    coreChartView.xAxisExt.as("xAxisExt"),
+                                    coreChartView.yAxis.as("yAxis"),
+                                    coreChartView.yAxisExt.as("yAxisExt"),
+                                    coreChartView.extStack.as("extStack"),
+                                    coreChartView.extBubble.as("extBubble"),
+                                    coreChartView.extLabel.as("extLabel"),
+                                    coreChartView.extTooltip.as("extTooltip"),
+                                    coreChartView.flowMapStartName.as("flowMapStartName"),
+                                    coreChartView.flowMapEndName.as("flowMapEndName"),
+                                    coreChartView.extColor.as("extColor")
+
+                            )
+                    )
+                    .from(coreChartView)
+                    .join(dataVisualizationInfo).on(dataVisualizationInfo.id.eq(coreChartView.sceneId))
+                    .where(coreChartView.id.eq(id));
+            po = jpaQuery.fetchFirst();
+        }
+        if (ObjectUtils.isEmpty(po)) return null;
+        ChartBaseVO vo = BeanUtils.copyBean(new ChartBaseVO(), po);
+        TypeReference<List<ChartViewFieldDTO>> tokenType = new TypeReference<>() {
+        };
+        vo.setXAxis(JsonUtil.parseList(po.getXAxis(), tokenType));
+        vo.setXAxisExt(JsonUtil.parseList(po.getXAxisExt(), tokenType));
+        vo.setYAxis(JsonUtil.parseList(po.getYAxis(), tokenType));
+        vo.setYAxisExt(JsonUtil.parseList(po.getYAxisExt(), tokenType));
+        vo.setExtStack(JsonUtil.parseList(po.getExtStack(), tokenType));
+        vo.setExtBubble(JsonUtil.parseList(po.getExtBubble(), tokenType));
+        vo.setFlowMapStartName(JsonUtil.parseList(po.getFlowMapStartName(), tokenType));
+        vo.setFlowMapEndName(JsonUtil.parseList(po.getFlowMapEndName(), tokenType));
+        if (StringUtils.isBlank(po.getExtColor()) || StringUtils.equals("null", po.getExtColor())) {
+            vo.setExtColor(new ArrayList<>());
+        } else {
+            vo.setExtColor(JsonUtil.parseList(po.getExtColor(), tokenType));
+        }
+        vo.setExtLabel(JsonUtil.parseList(po.getExtLabel(), tokenType));
+        vo.setExtTooltip(JsonUtil.parseList(po.getExtTooltip(), tokenType));
+        return vo;
+    }
+
+    public DatasetTableFieldDTO createCountField(Long id) {
+        DatasetTableFieldDTO dto = new DatasetTableFieldDTO();
+        dto.setId(-1L);
+        dto.setDatasetGroupId(id);
+        dto.setOriginName("*");
+        dto.setName("记录数*");
+        dto.setDataeaseName("*");
+        dto.setType("INT");
+        dto.setChecked(true);
+        dto.setColumnIndex(999);
+        dto.setDeType(2);
+        dto.setExtField(1);
+        dto.setGroupType("q");
+        return dto;
+    }
+
+    public List<ChartViewFieldDTO> transFieldDTO(List<DatasetTableFieldDTO> list) {
+        return list.stream().map(ele -> {
+            ChartViewFieldDTO dto = new ChartViewFieldDTO();
+            if (ele == null) return null;
+            BeanUtils.copyBean(dto, ele);
+            dto.setDateStyle("y_M_d");
+            dto.setDatePattern("date_sub");
+            dto.setDateShowFormat("y_M_d");
+            dto.setChartType("bar");
+
+            if (dto.getId() == -1L || dto.getDeType() == 0 || dto.getDeType() == 1 || dto.getDeType() == 7) {
+                dto.setSummary("count");
+            } else {
+                dto.setSummary("sum");
+            }
+
+            ChartFieldCompareDTO chartFieldCompareDTO = new ChartFieldCompareDTO();
+            chartFieldCompareDTO.setType("none");
+            dto.setCompareCalc(chartFieldCompareDTO);
+
+            dto.setFormatterCfg(new FormatterCfgDTO().setUnitLanguage(Lang.isChinese() ? "ch" : "en"));
+
+            dto.setSort("none");
+            dto.setFilter(Collections.emptyList());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public SnapshotCoreChartView transDTO2Record(ChartViewDTO dto) throws Exception {
+        SnapshotCoreChartView record = new SnapshotCoreChartView();
+        BeanUtils.copyBean(record, dto);
+        record.setXAxis(objectMapper.writeValueAsString(dto.getXAxis()));
+        record.setXAxisExt(objectMapper.writeValueAsString(dto.getXAxisExt()));
+        record.setYAxis(objectMapper.writeValueAsString(dto.getYAxis()));
+        record.setYAxisExt(objectMapper.writeValueAsString(dto.getYAxisExt()));
+        record.setExtStack(objectMapper.writeValueAsString(dto.getExtStack()));
+        record.setExtBubble(objectMapper.writeValueAsString(dto.getExtBubble()));
+        record.setExtLabel(objectMapper.writeValueAsString(dto.getExtLabel()));
+        record.setExtTooltip(objectMapper.writeValueAsString(dto.getExtTooltip()));
+        record.setCustomAttr(objectMapper.writeValueAsString(dto.getCustomAttr()));
+        if (dto.getCustomAttrMobile() != null) {
+            record.setCustomAttrMobile(objectMapper.writeValueAsString(dto.getCustomAttrMobile()));
+        }
+        record.setCustomStyle(objectMapper.writeValueAsString(dto.getCustomStyle()));
+        if (dto.getCustomAttrMobile() != null) {
+            record.setCustomStyleMobile(objectMapper.writeValueAsString(dto.getCustomStyleMobile()));
+        }
+        record.setSenior(objectMapper.writeValueAsString(dto.getSenior()));
+        record.setDrillFields(objectMapper.writeValueAsString(dto.getDrillFields()));
+        record.setCustomFilter(objectMapper.writeValueAsString(dto.getCustomFilter()));
+        record.setViewFields(objectMapper.writeValueAsString(dto.getViewFields()));
+        record.setFlowMapStartName(objectMapper.writeValueAsString(dto.getFlowMapStartName()));
+        record.setFlowMapEndName(objectMapper.writeValueAsString(dto.getFlowMapEndName()));
+        record.setExtColor(objectMapper.writeValueAsString(dto.getExtColor()));
+        record.setSortPriority(objectMapper.writeValueAsString(dto.getSortPriority()));
+        return record;
+    }
+
+    public ChartViewDTO transRecord2DTO(CoreChartView record) {
+        ChartViewDTO dto = new ChartViewDTO();
+        BeanUtils.copyBean(dto, record);
+
+        TypeReference<List<ChartViewFieldDTO>> tokenType = new TypeReference<>() {
+        };
+        dto.setXAxis(JsonUtil.parseList(record.getXAxis(), tokenType));
+        dto.setXAxisExt(JsonUtil.parseList(record.getXAxisExt(), tokenType));
+        dto.setYAxis(JsonUtil.parseList(record.getYAxis(), tokenType));
+        dto.setYAxisExt(JsonUtil.parseList(record.getYAxisExt(), tokenType));
+        dto.setExtStack(JsonUtil.parseList(record.getExtStack(), tokenType));
+        dto.setExtBubble(JsonUtil.parseList(record.getExtBubble(), tokenType));
+        dto.setExtLabel(JsonUtil.parseList(record.getExtLabel(), tokenType));
+        dto.setExtTooltip(JsonUtil.parseList(record.getExtTooltip(), tokenType));
+        dto.setCustomAttr(JsonUtil.parse(record.getCustomAttr(), Map.class));
+        if (record.getCustomAttrMobile() != null) {
+            dto.setCustomAttrMobile(JsonUtil.parse(record.getCustomAttrMobile(), Map.class));
+        }
+        dto.setCustomStyle(JsonUtil.parse(record.getCustomStyle(), Map.class));
+        if (record.getCustomStyleMobile() != null) {
+            dto.setCustomStyleMobile(JsonUtil.parse(record.getCustomStyleMobile(), Map.class));
+        }
+        dto.setSenior(JsonUtil.parse(record.getSenior(), Map.class));
+        dto.setDrillFields(JsonUtil.parseList(record.getDrillFields(), tokenType));
+        dto.setCustomFilter(JsonUtil.parseObject(record.getCustomFilter(), FilterTreeObj.class));
+        dto.setViewFields(JsonUtil.parseList(record.getViewFields(), tokenType));
+        dto.setFlowMapStartName(JsonUtil.parseList(record.getFlowMapStartName(), tokenType));
+        dto.setFlowMapEndName(JsonUtil.parseList(record.getFlowMapEndName(), tokenType));
+        dto.setExtColor(JsonUtil.parseList(record.getExtColor(), tokenType));
+        dto.setSortPriority(JsonUtil.parseList(record.getSortPriority(), new TypeReference<List<SortAxis>>() {
+        }));
+
+        return dto;
+
+    }
+
+    public String checkSameDataSet(String viewIdSource, String viewIdTarget) {
+        if (coreChartViewRepository.countDistinctTableIdByIdIn(Arrays.asList(viewIdSource, viewIdTarget)) == 1) {
+            return "YES";
+        } else {
+            return "NO";
+        }
+
+    }
+
+    public List<ViewSelectorVO> viewOption(Long resourceId) {
+        Specification<CoreChartView> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get("sceneId"), resourceId));
+            predicates.add(cb.notEqual(root.get("type"), "VQuery"));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        List<ViewSelectorVO> result = coreChartViewRepository.findAll(spec).stream().map(coreChartView -> {
+            ViewSelectorVO vo = new ViewSelectorVO();
+            vo.setId(coreChartView.getId());
+            vo.setPid(coreChartView.getSceneId());
+            vo.setTitle(coreChartView.getTitle());
+            vo.setType(coreChartView.getType());
+            return vo;
+        }).toList();
+        DataVisualizationInfo dvInfo = dataVisualizationInfoRepository.findById(resourceId).orElse(null);
+        if (dvInfo != null && !CollectionUtils.isEmpty(result)) {
+            String componentData = dvInfo.getComponentData();
+            return result.stream().filter(item -> componentData.indexOf(String.valueOf(item.getId())) > 0).toList();
+        } else {
+            return result;
+        }
+    }
+
+    public ChartViewDTO findChartViewAround(String viewId) {
+        QCoreChartView qChartView = QCoreChartView.coreChartView;
+        QSnapshotCoreChartView qSnapshotChartView = QSnapshotCoreChartView.snapshotCoreChartView;
+        ChartViewDTO mainResult = queryFactory
+                .select(Projections.fields(
+                        ChartViewDTO.class,
+                        qChartView.id,
+                        qChartView.sceneId,
+                        qChartView.title,
+                        qChartView.type
+                ))
+                .from(qChartView)
+                .where(qChartView.id.eq(Long.valueOf(viewId)))
+                .fetchOne();
+
+        if (mainResult != null) {
+            return mainResult;
+        }
+        ChartViewDTO snapshotResult = queryFactory
+                .select(Projections.fields(
+                        ChartViewDTO.class,
+                        qSnapshotChartView.id,
+                        qSnapshotChartView.sceneId,
+                        qSnapshotChartView.title,
+                        qSnapshotChartView.type
+                ))
+                .from(qSnapshotChartView)
+                .where(qSnapshotChartView.id.eq(Long.valueOf(viewId)))
+                .fetchOne();
+
+        return snapshotResult;
+    }
+
+    public void viewCopyWithDv(Long sourceDvId, Long newDvId, Long copyId, String resourceTable) {
+        if (resourceTable.equalsIgnoreCase("snapshot")) {
+            // 1. 查询源数据
+            List<SnapshotCoreChartView> sourceViews = snapshotCoreChartViewRepository.findBySceneId(sourceDvId);
+            // 2. 创建新记录
+            List<SnapshotCoreChartView> newViews = sourceViews.stream()
+                    .map(source -> {
+                        SnapshotCoreChartView newView = new SnapshotCoreChartView();
+                        BeanUtils.copyBean(newView, source);
+                        newView.setId(source.getId() + copyId);
+                        newView.setSceneId(newDvId);
+                        newView.setCopyFrom(source.getId());
+                        newView.setCopyId(copyId);
+                        return newView;
+                    })
+                    .collect(Collectors.toList());
+
+            // 3. 批量保存
+            snapshotCoreChartViewRepository.saveAll(newViews);
+        } else {
+            // 1. 查询源数据
+            List<CoreChartView> sourceViews = coreChartViewRepository.findBySceneId(sourceDvId);
+            // 2. 创建新记录
+            List<CoreChartView> newViews = sourceViews.stream()
+                    .map(source -> {
+                        CoreChartView newView = new CoreChartView();
+                        BeanUtils.copyBean(newView, source);
+                        newView.setId(source.getId() + copyId);
+                        newView.setSceneId(newDvId);
+                        newView.setCopyFrom(source.getId());
+                        newView.setCopyId(copyId);
+                        return newView;
+                    })
+                    .collect(Collectors.toList());
+
+            // 3. 批量保存
+            coreChartViewRepository.saveAll(newViews);
+        }
+
+    }
+}

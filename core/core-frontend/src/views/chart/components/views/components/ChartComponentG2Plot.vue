@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import {
+  FilterPasteMapReady,
+  canPrepareFilterPasteMap
+} from '@/views/chart/components/js/panel/charts/map/filter-paste-ready'
 import { installG2AssistLineVisibility } from '@/views/chart/components/js/panel/types/impl/g2-assist-line'
 import {
   applyG2TiledLegend,
@@ -7,6 +11,7 @@ import {
 } from '@/views/chart/components/js/panel/types/impl/g2-legend-tile'
 import {
   computed,
+  PropType,
   nextTick,
   onBeforeUnmount,
   onMounted,
@@ -16,6 +21,11 @@ import {
   toRefs
 } from 'vue'
 import { getData } from '@/api/chart'
+import type {
+  PasteBinding,
+  PasteReady,
+  PreparedQuery
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
 import { ChartLibraryType } from '@/views/chart/components/js/panel/types'
 import { G2ChartView, isLargeDataLabelMark } from '@/views/chart/components/js/panel/types/impl/g2'
 import { L7PlotChartView } from '@/views/chart/components/js/panel/types/impl/l7plot'
@@ -45,6 +55,12 @@ import { ElMessage } from 'element-plus-secondary'
 import G2TooltipCarousel from '@/views/chart/components/js/G2TooltipCarousel'
 import { listenerTooltipShow } from '@/views/chart/components/js/panel/charts/g2/bar/barUtil'
 import { createChartRefreshMock } from './chart-refresh-mock'
+import { type Chart as G2Chart } from '@antv/g2'
+import {
+  createG2RenderAttempt,
+  G2RenderAttemptFailure,
+  type G2RenderScope
+} from './g2-render-attempt'
 const mockRefreshResponse = import.meta.env.DEV ? createChartRefreshMock() : undefined
 const { t } = useI18n()
 const dvMainStore = dvMainStoreWithOut()
@@ -52,6 +68,7 @@ const { nowPanelTrackInfo, nowPanelJumpInfo, mobileInPc, embeddedCallBack, inMob
   storeToRefs(dvMainStore)
 const { emitter } = useEmitt()
 const props = defineProps({
+  pasteBinding: { type: Object as PropType<PasteBinding>, required: false },
   element: {
     type: Object,
     default() {
@@ -120,7 +137,12 @@ const g2TypeStack = [
 ]
 const g2TypeGroup = ['bar-group', 'box-plot']
 
-const { view, showPosition, scale, terminal, suffixId } = toRefs(props)
+const { showPosition, scale, terminal, suffixId } = toRefs(props)
+const filterPasteBinding = shallowRef<PasteBinding | undefined>(props.pasteBinding)
+const view = computed(() => filterPasteBinding.value?.current.value.view ?? props.view)
+const element = computed(() => filterPasteBinding.value?.current.value.element ?? props.element)
+const isPasteActive = () =>
+  !filterPasteBinding.value || filterPasteBinding.value.current.value.phase === 'active'
 
 const isError = ref(false)
 const errMsg = ref('')
@@ -257,7 +279,10 @@ const replayLinkageActive = () => {
     return
   }
   const chart = myChart
+  const replayScope = activeG2Scope
+  const replayVersion = g2RenderVersion
   requestAnimationFrame(() => {
+    if (replayScope && !isActiveG2Scope(replayVersion, replayScope, chart)) return
     if (chart !== myChart || !linkageActiveHistory.value) {
       return
     }
@@ -537,6 +562,10 @@ const checkSelected = param => {
  * autoRefresh 只标记定时刷新，手动查询仍使用完整绘制流程
  */
 const calcData = async (view, callback, autoRefresh = false) => {
+  if (!isPasteActive()) {
+    callback?.()
+    return
+  }
   if (view.tableId || view['dataFrom'] === 'template') {
     isError.value = false
     const v = JSON.parse(JSON.stringify(view))
@@ -601,10 +630,15 @@ const calcData = async (view, callback, autoRefresh = false) => {
   }
 }
 let curView
+const interactionView = computed(() =>
+  filterPasteBinding.value
+    ? { ...view.value, drill: curView?.drill, drillFilters: curView?.drillFilters }
+    : curView
+)
 /**
  * 按图表渲染库分发查询结果，仅向 G2 传递局部更新所需的定时刷新标记
  */
-const renderChart = async (view, callback?, autoRefresh = false) => {
+const renderChart = async (view, callback?, autoRefresh = false, strict = false) => {
   if (!view) {
     return
   }
@@ -617,17 +651,38 @@ const renderChart = async (view, callback?, autoRefresh = false) => {
     ...(props.fontFamily && props.fontFamily !== 'inherit' ? { fontFamily: props.fontFamily } : {})
   })
   const chartView = chartViewManager.getChartView(view.render, view.type)
+  // 只附于本次临时 chart；可枚举 string/function 键经真实 deepCopy/spread 保留。
+  if (strict && chartView.library === ChartLibraryType.G2) {
+    chart.__deFilterPasteInteraction = pasteInteractionAllowed
+  }
   recursionTransObj(customAttrTrans, chart.customAttr, scale.value, terminal.value)
   recursionTransObj(customStyleTrans, chart.customStyle, scale.value, terminal.value)
+  if (chartView.library !== ChartLibraryType.G2 && (activeG2Scope || ownedG2Generation)) {
+    // 仅离开 owned line 时使进行中的尝试失效；L7 绘制本身沿用原分支。
+    g2RenderVersion++
+    ownedG2Generation = false
+    g2Timer && clearTimeout(g2Timer)
+    finishG2Schedule?.()
+    clearG2ResizeSchedule()
+    if (activeG2Scope) disposeActiveG2Scope()
+  }
   switch (chartView.library) {
     case ChartLibraryType.L7_PLOT:
+      if (strict) {
+        await renderPreparedMap(chart, chartView)
+        break
+      }
       await renderL7Plot(chart, chartView as L7PlotChartView<any, any>, callback)
       break
     case ChartLibraryType.L7:
+      if (strict) {
+        await renderPreparedMap(chart, chartView)
+        break
+      }
       await renderL7(chart, chartView as L7ChartView<any, any>, callback)
       break
     case ChartLibraryType.G2:
-      await renderG2(chart, chartView as G2ChartView<any, any>, autoRefresh)
+      await renderG2(chart, chartView as G2ChartView<any, any>, autoRefresh, strict)
       callback?.()
       break
     default:
@@ -635,6 +690,34 @@ const renderChart = async (view, callback?, autoRefresh = false) => {
   }
 }
 let myChart = null
+const releaseCurrentChart = () => {
+  const chart = myChart
+  myChart = null
+  chart?.destroy()
+}
+let activeG2Scope: G2RenderScope<G2Chart> | null = null
+let activeG2Version = 0
+let ownedG2Generation = false
+const reportG2CleanupErrors = (errors: unknown[]) => {
+  if (errors.length) console.warn('G2 cleanup errors', errors)
+}
+const isActiveG2Scope = (version: number, scope: G2RenderScope<G2Chart>, instance: G2Chart) =>
+  !chartComponentUnmounted &&
+  version === g2RenderVersion &&
+  activeG2Scope === scope &&
+  myChart === instance &&
+  !scope.closed
+const disposeActiveG2Scope = () => {
+  const scope = activeG2Scope
+  activeG2Scope = null
+  myChart = null
+  if (scope) reportG2CleanupErrors(scope.dispose())
+}
+const clearG2ResizeSchedule = () => {
+  g2ResizeTimer && clearTimeout(g2ResizeTimer)
+  g2ResizeTimer = undefined
+  G2TooltipCarousel.dequeueResize(containerId)
+}
 let g2Timer: number
 let finishG2Schedule: (() => void) | undefined
 let g2RenderQueue = Promise.resolve()
@@ -644,10 +727,20 @@ let assistLineCleanup: (() => void) | undefined
 let g2TiledLegendCleanup: (() => void) | undefined
 let g2LegendPaginationCleanup: (() => void) | undefined
 const clearG2SliderAdapter = () => {
+  if (activeG2Scope) {
+    activeG2Scope.removeCleanup('slider')
+    return
+  }
   g2SliderCleanup?.()
   g2SliderCleanup = undefined
 }
 const clearG2LegendPaginationAdapter = () => {
+  if (activeG2Scope) {
+    activeG2Scope.removeCleanup('assist')
+    activeG2Scope.removeCleanup('tiled')
+    activeG2Scope.removeCleanup('pagination')
+    return
+  }
   assistLineCleanup?.()
   assistLineCleanup = undefined
   g2TiledLegendCleanup?.()
@@ -688,7 +781,12 @@ const installG2SvgCoordinateScaleAdapter = chartInstance => {
  * 定时刷新优先尝试已注册的局部更新，不支持时回退完整绘制
  * 返回的 Promise 在本轮绘制结束或调度取消后完成，供调用方释放加载状态
  */
-const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = false) => {
+const renderG2 = async (
+  chart,
+  chartView: G2ChartView<any, any>,
+  autoRefresh = false,
+  strict = false
+) => {
   if (
     !chart.customAttr?.tooltip?.carousel?.enable &&
     G2TooltipCarousel.getInstanceByContainerId(containerId)
@@ -698,18 +796,35 @@ const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = f
     replayLinkageActive()
   }
   const version = ++g2RenderVersion
+  const ownedLine = chart.type === 'line' && chartView.library === ChartLibraryType.G2
+  ownedG2Generation = ownedLine
+  if (ownedLine || activeG2Scope) clearG2ResizeSchedule()
   g2Timer && clearTimeout(g2Timer)
   finishG2Schedule?.()
-  return new Promise<void>(resolve => {
-    finishG2Schedule = resolve
+  return new Promise<void>((resolve, reject) => {
+    finishG2Schedule = () => (strict ? reject(new Error('paste_cancelled')) : resolve())
     g2Timer = setTimeout(() => {
       finishG2Schedule = undefined
       g2RenderQueue = g2RenderQueue
         .then(async () => {
-          if (chartComponentUnmounted || version !== g2RenderVersion) return
+          if (
+            chartComponentUnmounted ||
+            version !== g2RenderVersion ||
+            (strict && !pasteIsCurrent())
+          ) {
+            if (strict) throw new Error('paste_cancelled')
+            return
+          }
+          const notifiedCleanupErrors = new Set<Error>()
+          const notifyCleanupErrors = (errors: Error[]) => {
+            errors.forEach(error => notifiedCleanupErrors.add(error))
+            reportG2CleanupErrors(errors)
+          }
           try {
+            // owned line 切换到 legacy 前先释放旧 scope，避免 legacy 再次 destroy 旧实例。
+            if (!ownedLine && activeG2Scope) disposeActiveG2Scope()
             // 仅在移动端配置右侧缩略区域隐藏图表文本
-            let dashboardHidden = props.element.dashboardHidden
+            let dashboardHidden = element.value.dashboardHidden
             if (dvMainStore.mobileInPc) {
               dashboardHidden = !!document
                 .getElementById(containerId)
@@ -732,6 +847,124 @@ const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = f
               action,
               quadrantDefaultBaseline
             }
+            if (ownedLine) {
+              const isCurrent = () =>
+                !chartComponentUnmounted &&
+                version === g2RenderVersion &&
+                (!strict || pasteIsCurrent())
+              const scope = activeG2Scope
+              const instance = scope?.instance
+              if (autoRefresh && scope && instance) {
+                const isActive = () => isActiveG2Scope(version, scope, instance)
+                const updated = await chartView.updateData(drawOptions, () => {
+                  if (!isActive()) return
+                  // remove 先释放旧 adapter，再安装并登记本实例的新 adapter。
+                  scope.removeCleanup('assist')
+                  if (!isActive()) return
+                  scope.replaceCleanup('assist', installG2AssistLineVisibility(instance, chart))
+                })
+                if (!isActive()) return
+                if (updated) {
+                  activeG2Version = version
+                  replayLinkageActive()
+                  return
+                }
+              }
+              configEmptyDataStyle([1], containerId)
+              clearG2ResizeSchedule()
+              if (activeG2Scope) {
+                disposeActiveG2Scope()
+              } else {
+                // legacy -> owned：保留原资源释放顺序，再清空活动指针。
+                G2TooltipCarousel.destroyByContainer(containerId)
+                clearG2SliderAdapter()
+                clearG2LegendPaginationAdapter()
+                myChart?.destroy()
+                myChart = null
+              }
+              const result = await createG2RenderAttempt<G2Chart>({
+                isCurrent,
+                onCleanupErrors: notifyCleanupErrors,
+                initialCleanups: [
+                  {
+                    key: 'carousel',
+                    cleanup: () => G2TooltipCarousel.destroyByContainer(containerId)
+                  },
+                  { key: 'resize', cleanup: clearG2ResizeSchedule }
+                ],
+                create: async () => {
+                  if (Array.isArray(chart.data?.data) && chart.data.data.length === 0) {
+                    configEmptyDataStyle([], containerId)
+                    return { kind: 'empty' }
+                  }
+                  const instance = await chartView.drawChart(drawOptions)
+                  return { kind: 'instance', instance }
+                },
+                setup: scope => {
+                  const chartInstance = scope.instance
+                  listenerTooltipShow(chartInstance, { ...chart, container: containerId })
+                  configAxisTitleOverflowTooltip(
+                    { ...chart, container: containerId },
+                    chartInstance
+                  )
+                  chartView.applyThemeFont(chartInstance, chart.fontFamily)
+                  chartView.optimizeLargeData(chartInstance)
+                  const legendContainer = document.getElementById(containerId)
+                  chartInstance.options(
+                    applyG2TiledLegend(
+                      chartInstance.options(),
+                      chart.customStyle?.legend,
+                      legendContainer?.clientWidth || 1,
+                      legendContainer?.clientHeight || 1,
+                      (event, payload) => chartInstance.emit(event, payload),
+                      !isDashboard() ||
+                        dvMainStore.canvasStyleData?.dashboard?.themeColor === 'dark'
+                        ? 'dark'
+                        : 'light'
+                    )
+                  )
+                  if (chart.customStyle?.legend?.displayMode === 'tile') {
+                    scope.replaceCleanup('tiled', installG2TiledLegendStateAdapter(chartInstance))
+                  }
+                  scope.replaceCleanup(
+                    'assist',
+                    installG2AssistLineVisibility(chartInstance, chart)
+                  )
+                },
+                render: async scope => {
+                  await scope.instance.render()
+                },
+                afterRender: async scope => {
+                  const chartInstance = scope.instance
+                  installG2SvgCoordinateScaleAdapter(chartInstance)
+                  await chartView.afterRender?.(chartInstance)
+                  if (!isCurrent()) return
+                  scope.replaceCleanup('slider', installG2SliderAdapter(chartInstance))
+                  scope.replaceCleanup(
+                    'pagination',
+                    installG2SideLegendPaginationAdapter(chartInstance, {
+                      afterPageLayout: () => {
+                        if (isActiveG2Scope(activeG2Version, scope, chartInstance)) {
+                          replayLinkageActive()
+                        }
+                      }
+                    })
+                  )
+                }
+              })
+              if (result.status === 'ready') {
+                if (!isCurrent()) {
+                  reportG2CleanupErrors(result.scope.dispose())
+                  return
+                }
+                activeG2Scope = result.scope
+                activeG2Version = version
+                myChart = result.scope.instance
+                replayLinkageActive()
+              }
+              if (strict && result.status === 'stale') throw new Error('paste_cancelled')
+              return
+            }
             if (
               autoRefresh &&
               myChart &&
@@ -750,10 +983,24 @@ const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = f
             clearG2SliderAdapter()
             clearG2LegendPaginationAdapter()
             myChart?.destroy()
+            const renderData = chart.type === 't-heatmap' ? chart.data?.tableRow : chart.data?.data
+            if (strict && Array.isArray(renderData) && renderData.length === 0) {
+              configEmptyDataStyle([], containerId)
+              myChart = null
+              return
+            }
             myChart = await chartView.drawChart(drawOptions)
             // 固定本轮创建的实例，避免等待异步渲染期间新一轮 renderG2 替换全局 myChart 后误操作新实例
             const chartInstance = myChart
-            if (!chartInstance) return
+            if (strict && !pasteIsCurrent()) {
+              chartInstance?.destroy()
+              myChart = null
+              throw new Error('paste_cancelled')
+            }
+            if (!chartInstance) {
+              if (strict) throw new Error('paste_instance_missing')
+              return
+            }
             if (chartComponentUnmounted) {
               chartInstance.destroy()
               return
@@ -792,9 +1039,11 @@ const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = f
             assistLineCleanup = installG2AssistLineVisibility(chartInstance, chart)
             // 等待 G2 完成包含轴边界校正的最终布局
             await chartInstance?.render()
+            if (strict && !pasteIsCurrent()) throw new Error('paste_cancelled')
             installG2SvgCoordinateScaleAdapter(chartInstance)
             // 双向条形图、象限图仍依赖首次布局，必须等待其专属处理后再恢复联动状态
             await chartView.afterRender?.(chartInstance)
+            if (strict && !pasteIsCurrent()) throw new Error('paste_cancelled')
             // 异步等待期间若图表已被新实例替换，本轮旧实例不再回放联动状态，避免污染当前画布
             if (!chartComponentUnmounted && chartInstance && chartInstance === myChart) {
               g2SliderCleanup = installG2SliderAdapter(chartInstance)
@@ -805,10 +1054,22 @@ const renderG2 = async (chart, chartView: G2ChartView<any, any>, autoRefresh = f
               replayLinkageActive()
             }
           } catch (e) {
-            console.error('renderG2Plot error', e)
+            if (strict) throw e
+            if (e instanceof G2RenderAttemptFailure) {
+              console.error('renderG2Plot error', e.originalError ?? e)
+              // helper 已通知的 cleanup errors 不重复输出；主业务错误保持单独观察。
+              reportG2CleanupErrors(
+                e.cleanupErrors.filter(error => !notifiedCleanupErrors.has(error))
+              )
+            } else {
+              console.error('renderG2Plot error', e)
+            }
           }
         })
-        .finally(resolve)
+        .then(resolve, error => {
+          if (strict) reject(error)
+          else resolve()
+        })
     }, 300)
   })
 }
@@ -819,7 +1080,7 @@ const appStore = useAppStoreWithOut()
 let gadmName
 const chartContainer = ref<HTMLElement>(null)
 let scope
-let mapTimer: number
+let mapTimer: ReturnType<typeof setTimeout>
 const renderL7Plot = async (chart: ChartObj, chartView: L7PlotChartView<any, any>, callback) => {
   const map = parseJson(chart.customAttr).map
   let areaId = map.id
@@ -838,6 +1099,8 @@ const renderL7Plot = async (chart: ChartObj, chartView: L7PlotChartView<any, any
     try {
       clearG2SliderAdapter()
       clearG2LegendPaginationAdapter()
+      // 旧 strict 桥只释放自己持有的实例；普通刷新产生的新实例仍走原清理路径。
+      if (mapPasteInstance && myChart === mapPasteInstance) releaseMapPreparation()
       myChart?.destroy()
       if (chartContainer.value) {
         chartContainer.value.textContent = ''
@@ -866,6 +1129,8 @@ const renderL7 = async (chart: ChartObj, chartView: L7ChartView<any, any>, callb
   mapL7Timer && clearTimeout(mapL7Timer)
   mapL7Timer = setTimeout(async () => {
     try {
+      // 首次普通重绘结束 strict 桥的旧 layer/scene 所有权，避免复用时的正常 destroy 被当作准备失败。
+      if (mapPasteInstance && myChart === mapPasteInstance) releaseMapPreparation()
       myChart = await chartView.drawChart({
         chartObj: myChart,
         container: containerId,
@@ -902,6 +1167,7 @@ const actionDefault = param => {
 }
 
 const action = param => {
+  if (!isPasteActive()) return
   if (param.from) {
     actionDefault(param)
     return
@@ -940,11 +1206,11 @@ const action = param => {
       left: pointX - 50,
       top: pointY + 10
     }
-    trackBarStyleCheck(props.element, barStyleTemp, props.scale, trackMenu.value.length)
+    trackBarStyleCheck(element.value, barStyleTemp, props.scale, trackMenu.value.length)
     const trackBarX = barStyleTemp.left
     let trackBarY = 50
     state.trackBarStyle.left = barStyleTemp.left + 'px'
-    if (curView.type === 'symbolic-map') {
+    if (interactionView.value.type === 'symbolic-map') {
       trackBarY = pointY + 10
       state.trackBarStyle.top = pointY + 10 + 'px'
     } else {
@@ -964,6 +1230,7 @@ const action = param => {
 }
 
 const trackClick = trackAction => {
+  if (!isPasteActive()) return
   const param = state.pointParam
   if (!param?.data?.dimensionList) {
     return
@@ -996,11 +1263,11 @@ const trackClick = trackAction => {
   if (state.pointParam.data.dimensionList.length > 1) {
     const fieldIds = []
     // 优先下钻字段
-    if (curView.drill) {
-      const curFiled = curView.drillFields[curView.drillFilters.length]
+    if (interactionView.value.drill) {
+      const curFiled = interactionView.value.drillFields[interactionView.value.drillFilters.length]
       fieldIds.push(curFiled.id)
     }
-    if (curView.type.includes('chart-mix')) {
+    if (interactionView.value.type.includes('chart-mix')) {
       const mixFields = [
         ...(chartData.value?.left?.fields || []),
         ...(chartData.value?.right?.fields || [])
@@ -1029,9 +1296,9 @@ const trackClick = trackAction => {
     }
   }
   let quotaList = state.pointParam.data.quotaList
-  if (['bar-range', 'bullet-graph'].includes(curView.type)) {
+  if (['bar-range', 'bullet-graph'].includes(interactionView.value.type)) {
     quotaList = state.pointParam.data.dimensionList
-  } else if (curView.type === 'multi-scatter') {
+  } else if (interactionView.value.type === 'multi-scatter') {
     const dynamicValueMap = {}
     ;[
       ...(state.pointParam.data.dynamicLabelValue || []),
@@ -1040,10 +1307,10 @@ const trackClick = trackAction => {
       dynamicValueMap[item.fieldId] = item.stringValue ?? item.value
     })
     const multiScatterValueMap = {
-      [curView.xAxis?.[0]?.id]: state.pointParam.data.x,
-      [curView.yAxis?.[0]?.id]: state.pointParam.data.y,
-      [curView.extBubble?.[0]?.id]: state.pointParam.data.popSize,
-      [curView.yAxisExt?.[0]?.id]: state.pointParam.data.lightness,
+      [interactionView.value.xAxis?.[0]?.id]: state.pointParam.data.x,
+      [interactionView.value.yAxis?.[0]?.id]: state.pointParam.data.y,
+      [interactionView.value.extBubble?.[0]?.id]: state.pointParam.data.popSize,
+      [interactionView.value.yAxisExt?.[0]?.id]: state.pointParam.data.lightness,
       ...dynamicValueMap
     }
     quotaList = quotaList.map(item => ({
@@ -1112,12 +1379,12 @@ const trackMenu = computed(() => {
   // 复用、放大状态的仪表板不进行联动、跳转和下钻的动作
   if (!['multiplexing', 'viewDialog'].includes(showPosition.value)) {
     let drillFields =
-      curView?.drill && curView?.drillFilters?.length
-        ? curView.drillFilters.map(item => item.fieldId)
+      interactionView.value?.drill && interactionView.value?.drillFilters?.length
+        ? interactionView.value.drillFilters.map(item => item.fieldId)
         : []
     let linkageCount = 0
     let jumpCount = 0
-    if (curView?.type?.includes('chart-mix')) {
+    if (interactionView.value?.type?.includes('chart-mix')) {
       Array.of('left', 'right').forEach(side => {
         chartData.value?.[side]?.fields
           ?.filter(item => !drillFields.includes(item.id))
@@ -1151,11 +1418,11 @@ const trackMenu = computed(() => {
     linkageCount && view.value?.linkageActive && trackMenuInfo.push('linkage')
     view.value.drillFields.length && trackMenuInfo.push('drill')
     // 如果同时配置jump linkage drill 切配置联动时同时下钻 在实际只显示两个 '跳转' '联动和下钻'
-    if (trackMenuInfo.length === 3 && props.element.actionSelection.linkageActive === 'auto') {
+    if (trackMenuInfo.length === 3 && element.value.actionSelection.linkageActive === 'auto') {
       trackMenuInfo = ['jump', 'linkageAndDrill']
     } else if (
       trackMenuInfo.length === 2 &&
-      props.element.actionSelection.linkageActive === 'auto' &&
+      element.value.actionSelection.linkageActive === 'auto' &&
       !trackMenuInfo.includes('jump')
     ) {
       trackMenuInfo = ['linkageAndDrill']
@@ -1164,6 +1431,7 @@ const trackMenu = computed(() => {
   return trackMenuInfo
 })
 const quadrantDefaultBaseline = defaultQuadrant => {
+  if (!isPasteActive()) return
   emitter.emit('quadrant-default-baseline', defaultQuadrant)
 }
 
@@ -1253,7 +1521,178 @@ const unPreparePicture = id => {
     })
   }
 }
+let pasteIsCurrent = () => true
+let pasteInteractionAllowed = () => true
+const filterPasteAreaId = chart => {
+  const areaId = parseJson(chart.customAttr)?.map?.id
+  if (areaId?.startsWith('000') && dynamicAreaId.value.startsWith('000'))
+    return dynamicAreaId.value.slice(3)
+  return dynamicAreaId.value || areaId
+}
+const canPrepareFilterPaste = () => {
+  const library = chartViewManager.getChartView(view.value.render, view.value.type)?.library
+  return (
+    library === ChartLibraryType.G2 ||
+    ([ChartLibraryType.L7, ChartLibraryType.L7_PLOT].includes(library) &&
+      canPrepareFilterPasteMap(
+        view.value as ChartObj,
+        scope ? '156' : filterPasteAreaId(view.value)
+      ))
+  )
+}
+let mapPasteReady: FilterPasteMapReady | undefined
+let mapPasteInstance
+let cancelMapPreparation: (() => void) | undefined
+const releaseMapPreparation = () => {
+  if (mapPasteInstance && myChart === mapPasteInstance) myChart = null
+  cancelMapPreparation?.()
+}
+const assertMapPreparation = () => {
+  if (mapPasteReady && !mapPasteReady.check()) throw new Error('paste_map_cancelled')
+}
+const renderPreparedMap = (chart, chartView) =>
+  new Promise<void>((resolve, reject) => {
+    cancelMapPreparation = () => {
+      mapPasteReady?.dispose()
+      reject(new Error('paste_map_cancelled'))
+    }
+    mapTimer = setTimeout(async () => {
+      const ready = new FilterPasteMapReady(pasteIsCurrent)
+      mapPasteReady = ready
+      try {
+        if (!ready.check()) throw new Error('paste_map_cancelled')
+        const originalId = chart.id
+        chart.id = `paste-${props.suffixId}-${originalId}`
+        const areaId = filterPasteAreaId(chart)
+        const instance = await chartView.drawChart({
+          chartObj: undefined,
+          container: containerId,
+          chart,
+          areaId,
+          action,
+          scope,
+          gadmName,
+          filterPaste: ready
+        })
+        if (!ready.check()) {
+          ready.dispose()
+          throw new Error('paste_map_cancelled')
+        }
+        if (!instance) throw new Error('paste_map_instance_missing')
+        mapPasteInstance = instance
+        myChart = instance
+        if (chartView.library === ChartLibraryType.L7) instance.render()
+        await ready.ready
+        if (!ready.check()) throw new Error('paste_map_cancelled')
+        resolve()
+      } catch (error) {
+        ready.fail(error)
+        reject(error)
+      }
+    }, 500)
+  })
+const prepareFilterPaste = async (
+  input: PreparedQuery,
+  binding: PasteBinding,
+  isCurrent: () => boolean
+): Promise<PasteReady> => {
+  const library =
+    input.kind === 'queried' &&
+    chartViewManager.getChartView(input.response.render, input.response.type)?.library
+  if (
+    input.kind !== 'queried' ||
+    ![ChartLibraryType.G2, ChartLibraryType.L7, ChartLibraryType.L7_PLOT].includes(library)
+  ) {
+    return { ok: false, reason: 'preparation_unavailable' }
+  }
+  filterPasteBinding.value = binding
+  if (!canPrepareFilterPaste()) return { ok: false, reason: 'map_infrastructure_unavailable' }
+  let alive = true
+  pasteIsCurrent = () => alive && !chartComponentUnmounted && isCurrent()
+  pasteInteractionAllowed = () =>
+    alive && !chartComponentUnmounted && binding.current.value.phase === 'active'
+  const dispose = () => {
+    if (!alive) return
+    alive = false
+    g2RenderVersion++
+    clearTimeout(mapTimer)
+    releaseMapPreparation()
+    clearTimeout(g2Timer)
+    finishG2Schedule?.()
+    clearG2ResizeSchedule()
+    if (activeG2Scope) disposeActiveG2Scope()
+    else {
+      clearG2SliderAdapter()
+      clearG2LegendPaginationAdapter()
+      releaseCurrentChart()
+    }
+  }
+  let timeout: ReturnType<typeof setTimeout>
+  try {
+    if (!pasteIsCurrent()) throw new Error('paste_cancelled')
+    const response = cloneDeep(input.response)
+    chartData.value = (response.data ?? { fields: [], data: [] }) as Partial<Chart['data']>
+    // 候选不启动共享轮播；此非关键交互在后续普通重绘时按 canonical 配置恢复。
+    const carousel = response.customAttr?.tooltip?.carousel
+    if (carousel && typeof carousel === 'object') carousel.enable = false
+    if (library !== ChartLibraryType.G2) {
+      response.customAttr.tooltip.show = false
+      const drill = response.drillFilters || []
+      const extra = input.request.chartExtRequest?.drill?.[drill.length - 1]?.extra
+      dynamicAreaId.value = extra?.adcode ? String(extra.adcode) : ''
+      scope = extra?.scope
+      gadmName = extra?.gadmName
+    }
+    isError.value = false
+    await Promise.race([
+      renderChart(response, undefined, false, true),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(
+          () => reject(new Error('paste_render_timeout')),
+          library === ChartLibraryType.G2 ? 10000 : 31000
+        )
+      })
+    ])
+    // renderPreparedMap resolve 后仍会跨越 renderChart/Promise.race 的微任务。
+    assertMapPreparation()
+    const node = document.getElementById(containerId)
+    if (
+      !pasteIsCurrent() ||
+      !node?.isConnected ||
+      node.getBoundingClientRect().width <= 1 ||
+      node.getBoundingClientRect().height <= 1
+    )
+      throw new Error('paste_render_disconnected')
+    const metadata = {
+      kind: 'g2' as const,
+      drillFilters: cloneDeep(response.drillFilters || []),
+      originData: cloneDeep(chartData.value),
+      publishOrigin: !response.drill && !response.chartExtRequest?.linkageFilters?.length
+    }
+    return {
+      ok: true,
+      handle: {
+        key: props.suffixId,
+        binding,
+        instance: myChart,
+        get metadata() {
+          // 调用方 await 返回后、同步发布前读取 metadata 时再核已知失败。
+          assertMapPreparation()
+          return metadata
+        },
+        dispose
+      }
+    }
+  } catch {
+    dispose()
+    return { ok: false, reason: 'paste_render_failed' }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
 defineExpose({
+  canPrepareFilterPaste,
+  prepareFilterPaste,
   calcData,
   renderChart,
   trackMenu,
@@ -1271,6 +1710,7 @@ onMounted(() => {
   const { offsetWidth, offsetHeight } = containerDom
   const preSize = [offsetWidth, offsetHeight]
   resizeObserver = new ResizeObserver(([entry] = []) => {
+    if (!isPasteActive()) return
     const [size] = entry.borderBoxSize || []
     const widthOffsetPercent = (size.inlineSize - preSize[0]) / preSize[0]
     const heightOffsetPercent = (size.blockSize - preSize[1]) / preSize[1]
@@ -1289,12 +1729,16 @@ onMounted(() => {
         renderChart(curView)
       } else {
         g2ResizeTimer && clearTimeout(g2ResizeTimer)
+        const resizeVersion = activeG2Scope ? activeG2Version : g2RenderVersion
+        const resizeScope = activeG2Scope
+        const resizeInstance = resizeScope?.instance
         g2ResizeTimer = setTimeout(() => {
           G2TooltipCarousel.enqueueResize(containerId, async () => {
             const chartView = chartViewManager.getChartView(curView.render, curView.type)
-            const chartInstance = myChart
+            const chartInstance = resizeScope ? resizeInstance : myChart
             if (
               chartComponentUnmounted ||
+              (resizeScope && !isActiveG2Scope(resizeVersion, resizeScope, resizeInstance)) ||
               chartView.library !== ChartLibraryType.G2 ||
               typeof chartInstance?.forceFit !== 'function'
             ) {
@@ -1316,7 +1760,11 @@ onMounted(() => {
               )
             )
             await chartInstance.forceFit()
-            if (!chartComponentUnmounted && chartInstance === myChart) {
+            if (
+              !chartComponentUnmounted &&
+              chartInstance === myChart &&
+              (!resizeScope || isActiveG2Scope(resizeVersion, resizeScope, resizeInstance))
+            ) {
               replayG2TiledLegendSelection(chartInstance.options(), (event, payload) =>
                 chartInstance.emit(event, payload)
               )
@@ -1331,6 +1779,7 @@ onMounted(() => {
   })
   resizeObserver.observe(containerDom)
   intersectionObserver = new IntersectionObserver(([entry]) => {
+    if (!isPasteActive()) return
     if (RESIZE_MONITOR_CHARTS.includes(view.value.type)) {
       return
     }
@@ -1340,8 +1789,9 @@ onMounted(() => {
     }
   })
   intersectionObserver.observe(containerDom)
-  useEmitt({ name: 'l7-prepare-picture', callback: preparePicture })
-  useEmitt({ name: 'l7-unprepare-picture', callback: unPreparePicture })
+  if (!filterPasteBinding.value) useEmitt({ name: 'l7-prepare-picture', callback: preparePicture })
+  if (!filterPasteBinding.value)
+    useEmitt({ name: 'l7-unprepare-picture', callback: unPreparePicture })
 })
 const MAP_CHARTS = ['map', 'bubble-map', 'flow-map', 'heat-map', 'symbolic-map']
 const onWheel = (e: WheelEvent) => {
@@ -1353,21 +1803,33 @@ const onWheel = (e: WheelEvent) => {
   }
 }
 onBeforeUnmount(() => {
+  // 先同步失效，已开始的库 Promise 只能 settle，不能再发布或回放。
+  chartComponentUnmounted = true
+  releaseMapPreparation()
+  clearTimeout(mapTimer)
+  g2RenderVersion++
+  const cleanup = (release: () => void) => {
+    try {
+      release()
+    } catch (error) {
+      reportG2CleanupErrors([error])
+    }
+  }
   try {
-    chartComponentUnmounted = true
-    g2RenderVersion++
-    clearTimeout(g2Timer)
-    finishG2Schedule?.()
-    g2ResizeTimer && clearTimeout(g2ResizeTimer)
-    G2TooltipCarousel.dequeueResize(containerId)
-    G2TooltipCarousel.destroyByContainer(containerId)
-    clearG2SliderAdapter()
-    clearG2LegendPaginationAdapter()
-    myChart?.destroy()
-    resizeObserver?.disconnect()
-    intersectionObserver?.disconnect()
-  } catch (e) {
-    console.warn(e)
+    cleanup(() => clearTimeout(g2Timer))
+    cleanup(() => finishG2Schedule?.())
+    cleanup(clearG2ResizeSchedule)
+    if (activeG2Scope) {
+      cleanup(disposeActiveG2Scope)
+    } else {
+      cleanup(() => G2TooltipCarousel.destroyByContainer(containerId))
+      cleanup(clearG2SliderAdapter)
+      cleanup(clearG2LegendPaginationAdapter)
+      cleanup(releaseCurrentChart)
+    }
+  } finally {
+    cleanup(() => resizeObserver?.disconnect())
+    cleanup(() => intersectionObserver?.disconnect())
   }
 })
 </script>

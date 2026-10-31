@@ -1,0 +1,267 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-AREA-RENDERER-FAILURE-DIAGNOSIS-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景；完整验收要求没有删减。继续实现 S02 Goal。当前真实 area 图表完成查询后返回 paste_render_failed，需先用确切运行见证定位原因，再做最小修复并继续 P1 全类型验收。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只调查和修复已观测的 G2 area 粘贴失败，保留 P1 12 + P2 原始 26 全部 38 项；真实权限保持未验证。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/AreaPasteFailureDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/AreaPasteFailureCases-r001.json",
+      "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "core/core-frontend/tests/filter-copy-mvp-renderers/check.mjs"
+    ],
+    "forbidden_actions": [
+      "改变真实 UI 权限或用 admin/standalone/mock 冒充真实鉴权",
+      "因 area 失败从受支持类型分母移除 area",
+      "在未定位根因前扩大 renderer 重构或吞掉失败",
+      "修改 S01 数据和源码"
+    ],
+    "maximum_claim": "针对已观测 area 失败的有界诊断/修复候选，不是49类型运行通过或 Goal 完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "area failure diagnosis",
+      "reason": "project rules",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "area failure diagnosis",
+      "reason": "SGE routing and stop-gate",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "applicability": "area failure diagnosis",
+      "reason": "38-item Goal and current phase semantics",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstFullAcceptanceAuthority-20261027.md",
+      "revision": "143af02a1303d3e8170d2a0b2cc32b3b737bc50a9fffd55244274ae2534042bd",
+      "applicability": "area failure diagnosis",
+      "reason": "latest sequencing authority",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/FullAcceptancePhaseCrosswalk-r001.json",
+      "revision": "e0a5d2aee17d9d11354d32de02b68debc4b0e7d6cc20b9b0899c55c400e284cf",
+      "applicability": "area failure diagnosis",
+      "reason": "38-item phase mapping",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "revision": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468",
+      "applicability": "area failure diagnosis",
+      "reason": "frozen MVP product integration contract",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "applicability": "area failure diagnosis",
+      "reason": "MVP cases",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeAreaPasteFailure-r001.json",
+      "revision": "918bcea2b15f729c4f595abcfe7d3e9700d43fa4f0c0d9c211995e5d9ec40bf8",
+      "applicability": "area failure diagnosis",
+      "reason": "actual area failure witness",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeCodeRegression-r001.md",
+      "revision": "10f81c7164f40d0bbf078828d2efdad4ebd97898f6914f056f91cfb3f03285ba",
+      "applicability": "area failure diagnosis",
+      "reason": "current code regression results",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeUiProgress-r001.json",
+      "revision": "7d776a5714e50feddf3555a1eb486bb0224dded0b8c2caafe4e78c8441244a06",
+      "applicability": "area failure diagnosis",
+      "reason": "49-type runtime denominator and current progress",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r469.json",
+      "revision": "55f6f51ece1a44bbd1afa477a738828ed1c85a8a976e7d58f578b9508bbdd982",
+      "applicability": "area failure diagnosis",
+      "reason": "latest execution topology",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "revision": "dd88f2ac4f7c5e35f0b07822c72cae0764a3bad11be4a19f23a86d9fb9de3c7b",
+      "applicability": "area failure diagnosis",
+      "reason": "paste orchestration and atomic adoption",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/FilterPasteRenderer.vue",
+      "revision": "1c6708ef48bfa466c2d167fba010183792815f2dc7926ff9d163c19abb9fa985",
+      "applicability": "area failure diagnosis",
+      "reason": "renderer boundary and error capture",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "revision": "5ca0da498a294f82b3bb869dc2bcfa71a968b96f0b6ef98f9438cf150755daaa",
+      "applicability": "area failure diagnosis",
+      "reason": "actual G2/area preparation path",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-mvp-renderers/check.mjs",
+      "revision": "7d00e3274b48c6629336c083bdb9029cd82bc2202ed89bf54f949f48ea59745f",
+      "applicability": "area failure diagnosis",
+      "reason": "existing controlled renderer harness",
+      "domains": [
+        "authority",
+        "acceptance",
+        "implementation",
+        "runtime"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "AREA-ERROR-DETAILS",
+      "condition": "运行时异常包含可能的业务数据、SQL、凭据或用户内容",
+      "action": "不记录原始 message/stack；只保存脱敏类型、静态阶段码与本地可复核引用",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "AREA-CODE-SCOPE",
+      "condition": "根因指向目标写范围外的共用代码或新增AC",
+      "action": "先报告同一 Goal 下的最小 Scope Delta/依赖，不静默扩大；继续不依赖项",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "acceptance",
+      "implementation",
+      "runtime"
+    ],
+    "preservation_statement": "必须保留真实 area 失败、49 类型分母、P1/P2 全部38项及权限未验证边界；受控 runner、截图和源码推断不得替代真实 UI。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": true,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded P1 renderer diagnosis then exact builder admission",
+    "reason": "真实 UI area paste 当前失败，产品根因未知；必须从现有 G2 preparation/catch 路径和captured request-response复现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

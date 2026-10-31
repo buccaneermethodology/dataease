@@ -1,0 +1,42 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-REQ-001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "以 docs/DataEase_Requirements_V1_20261014.md 为最新决策权威源，DT_DM-478391 原始需求目录仅作参考；建立可供后续决策/变更延续的初版 KB 真源。用户随后授权建立并执行 Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "新建独立需求型 KB 真源；不将需求描述表述为已实现事实，保留待证和未裁事项。",
+    "authority_role": "projection",
+    "assumptions": ["权威文档 Q01-Q156 为已确认范围；其明示 Q157 和跨功能冲突审查未处理。"]
+  },
+  "boundaries": {
+    "write_scope": ["Dashboard/Artifacts/Goal-DE-REQ-001/", "Dashboard/Sessions.md", "kb/requirements/", "kb/schema/requirement-baseline-v1.schema.json", "kb/tools/render_requirement_kb.py", "kb/generated/dashboard-requirements-DT_DM-478391-v1.md", "kb/README.md"],
+    "forbidden_actions": ["修改 DataEase 产品代码或运行配置", "运行构建/部署或访问业务数据库", "修改两个输入源", "将原始建议升级为强制验收", "将未实现需求标记为实现事实", "创建子 Agent（当前系统限制）"],
+    "maximum_claim": "候选需求 KB 真源与确定性投影；无产品实现或运行验证声明"
+  },
+  "required_read_set": [
+    {"path":"AGENTS.md","revision":"working-tree","applicability":"required","reason":"项目写入、KB、Dashboard、验证规则","domains":["repository-governance"]},
+    {"path":".codex/skills/sge-governed-checkpoints/SKILL.md","revision":"working-tree","applicability":"required","reason":"治理路由与写入/收尾门禁","domains":["governance"]},
+    {"path":"/Users/xiaomei/.codex/skills/doc-system-kb-builder/SKILL.md","revision":"installed","applicability":"required","reason":"JSON 真源、投影及冲突记录工作流","domains":["kb-contract"]},
+    {"path":"docs/DataEase_Requirements_V1_20261014.md","revision":"sha256:b2de23046c8000a52d5ada278df2302c6ab7a77682295cd38f1c88fd94854493","applicability":"required","reason":"用户指定的权威决策与验收源","domains":["source-authority","requirements-semantics"]},
+    {"path":"docs/DT_DM-478391…/DT_DM-478391….md and Attachments/未知.png","revision":"source-manifest.json","applicability":"reference-only","reason":"原始需求与架构图仅供比照，不得覆盖权威源","domains":["source-authority","requirements-semantics"]},
+    {"path":"kb/README.md; kb/schema/document.schema.json; kb/tools/kb.py; kb/data/*.json","revision":"working-tree","applicability":"required","reason":"确认既有 KB 结构与防止破坏源码核实型 KB","domains":["kb-contract","repository-state"]},
+    {"path":"Dashboard/Artifacts/SP-001/goal.md; stage-plan.md; Dashboard/Sessions.md","revision":"working-tree","applicability":"required","reason":"核实现有初始 KB Goal 的范围及新需求隔离","domains":["governance","repository-state"]}
+  ],
+  "conditional_read_set": [
+    {"trigger_id":"source-conflict","condition":"主文档与原始描述表达不一致","mode":"deterministic","action":"主文档优先；冲突或未裁事项在需求 JSON 显式保留。","can_suppress_deterministic":false},
+    {"trigger_id":"implementation-claim","condition":"需求文案可能被误读成现状","mode":"evidence_backed_agent_evaluated","action":"核实 KB 类型与声明边界；无产品代码调查时标记实现状态 not_assessed。","can_suppress_deterministic":false}
+  ],
+  "semantic_refresh": {"required_when_digest_unchanged":true,"anchors":["objective","authority","claim_ceiling","critical_dependencies"]},
+  "epistemic_search_space": {
+    "required_domains":["source-authority","requirements-semantics","kb-contract","repository-state","governance"],
+    "preservation_statement":"完整保留 F01-F08/Q01-Q156 分母、权威优先级、待证/未裁事项、Q157及跨功能审查边界；不能因原文不一致缩小或扩写范围。",
+    "missing_evidence_action":"expand_or_report_evidence_gap"
+  },
+  "change_impact": {"kb_truth":true,"dashboard_state":true,"contract_or_acceptance":true,"runtime_or_schema":false,"external_side_effect":false,"semantic_risk":"high","write_conflict":false},
+  "topology": {"basis":"change_impact","route":"single_agent_exception_due_system_no_delegation","reason":"当前系统明令不得创建子 Agent；实施者将记录实际身份，独立 Validation 若不可用则不冒充通过。"},
+  "skipped_reads": [],
+  "validation_evidence_surfaces": ["original objective","acceptance criteria","actual diff","final state"]
+}

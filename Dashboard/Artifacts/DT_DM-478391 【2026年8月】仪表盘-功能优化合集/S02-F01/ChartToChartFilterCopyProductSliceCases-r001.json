@@ -1,0 +1,377 @@
+{
+  "schema_version": "s02_chart_to_chart_filter_copy_product_cases_v1",
+  "case_set_id": "S02-F01-CHART-TO-CHART-PRODUCT-001",
+  "revision": "r001",
+  "design_ref": "ChartToChartFilterCopyProductSliceDesign-r001.md",
+  "frozen_for_builder": false,
+  "status": "CANDIDATE_FOR_INDEPENDENT_REVIEW",
+  "scope": {
+    "source_chart_type": "bar",
+    "target_chart_type": "line",
+    "same_dataset_required": true,
+    "scope_delta": "none"
+  },
+  "blocked_claims": [
+    "真实只读用户拒绝",
+    "真实撤权与恢复",
+    "真实权限模块行为",
+    "超过本组观察范围的完整 AC-F01-Q004/Q006/Q007/Q014/Q015",
+    "普通表、透视表、查询组件与全部过滤形态",
+    "ISS-AC-01 精确等号边界",
+    "ISS-AC-02 全量 MB 测量边界",
+    "AC-F01-ORIG-02 既有组件复制改类型回归"
+  ],
+  "cases": [
+    {
+      "id": "CCOPY-001",
+      "title": "同数据集柱图复制完整静态过滤树",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "source": {
+          "id": "BAR-1",
+          "type": "bar",
+          "tableId": "DS-1",
+          "customFilter": "TREE-A"
+        },
+        "clipboard": null
+      },
+      "actions": [
+        "点击复制"
+      ],
+      "expected": {
+        "clipboard_written": true,
+        "clipboard_identity": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard_source": {
+          "chartId": "BAR-1",
+          "tableId": "DS-1"
+        },
+        "clipboard_filter_equals": "TREE-A",
+        "source_unchanged": true,
+        "system_clipboard_unchanged": true,
+        "success_message": "过滤条件已复制"
+      },
+      "forbidden": [
+        "source_config_api",
+        "target_mutation",
+        "preview_refresh",
+        "save_request"
+      ]
+    },
+    {
+      "id": "CCOPY-002",
+      "title": "同数据集折线图粘贴到空目标并预览",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": {}
+        }
+      },
+      "actions": [
+        "点击粘贴",
+        "检查本地数据集 ID",
+        "调用 checkSameDataSet 并返回同数据集",
+        "应用复制树",
+        "调用既有 calcData"
+      ],
+      "expected": {
+        "target_customFilter_equals": "TREE-A",
+        "logical_preview_refreshes": 1,
+        "save_request": 0,
+        "success_message": "过滤条件已应用",
+        "source_target_independent": true
+      },
+      "forbidden": [
+        "partial_target_tree",
+        "auto_save",
+        "system_clipboard"
+      ]
+    },
+    {
+      "id": "CCOPY-003",
+      "title": "目标已有条件时确认覆盖",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": "TREE-OLD"
+        }
+      },
+      "actions": [
+        "点击粘贴",
+        "确认覆盖"
+      ],
+      "expected": {
+        "target_customFilter_equals": "TREE-A",
+        "logical_preview_refreshes": 1,
+        "save_request": 0,
+        "success_message": "过滤条件已应用"
+      },
+      "forbidden": [
+        "merge_old_tree",
+        "partial_target_tree",
+        "auto_save"
+      ]
+    },
+    {
+      "id": "CCOPY-004",
+      "title": "取消覆盖不产生任何目标副作用",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": "TREE-OLD"
+        }
+      },
+      "actions": [
+        "点击粘贴",
+        "取消覆盖"
+      ],
+      "expected": {
+        "target_unchanged": true,
+        "logical_preview_refreshes": 0,
+        "save_request": 0,
+        "success_message": null,
+        "clipboard_unchanged": true
+      },
+      "forbidden": [
+        "target_mutation",
+        "snapshot_mutation",
+        "preview_refresh",
+        "save_request"
+      ]
+    },
+    {
+      "id": "CCOPY-005",
+      "title": "数据集 ID 不同或后端同数据集校验拒绝",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-2",
+          "customFilter": "TREE-OLD"
+        }
+      },
+      "actions": [
+        "点击粘贴"
+      ],
+      "variants": [
+        {
+          "id": "local_dataset_id_mismatch",
+          "api_call": false
+        },
+        {
+          "id": "api_same_dataset_negative",
+          "local_table_id": "DS-1",
+          "api_result": false
+        }
+      ],
+      "expected": {
+        "target_unchanged": true,
+        "logical_preview_refreshes": 0,
+        "success_message": null,
+        "save_request": 0
+      },
+      "forbidden": [
+        "target_mutation",
+        "preview_refresh",
+        "success_message",
+        "save_request"
+      ]
+    },
+    {
+      "id": "CCOPY-006",
+      "title": "用户或组织变化后旧复制内容不可消费",
+      "setup": {
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": "TREE-OLD"
+        }
+      },
+      "actions": [
+        "将当前用户/组织变更为 V1/O1 或 U1/O2",
+        "尝试粘贴"
+      ],
+      "expected": {
+        "clipboard_unavailable": true,
+        "target_unchanged": true,
+        "logical_preview_refreshes": 0,
+        "success_message": null
+      },
+      "forbidden": [
+        "target_mutation",
+        "preview_refresh",
+        "save_request"
+      ],
+      "evidence_limit": "仅本地身份分区机械验证，不构成真实权限验收"
+    },
+    {
+      "id": "CCOPY-007",
+      "title": "超过已确认有效期拒绝且复制不续期",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1801000
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": "TREE-OLD"
+        }
+      },
+      "actions": [
+        "点击粘贴"
+      ],
+      "expected": {
+        "clipboard_unavailable": true,
+        "target_unchanged": true,
+        "logical_preview_refreshes": 0,
+        "success_message": null
+      },
+      "forbidden": [
+        "target_mutation",
+        "preview_refresh",
+        "save_request"
+      ],
+      "unresolved_boundary": "ISS-AC-01 精确 1800000ms 不由此案例裁定"
+    },
+    {
+      "id": "CCOPY-008",
+      "title": "过滤树超叶子或容量限制时拒绝整次复制",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "previous_clipboard": "TREE-OLD",
+        "source": {
+          "id": "BAR-1",
+          "type": "bar",
+          "tableId": "DS-1"
+        }
+      },
+      "actions": [
+        "尝试复制 51 叶过滤树或序列化 UTF-8 载荷大于 1000000 bytes 的树"
+      ],
+      "expected": {
+        "clipboard_unchanged": true,
+        "target_unchanged": true,
+        "success_message": null
+      },
+      "forbidden": [
+        "partial_copy",
+        "clipboard_replacement"
+      ],
+      "unresolved_boundary": "ISS-AC-02 编码/MB精确边界仍 open；1000000 bytes 仅为该切片候选实现阈值"
+    },
+    {
+      "id": "CCOPY-009",
+      "title": "保存后重开保留成功粘贴的过滤树",
+      "setup": {
+        "user": {
+          "uid": "U1",
+          "oid": "O1"
+        },
+        "target": {
+          "id": "LINE-1",
+          "type": "line",
+          "tableId": "DS-1",
+          "customFilter": "TREE-OLD"
+        },
+        "clipboard": {
+          "uid": "U1",
+          "oid": "O1",
+          "tableId": "DS-1",
+          "filter": "TREE-A",
+          "age_ms": 1000
+        }
+      },
+      "actions": [
+        "确认覆盖并粘贴",
+        "调用既有 canvasSave",
+        "关闭编辑页",
+        "重新打开保存后的仪表板"
+      ],
+      "expected": {
+        "reopened_target_customFilter_equals": "TREE-A",
+        "auto_save_request": 0,
+        "explicit_save_request": 1
+      },
+      "forbidden": [
+        "shared_mutable_reference",
+        "unrelated_chart_mutation"
+      ],
+      "evidence_limit": "需实际产品运行与独立验证后才可声明保存重开通过"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { isFilterPasteInteractionAllowed } from './panel/common/filter-paste-interaction'
 import { isInstanceDataRefreshEnabled } from './panel/types/impl/g2-data-refresh'
 import type { DisplayObject } from '@antv/g'
 import { parseJson } from '@/views/chart/components/js/util'
@@ -89,13 +90,14 @@ class G2TooltipCarousel {
    * 构造函数，初始化轮播实例
    */
   constructor(newChart: any, chart: any, data: any[]) {
+    this.newChart = newChart
+    this.chart = chart
     if (typeof newChart?.on === 'function') {
       listenerTooltipShow(newChart, chart)
     }
+    if (!isFilterPasteInteractionAllowed(chart)) return
     // 重新创建实例前销毁已有实例
     G2TooltipCarousel.destroyByContainer(chart.container)
-    this.newChart = newChart
-    this.chart = chart
     this.setCarouselData(data)
     this.index = 0
     this.isPaused = false
@@ -573,6 +575,7 @@ class G2TooltipCarousel {
    * 判断是否需要暂停轮播
    */
   private shouldPauseCarousel(): boolean {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return true
     return (
       this.isPaused ||
       G2TooltipCarousel.pageScrolling ||
@@ -588,6 +591,7 @@ class G2TooltipCarousel {
    * 轮播下一个tooltip
    */
   private next() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (this.isUpdatingData) {
       this.afterDataUpdate(() => {
         this.isExecuting = false
@@ -823,6 +827,7 @@ class G2TooltipCarousel {
    * @param preserveSelection 刷新后恢复同一轮播项时保留选择状态和背景节点
    */
   showTooltipAtData(tooltipData, originalData?: any, preserveSelection = false) {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (typeof this.newChart?.emit !== 'function') {
       return
     }
@@ -1294,6 +1299,7 @@ class G2TooltipCarousel {
    * 增加防重入判断，避免多次启动导致多个定时器
    */
   start() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     // 未完成初始化或已被替换的实例不进入全局启动队列
     if (this.isDestroyed || G2TooltipCarousel.instanceCache.get(this.chart?.container) !== this) {
       return
@@ -1307,6 +1313,7 @@ class G2TooltipCarousel {
   }
 
   private startFromQueue() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (this.isDestroyed || this.isPaused || G2TooltipCarousel.pageScrolling) {
       return
     }
@@ -1325,6 +1332,7 @@ class G2TooltipCarousel {
   }
 
   private resumeAfterPageScroll() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (
       this.isDestroyed ||
       this.isPaused ||
@@ -1355,6 +1363,7 @@ class G2TooltipCarousel {
    * 鼠标进入图表时只暂停轮播，不清理联动或选中状态
    */
   private mouseEnter() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     this.clearCarouselBackground()
     this.pause(true)
     switchTooltipWrapperHost(this.chart, 'hover')
@@ -1385,6 +1394,7 @@ class G2TooltipCarousel {
   }
 
   private scheduleResumeAfterHover() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (this.timers.hoverLeave) {
       clearTimeout(this.timers.hoverLeave)
     }
@@ -1395,6 +1405,7 @@ class G2TooltipCarousel {
   }
 
   private resumeAfterHover() {
+    if (!isFilterPasteInteractionAllowed(this.chart)) return
     if (this.isDestroyed) return
     const chartHovered = this.chartElement?.matches(':hover')
     const tooltipHovered = this.getTooltipElement()?.matches(':hover')

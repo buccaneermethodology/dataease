@@ -1,0 +1,296 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SAVED-CANVAS-OWNER-design-review-r002",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读复审owner设计r002及27个状态用例；逐项判断SCO-01..03是否关闭，引用当前源码核实加载/恢复producer边界，给Design Freeze与detached-helper readiness双结论；不修改候选、源码、测试或产品入口。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "验证真实对象引用DSL、初始化来源映射、状态机与错误终态可否支持有界detached helper；确认Goal分母和权限边界。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerDesignReview-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改owner候选、源码或测试",
+      "产品UI/Store接线、来源配置读取、copy/paste、commit/save/preview/query",
+      "以standalone/mock代替真实权限",
+      "缩减Goal分母或追认r001准入"
+    ],
+    "maximum_claim": "只审查已保存画布owner生命周期候选的设计冻结和最多detached-helper readiness；Goal继续开放。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "仓库指令",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "治理边界",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "Goal authority与完整分母",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r002.md",
+      "revision": "fafe768f7eb8288e4582b6140eb3a1dd5e759b6117b14bd6506803d11abbd2c3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复审候选设计",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r002.json",
+      "revision": "33447f06d5a7812003fb6a177907b8cd77b42680f59bca08f5d7d8c1ae6d0150",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "27个冻结状态用例",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerDesignReview-r001.md",
+      "revision": "defe7408fbcfce90b896cb44fb0731faaf82f1275b80cd83c9171e1b72a3f3df",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "待关闭finding",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "当前创建型owner边界",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "75c0550afc403cf06ab0ce62cf459dc22d1676842293f73e575bc351b333dddd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "dashboard加载、恢复与copy/create分流",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "Store root发布与身份入口",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "数据发布与回调语义",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "真实权限阻塞事实",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r005.md",
+      "revision": "c9ab8212e34a86eabdeb8fc9159b59336320a8d7e13ad1f4dbd682ebbdee117a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "QPC产品接线准入边界",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r191.json",
+      "revision": "fed7b7ac8be43e8b1050e16f2e8231ea15a7ce18b8ae6c54a7eb1cd20f1c1078",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "最新实际拓扑",
+      "applicability": "S02-SAVED-CANVAS-OWNER-design-review-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "bound_digest_drift",
+      "mode": "deterministic",
+      "condition": "任一 required_read_set 摘要漂移",
+      "action": "停止并重新基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_contract_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "r002仍存在多解oracle、owner不兼容、效果口径不符或授权越界",
+      "action": "给编号finding及最小修订，不修改候选",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "saved dashboard owner lifecycle affects raw identity and permission-boundary semantics; independent semantic review required",
+    "route": "semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal与完整分母",
+    "当前源码加载/恢复/copy/create/template路径",
+    "r001 findings与r002 dispositions",
+    "27个fixture input/step/oracle",
+    "reference DSL到对象引用的runner规则",
+    "状态机/错误优先级/terminal cleanup",
+    "authorization separation",
+    "product admission limits",
+    "actual topology and working diff",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10 Goal AC、26 must-have、16产品义务与Scope Delta none完整保留；S01独立；权限验收BLOCKED/NOT_RUN；最多detached helper，不准入UI/Store。"
+  },
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerDesignReview-r001.md"
+  ],
+  "provenance": null,
+  "task_completion": {
+    "criteria": [
+      "对SCO-01/02/03逐条给出closed/open及证据",
+      "验证对象ref DSL由runner解析成真实引用，clone身份为不同对象",
+      "核实常规加载、cache restore、copy/create/template和onInitReady边界",
+      "确认状态机错误优先级、registration保留/清理、generation与终态一致",
+      "判断helper接口是否可deterministically implement/test",
+      "保留QPC不准入、权限BLOCKED/NOT_RUN、10/26/16和Scope Delta none"
+    ],
+    "terminal_status": "independent_review_only"
+  },
+  "maximum_claim": {
+    "summary": "仅审查r002候选Design Freeze与detached-helper readiness；不表示产品集成或Goal完成。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  }
+}

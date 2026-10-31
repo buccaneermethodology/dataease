@@ -1,0 +1,213 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-ST-SRC-006-evidence-reconciliation-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续执行 S02；保留 Builder r001 历史，追加 r002 更正其未跟踪文件 whitespace 证据，追加 Session r110 并记录独立 Validation PASS WITH BOUNDS；不宣称产品验收或 Goal 完成。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "记录独立 Validation 结果并更正 Builder evidence ledger，保持原 Goal 分母。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/ST-SRC-006-SOURCE-HANDLER-HARNESS-r002.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r305.json"
+    ],
+    "forbidden_actions": [
+      "修改产品源码或harness",
+      "修改冻结Contract/Cases",
+      "覆盖Sessions既有内容，仅允许末尾追加新条目",
+      "宣称产品验收或Goal完成",
+      "以standalone/mock替代真实权限验证"
+    ],
+    "maximum_claim": "只记录 ST-SRC-006 独立 Validation PASS WITH BOUNDS 与经更正的未跟踪文件 whitespace 检查；不代表产品或 Goal AC 验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "project rules",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "governance invariants",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "full frozen Goal denominator",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessContract-frozen-r001.json",
+      "revision": "4a1597dbd33ca71791df5584ec4ad1883b8eb956db67f0394763c697803d5329",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ],
+      "reason": "frozen harness contract",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessCases-frozen-r001.json",
+      "revision": "31fda7840facd8a8db3852ec1810d34f79d8b6b12d94878118fdcc405c6e6685",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "frozen exact local oracles",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ST-SRC-006-SourceHandlerHarnessDesignReview-r003.md",
+      "revision": "2cb9d1913a9197e134234b60649bb0e1729260731ef837a4deffd4b7599a01f2",
+      "domains": [
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "independent design authorization",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/source-handler-harness.mjs",
+      "revision": "81fed6996bda1920b10d5119b2f871714ac06f409a25949816539abf1faa8214",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "Builder artifact",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r303.json",
+      "revision": "e0172ef4e5f5805b25b09ad499b83b7d5fbb46c811f79f2fe67a44e2364755f7",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "actual candidate topology",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "ff863279871bbf0688d5c16bc8b88944067349455dbacc1a54d7656b720d7ddb",
+      "domains": [
+        "scope",
+        "dependency"
+      ],
+      "reason": "append-only Session ledger",
+      "applicability": "ST-SRC-006 evidence closeout r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ST-SRC-006-SourceHandlerHarness-Validation-r001.md",
+      "revision": "982b77f71530c07f97c4fe6928b6452da731e2832a92de50d962d0676b6d8abb",
+      "domains": [
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "independent Validation result",
+      "applicability": "ST-SRC-006 evidence reconciliation r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r304.json",
+      "revision": "e31e91a87b3abb9d1d475712d876fed6a79d6fd2568aafe1f2bc6cfcfcc41f43",
+      "domains": [
+        "dependency",
+        "validation"
+      ],
+      "reason": "previous pre-validation topology",
+      "applicability": "ST-SRC-006 evidence reconciliation r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_identity_drift",
+      "mode": "deterministic",
+      "condition": "runner、冻结合同、用例或复核摘要变化",
+      "action": "停止并重新绑定验证证据",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim_expansion",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "记录文字超出当前本地harness观察证据",
+      "action": "收紧声明并保留未验证项",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10/26/16、Scope Delta none；local harness only；S01 CONDITIONAL；真实权限 BLOCKED/NOT_RUN；所有产品/权限验收保持未验证。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_builder",
+    "reason": "仅追加一份Builder evidence更正版、一条Session及当前实际拓扑；不修改合同或产品代码。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "independent Validation report",
+    "Builder r001 ledger correction",
+    "actual diff",
+    "append-only Session state",
+    "current topology"
+  ]
+}

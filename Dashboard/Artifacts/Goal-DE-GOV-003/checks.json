@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-14T00:50:39.616663+00:00",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/context_bootstrap.py",
+        "validate",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-003/context-v1.json"
+      ],
+      "exit_code": 0,
+      "output": "{\n  \"boundaries\": {\n    \"forbidden_actions\": [\n      \"修改运行时代码\",\n      \"安装依赖\",\n      \"构建或启动 DataEase\",\n      \"数据库写入\",\n      \"提交或推送\",\n      \"发布或部署\"\n    ],\n    \"maximum_claim\": \"setup可用，长期收益尚无结论\",\n    \"write_scope\": [\n      \"AGENTS.md\",\n      \"Dashboard/README.md\",\n      \"Dashboard/Sessions.md\",\n      \"Dashboard/Decisions.md\",\n      \"Dashboard/Artifacts/README.md\",\n      \"Dashboard/Artifacts/Goal-DE-GOV-003/**\",\n      \"当前聊天 heartbeat 配置\"\n    ]\n  },\n  \"change_impact\": {\n    \"contract_or_acceptance\": true,\n    \"dashboard_state\": true,\n    \"external_side_effect\": true,\n    \"kb_truth\": false,\n    \"runtime_or_schema\": false,\n    \"semantic_risk\": \"medium\",\n    \"write_conflict\": false\n  },\n  \"conditional_read_set\": [\n    {\n      \"action\": \"先读取对应工具/KB contract 并扩展 AC 与验证范围\",\n      \"can_suppress_deterministic\": false,\n      \"condition\": \"若新增项目级 Dashboard registry 或 canonical KB\",\n      \"mode\": \"deterministic\",\n      \"trigger_id\": \"C-01\"\n    },\n    {\n      \"action\": \"重新构造 Context Bootstrap 并触发 full rebaseline\",\n      \"can_suppress_deterministic\": false,\n      \"condition\": \"若发生范围外行为、authority 或执行拓扑变化\",\n      \"mode\": \"evidence_backed_agent_evaluated\",\n      \"trigger_id\": \"C-02\"\n    }\n  ],\n  \"epistemic_search_space\": {\n    \"missing_evidence_action\": \"expand_or_report_evidence_gap\",\n    \"preservation_statement\": \"覆盖后续观察的样本选择、时间定义、可比性、质量与采集成本；缺数据不推断收益。\",\n    \"required_domains\": [\n      \"authority\",\n      \"scope\",\n      \"governance\"\n    ]\n  },\n  \"intake_projection\": {\n    \"assumptions\": [\n      \"范围为DataEase后续非平凡任务\",\n      \"每日09:00本地检查；只在5任务阈值或风险时通知\"\n    ],\n    \"authority_role\": \"projection\",\n    \"summary\": \"建立每5任务一轮的前瞻收益评估方案和持续采集入口\"\n  },\n  \"raw_user_intent\": {\n    \"authority_role\": \"authority\",\n    \"text\": \"后续如何策略实际效率收益？请帮我设计一个goal，根据后续任务的执行情况，帮我持续收集数据、测量收益，以判断本次对于skill的优化是否合适\\n\\n后续明确要求：\\n每观察5个任务，出一轮评估报告\\n\"\n  },\n  \"required_read_set\": [\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"AGENTS.md\",\n      \"reason\": \"原始范围、现有规则及可测量对象\",\n      \"revision\": \"current\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \".codex/skills/sge-governed-checkpoints/SKILL.md\",\n      \"reason\": \"原始范围、现有规则及可测量对象\",\n      \"revision\": \"current\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/goal.md\",\n      \"reason\": \"原始范围、现有规则及可测量对象\",\n      \"revision\": \"current\"\n    },\n    {\n      \"applicability\": \"required\",\n      \"domains\": [\n        \"authority\",\n        \"scope\",\n        \"governance\"\n      ],\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-002/review.md\",\n      \"reason\": \"原始范围、现有规则及可测量对象\",\n      \"revision\": \"current\"\n    }\n  ],\n  \"schema_version\": \"context_bootstrap_v1\",\n  \"semantic_refresh\": {\n    \"anchors\": [\n      \"objective\",\n      \"authority\",\n      \"claim_ceiling\",\n      \"critical_dependencies\"\n    ],\n    \"required_when_digest_unchanged\": true\n  },\n  \"skipped_reads\": [],\n  \"task_id\": \"DE-GOV-003-SETUP\",\n  \"task_profile\": \"implementation\",\n  \"topology\": {\n    \"basis\": \"change_impact\",\n    \"reason\": \"根代理完成有边界的规则编辑，独立 Validation 检查规则语义和最终冻结包；不改执行判定。\",\n    \"route\": \"design -> builder -> independent validation -> closure\"\n  },\n  \"validation_evidence_surfaces\": [\n    \"original objective\",\n    \"acceptance criteria\",\n    \"actual diff\",\n    \"final state\"\n  ]\n}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/execution_admission.py",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-003/admission-v1.json",
+        "--root",
+        "/Users/xiaomei/Documents/projects/dataease",
+        "--action",
+        "builder",
+        "--target",
+        "DataEase本地持续观察入口与当前聊天heartbeat"
+      ],
+      "exit_code": 0,
+      "output": "{\n  \"schema_version\": \"execution_admission_v1\",\n  \"admission_id\": \"DE-GOV-003-SETUP-V1\",\n  \"action\": \"builder\",\n  \"target\": \"DataEase本地持续观察入口与当前聊天heartbeat\",\n  \"references\": {\n    \"goal\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-003/setup-goal.md\",\n      \"sha256\": \"016a8fb4aafcf440ed63f43a64213fe0da18e305bb448472a148941afe8c8fdc\"\n    },\n    \"completion_contract\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-003/contract.json\",\n      \"sha256\": \"d4698b95bc28632ea1e02fbd004761a805bda7f95e4963743113e41a0b62e3da\"\n    },\n    \"context\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-003/context-v1.json\",\n      \"sha256\": \"c5c9bab630a4bede049ee1a3487806d8e180256a14620fa4455fe672fd519697\"\n    },\n    \"design_review\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-003/design-v1.md\",\n      \"sha256\": \"a97f5c130b595389970ddf79759fff7e43d3d7ccc964dadf9e3db5005cfdf48f\"\n    },\n    \"topology\": {\n      \"path\": \"Dashboard/Artifacts/Goal-DE-GOV-003/topology-v1.json\",\n      \"sha256\": \"23768d31d09d29dc518cc37773f8b97b2a45081a9fec3ef94437312add4cc9d2\"\n    }\n  }\n}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints/scripts/guardrail_checklist.py",
+        "--mode",
+        "closeout-language",
+        "--file",
+        "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-003/closeout.md"
+      ],
+      "exit_code": 0,
+      "output": "Closeout language check passed: /Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/Goal-DE-GOV-003/closeout.md\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "json_parse": "pass",
+  "markdown_links": "pass",
+  "evaluated_skill_unchanged": true,
+  "eligible_future_samples": 0,
+  "runtime_status": "automation configured, future execution unverified",
+  "claim_ceiling": "仅结构与配置；收益未证实。"
+}

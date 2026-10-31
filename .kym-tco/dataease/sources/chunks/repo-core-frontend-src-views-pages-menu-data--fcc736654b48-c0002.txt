@@ -1,0 +1,589 @@
+              if (value) {
+                obj[key] = new Date(value)
+              } else {
+                obj[key] = undefined
+              }
+            } else {
+              obj[key] = value === null ? undefined : value
+            }
+          })
+          _data.push({
+            data: obj,
+            logInfo: d.logInfo ? JSON.parse(d.logInfo) : undefined
+          })
+        })
+        state.dfTableData = _data
+      }
+    })
+    .finally(() => {
+      dsLoading.value = false
+    })
+}
+
+const pageChange = index => {
+  if (typeof index !== 'number') {
+    return
+  }
+  state.paginationConfig.currentPage = index
+  search(searchConditions.value)
+}
+
+const sizeChange = size => {
+  state.paginationConfig.pageSize = size
+  state.paginationConfig.currentPage = 1
+  search(searchConditions.value)
+}
+const sortChange = param => {
+  state.orders = []
+  if (param.order && param.prop === 'createTime') {
+    const type = param.order.substring(0, param.order.indexOf('ending'))
+    state.orders.push('create_time ' + type)
+    search(searchConditions.value)
+  }
+}
+
+const multipleTableRef = ref()
+
+const handleSelectionChange = rows => {
+  state.multipleSelection = rows
+}
+
+const clearSelection = () => {
+  multipleTableRef.value?.clearSelection()
+}
+
+const batchDelHandler = () => {
+  ElMessageBox.confirm(
+    t('data_fill.confirm_delete_multiple_data', [state.multipleSelection.length]),
+    {
+      confirmButtonType: 'danger',
+      type: 'warning',
+      confirmButtonText: t('common.delete'),
+      cancelButtonText: t('dataset.cancel'),
+      autofocus: false,
+      showClose: false
+    }
+  )
+    .then(res => {
+      batchDel()
+    })
+    .catch(() => {
+      clearSelection()
+    })
+}
+
+const batchDel = () => {
+  if (selectedItemId.value) {
+    const key = state.paginationConfig.key
+    const ids = state.multipleSelection.map(item => item.data[key])
+    dsLoading.value = true
+
+    batchDeleteRowData(selectedItemId.value, ids)
+      .then(res => {
+        ElMessage.success(t('common.delete_success'))
+        search(searchConditions.value)
+      })
+      .catch(e => {
+        dsLoading.value = false
+      })
+  }
+}
+
+const addRowData = () => {
+  rowDataFormRef.value?.init(selectedItemId.value, true, true, undefined, undefined, true)
+}
+
+function openRow(item) {
+  const id = item[state.paginationConfig.key]
+  rowDataFormRef.value?.init(selectedItemId.value, true, false, [{ rowDataId: id }])
+}
+
+function updateRow(item) {
+  const id = item[state.paginationConfig.key]
+  rowDataFormRef.value?.init(selectedItemId.value, true, true, [{ rowDataId: id }], undefined, true)
+}
+
+function deleteRow(id) {
+  ElMessageBox.confirm(t('data_fill.confirm_delete_data'), {
+    confirmButtonType: 'danger',
+    type: 'warning',
+    confirmButtonText: t('common.delete'),
+    cancelButtonText: t('dataset.cancel'),
+    autofocus: false,
+    showClose: false
+  }).then(() => {
+    dsLoading.value = true
+    deleteRowData(selectedItemId.value, id)
+      .then(res => {
+        ElMessage.success(t('common.delete_success'))
+        search(searchConditions.value)
+      })
+      .catch(e => {
+        dsLoading.value = false
+      })
+  })
+}
+
+function truncateTable() {
+  ElMessageBox.confirm(t('data_fill.confirm_truncate_table'), {
+    confirmButtonType: 'danger',
+    type: 'warning',
+    confirmButtonText: t('data_fill.truncate'),
+    cancelButtonText: t('dataset.cancel'),
+    autofocus: false,
+    showClose: false
+  }).then(() => {
+    dsLoading.value = true
+    truncateRowData(selectedItemId.value)
+      .then(res => {
+        ElMessage.success(t('common.delete_success'))
+        search(searchConditions.value)
+      })
+      .catch(e => {
+        dsLoading.value = false
+      })
+  })
+}
+
+function openUploadData() {
+  showDownloadDrawer.value = true
+}
+
+function closeUpload() {
+  showDownloadDrawer.value = false
+}
+
+function downloadData() {
+  const _condition: Array<any> = getCondition()
+  innerExport(selectedItemId.value, isEmbedded.value, { searchParams: _condition })
+    .then(res => {
+      if (isEmbedded.value && embeddedSyncExport.value) {
+        const blobData = res.data
+        const temp = res.headers['content-disposition']
+          ?.split(';')[1]
+          ?.split("filename*=utf-8''")[1]
+        const fileName = temp ? decodeURIComponent(temp) : `${selectedItem.value.name}.xlsx`
+        const blob = new Blob([blobData], {
+          type:
+            res.headers['content-type'] ??
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+        })
+        const link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        link.download = fileName // 下载的文件名
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      } else {
+        openMessageLoading(exportData)
+      }
+    })
+    .catch(() => {
+      console.error('Excel download error')
+    })
+}
+
+const exportData = () => {
+  useEmitt().emitter.emit('data-export-center', { activeName: 'IN_PROGRESS' })
+}
+
+const openMessageLoading = cb => {
+  const iconClass = `el-icon-loading`
+  const customClass = `de-message-loading de-message-export`
+  ElMessage({
+    message: h('p', null, [
+      t('data_fill.exporting'),
+      h(
+        ElButton,
+        {
+          text: true,
+          size: 'small',
+          class: 'btn-text',
+          onClick: () => {
+            cb()
+          }
+        },
+        t('data_export.export_center')
+      ),
+      t('data_fill.progress_to_download')
+    ]),
+    iconClass,
+    icon: h(RefreshLeft),
+    showClose: true,
+    customClass
+  })
+}
+
+function finishUpload() {
+  closeUpload()
+  search(searchConditions.value)
+}
+
+const showFilter = ref(false)
+const searchConditions = ref([])
+const drawerMainOpen = async () => {
+  //todo
+  showFilter.value = true
+}
+const drawerMainClose = () => {
+  showFilter.value = false
+}
+
+function getMultipleValueList(data) {
+  try {
+    return join(JSON.parse(data), '; ')
+  } catch (e) {
+    console.error(e)
+  }
+  return ''
+}
+</script>
+
+<template>
+  <div class="datasource-manage" ref="datasourceManageRef" v-loading="dsLoading">
+    <ArrowSide
+      :style="{ left: (sideTreeStatus ? width - 12 : 0) + 'px' }"
+      @change-side-tree-status="changeSideTreeStatus"
+      :isInside="!sideTreeStatus"
+    />
+    <el-aside
+      @mouseenter="mouseenter"
+      @mouseleave="mouseleave"
+      class="resource-area"
+      :class="{ retract: !sideTreeStatus }"
+      ref="node"
+      :style="{ width: width + 'px' }"
+    >
+      <ArrowSide
+        :isInside="!sideTreeStatus"
+        :style="{ left: (sideTreeStatus ? width - 12 : 0) + 'px' }"
+        @change-side-tree-status="changeSideTreeStatus"
+      />
+      <div class="resource-tree">
+        <div class="tree-header">
+          <div class="icon-methods">
+            <span class="title"> {{ t('data_fill.data_fill') }} </span>
+            <div v-if="rootManage || moduleAuthData.anyManage" class="flex-align-center">
+              <el-tooltip
+                effect="dark"
+                offset="14"
+                popper-class="new-folder_tip"
+                :content="t('data_fill.create_folder')"
+                placement="top"
+                v-if="rootManage"
+              >
+                <el-icon
+                  class="custom-icon btn"
+                  :style="{ marginRight: '20px' }"
+                  @click="handleFormTree('folder')"
+                >
+                  <Icon name="dv-new-folder">
+                    <dvNewFolder class="svg-icon" />
+                  </Icon>
+                </el-icon>
+              </el-tooltip>
+              <el-tooltip
+                effect="dark"
+                :content="t('data_fill.create_form')"
+                offset="14"
+                popper-class="new-data_fill"
+                placement="top"
+                v-if="rootManage"
+              >
+                <el-icon class="custom-icon btn" @click="createForm">
+                  <Icon name="icon_file-add_outlined">
+                    <icon_fileAdd_outlined />
+                  </Icon>
+                </el-icon>
+              </el-tooltip>
+            </div>
+          </div>
+
+          <el-input
+            :placeholder="t('commons.search')"
+            v-model="dsName"
+            clearable
+            class="search-bar"
+          >
+            <template #prefix>
+              <el-icon>
+                <Icon name="icon_search-outline_outlined">
+                  <icon_searchOutline_outlined />
+                </Icon>
+              </el-icon>
+            </template>
+          </el-input>
+          <el-dropdown @command="handleSortTypeChange" trigger="click">
+            <el-icon class="filter-icon-span">
+              <el-tooltip :offset="16" effect="dark" :content="sortTypeTip" placement="top">
+                <Icon v-if="state.curSortType.includes('asc')" name="dv-sort-asc" class="opt-icon">
+                  <dvSortAsc />
+                </Icon>
+              </el-tooltip>
+              <el-tooltip :offset="16" effect="dark" :content="sortTypeTip" placement="top">
+                <Icon
+                  v-if="state.curSortType.includes('desc')"
+                  name="dv-sort-desc"
+                  class="opt-icon"
+                >
+                  <dvSortDesc class="svg-icon opt-icon" />
+                </Icon>
+              </el-tooltip>
+            </el-icon>
+            <template #dropdown>
+              <el-dropdown-menu style="width: 246px">
+                <template :key="ele.value" v-for="ele in sortList">
+                  <el-dropdown-item
+                    class="ed-select-dropdown__item"
+                    :class="ele.value === state.curSortType && 'selected'"
+                    :command="ele.value"
+                  >
+                    {{ ele.name }}
+                  </el-dropdown-item>
+                  <li v-if="ele.divided" class="ed-dropdown-menu__item--divided"></li>
+                </template>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+        <el-scrollbar
+          @scroll="handleScroll"
+          ref="scrollbarRef"
+          :style="customTreeStyle"
+          class="custom-tree"
+        >
+          <el-tree
+            menu
+            v-if="dsListTreeShow"
+            ref="dsListTree"
+            node-key="id"
+            @node-expand="nodeExpand"
+            @node-collapse="nodeCollapse"
+            :filter-node-method="filterNode"
+            :default-expanded-keys="expandedKey"
+            :data="state.datasourceTree"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          >
+            <template #default="{ node, data }">
+              <span class="custom-tree-node" :class="{ 'node-disabled-custom': !data.weight }">
+                <el-icon :class="data.leaf && 'icon-border'" style="font-size: 18px">
+                  <Icon>
+                    <component :is="getDsIconName(data)"></component>
+                  </Icon>
+                </el-icon>
+                <el-tooltip
+                  v-if="!data.weight"
+                  effect="dark"
+                  :content="t('common.no_permission_node')"
+                  placement="top-start"
+                >
+                  <span
+                    :title="node.label"
+                    class="label-tooltip ellipsis"
+                    :class="data.type === 'Excel' && 'excel'"
+                    >{{ node.label }}</span
+                  >
+                </el-tooltip>
+                <span
+                  v-else
+                  :title="node.label"
+                  class="label-tooltip ellipsis"
+                  :class="data.type === 'Excel' && 'excel'"
+                  >{{ node.label }}</span
+                >
+                <div class="icon-more" v-if="data.weight >= 7">
+                  <handle-more
+                    icon-size="24px"
+                    @handle-command="cmd => handleFormTree(cmd, data)"
+                    :menu-list="addOptionTypeList"
+                    :icon-name="icon_add_outlined"
+                    placement="bottom-start"
+                    v-if="!data.leaf"
+                  ></handle-more>
+                  <el-icon
+                    class="hover-icon"
+                    @click.stop="handleEdit(data)"
+                    v-else-if="data.type !== 'Excel'"
+                  >
+                    <icon name="icon_edit_outlined"><icon_edit_outlined class="svg-icon" /></icon>
+                  </el-icon>
+                  <handle-more
+                    @handle-command="
+                      cmd => operation(cmd, data, data.leaf ? 'data-filling' : 'folder')
+                    "
+                    :menu-list="
+                      getMenuList(!['Excel', 'API'].includes(data.type) && data.leaf, data)
+                    "
+                  ></handle-more>
+                </div>
+              </span>
+            </template>
+          </el-tree>
+        </el-scrollbar>
+      </div>
+    </el-aside>
+
+    <div
+      class="datasource-content"
+      :class="{
+        auto: isEmbedded,
+        h100: isIframe,
+        h90: isDataEaseBi
+      }"
+      :style="datasourceContentStyle"
+      v-loading="mainLoading"
+    >
+      <template v-if="!state.datasourceTree.length && mounted">
+        <empty-background :description="t('data_fill.no_form')" img-type="none">
+          <el-button v-if="rootManage" @click="() => createForm()" type="primary">
+            <template #icon>
+              <Icon name="icon_add_outlined">
+                <icon_add_outlined class="svg-icon" />
+              </Icon>
+            </template>
+            {{ t('data_fill.create_form') }}
+          </el-button>
+        </empty-background>
+      </template>
+      <template v-else-if="!!selectedItemId && selectedItem">
+        <div class="datasource-info">
+          <div class="info-method">
+            <span :title="selectedItem.name" class="name ellipsis">
+              {{ selectedItem.name }}
+            </span>
+            <el-divider style="margin: 0 12px" direction="vertical" />
+            <span class="create-user">
+              {{ t('visualization.create_by') }}:{{ selectedItem.creator }}
+            </span>
+            <el-popover :offset="8" show-arrow placement="bottom" width="290" trigger="hover">
+              <template #reference>
+                <el-icon size="16px" class="create-user">
+                  <Icon name="icon_info_outlined">
+                    <icon_info_outlined class="svg-icon" />
+                  </Icon>
+                </el-icon>
+              </template>
+              <InfoDetail
+                :id="selectedItem.id"
+                :creator="selectedItem.creator"
+                :updater="selectedItem.updater"
+                :create-time="timestampFormatDate(selectedItem.createTime)"
+                :update-time="timestampFormatDate(selectedItem.updateTime)"
+                :data-source-name="selectedItem.datasourceName"
+                :table-name="selectedItem.tableName"
+              />
+            </el-popover>
+            <div class="right-btn flex-align-center" style="height: 32px">
+              <el-button
+                v-if="selectedItem?.weight >= 7"
+                @click="editForm(selectedItem.id)"
+                type="primary"
+              >
+                <template #icon>
+                  <Icon name="icon_edit_outlined">
+                    <icon_edit_outlined class="svg-icon" />
+                  </Icon>
+                </template>
+                {{ t('common.edit') }}
+              </el-button>
+            </div>
+          </div>
+          <div class="tab-border">
+            <el-tabs v-model="activeName" @tab-change="handleClick">
+              <el-tab-pane :label="t('data_fill.form.list')" name="dataPreview" />
+              <el-tab-pane :label="t('data_fill.form.record')" name="record" />
+              <el-tab-pane
+                :label="t('data_fill.form.task_manage')"
+                name="task"
+                v-if="selectedItem?.weight >= 7"
+              />
+            </el-tabs>
+          </div>
+        </div>
+
+        <div
+          v-if="activeName === 'dataPreview'"
+          class="df-table-container"
+          :class="{
+            'df-table-container-no-bottom': state.multipleSelection.length
+          }"
+        >
+          <div style="display: flex; width: 100%; height: 100%; flex-direction: column">
+            <div
+              class="df-table"
+              :class="{
+                'df-table-bottom': state.multipleSelection.length
+              }"
+            >
+              <div style="display: flex; width: 100%; flex-direction: row; margin-bottom: 16px">
+                <div class="search-operate" v-if="selectedItem?.weight >= 7" style="flex: 1">
+                  <el-button secondary @click="addRowData">
+                    <template #icon>
+                      <Icon name="icon_add_outlined">
+                        <icon_add_outlined class="svg-icon" />
+                      </Icon>
+                    </template>
+                    {{ t('data_fill.data.add_data') }}
+                  </el-button>
+                  <el-button secondary @click="openUploadData">
+                    <template #icon>
+                      <Icon name="icon_upload_outlined">
+                        <icon_upload_outlined />
+                      </Icon>
+                    </template>
+                    {{ t('data_fill.data.batch_upload') }}
+                  </el-button>
+                  <el-button secondary @click="downloadData">
+                    <template #icon>
+                      <Icon name="icon_download_outlined">
+                        <icon_download_outlined />
+                      </Icon>
+                    </template>
+                    {{ t('data_fill.data.download') }}
+                  </el-button>
+                  <el-button secondary @click="truncateTable">
+                    {{ t('data_fill.truncate_table') }}
+                  </el-button>
+                </div>
+                <el-button
+                  @click="drawerMainOpen"
+                  :plain="!!searchConditions.length"
+                  :class="searchConditions.length ? 'filter-condition-button' : 'filter-button'"
+                >
+                  <template #icon>
+                    <Icon name="icon-filter">
+                      <iconFilter class="svg-icon" />
+                    </Icon>
+                  </template>
+                  {{
+                    t('common.filter') +
+                    (searchConditions.length ? `(${searchConditions?.length})` : '')
+                  }}
+                </el-button>
+              </div>
+              <div class="info-table-full" :class="{ 'info-table': selectedItem?.weight >= 7 }">
+                <GridTable
+                  ref="multipleTableRef"
+                  :pagination="state.paginationConfig"
+                  :table-data="state.dfTableData"
+                  :empty-desc="emptyDesc"
+                  :empty-img="imgType"
+                  class="popper-max-width df-data-form-table"
+                  @current-change="pageChange"
+                  @size-change="sizeChange"
+                  @sort-change="sortChange"
+                  @selection-change="handleSelectionChange"
+                  border
+                >
+                  <el-table-column type="selection" width="36" v-if="selectedItem?.weight >= 7" />
+                  <el-table-column v-for="c in columns" :key="c.props" :prop="c.props">
+                    <template #header>
+                      {{ c.label }}
+                      <span v-if="c.rangeIndex === 0">({{ t('data_fill.data.start') }})</span>
+                      <span v-if="c.rangeIndex === 1">({{ t('data_fill.data.end') }})</span>
+                    </template>
+                    <template #default="scope">
+                      <span
+                        v-if="c.date && scope.row.data[c.props]"

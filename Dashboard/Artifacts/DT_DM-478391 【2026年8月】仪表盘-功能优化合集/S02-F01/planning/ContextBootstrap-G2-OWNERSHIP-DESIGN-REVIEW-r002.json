@@ -1,0 +1,393 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "同一ownership交付物第2/3轮，保留完整Goal与权限边界；审查R001..R008全部处置并分别给Design Freeze、RED准备和主Builder条件准入。23个helper与4个实际SFC控制流case。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "为界面MVP按实例隔离G2资源及迟到cleanup，独立检查本最小实施单元而不重开旧全量产品接线交付物。",
+    "objective": "判定ownership helper及真实组件接线合同、18案例、RED方案可否冻结并进入有界Builder。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2StageLifecycleOwnershipDesignReview-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改Design/Cases/Goal/源码",
+      "运行数据库/权限/构建或产品UI",
+      "把本单元通过提升为stage/query/Store事务或完整MVP通过",
+      "重开此前已满3/3的交付物"
+    ],
+    "maximum_claim": "仅本ownership实施单元Design及有界Builder准入；不证明runtime或完整MVP。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/references/recipes/design-and-builder.md",
+      "revision": "f2e9a541f2ceafc6ef6e153862a8b90f414cf12b35a3804d08484055eccceca7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstAuthority-20261025.json",
+      "revision": "a5b00d1678a7543e654c1b9eb07e77fe36f6810ab025f473d59ccd64b5979342",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md",
+      "revision": "e79f0896948a7897d4b6fb2e509912c3080825520bea1c561c5200ecd9227618",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipDesign-r002.md",
+      "revision": "7b522c8eed3ec21265f83631608da7ecac5626b9774a97b5a6ef6e437461e79b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipCases-r002.json",
+      "revision": "f4348c739094943db73872ebc974d9b5048186d627c5022df2fa9c33d5fd2bba",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "revision": "e9429bf59915e5a23d4f9d70987b126ca8b8329863be3208c625367e71f607e5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+      "revision": "acacb1ae0fde128a1cb894f06ce073454da04205e9225633168e5f67cc8b4311",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/G2TooltipCarousel.ts",
+      "revision": "f3a1d565701da75bc027edca263e18e7e08b0096b08523d2cfcc3b0ce0860389",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/common/common_antv.ts",
+      "revision": "c6c5c643db10966e098aede11b53faf2098f8a9e16e1ce113888a5707edd4f1e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/types/impl/g2-legend-pagination.ts",
+      "revision": "710104d7b2c1ac1240837814d0b97df01236300f6712ab5ef9df8a3dd4117e35",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/types/impl/g2-assist-line.ts",
+      "revision": "57bf3d4c6dfb986d90e1750909f235a1b70c698affcdd5bb6acfa1d0bcaf4e3d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/types/impl/g2-legend-tile.ts",
+      "revision": "1caa0e7a8c3f7e4dce08d8a6c789063e04b362790f9a32f1a95baf098f2cffd3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对本单元authority、源代码资源归属、API和案例/准入合同。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2StageLifecycleOwnershipDesignReview-r001.md",
+      "revision": "ed4f790c2a10c8775ba176727718dd28d701f80b6fd3c514cb529923e9a3f043",
+      "domains": [
+        "acceptance",
+        "validation",
+        "implementation",
+        "claim_ceiling"
+      ],
+      "reason": "逐项核对首轮全部八项finding及同类残余。",
+      "applicability": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal为10 AC/26 must-have/16产品义务且Scope Delta none；旧Chart→Chart r003与事务合同r003各自3/3且不得重开；AM-09仍NEEDS_REVISION；S01 F01 CONDITIONAL；真实权限环境BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_independent_semantic_review",
+    "reason": "本交付物第2/3轮，核验八项finding的处置，区分RED准备准入与主Builder准入。",
+    "task_id": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002",
+    "recorded_at": "2026-10-26T03:22:28.724411+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r381.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r382.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "实例/资源所有权与cleanup顺序",
+    "异步generation及卸载边界",
+    "空数据与错误隔离",
+    "真实组件full-render/autoRefresh/unmount调用链",
+    "RED可信性及same-identity GREEN",
+    "MVP及完整Goal声明上限"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-F01-G2-OWNERSHIP-DESIGN-REVIEW-r002",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-G2-OWNERSHIP-DESIGN-REVIEW-r001.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "maximum_claim": "仅本ownership实施单元Design及有界Builder准入；不证明runtime或完整MVP。",
+  "design_objective": "判定ownership helper及真实组件接线合同、18案例、RED方案可否冻结并进入有界Builder。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2StageLifecycleOwnershipDesignReview-r002.md"
+}

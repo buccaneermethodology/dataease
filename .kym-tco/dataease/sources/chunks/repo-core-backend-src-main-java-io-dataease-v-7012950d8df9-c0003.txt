@@ -1,0 +1,275 @@
+                        visualizationLinkageField.copyId)).from(visualizationLinkageField)
+                .join(visualizationLinkage).on(visualizationLinkageField.linkageId.eq(visualizationLinkage.id))
+                .where(visualizationLinkage.dvId.eq(dvId)).fetch().forEach(item -> {
+                    SnapshotVisualizationLinkageField snapshotVisualizationLinkageField = new SnapshotVisualizationLinkageField();
+                    BeanUtils.copyBean(snapshotVisualizationLinkageField, item);
+                    snapshotVisualizationLinkageFieldRepository.saveAndFlush(snapshotVisualizationLinkageField);
+                });
+
+        visualizationLinkageRepository.findByDvId(dvId).forEach(item -> {
+            SnapshotVisualizationLinkage snapshotVisualizationLinkage = new SnapshotVisualizationLinkage();
+            BeanUtils.copyBean(snapshotVisualizationLinkage, item);
+            snapshotVisualizationLinkageRepository.saveAndFlush(snapshotVisualizationLinkage);
+        });
+
+        QVisualizationOuterParamsInfo visualizationOuterParamsInfo = QVisualizationOuterParamsInfo.visualizationOuterParamsInfo;
+        QVisualizationOuterParams visualizationOuterParams = QVisualizationOuterParams.visualizationOuterParams;
+        QVisualizationOuterParamsTargetViewInfo visualizationOuterParamsTargetViewInfo = QVisualizationOuterParamsTargetViewInfo.visualizationOuterParamsTargetViewInfo;
+
+        queryFactory.select(Projections.bean(VisualizationOuterParamsTargetViewInfo.class,
+                        visualizationOuterParamsTargetViewInfo.targetId,
+                        visualizationOuterParamsTargetViewInfo.paramsInfoId,
+                        visualizationOuterParamsTargetViewInfo.targetViewId,
+                        visualizationOuterParamsTargetViewInfo.targetFieldId,
+                        visualizationOuterParamsTargetViewInfo.copyFrom,
+                        visualizationOuterParamsTargetViewInfo.copyId,
+                        visualizationOuterParamsTargetViewInfo.targetDsId
+                )).from(visualizationOuterParamsTargetViewInfo)
+                .leftJoin(visualizationOuterParamsInfo).on(visualizationOuterParamsTargetViewInfo.paramsInfoId.eq(visualizationOuterParamsInfo.paramsInfoId))
+                .leftJoin(visualizationOuterParams).on(visualizationOuterParams.paramsId.eq(visualizationOuterParamsInfo.paramsId))
+                .where(visualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch().forEach(item -> {
+                    SnapshotVisualizationOuterParamsTargetViewInfo snapshotVisualizationOuterParamsTargetViewInfo = new SnapshotVisualizationOuterParamsTargetViewInfo();
+                    BeanUtils.copyBean(snapshotVisualizationOuterParamsTargetViewInfo, item);
+                    snapshotVisualizationOuterParamsTargetViewInfoRepository.saveAndFlush(snapshotVisualizationOuterParamsTargetViewInfo);
+                });
+
+        queryFactory.select(Projections.bean(VisualizationOuterParamsInfo.class,
+                        visualizationOuterParamsInfo.paramsInfoId,
+                        visualizationOuterParamsInfo.paramsId,
+                        visualizationOuterParamsInfo.paramName,
+                        visualizationOuterParamsInfo.checked,
+                        visualizationOuterParamsInfo.copyFrom,
+                        visualizationOuterParamsInfo.copyId,
+                        visualizationOuterParamsInfo.required,
+                        visualizationOuterParamsInfo.defaultValue,
+                        visualizationOuterParamsInfo.enabledDefault
+                )).from(visualizationOuterParamsInfo)
+                .leftJoin(visualizationOuterParams).on(visualizationOuterParams.paramsId.eq(visualizationOuterParamsInfo.paramsId))
+                .where(visualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch().forEach(item -> {
+                    SnapshotVisualizationOuterParamsInfo snapshotVisualizationOuterParamsInfo = new SnapshotVisualizationOuterParamsInfo();
+                    BeanUtils.copyBean(snapshotVisualizationOuterParamsInfo, item);
+                    snapshotVisualizationOuterParamsInfoRepository.saveAndFlush(snapshotVisualizationOuterParamsInfo);
+                });
+
+        visualizationOuterParamsRepository.findByVisualizationId(String.valueOf(dvId)).forEach(item -> {
+            SnapshotVisualizationOuterParams snapshotVisualizationOuterParams = new SnapshotVisualizationOuterParams();
+            BeanUtils.copyBean(snapshotVisualizationOuterParams, item);
+            snapshotVisualizationOuterParamsRepository.saveAndFlush(snapshotVisualizationOuterParams);
+        });
+        //xpack 阈值告警
+        chartViewManege.restoreThreshold(dvId, CommonConstants.RESOURCE_TABLE.SNAPSHOT);
+    }
+
+    @Transactional
+    public void dvRestore(Long dvId) {
+        // 主表行未被删除，此处按 dvId 原地更新（saveAndFlush 命中已存在行做 UPDATE），
+        // 将镜像表数据同步到主表
+        snapshotDataVisualizationInfoRepository.findById(dvId).ifPresent(item -> {
+            DataVisualizationInfo dataVisualizationInfo = new DataVisualizationInfo();
+            BeanUtils.copyBean(dataVisualizationInfo, item, "updateTime");
+            dataVisualizationInfoRepository.saveAndFlush(dataVisualizationInfo);
+        });
+
+        List<CoreChartView> coreChartViews = new ArrayList<>();
+        snapshotCoreChartViewRepository.findBySceneId(dvId).forEach(item -> {
+            coreChartViews.add(BeanUtils.copyBean(new CoreChartView(), item));
+        });
+        coreChartViewRepository.saveAllAndFlush(coreChartViews);
+
+        // LinkJump / Linkage / OuterParams 相关主表先按 dvId 清理，再从镜像表复制，避免残留脏数据
+        removeCoreLinkAndOuterParams(dvId);
+
+        QSnapshotVisualizationLinkJump snapshotVisualizationLinkJump = QSnapshotVisualizationLinkJump.snapshotVisualizationLinkJump;
+        QSnapshotVisualizationLinkJumpInfo snapshotVisualizationLinkJumpInfo = QSnapshotVisualizationLinkJumpInfo.snapshotVisualizationLinkJumpInfo;
+        QSnapshotVisualizationLinkJumpTargetViewInfo snapshotVisualizationLinkJumpTargetViewInfo = QSnapshotVisualizationLinkJumpTargetViewInfo.snapshotVisualizationLinkJumpTargetViewInfo;
+        queryFactory.select(Projections.fields(SnapshotVisualizationLinkJumpTargetViewInfo.class,
+                        snapshotVisualizationLinkJumpTargetViewInfo.targetId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.linkJumpInfoId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.sourceFieldActiveId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.targetViewId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.targetFieldId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.copyFrom,
+                        snapshotVisualizationLinkJumpTargetViewInfo.copyId,
+                        snapshotVisualizationLinkJumpTargetViewInfo.targetType
+                )).from(snapshotVisualizationLinkJumpTargetViewInfo)
+                .leftJoin(snapshotVisualizationLinkJumpInfo).on(snapshotVisualizationLinkJumpTargetViewInfo.linkJumpInfoId.eq(snapshotVisualizationLinkJumpInfo.id))
+                .leftJoin(snapshotVisualizationLinkJump).on(snapshotVisualizationLinkJumpInfo.linkJumpId.eq(snapshotVisualizationLinkJump.id))
+                .where(snapshotVisualizationLinkJump.sourceDvId.eq(dvId)).fetch().forEach(item -> {
+                    VisualizationLinkJumpTargetViewInfo visualizationLinkJumpTargetViewInfo = new VisualizationLinkJumpTargetViewInfo();
+                    BeanUtils.copyBean(visualizationLinkJumpTargetViewInfo, item);
+                    visualizationLinkJumpTargetViewInfoRepository.saveAndFlush(visualizationLinkJumpTargetViewInfo);
+                });
+
+
+        queryFactory.select(Projections.fields(SnapshotVisualizationLinkJumpInfo.class,
+                        snapshotVisualizationLinkJumpInfo.id,
+                        snapshotVisualizationLinkJumpInfo.linkJumpId,
+                        snapshotVisualizationLinkJumpInfo.linkType,
+                        snapshotVisualizationLinkJumpInfo.jumpType,
+                        snapshotVisualizationLinkJumpInfo.targetDvId,
+                        snapshotVisualizationLinkJumpInfo.sourceFieldId,
+                        snapshotVisualizationLinkJumpInfo.content,
+                        snapshotVisualizationLinkJumpInfo.checked,
+                        snapshotVisualizationLinkJumpInfo.attachParams,
+                        snapshotVisualizationLinkJumpInfo.copyFrom,
+                        snapshotVisualizationLinkJumpInfo.copyId,
+                        snapshotVisualizationLinkJumpInfo.windowSize
+                )).from(snapshotVisualizationLinkJumpInfo)
+                .leftJoin(snapshotVisualizationLinkJump).on(snapshotVisualizationLinkJumpInfo.linkJumpId.eq(snapshotVisualizationLinkJump.id))
+                .where(snapshotVisualizationLinkJump.sourceDvId.eq(dvId)).fetch().forEach(item -> {
+                    VisualizationLinkJumpInfo visualizationLinkJumpInfo = new VisualizationLinkJumpInfo();
+                    BeanUtils.copyBean(visualizationLinkJumpInfo, item);
+                    visualizationLinkJumpInfoRepository.saveAndFlush(visualizationLinkJumpInfo);
+                });
+
+        queryFactory.select(Projections.fields(SnapshotVisualizationLinkJump.class,
+                        snapshotVisualizationLinkJump.id,
+                        snapshotVisualizationLinkJump.sourceDvId,
+                        snapshotVisualizationLinkJump.sourceViewId,
+                        snapshotVisualizationLinkJump.linkJumpInfo,
+                        snapshotVisualizationLinkJump.checked,
+                        snapshotVisualizationLinkJump.copyFrom,
+                        snapshotVisualizationLinkJump.copyId
+                )).from(snapshotVisualizationLinkJump)
+                .where(snapshotVisualizationLinkJump.sourceDvId.eq(dvId)).fetch().forEach(item -> {
+                    VisualizationLinkJump visualizationLinkJump = new VisualizationLinkJump();
+                    BeanUtils.copyBean(visualizationLinkJump, item);
+                    visualizationLinkJumpRepository.saveAndFlush(visualizationLinkJump);
+                });
+
+        QSnapshotVisualizationLinkage snapshotVisualizationLinkage = QSnapshotVisualizationLinkage.snapshotVisualizationLinkage;
+        queryFactory.select(Projections.fields(SnapshotVisualizationLinkage.class,
+                        snapshotVisualizationLinkage.id,
+                        snapshotVisualizationLinkage.dvId,
+                        snapshotVisualizationLinkage.sourceViewId,
+                        snapshotVisualizationLinkage.targetViewId,
+                        snapshotVisualizationLinkage.updateTime,
+                        snapshotVisualizationLinkage.updatePeople,
+                        snapshotVisualizationLinkage.linkageActive,
+                        snapshotVisualizationLinkage.ext1,
+                        snapshotVisualizationLinkage.ext2,
+                        snapshotVisualizationLinkage.copyFrom,
+                        snapshotVisualizationLinkage.copyId
+                )).from(snapshotVisualizationLinkage)
+                .where(snapshotVisualizationLinkage.dvId.eq(dvId)).fetch().forEach(itme -> {
+                    VisualizationLinkage visualizationLinkage = new VisualizationLinkage();
+                    BeanUtils.copyBean(visualizationLinkage, itme);
+                    visualizationLinkageRepository.saveAndFlush(visualizationLinkage);
+                });
+
+        QSnapshotVisualizationLinkageField snapshotVisualizationLinkageField = QSnapshotVisualizationLinkageField.snapshotVisualizationLinkageField;
+
+        queryFactory.select(Projections.fields(SnapshotVisualizationLinkageField.class,
+                        snapshotVisualizationLinkageField.id,
+                        snapshotVisualizationLinkageField.linkageId,
+                        snapshotVisualizationLinkageField.sourceField,
+                        snapshotVisualizationLinkageField.targetField,
+                        snapshotVisualizationLinkageField.updateTime,
+                        snapshotVisualizationLinkageField.copyFrom,
+                        snapshotVisualizationLinkageField.copyId
+                )).from(snapshotVisualizationLinkageField)
+                .leftJoin(snapshotVisualizationLinkage).on(snapshotVisualizationLinkageField.linkageId.eq(snapshotVisualizationLinkage.id))
+                .where(snapshotVisualizationLinkage.dvId.eq(dvId)).fetch().forEach(item -> {
+                    VisualizationLinkageField visualizationLinkageField = new VisualizationLinkageField();
+                    BeanUtils.copyBean(visualizationLinkageField, item);
+                    visualizationLinkageFieldRepository.saveAndFlush(visualizationLinkageField);
+                });
+
+
+        QSnapshotVisualizationOuterParamsInfo snapshotVisualizationOuterParamsInfo = QSnapshotVisualizationOuterParamsInfo.snapshotVisualizationOuterParamsInfo;
+        QSnapshotVisualizationOuterParams snapshotVisualizationOuterParams = QSnapshotVisualizationOuterParams.snapshotVisualizationOuterParams;
+        QSnapshotVisualizationOuterParamsTargetViewInfo snapshotVisualizationOuterParamsTargetViewInfo = QSnapshotVisualizationOuterParamsTargetViewInfo.snapshotVisualizationOuterParamsTargetViewInfo;
+        queryFactory.select(Projections.fields(SnapshotVisualizationOuterParamsTargetViewInfo.class,
+                        snapshotVisualizationOuterParamsTargetViewInfo.targetId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.paramsInfoId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.targetViewId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.targetFieldId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.copyFrom,
+                        snapshotVisualizationOuterParamsTargetViewInfo.copyId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.targetDsId,
+                        snapshotVisualizationOuterParamsTargetViewInfo.matchMode
+                )).from(snapshotVisualizationOuterParamsTargetViewInfo)
+                .leftJoin(snapshotVisualizationOuterParamsInfo).on(snapshotVisualizationOuterParamsTargetViewInfo.paramsInfoId.eq(snapshotVisualizationOuterParamsInfo.paramsInfoId))
+                .leftJoin(snapshotVisualizationOuterParams).on(snapshotVisualizationOuterParams.paramsId.eq(snapshotVisualizationOuterParamsInfo.paramsId))
+                .where(snapshotVisualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch().forEach(item -> {
+                    VisualizationOuterParamsTargetViewInfo visualizationOuterParamsTargetViewInfo = new VisualizationOuterParamsTargetViewInfo();
+                    BeanUtils.copyBean(visualizationOuterParamsTargetViewInfo, item);
+                    visualizationOuterParamsTargetViewInfoRepository.saveAndFlush(visualizationOuterParamsTargetViewInfo);
+                });
+
+
+        queryFactory.select(Projections.fields(SnapshotVisualizationOuterParamsInfo.class,
+                        snapshotVisualizationOuterParamsInfo.paramsInfoId,
+                        snapshotVisualizationOuterParamsInfo.paramsId,
+                        snapshotVisualizationOuterParamsInfo.paramName,
+                        snapshotVisualizationOuterParamsInfo.checked,
+                        snapshotVisualizationOuterParamsInfo.copyFrom,
+                        snapshotVisualizationOuterParamsInfo.copyId,
+                        snapshotVisualizationOuterParamsInfo.required,
+                        snapshotVisualizationOuterParamsInfo.defaultValue,
+                        snapshotVisualizationOuterParamsInfo.enabledDefault
+                )).from(snapshotVisualizationOuterParamsInfo)
+                .leftJoin(snapshotVisualizationOuterParams).on(snapshotVisualizationOuterParamsInfo.paramsId.eq(snapshotVisualizationOuterParams.paramsId))
+                .where(snapshotVisualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch().forEach(item -> {
+                    VisualizationOuterParamsInfo visualizationOuterParamsInfo = new VisualizationOuterParamsInfo();
+                    BeanUtils.copyBean(visualizationOuterParamsInfo, item);
+                    visualizationOuterParamsInfoRepository.saveAndFlush(visualizationOuterParamsInfo);
+
+                });
+
+        queryFactory.select(Projections.fields(SnapshotVisualizationOuterParams.class,
+                snapshotVisualizationOuterParams.paramsId,
+                snapshotVisualizationOuterParams.visualizationId,
+                snapshotVisualizationOuterParams.checked,
+                snapshotVisualizationOuterParams.remark,
+                snapshotVisualizationOuterParams.copyFrom,
+                snapshotVisualizationOuterParams.copyId
+        )).from(snapshotVisualizationOuterParams).where(snapshotVisualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch().forEach(item -> {
+            VisualizationOuterParams outerParams = new VisualizationOuterParams();
+            BeanUtils.copyBean(outerParams, item);
+            visualizationOuterParamsRepository.saveAndFlush(outerParams);
+        });
+
+
+        //xpack 阈值告警
+        chartViewManege.restoreThreshold(dvId, CommonConstants.RESOURCE_TABLE.CORE);
+    }
+
+    /**
+     * 恢复镜像前，按 dvId 清理主表中 LinkJump / Linkage / OuterParams 相关数据
+     * 先删子表再删父表，避免残留脏数据
+     */
+    private void removeCoreLinkAndOuterParams(Long dvId) {
+        // LinkJump: TargetViewInfo -> Info -> LinkJump
+        QVisualizationLinkJump visualizationLinkJump = QVisualizationLinkJump.visualizationLinkJump;
+        QVisualizationLinkJumpInfo visualizationLinkJumpInfo = QVisualizationLinkJumpInfo.visualizationLinkJumpInfo;
+        List<Long> linkJumpIds = queryFactory.select(visualizationLinkJump.id).from(visualizationLinkJump)
+                .where(visualizationLinkJump.sourceDvId.eq(dvId)).fetch();
+        if (CollectionUtils.isNotEmpty(linkJumpIds)) {
+            List<Long> linkJumpInfoIds = queryFactory.select(visualizationLinkJumpInfo.id).from(visualizationLinkJumpInfo)
+                    .where(visualizationLinkJumpInfo.linkJumpId.in(linkJumpIds)).fetch();
+            if (CollectionUtils.isNotEmpty(linkJumpInfoIds)) {
+                visualizationLinkJumpTargetViewInfoRepository.deleteByLinkJumpInfoIds(linkJumpInfoIds);
+            }
+            visualizationLinkJumpInfoRepository.deleteByLinkJumpIds(linkJumpIds);
+        }
+        visualizationLinkJumpRepository.deleteBySourceDvId(dvId);
+
+        // Linkage: LinkageField -> Linkage
+        QVisualizationLinkage visualizationLinkage = QVisualizationLinkage.visualizationLinkage;
+        List<Long> linkageIds = queryFactory.select(visualizationLinkage.id).from(visualizationLinkage)
+                .where(visualizationLinkage.dvId.eq(dvId)).fetch();
+        if (CollectionUtils.isNotEmpty(linkageIds)) {
+            visualizationLinkageFieldRepository.deleteByLinkageIds(linkageIds);
+        }
+        visualizationLinkageRepository.deleteByDvId(dvId);
+
+        // OuterParams: TargetViewInfo -> Info -> OuterParams
+        QVisualizationOuterParams visualizationOuterParams = QVisualizationOuterParams.visualizationOuterParams;
+        QVisualizationOuterParamsInfo visualizationOuterParamsInfo = QVisualizationOuterParamsInfo.visualizationOuterParamsInfo;
+        List<String> paramsIds = queryFactory.select(visualizationOuterParams.paramsId).from(visualizationOuterParams)
+                .where(visualizationOuterParams.visualizationId.eq(String.valueOf(dvId))).fetch();
+        if (CollectionUtils.isNotEmpty(paramsIds)) {
+            List<String> paramsInfoIds = queryFactory.select(visualizationOuterParamsInfo.paramsInfoId).from(visualizationOuterParamsInfo)
+                    .where(visualizationOuterParamsInfo.paramsId.in(paramsIds)).fetch();
+            if (CollectionUtils.isNotEmpty(paramsInfoIds)) {

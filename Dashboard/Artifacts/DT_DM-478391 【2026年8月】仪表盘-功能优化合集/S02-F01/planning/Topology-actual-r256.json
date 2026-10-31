@@ -1,0 +1,58 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-MANUAL2-PURE-HELPER-trusted-red-complete",
+  "recorded_at": "2026-10-20T21:20:00Z",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r255.json",
+  "phase": "trusted_red_valid",
+  "task_id": "S02-F01-MANUAL2-PURE-HELPER-BUILDER-r001",
+  "timestamp_note": "控制面独立重跑测试runner；contract有效、执行成功、目标source缺失，31项行为断言全部只因UNIMPLEMENTED失败。",
+  "execution": {
+    "identity": "/root/qpad_validation",
+    "state": "red_complete_source_not_written",
+    "result": "RED valid；未写helper源文件。"
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r255.json",
+      "sha256": "7c35eb381f9f512a928ca1502458c5007955faf864c65c3c77cca1e9e877db57"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-manual2-pure.test.ts",
+      "sha256": "9c0f3ab9b22b3fdc34b8a1d08878ecacdf3a4f8740ce749d0815f6d87869a7fc"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-manual2-pure-helper-test-r001.json",
+      "sha256": "d59c0c1e82e94714f6a975eecbd817df44f47fb308b08c4115645aa7af8b4da0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectManual2PureCases-r001.json",
+      "sha256": "5497a5b8fff2761b52b0035ba7a4f9c531cfdceb3e23be622f89294c89e729a1"
+    }
+  ],
+  "trusted_red": {
+    "source_exists": false,
+    "source_fingerprint": "769b8995b8bf4407c89e906d67601a46266d34922a63ab1754440eecb0657aab",
+    "contract_valid": true,
+    "execution_ok": true,
+    "execution_errors": [],
+    "exit_code": 1,
+    "frozen_cases": 28,
+    "p2_checks": 3,
+    "behavior_failures": 31,
+    "failure_class": "所有失败均为UNIMPLEMENTED source-missing stub，可信RED有效。"
+  },
+  "planned_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-manual2-pure.ts"
+  ],
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "仅纯helper目标的可信RED证据；没有GREEN或产品/权限行为结论。",
+  "blockers": [
+    "source target尚待执行准入；source auth及产品接线NOT_READY。",
+    "真实权限BLOCKED/NOT_RUN，完整Goal未完成。"
+  ]
+}

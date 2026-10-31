@@ -1,0 +1,251 @@
+                        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    }
+                }
+                Date date = simpleDateFormat.parse(cTime);
+                calendar.setTime(date);
+                calendar.add(Calendar.MONTH, -1);
+                lastTime = simpleDateFormat.format(calendar.getTime());
+            }
+            return lastTime;
+        } catch (Exception e) {
+            return cTime;
+        }
+    }
+
+    private boolean checkCalcType(String dateStyle, String calcType) {
+        switch (dateStyle) {
+            case "y":
+                return StringUtils.equalsIgnoreCase(calcType, "year_mom");
+            case "y_M":
+                return StringUtils.equalsIgnoreCase(calcType, "month_mom")
+                        || StringUtils.equalsIgnoreCase(calcType, "year_yoy");
+            case "y_M_d":
+                return StringUtils.equalsIgnoreCase(calcType, "day_mom")
+                        || StringUtils.equalsIgnoreCase(calcType, "month_yoy")
+                        || StringUtils.equalsIgnoreCase(calcType, "year_yoy");
+        }
+        return false;
+    }
+
+    protected boolean checkYoyFilter(List<ChartExtFilterDTO> filter, List<ChartViewFieldDTO> yoyAxis) {
+        boolean flag = false;
+        for (ChartExtFilterDTO filterDTO : filter) {
+            for (ChartViewFieldDTO chartViewFieldDTO : yoyAxis) {
+                ChartFieldCompareDTO compareCalc = chartViewFieldDTO.getCompareCalc();
+                if (ObjectUtils.isEmpty(compareCalc)) {
+                    continue;
+                }
+                if (StringUtils.isNotEmpty(compareCalc.getType())
+                        && !StringUtils.equalsIgnoreCase(compareCalc.getType(), "none")) {
+                    if (Arrays.asList(ChartConstants.M_Y).contains(compareCalc.getType())) {
+                        if (StringUtils.equalsIgnoreCase(compareCalc.getField() + "", filterDTO.getFieldId())
+                                && (filterDTO.getFilterType() == 0 || filterDTO.getFilterType() == 2)) {
+                            // -1 year
+                            try {
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(new Date(Long.parseLong(filterDTO.getValue().getFirst())));
+                                calendar.add(Calendar.YEAR, -1);
+                                filterDTO.getValue().set(0, String.valueOf(calendar.getTime().getTime()));
+                                flag = true;
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 检查并生成往前推1年的扩展图表自身过滤器（expandedCustomFilter）
+     */
+    protected FilterTreeObj getExpandedCustomFilter(FilterTreeObj customFilter, List<ChartViewFieldDTO> yoyAxis) {
+        if (ObjectUtils.isEmpty(customFilter) || CollectionUtils.isEmpty(customFilter.getItems()) || CollectionUtils.isEmpty(yoyAxis)) {
+            return null;
+        }
+        String customFilterJson = (String) JsonUtil.toJSONString(customFilter);
+        FilterTreeObj expandedCustomFilter = JsonUtil.parseObject(customFilterJson, FilterTreeObj.class);
+        if (chartFilterTreeService != null) {
+            chartFilterTreeService.searchFieldAndSet(expandedCustomFilter);
+            expandedCustomFilter = chartFilterTreeService.charReplace(expandedCustomFilter);
+        }
+        boolean customYoyFiltered = checkYoyCustomFilter(expandedCustomFilter, yoyAxis);
+        if (customYoyFiltered) {
+            return expandedCustomFilter;
+        }
+        return null;
+    }
+
+    /**
+     * 检查图表自身配置的过滤器中是否包含同环比指标对应的时间字段，并扩充时间范围（往前推1年）
+     */
+    protected boolean checkYoyCustomFilter(FilterTreeObj customFilter, List<ChartViewFieldDTO> yoyAxis) {
+        if (ObjectUtils.isEmpty(customFilter) || CollectionUtils.isEmpty(customFilter.getItems()) || CollectionUtils.isEmpty(yoyAxis)) {
+            return false;
+        }
+        return checkYoyCustomFilterItems(customFilter.getItems(), yoyAxis);
+    }
+
+    private boolean checkYoyCustomFilterItems(List<FilterTreeItem> items, List<ChartViewFieldDTO> yoyAxis) {
+        boolean flag = false;
+        if (CollectionUtils.isEmpty(items)) {
+            return false;
+        }
+        for (FilterTreeItem item : items) {
+            if (item == null) {
+                continue;
+            }
+            if (StringUtils.equalsIgnoreCase(item.getType(), "tree") || (item.getSubTree() != null && CollectionUtils.isNotEmpty(item.getSubTree().getItems()))) {
+                if (checkYoyCustomFilterItems(item.getSubTree().getItems(), yoyAxis)) {
+                    flag = true;
+                }
+            } else if (item.getFieldId() != null) {
+                for (ChartViewFieldDTO chartViewFieldDTO : yoyAxis) {
+                    ChartFieldCompareDTO compareCalc = chartViewFieldDTO.getCompareCalc();
+                    if (ObjectUtils.isEmpty(compareCalc)) {
+                        continue;
+                    }
+                    if (StringUtils.isNotEmpty(compareCalc.getType())
+                            && !StringUtils.equalsIgnoreCase(compareCalc.getType(), "none")) {
+                        if (Arrays.asList(ChartConstants.M_Y).contains(compareCalc.getType())) {
+                            DatasetTableFieldDTO fieldDTO = item.getField();
+                            if (fieldDTO == null && datasetTableFieldManage != null) {
+                                fieldDTO = datasetTableFieldManage.selectById(item.getFieldId());
+                                item.setField(fieldDTO);
+                            }
+                            if (StringUtils.equalsIgnoreCase(String.valueOf(compareCalc.getField()), String.valueOf(item.getFieldId()))
+                                    && (fieldDTO != null && fieldDTO.getDeType() == 1)) {
+                                try {
+                                    String val = CustomWhere2Str.fixValue(item);
+                                    if (StringUtils.isNotBlank(val)) {
+                                        Map<String, Long> timeMap = Utils.parseDateTimeValue(val);
+                                        Long startTime = timeMap.get("startTime");
+                                        Long endTime = timeMap.get("endTime");
+                                        if (startTime != null && endTime != null && startTime > 0) {
+                                            Calendar calendar = Calendar.getInstance();
+                                            calendar.setTime(new Date(startTime));
+                                            calendar.add(Calendar.YEAR, -1);
+                                            long expandedStartTime = calendar.getTime().getTime();
+
+                                            String term = item.getTerm();
+                                            if (StringUtils.equalsIgnoreCase(term, "eq")) {
+                                                // 将单个 eq 转换为包含起始时间向前推1年的 subTree 范围 (ge expandedStartTime AND le endTime)
+                                                item.setType("tree");
+                                                FilterTreeObj subTree = new FilterTreeObj();
+                                                subTree.setLogic("and");
+
+                                                FilterTreeItem startItem = new FilterTreeItem();
+                                                BeanUtils.copyBean(startItem, item);
+                                                startItem.setType("item");
+                                                startItem.setTerm("ge");
+                                                startItem.setValue(Utils.transLong2Str(expandedStartTime));
+                                                startItem.setFilterTypeTime("dateValue");
+                                                startItem.setDynamicTimeSetting(null);
+                                                startItem.setSubTree(null);
+
+                                                FilterTreeItem endItem = new FilterTreeItem();
+                                                BeanUtils.copyBean(endItem, item);
+                                                endItem.setType("item");
+                                                endItem.setTerm("le");
+                                                endItem.setValue(Utils.transLong2Str(endTime));
+                                                endItem.setFilterTypeTime("dateValue");
+                                                endItem.setDynamicTimeSetting(null);
+                                                endItem.setSubTree(null);
+
+                                                subTree.setItems(Arrays.asList(startItem, endItem));
+                                                item.setSubTree(subTree);
+                                                flag = true;
+                                            } else if (StringUtils.equalsIgnoreCase(term, "ge") || StringUtils.equalsIgnoreCase(term, "gt")) {
+                                                item.setValue(Utils.transLong2Str(expandedStartTime));
+                                                item.setFilterTypeTime("dateValue");
+                                                item.setDynamicTimeSetting(null);
+                                                flag = true;
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    logger.error("checkYoyCustomFilter error", e);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    protected void groupStackDrill(List<ChartViewFieldDTO> xAxis,
+                                   List<ChartExtFilterDTO> filterList,
+                                   List<ChartViewFieldDTO> fieldsToFilter,
+                                   List<ChartViewFieldDTO> drillFields,
+                                   List<ChartDrillRequest> drillRequestList) {
+        var fields = xAxis.stream().map(ChartViewFieldDTO::getId).collect(Collectors.toSet());
+        ChartDrillRequest head = drillRequestList.getFirst();
+        Map<Long, String> dimValMap = new HashMap<>();
+        head.getDimensionList().forEach(item -> dimValMap.put(item.getId(), item.getValue()));
+        Map<Long, ChartViewFieldDTO> fieldMap = xAxis.stream().collect(Collectors.toMap(ChartViewFieldDTO::getId, o -> o, ((p, n) -> p)));
+        for (int i = 0; i < drillRequestList.size(); i++) {
+            ChartDrillRequest request = drillRequestList.get(i);
+            ChartViewFieldDTO chartViewFieldDTO = drillFields.get(i);
+            for (ChartDimensionDTO requestDimension : request.getDimensionList()) {
+                // 将钻取值作为条件传递，将所有钻取字段作为xAxis并加上下一个钻取字段
+                if (Objects.equals(requestDimension.getId(), chartViewFieldDTO.getId())) {
+                    fieldsToFilter.add(chartViewFieldDTO);
+                    dimValMap.put(requestDimension.getId(), requestDimension.getValue());
+                    if (!fields.contains(requestDimension.getId())) {
+                        fieldMap.put(chartViewFieldDTO.getId(), chartViewFieldDTO);
+                        chartViewFieldDTO.setSource(FieldSource.DRILL);
+                        xAxis.add(chartViewFieldDTO);
+                        fields.add(requestDimension.getId());
+                    }
+                    if (i == drillRequestList.size() - 1) {
+                        ChartViewFieldDTO nextDrillField = drillFields.get(i + 1);
+                        if (!fields.contains(nextDrillField.getId())) {
+                            // get drill list first element's sort,then assign to nextDrillField
+                            nextDrillField.setSort(getDrillSort(xAxis, drillFields.get(0)));
+                            nextDrillField.setSource(FieldSource.DRILL);
+                            xAxis.add(nextDrillField);
+                            fields.add(nextDrillField.getId());
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < fieldsToFilter.size(); i++) {
+            ChartViewFieldDTO tmpField = fieldsToFilter.get(i);
+            ChartExtFilterDTO tmpFilter = new ChartExtFilterDTO();
+            DatasetTableFieldDTO datasetTableField = datasetTableFieldManage.selectById(tmpField.getId());
+            tmpFilter.setDatasetTableField(datasetTableField);
+            tmpFilter.setDateStyle(fieldMap.get(tmpField.getId()).getDateStyle());
+            tmpFilter.setDatePattern(fieldMap.get(tmpField.getId()).getDatePattern());
+            tmpFilter.setFieldId(String.valueOf(tmpField.getId()));
+            tmpFilter.setFilterType(1);
+            if (datasetTableField.getDeType() == 1) {
+                tmpFilter.setOriginValue(Collections.singletonList(dimValMap.get(tmpField.getId())));
+                tmpFilter.setOperator("between");
+                // 把value类似过滤组件处理，获得start time和end time
+                Map<String, Long> stringLongMap = Utils.parseDateTimeValue(dimValMap.get(tmpField.getId()));
+                tmpFilter.setValue(Arrays.asList(String.valueOf(stringLongMap.get("startTime")), String.valueOf(stringLongMap.get("endTime"))));
+            } else {
+                tmpFilter.setOperator("in");
+                tmpFilter.setValue(Collections.singletonList(dimValMap.get(tmpField.getId())));
+            }
+            filterList.add(tmpFilter);
+        }
+    }
+
+    private String getDrillSort(List<ChartViewFieldDTO> xAxis, ChartViewFieldDTO field) {
+        String res = "";
+        for (ChartViewFieldDTO f : xAxis) {
+            if (Objects.equals(f.getId(), field.getId())) {
+                if (StringUtils.equalsIgnoreCase(f.getSort(), "asc") || StringUtils.equalsIgnoreCase(f.getSort(), "desc")) {
+                    res = f.getSort();
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}

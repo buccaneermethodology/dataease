@@ -2,6 +2,20 @@
 
 本文件适用于整个工作区，供开发者和编码代理共同遵守。子目录存在更具体的 `AGENTS.md` 时，优先遵循其局部约定；用户当前明确的任务范围优先。默认使用中文沟通，保留代码中的既有命名。
 
+## 项目治理技能与执行 Dashboard
+
+- 非平凡实现、验证、持久化状态或 Dashboard/KB 更新任务，先读取项目内 `.codex/skills/sge-governed-checkpoints/SKILL.md`，按其任务入口、上下文、验收、验证和收尾要求执行；该 Skill 是工作路由与证据边界，不替代本文件的 DataEase 工程规范。
+- 每个请求的原始用户意图是 authority。任务范围、状态或结论发生变化时，保留原范围并记录差异、证据上限及后续动作；不能由测试、构建或自检代替独立验证。
+- `Dashboard/` 只记录执行状态、决策、阻塞、收尾证据和下一步；稳定产品知识与架构规则留在对应文档或 canonical KB。Repo 产品知识全景 `Docs/Dashboard/` 与项目执行台账 `Dashboard/` 含义不同，不共用状态。
+- 执行台账按 `Dashboard/README.md`、`Big_Ideas.md`、`Sessions.md`、`Decisions.md` 分面维护。Big Idea 和 Session 均填写 Topic、Scope、Purpose；Session 另记录唯一归属、Status、Delivery State、Claim Ceiling、Authority / Blocker、Evidence、Next。
+- 当前项目未提供 Session registry/reconcile/validate 工具；不得声称通过程序化注册表校验。若后续引入工具，需明确权威记录与派生索引，按工具规定先 check、再修复并复验。
+- 本项目级 Skill 的确定性脚本从 `.codex/skills/sge-governed-checkpoints/scripts/` 调用；依赖未安装或能力不可用时，先报告并按 Skill 的 core fallback/阻断规则处理，不静默安装依赖或扩大权限。
+
+### 本地 SGE 优化的持续观察
+
+- 后续使用本地 SGE 的非平凡 DataEase 任务，按 `Dashboard/Artifacts/Goal-DE-GOV-003/protocol-v2.md` 在任务开始登记类别、复杂度和 Skill 版本，并在收尾记录可追溯的时间点、返工与验收结果；模板为同目录 `task-record.template.json`。未知值保留 null，不从文件 mtime 或印象估计耗时。
+- 测量记录只追加到该 Goal 的 `data/tasks/`，不改写任务已冻结的证据。每新增1个已结束任务由观察者出一份报告；任务的重试和子 Agent 不重复计数。采集复用已有验收并记录自身成本，不为写测量记录额外启动 review 或 Goal。
+
 ## 0. 产品版本、开源边界与协作分支
 
 - 当前工作区是 DataEase 产品 **V3** 源码，以下仓库属性和协作规则由项目维护者明确指定。

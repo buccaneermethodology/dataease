@@ -1,0 +1,285 @@
+{
+  "status": "窄projection候选，未运行",
+  "card_sha256": "d37e33836f172c2253bb4934c0f5c8585d81da4099f850cd02e1af64fb34b574",
+  "interface": "projectQueryReferenceInput({propValue,cascade?,sourceComponents,maps}): {ok:true,value:QueryReferenceInput}|{ok:false,reason:ProjectionReason}",
+  "cases": [
+    {
+      "id": "TC-QPROJ-001",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "201"
+            },
+            "field": {
+              "id": "province"
+            },
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "parameters": [],
+            "defaultValue": [
+              "浙江"
+            ],
+            "mapValue": [
+              "江苏"
+            ]
+          },
+          {
+            "id": "q2",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "201"
+            },
+            "field": {
+              "id": "city"
+            },
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "city"
+            },
+            "parameters": []
+          }
+        ],
+        "cascade": [
+          [
+            {
+              "id": "n1",
+              "datasetId": "201--q1--province",
+              "fieldId": "",
+              "placeholder": "首级"
+            },
+            {
+              "id": "n2",
+              "datasetId": "201--q2--city",
+              "fieldId": "",
+              "placeholder": "配置级联字段"
+            }
+          ]
+        ],
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "city"
+            ]
+          }
+        ],
+        "maps": {
+          "conditionMap": {
+            "q1": "q12",
+            "q2": "q22"
+          },
+          "nodeMap": {
+            "n1": "n12",
+            "n2": "n22"
+          },
+          "componentMap": {
+            "chart-A": [
+              "chart-B"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "conditions": [
+            {
+              "id": "q1",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-A",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            },
+            {
+              "id": "q2",
+              "datasetId": "201",
+              "fieldId": "city",
+              "targetRefs": [
+                {
+                  "componentId": "chart-A",
+                  "datasetId": "201",
+                  "fieldId": "city"
+                }
+              ]
+            }
+          ],
+          "chains": [
+            [
+              {
+                "nodeId": "n1",
+                "conditionId": "q1",
+                "datasetId": "201",
+                "fieldId": "province"
+              },
+              {
+                "nodeId": "n2",
+                "conditionId": "q2",
+                "datasetId": "201",
+                "fieldId": "city"
+              }
+            ]
+          ],
+          "conditionMap": {
+            "q1": "q12",
+            "q2": "q22"
+          },
+          "nodeMap": {
+            "n1": "n12",
+            "n2": "n22"
+          },
+          "componentMap": {
+            "chart-A": [
+              "chart-B"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "TC-QPROJ-002",
+      "base": "TC-QPROJ-001",
+      "patch": {
+        "remove_property": "cascade"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "conditions": [
+            {
+              "id": "q1",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-A",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            },
+            {
+              "id": "q2",
+              "datasetId": "201",
+              "fieldId": "city",
+              "targetRefs": [
+                {
+                  "componentId": "chart-A",
+                  "datasetId": "201",
+                  "fieldId": "city"
+                }
+              ]
+            }
+          ],
+          "chains": [],
+          "conditionMap": {
+            "q1": "q12",
+            "q2": "q22"
+          },
+          "nodeMap": {
+            "n1": "n12",
+            "n2": "n22"
+          },
+          "componentMap": {
+            "chart-A": [
+              "chart-B"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "TC-QPROJ-003",
+      "base": "TC-QPROJ-001",
+      "patch": {
+        "sourceComponents": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "SOURCE_COMPONENT_UNRESOLVED"
+      }
+    },
+    {
+      "id": "TC-QPROJ-004",
+      "base": "TC-QPROJ-001",
+      "patch": {
+        "cascade[0][1].datasetId": "201--q2"
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_COMPOSITE_REFERENCE"
+      }
+    },
+    {
+      "id": "TC-QPROJ-005",
+      "base": "TC-QPROJ-001",
+      "patch": {
+        "propValue[1].displayType": "9",
+        "propValue[1].treeFieldList": [
+          {
+            "id": "city",
+            "datasetGroupId": "201"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_REFERENCE_SHAPE"
+      },
+      "note": "只拒绝此窄projection，不是产品拒绝合法树；完整适配后续保留"
+    },
+    {
+      "id": "TC-QPROJ-006",
+      "base": "TC-QPROJ-001",
+      "patch": {
+        "cascade[0][1].datasetId": "201--missing--city"
+      },
+      "expected_projection": {
+        "ok": true,
+        "chains_conditionId_at_1": "missing"
+      },
+      "expected_qprep": {
+        "ok": false,
+        "reason": "MISSING_CONDITION"
+      }
+    }
+  ],
+  "error_order": [
+    "INVALID_INPUT",
+    "UNSUPPORTED_REFERENCE_SHAPE",
+    "SOURCE_COMPONENT_UNRESOLVED",
+    "INVALID_COMPOSITE_REFERENCE"
+  ],
+  "failure_atomicity": "无partial value、无输入修改、无Store/网络/ID生成；结果全部新对象",
+  "source_boundary": "sourceComponents由调用方对canvasViewInfo/tableId及授权元数据形成，只是显式已取得数据；本函数不证明其可信或权限",
+  "exclusions": [
+    "树/参数/范围动态引用族",
+    "跨数据集级联独立fieldId关系",
+    "值/默认/布局/过滤语义",
+    "target真实字段能力或权限",
+    "payload反向重写"
+  ],
+  "proposed_write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-schema-projection.test.ts"
+  ],
+  "runner_candidate": "沿现有query-reference-plan.test.ts执行环境；先只读检查runner，禁止安装。将6项case冻结后新独立Builder/admission，真实RED/GREEN另行生成。",
+  "checks": "JSON和输出精确键自检；未执行projection或产品"
+}

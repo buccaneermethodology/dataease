@@ -1,0 +1,3903 @@
+{
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "slice": "QTARGET-REBUILD-001",
+  "card_digest": "97f4e576a56c55d8feaed75239a8c00aa0300d0157cfefa446953df1e4f437ef",
+  "signature": "rebuildSingleSelectTarget(input:unknown): {ok:true,value:{design:{propValue:JsonObject[],cascade:[]},runtime:{propValue:JsonObject[],cascade:[]}}}|{ok:false,stage:ENVELOPE|QCARRIER|PLAN|DIRECTORY,reason:string}",
+  "dependency": {
+    "api": "prepareSingleSelectCarrier",
+    "source": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+    "source_sha256": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+    "calls": "envelope合法后恰一次真实QCARRIER，先于任何plan/directory语义检查；失败原reason透传stage QCARRIER",
+    "package_ceiling": "已审合同有界通过；Validation-r001行为通过而耐久交接绑定阻断，不能追认全包PASS"
+  },
+  "source_contract": {
+    "input_origin": "当前已确认普通单选条件的JSON保存形态（可已受运行选择更新）；调用方显式传入完整propValue/cascade，不接受live Vue对象或外层组件。来源可信/权限由外层负责，本函数不证明。",
+    "condition_fields": {
+      "id": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "name": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "showError": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": true
+        }
+      },
+      "timeGranularity": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "date"
+        }
+      },
+      "timeGranularityMultiple": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "datetimerange"
+        }
+      },
+      "field": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "displayId": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "sortId": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": ""
+        }
+      },
+      "sort": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "asc"
+        }
+      },
+      "defaultMapValue": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "mapValue": {
+        "extract": "REMOVE",
+        "runtime": "REGENERATE_FROM_DEFAULT",
+        "constraint": "见variable_constraints"
+      },
+      "conditionType": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 0
+        }
+      },
+      "conditionValueOperatorF": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "eq"
+        }
+      },
+      "conditionValueF": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": ""
+        }
+      },
+      "conditionValueOperatorS": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "like"
+        }
+      },
+      "conditionValueS": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": ""
+        }
+      },
+      "defaultConditionValueOperatorF": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "eq"
+        }
+      },
+      "defaultConditionValueF": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": ""
+        }
+      },
+      "defaultConditionValueOperatorS": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "like"
+        }
+      },
+      "defaultConditionValueS": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": ""
+        }
+      },
+      "timeType": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "fixed"
+        }
+      },
+      "relativeToCurrent": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "custom"
+        }
+      },
+      "required": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "timeNum": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 0
+        }
+      },
+      "relativeToCurrentType": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "date"
+        }
+      },
+      "around": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "f"
+        }
+      },
+      "parametersStart": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "parametersEnd": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "arbitraryTime": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "timeNumRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 0
+        }
+      },
+      "relativeToCurrentTypeRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "date"
+        }
+      },
+      "aroundRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "f"
+        }
+      },
+      "arbitraryTimeRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "auto": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "defaultValue": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "selectValue": {
+        "extract": "REMOVE",
+        "runtime": "REGENERATE_FROM_DEFAULT",
+        "constraint": "见variable_constraints"
+      },
+      "optionValueSource": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 1
+        }
+      },
+      "valueSource": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": []
+        }
+      },
+      "dataset": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "visible": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": true
+        }
+      },
+      "defaultValueCheck": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "multiple": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "displayType": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "0"
+        }
+      },
+      "checkedFields": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "parameters": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": []
+        }
+      },
+      "parametersCheck": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "parametersList": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": []
+        }
+      },
+      "checkedFieldsMap": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "hideConditionSwitching": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "resultMode": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 0
+        }
+      },
+      "relativeToCurrentRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": "custom"
+        }
+      },
+      "treeDatasetId": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": "见variable_constraints"
+      },
+      "setTimeRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "showEmpty": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "defaultNumValueStart": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "defaultNumValueEnd": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "numValueEnd": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "numValueStart": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": null
+        }
+      },
+      "displayFormat": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": 0
+        }
+      },
+      "timeRange": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          }
+        }
+      },
+      "oldTreeLoad": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "treeCheckedList": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": []
+        }
+      },
+      "defaultValueFirstItem": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": false
+        }
+      },
+      "treeFieldList": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": []
+        }
+      },
+      "checkedFieldsMapArr": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "checkedFieldsMapArrNum": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "checkedFieldsMapStart": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "checkedFieldsMapStartNum": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "checkedFieldsMapEnd": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "checkedFieldsMapEndNum": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      },
+      "parametersArr": {
+        "extract": "KEEP",
+        "runtime": "KEEP_DEEP_COPY",
+        "constraint": {
+          "equals": {}
+        }
+      }
+    },
+    "variable_constraints": {
+      "id": "非空字符串不含--，保持不重绑",
+      "name": "字符串",
+      "field": "精确id/name/type/deType；id非空不含--，name字符串，type=VARCHAR,deType=0",
+      "dataset": "精确id/name/fields；id非空不含--，name字符串，fields=[]",
+      "displayId": "等field.id",
+      "treeDatasetId": "等dataset.id",
+      "checkedFields": "非空、唯一、非空不含--字符串数组",
+      "checkedFieldsMap": "键恰与checkedFields对应，值都等field.id；保持所有引用，不重绑",
+      "arbitraryTime": "ISO UTC字符串且Date.toISOString往返严格相等",
+      "arbitraryTimeRange": "同arbitraryTime",
+      "defaultValueCheck": "true或false",
+      "defaultValue": "true时必要且非空字符串；false时必须缺省，出现值UNSUPPORTED_SHAPE",
+      "defaultMapValue": "true时恰一个非空字符串；false时[]",
+      "selectValue": "可缺省或任意字符串含空串；null/数组非法",
+      "mapValue": "必要，[]或一个非空字符串；不按内容推断defaultMap"
+    },
+    "shape_constraints": {
+      "root_keys": [
+        "propValue",
+        "cascade"
+      ],
+      "propValue_length": 1,
+      "cascade": [],
+      "condition_keys": "按condition_fields；selectValue可缺省；defaultValue依模式；其它均必要",
+      "nested": "field/dataset精确键；timeRange精确基准所有键和值；其余fixed值JSON深等，不容额外嵌套键",
+      "unsupported_remains_goal": "树/参数/日期/级联/多条件/多选/旧默认残留/首项/多映射后续适配，非永久拒绝"
+    },
+    "error_priority": [
+      "INVALID_INPUT",
+      "UNSUPPORTED_FIELD",
+      "UNSUPPORTED_SHAPE"
+    ]
+  },
+  "target_field_matrix": {
+    "id": {
+      "action": "REBIND",
+      "rule": "计划重生"
+    },
+    "name": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "showError": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeGranularity": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeGranularityMultiple": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "field": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "displayId": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "sortId": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "sort": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultMapValue": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "mapValue": {
+      "action": "REMOVE_FROM_DESIGN_RESET_IN_RUNTIME",
+      "rule": "完全由QCARRIER结果定义；不复制源B，不自改QVALUE逻辑"
+    },
+    "conditionType": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "conditionValueOperatorF": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "conditionValueF": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "conditionValueOperatorS": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "conditionValueS": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultConditionValueOperatorF": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultConditionValueF": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultConditionValueOperatorS": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultConditionValueS": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeType": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "relativeToCurrent": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "required": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeNum": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "relativeToCurrentType": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "around": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "parametersStart": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "parametersEnd": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "arbitraryTime": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeNumRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "relativeToCurrentTypeRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "aroundRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "arbitraryTimeRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "auto": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultValue": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "selectValue": {
+      "action": "REMOVE_FROM_DESIGN_RESET_IN_RUNTIME",
+      "rule": "完全由QCARRIER结果定义；不复制源B，不自改QVALUE逻辑"
+    },
+    "optionValueSource": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "valueSource": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "dataset": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "visible": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultValueCheck": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "multiple": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "displayType": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFields": {
+      "action": "REBIND",
+      "rule": "计划重生"
+    },
+    "parameters": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "parametersCheck": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "parametersList": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMap": {
+      "action": "REBIND",
+      "rule": "计划重生"
+    },
+    "hideConditionSwitching": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "resultMode": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "relativeToCurrentRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "treeDatasetId": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "setTimeRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "showEmpty": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultNumValueStart": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultNumValueEnd": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "numValueEnd": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "numValueStart": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "displayFormat": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "timeRange": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "oldTreeLoad": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "treeCheckedList": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "defaultValueFirstItem": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "treeFieldList": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapArr": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapArrNum": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapStart": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapStartNum": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapEnd": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "checkedFieldsMapEndNum": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    },
+    "parametersArr": {
+      "action": "KEEP",
+      "rule": "各自QCARRIER输出深拷贝保持，未在源出现的可选键仍缺省"
+    }
+  },
+  "cascade_rule": "source与plan.chains都必须[]，两输出各新建[]，不删除非空级联伪成功",
+  "envelope": "精确source/referencePlan/targetComponents三键；先检查完整输入JSON安全（plain、无getter/符号/稀疏/特殊对象/循环/undefined/非有限数）；非法JSON或非对象ENVELOPE INVALID_INPUT；缺/多根键UNSUPPORTED_FIELD",
+  "plan_contract": {
+    "root_keys": [
+      "conditions",
+      "chains"
+    ],
+    "condition_keys": [
+      "id",
+      "datasetId",
+      "fieldId",
+      "targetRefs"
+    ],
+    "reference_keys": [
+      "componentId",
+      "datasetId",
+      "fieldId"
+    ],
+    "conditions_length": 1,
+    "chains": [],
+    "ids": "非空不含--字符串；new condition.id必须!=source condition.id；不与chart ID比较，命名域独立",
+    "identity": "planned.datasetId==source.dataset.id；planned.fieldId==source.field.id；每ref.datasetId/fieldId严格相同；targetRefs长度等source.checkedFields长度，按顺序对应",
+    "many_to_one": "同一字段的重复componentId按第一次顺序去重，checkedFieldsMap同字段；不能减少plan输入引用数量",
+    "validation": "全部结构/精确键/身份/引用长度/源新ID违例统一PLAN_MISMATCH，不接收外部所谓validated标志跳过"
+  },
+  "directory_contract": {
+    "root": "非空数组，每项精确componentId/datasetId/fieldIds",
+    "ids": "componentId/datasetId非空不含--，componentId全目录唯一；fieldIds是唯一非空不含--字符串的数组，允许空但若所用字段缺失失败",
+    "used": "每plan target唯一存在，同dataset且field覆盖；所有目录条目形状均验证，未用合法项可存在",
+    "failure": "任何目录结构/重复/缺字段/身份不一致TARGET_UNRESOLVED"
+  },
+  "stages": [
+    "ENVELOPE",
+    "QCARRIER",
+    "PLAN",
+    "DIRECTORY",
+    "REBUILD"
+  ],
+  "rebuild": "两QCARRIER载体分别深拷贝，替换三个身份/引用字段；仅在所有阶段通过后返回完整value，不复用中间候选引用",
+  "cases": [
+    {
+      "id": "TC-QTARGET-REBUILD-001",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": []
+          },
+          "runtime": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          }
+        }
+      },
+      "purpose": "显式A/运行B→新目标design无B/runtime A，完整两对象"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-002",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": []
+          },
+          "runtime": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": []
+              }
+            ],
+            "cascade": []
+          }
+        }
+      },
+      "purpose": "无默认→新目标runtime缺select，map=[]"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-003",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A",
+                "chart-C"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province",
+                "chart-C": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                },
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": []
+          },
+          "runtime": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          }
+        }
+      },
+      "purpose": "两源引用同字段映同目标，首次位置去重无丢字段"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-004",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A",
+                "chart-C"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province",
+                "chart-C": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                },
+                {
+                  "componentId": "chart-D",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          },
+          {
+            "componentId": "chart-D",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B",
+                  "chart-D"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province",
+                  "chart-D": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": []
+          },
+          "runtime": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B",
+                  "chart-D"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province",
+                  "chart-D": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          }
+        }
+      },
+      "purpose": "多源独立目标引用保持顺序"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-005",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {},
+              "unknown": 1
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QCARRIER",
+        "reason": "UNSUPPORTED_FIELD"
+      },
+      "purpose": "source额外字段"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-006",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "city",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH"
+      },
+      "purpose": "同长度字段错配"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-007",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q1",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH"
+      },
+      "purpose": "新条件ID复用源"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-008",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": []
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH"
+      },
+      "purpose": "删引用"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-009",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "city"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "DIRECTORY",
+        "reason": "TARGET_UNRESOLVED"
+      },
+      "purpose": "目标缺字段"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-010",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": [
+            [
+              {
+                "nodeId": "n"
+              }
+            ]
+          ]
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH"
+      },
+      "purpose": "输入空级联不容计划增加级联"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-011",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QCARRIER",
+        "reason": "UNSUPPORTED_SHAPE"
+      },
+      "purpose": "原carrier拒绝优先"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-012",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          },
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "stage": "DIRECTORY",
+        "reason": "TARGET_UNRESOLVED"
+      },
+      "purpose": "重复目录ID不取首个"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-013",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {},
+        "targetComponents": []
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QCARRIER",
+        "reason": "UNSUPPORTED_SHAPE"
+      },
+      "purpose": "carrier失败优先plan和目录"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-014",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {},
+        "targetComponents": []
+      },
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH"
+      },
+      "purpose": "plan失败优先目录"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-015",
+      "input": {
+        "source": {
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "mapValue": [
+                "B-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "B",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "cascade": []
+        },
+        "referencePlan": {
+          "conditions": [
+            {
+              "id": "q-new",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            }
+          ],
+          "chains": []
+        },
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "extra": 1
+      },
+      "expected": {
+        "ok": false,
+        "stage": "ENVELOPE",
+        "reason": "UNSUPPORTED_FIELD"
+      },
+      "purpose": "顶层精确三键"
+    },
+    {
+      "id": "TC-QTARGET-REBUILD-016",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "stage": "ENVELOPE",
+        "reason": "INVALID_INPUT"
+      },
+      "purpose": "非对象输入"
+    }
+  ],
+  "invariants": [
+    "全部输入不变，深冻输入可用",
+    "design/runtime/source/plan/directory间无共享可变对象；design和runtime新Map/数组也独立",
+    "每个KEEP字段和缺键与QCARRIER相同；唯一额外变化三个REBIND字段",
+    "失败不返回value/partial，不暴露carrier中间输出",
+    "JSON往返保持输出，源运行B变化不影响目标design/runtime",
+    "无随机/时钟/网络/权限/Store/保存/回调，ID完全由plan给定"
+  ],
+  "builder_write_candidates": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-target-rebuild.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-target-rebuild.test.ts"
+  ],
+  "checks": "16个完整oracle/字段矩阵/JSON构造自检；未运行重建器或独立审查",
+  "remaining": "无级联/多条件/树/参数/日期/多选及完整产品准入仍待后续；10+16义务保持"
+}

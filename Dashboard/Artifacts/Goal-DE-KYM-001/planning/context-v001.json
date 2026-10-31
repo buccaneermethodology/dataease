@@ -1,0 +1,42 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-KYM-001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "基于 kb/requirements/DT_DM-478391.v1.json 构建该需求的首稿 KYM；用户随后明确授权覆盖 build-kym Skill 的 supported-host 限制，改用普通 CLI 手工构建。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "将批准需求基线增量纳入现有 DataEase KYM，输出 r002 candidate 与 renderer 阅读版。",
+    "authority_role": "projection",
+    "assumptions": ["现有 r001 是唯一修订基线并必须保留。", "需求 JSON 是本次新增语义的权威输入；其引用但缺失的上游文档只记为来源追溯问题。", "不把需求状态解释为代码实现状态。"]
+  },
+  "boundaries": {
+    "write_scope": ["Dashboard/Big_Ideas.md", "Dashboard/Sessions.md", "Dashboard/Artifacts/SP-002/", "Dashboard/Artifacts/Goal-DE-KYM-001/", "Dashboard/Agent_Logs/", ".kym-tco/dataease/"],
+    "forbidden_actions": ["修改产品代码/API/数据库", "访问业务数据", "构建或运行 DataEase", "生成 TCO/Coverage", "accepted state", "提交/推送/发布/部署", "声称 supported-host 流水线已通过"],
+    "maximum_claim": "普通 CLI 生成的候选 KYM 修订及实际确定性检查结果；无独立语义、实现、运行或用户验收声明"
+  },
+  "required_read_set": [
+    {"path":"AGENTS.md","revision":"working-tree","applicability":"required","reason":"DataEase 持久写入、产品/KB/Dashboard 边界及验证规范","domains":["governance","scope"]},
+    {"path":".codex/skills/sge-governed-checkpoints/SKILL.md","revision":"working-tree","applicability":"required","reason":"项目治理入口、准入和收尾约束","domains":["governance"]},
+    {"path":".codex/skills/build-kym/SKILL.md and references/kym-contract.md, kym-analysis-guide.md, kym-semantic-placement.md, kym-reader-quality.md","revision":"working-tree","applicability":"required","reason":"KYM schema、语义放置、候选和来源规则","domains":["kym-contract","semantic-placement"]},
+    {"path":"kb/requirements/DT_DM-478391.v1.json","revision":"sha256:83387f717bdb735d7d2bff762c9b635fca4e92d2050f0089028ac627c5d8cb88","applicability":"required","reason":"用户指定的 F01-F08/Q01-Q156 需求真源","domains":["source-authority","requirements-semantics"]},
+    {"path":".kym-tco/dataease/config.json; kym/revisions/kym-r001.json; kym/views/kym-r001.md","revision":"working-tree","applicability":"required","reason":"核实 workspace、固定模板、现有语句与修订基线","domains":["kym-contract","revision-preservation"]},
+    {"path":"Dashboard/Artifacts/Goal-DE-REQ-001/goal.md and source-manifest.json","revision":"working-tree","applicability":"required","reason":"理解需求真源的权威边界及已知上游来源缺口","domains":["source-authority","governance"]}
+  ],
+  "conditional_read_set": [
+    {"trigger_id":"upstream-source-missing","condition":"需求 JSON 声称的 primary_source 当前不可见","action":"以用户指定 JSON 作为本轮输入，记录上游 lineage unresolved；不从缺失文档补充内容。","mode":"deterministic","can_suppress_deterministic":false},
+    {"trigger_id":"repo-drift","condition":"新增陈述需要依赖代码事实或现有源码证据漂移","action":"限定到既有 r001 已绑定的 repo source snapshot；本任务不重新声称当前 runtime 或重采代码。","mode":"evidence_backed_agent_evaluated","can_suppress_deterministic":false},
+    {"trigger_id":"role-ambiguity","condition":"需求角色与 Customer/Users/Stakeholders 的主关系不明确","action":"保留源用词并记录 unresolved，不重复或推定 actor。","mode":"evidence_backed_agent_evaluated","can_suppress_deterministic":false}
+  ],
+  "semantic_refresh":{"required_when_digest_unchanged":true,"anchors":["objective","authority","claim_ceiling","critical_dependencies"]},
+  "epistemic_search_space":{
+    "required_domains":["governance","scope","kym-contract","semantic-placement","source-authority","requirements-semantics","revision-preservation"],
+    "preservation_statement":"完整保留已有 r001 内容与 Profile，覆盖 F01-F08/Q01-Q156 与输入明示的未决/排除项，区分规范需求、来源身份和既有源码断言；缺失证据继续显式未决。",
+    "missing_evidence_action":"expand_or_report_evidence_gap"
+  },
+  "change_impact":{"kb_truth":false,"dashboard_state":true,"contract_or_acceptance":true,"runtime_or_schema":false,"external_side_effect":false,"semantic_risk":"high","write_conflict":true},
+  "topology":{"basis":"change_impact","route":"single_agent_builder_with_candidate_only_self_checks","reason":"当前协作指令未授权委派；执行者完成语义起草并运行确定性 CLI checks，不冒充独立 Validation 或 Semantic Review。"},
+  "skipped_reads":[],
+  "validation_evidence_surfaces":["original objective","acceptance criteria","source JSON and line ranges","base r001 and Profile preservation","candidate package and reader rerender","actual diff and final state"]
+}

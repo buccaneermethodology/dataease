@@ -1,0 +1,56 @@
+{
+  "schema_version": "qssdh_preparation_capture_contract_r001",
+  "status": "FROZEN_FOR_M0_BUILDER",
+  "scope": "Synchronous detached preparation and complete save intent capture for one ordinary single-select component in a managed new-document candidate.",
+  "authority": {
+    "goal": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "goal_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+    "design_review": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r003.md",
+    "design_review_sha256": "4a583de325308180d992681af9636595ca8e53c2b07153082b2ca02dca403e4c"
+  },
+  "operations": [
+    {
+      "id": "prepareConfirmation",
+      "input": "Explicit JSON-only queryRoot, KEEP outerRoot, componentId, revision/expectedRevision and commitId.",
+      "success": "Returns detached designRoot/runtimeRoot retaining all outer fields and applying carrier design/runtime fields to exactly one matching component.",
+      "failure": [
+        "INVALID_INPUT",
+        "STALE_PREPARE",
+        "COMPONENT_NOT_FOUND",
+        "AMBIGUOUS_COMPONENT",
+        "carrier validation reason"
+      ],
+      "side_effects": "None; no source authority minted, no store writes, events, requests or history."
+    },
+    {
+      "id": "captureSave",
+      "input": "Explicit JSON-only componentData/canvasStyleData/canvasViewInfo/appData/dvInfo/checkVersion/contentId plus queryDesignOverlay (null or detached design projection tied to one component and commitId).",
+      "success": "Returns detached complete payload, applying the supplied design projection to exactly one component before cleanup, plus save/update method, target and current name-check parameters, SHA-256 intentDigest over canonical full payload excluding contentId and checkVersion.",
+      "failure": [
+        "INVALID_INPUT",
+        "INVALID_NAME"
+      ],
+      "side_effects": "None; does not mutate inputs, send requests, bind create identity or clear dirty."
+    }
+  ],
+  "invariants": [
+    "deeply detached output and input unchanged",
+    "reject non-JSON/cycles/accessors without invoking getters",
+    "prepare requires exact current revision and exactly one target",
+    "save capture removes top-level GroupArea and clears linkageFilters only on UserView, Group children and DeTabs children in its copy",
+    "dvInfo.name is trimmed on copy and must be 1..64 characters when supplied",
+    "payload preserves full current fields and sets watermarkInfo null",
+    "method is updateCanvas only when id exists and optType is not copy; otherwise saveCanvas",
+    "name-check parameters are derived from captured payload",
+    "digest is canonical SHA-256 and excludes only contentId/checkVersion",
+    "when queryDesignOverlay is supplied, apply its propValue/cascade only to exactly one target in captured componentData; reject absent/ambiguous target and leave input unchanged"
+  ],
+  "write_exclusions": [
+    "Store/Select/Component/DeCanvas/dvMain/snapshot/canvasUtils integration",
+    "confirmation publish and session-owner authority",
+    "undo/redo/history",
+    "network execution, server outcomes, dirty clearing",
+    "permissions, persistence/reopen or Goal acceptance"
+  ],
+  "claim_ceiling": "M0 pure module candidate only; no product lifecycle activation, save behavior, authorization or Goal completion."
+}

@@ -1,0 +1,87 @@
+                    case "var_pop":
+                        totalRow[j] = calcVariance(acc, fName, false);
+                        break;
+                    case "stddev_pop":
+                        totalRow[j] = calcVariance(acc, fName, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        int summaryLabelColumnIndex = getSummaryLabelColumnIndex(allColumns, config);
+        if (summaryLabelColumnIndex >= 0) {
+            totalRow[summaryLabelColumnIndex] = config.summaryLabel;
+        }
+        return totalRow;
+    }
+
+    private static int getSummaryLabelColumnIndex(List<ChartViewFieldDTO> allColumns, SummaryConfig config) {
+        if (CollectionUtils.isEmpty(allColumns)) {
+            return -1;
+        }
+        int firstVisibleColumnIndex = -1;
+        for (int i = 0; i < allColumns.size(); i++) {
+            if (!allColumns.get(i).isHide()) {
+                firstVisibleColumnIndex = i;
+                break;
+            }
+        }
+        if (firstVisibleColumnIndex < 0) {
+            return -1;
+        }
+        ChartViewFieldDTO firstColumn = allColumns.get(firstVisibleColumnIndex);
+        String firstFieldName = firstColumn.getDataeaseName();
+        boolean firstColumnSummaryVisible = config.summaryShowMap.containsKey(firstFieldName)
+                && config.summaryShowMap.get(firstFieldName);
+        if (config.tableInfo) {
+            return firstColumnSummaryVisible ? -1 : firstVisibleColumnIndex;
+        }
+        return (!firstColumnSummaryVisible || !Arrays.asList(DeTypeConstants.DE_INT, DeTypeConstants.DE_FLOAT).contains(firstColumn.getDeType()))
+                ? firstVisibleColumnIndex : -1;
+    }
+
+    private static String calcVariance(SummaryAccumulator acc, String fName, boolean isSqrt) {
+        Long cnt = acc.countMap.get(fName);
+        BigDecimal sum = acc.sumMap.get(fName);
+        BigDecimal sumSq = acc.sumOfSquaresMap.get(fName);
+        if (cnt == null || cnt < 2 || sum == null || sumSq == null) return null;
+        BigDecimal mean = sum.divide(BigDecimal.valueOf(cnt), 16, java.math.RoundingMode.HALF_UP);
+        BigDecimal variance = sumSq.divide(BigDecimal.valueOf(cnt), 16, java.math.RoundingMode.HALF_UP)
+                .subtract(mean.multiply(mean));
+        BigDecimal sampleVariance = variance.multiply(BigDecimal.valueOf(cnt))
+                .divide(BigDecimal.valueOf(cnt - 1), 8, java.math.RoundingMode.HALF_UP);
+        if (isSqrt) {
+            return BigDecimal.valueOf(Math.sqrt(sampleVariance.doubleValue()))
+                    .setScale(8, java.math.RoundingMode.HALF_UP).toPlainString();
+        }
+        return sampleVariance.toPlainString();
+    }
+
+    public static List<ChartViewFieldDTO> getAllExportColumns(ChartViewDTO viewInfo) {
+        List<ChartViewFieldDTO> allColumns = new ArrayList<>();
+        allColumns.addAll(viewInfo.getXAxis());
+        allColumns.addAll(viewInfo.getYAxis());
+        allColumns.addAll(viewInfo.getXAxisExt());
+        allColumns.addAll(viewInfo.getYAxisExt());
+        allColumns.addAll(viewInfo.getExtStack());
+        return allColumns;
+    }
+
+    public static class SummaryConfig {
+        public boolean tableInfo;
+        public String summaryLabel;
+        public Map<String, String> summaryTypeMap = new HashMap<>();
+        public Map<String, Boolean> summaryShowMap = new HashMap<>();
+    }
+
+    public static class SummaryAccumulator {
+        public long totalCount = 0;
+        public Map<String, BigDecimal> sumMap = new HashMap<>();
+        public Map<String, BigDecimal> maxMap = new HashMap<>();
+        public Map<String, BigDecimal> minMap = new HashMap<>();
+        public Map<String, Long> countMap = new HashMap<>();
+        public Map<String, BigDecimal> sumOfSquaresMap = new HashMap<>();
+    }
+
+}

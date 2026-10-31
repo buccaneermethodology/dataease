@@ -1,0 +1,67 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "DE-F01F08-S01-INVESTIGATION-r001-PREDICATE",
+  "source_completion_rule_id": "DE-F01F08-S01-INVESTIGATION-r001-RULE",
+  "source_completion_rule_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/stop-gate/completion-rule.md",
+  "source_completion_rule_sha256": "2180878238dd853c5f3effd2ea94d1b883db672780dae2d31c495d047abd9bde",
+  "issued_by_authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/stop-gate/goal-authority.json",
+  "issued_by_authority_sha256": "7c8443b048a485e8ee05e2eeadb38bf4b84e009d4fba57121eab2bc097c7ca25",
+  "issued_by_authority_id": "DE-F01F08-S01-INVESTIGATION-r001-USER",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "S01.0",
+            "S01.1",
+            "S01.2",
+            "S01.3",
+            "S01.4",
+            "S01.5",
+            "S01.6",
+            "S01.7"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "human_decisions",
+          "operator": "none_pending_admissible"
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "goal",
+            "completion_rule",
+            "obligation_inventory",
+            "final_diff",
+            "independent_validation",
+            "closeout",
+            "dashboard_state",
+            "kb_disposition",
+            "original_plan_coverage",
+            "scope_delta_audit",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

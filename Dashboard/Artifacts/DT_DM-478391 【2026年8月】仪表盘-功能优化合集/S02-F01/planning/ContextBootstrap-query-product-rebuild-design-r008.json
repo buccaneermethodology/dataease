@@ -1,0 +1,191 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-query-product-rebuild-design-r008",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "推进QPADR-03，普通文本单选完整目标配置离线纯重建器r008，复用已通过子合同，不改产品与Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "QCARRIER单条件空cascade提取水合后，按引用计划及目标目录重绑完整design/runtime；不复刻旧COPY或UI",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildDesign-r008.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildFixtures-r008.json"
+    ],
+    "forbidden_actions": [
+      "修改源码、测试实现或现有冻结合同",
+      "缩减10项Goal AC或16项产品义务",
+      "把合法复杂查询形态永久拒绝来缩小支持范围",
+      "声称产品Builder准入、权限通过或Goal完成",
+      "改动S01、权限实现、部署或数据库"
+    ],
+    "maximum_claim": "只冻结可审查值状态纯合同候选，不授予Builder或产品验收"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierFixtures-r001.json",
+      "revision": "03613abf4395405162baa736a7592dcaa1bc5be706b7b56960cd96860d93e371",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectCarrierDesignReview-r002.md",
+      "revision": "602f78ec1a78d126fa78fb4dd485d2f45098d7beb624061e7260e66f2a3e450e",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QCARRIER-001-Validation-r001.md",
+      "revision": "a3f107bcf0b829ee8817c34c653c9a2459a5169dcd6d19f89a5f032fb66c559c",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "target rebuild",
+      "reason": "当前实际接口与边界及目标身份合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "value-write-conflict",
+      "condition": "默认与运行写入出现无法由源码区分的分支",
+      "action": "该分支NOT_READY，禁止扩大到默认first-item/动态日期",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runtime-consumer-needed",
+      "condition": "水合语义需额外消费者证据",
+      "action": "扩读相邻消费者并保持九键域，不扩大产品接口",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_design_lane_then_semantic_review",
+    "reason": "完整查询适配设计为高语义风险；当前只写候选设计，产品Builder仍受原Goal前置门控。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original Goal and 16 obligations",
+    "query component source fields and consumers",
+    "existing reviewed subcontracts and fixtures",
+    "design output and exact fixtures"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "dependency",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "必须保留全部查询形态、Goal分母与权限边界；设计不得把未覆盖形态静默移出目标。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  }
+}

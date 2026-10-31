@@ -1,0 +1,168 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REPAIR-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按独立来源追踪复核 F-ST-SRC-001 (P2) 最小修正候选文档；保留原始 r001，仅写 r002 与指定修订证据；不改源码、Goal、Cases、权限状态或产品准入。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只修复独立审查确认的源码引用范围与阶段表述，不扩展功能或产品结论。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r002.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SH-SELECT-TEXT-SOURCE-TRACE-REPAIR-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、Goal、Cases、CoverageMatrix或权限状态",
+      "将局部属性默认推广为所有新对象统一初值",
+      "将设计候选或静态源码观察写为行为验证/完整schema/合法组合",
+      "准入产品UI/Store/source-read/target-commit"
+    ],
+    "maximum_claim": "只修复来源候选的F-ST-SRC-001引用定位与阶段边界；ST-SRC与Goal验收状态不变。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "项目边界及执行规则。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "topology"
+      ],
+      "reason": "治理审查与独立性要求。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r001.md",
+      "revision": "e545f799a49d30dc836f45ad8d5e01d1b7a03e8c477922557ebf2544778bbe20",
+      "domains": [
+        "design",
+        "claim_ceiling"
+      ],
+      "reason": "修订基线",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTraceReview-r002.md",
+      "revision": "fb9bf729306b8bce54e32579048ea81678ca2dfe886f31aba3b57aabdad60ae1",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "P2 finding依据",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "核对准确行范围",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "核对补全应用路径",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r273.json",
+      "revision": "717e8e04bedb0f4785549832bd4d42d160f94f3d9e653ca62299c88325508ea0",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "绑定当前候选边界",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_path_or_behavior_disagreement",
+      "condition": "若来源定位与文档行为陈述不符",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "指出准确路径、修正边界并限制结论",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "scope_or_dependency_drift",
+      "condition": "若Gate/Session/权限或S01状态与候选不符",
+      "mode": "deterministic",
+      "action": "保留差异并限制可接受范围",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations完整保留；Scope Delta none；S01 F01 Packet仍CONDITIONAL；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_design_review",
+    "reason": "复核入口因当前工作树和r001卡片摘要漂移重建；只读独立复核，不授权实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "finding source",
+    "candidate r001 vs r002 diff",
+    "source line ranges",
+    "scope and claim ceiling"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03"
+  ]
+}

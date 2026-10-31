@@ -10,6 +10,7 @@ import {
   nextTick,
   computed,
   inject,
+  toRaw,
   onBeforeUnmount,
   onUnmounted,
   defineAsyncComponent,
@@ -102,6 +103,7 @@ const unMountSelect: Ref = inject('unmount-select')
 const placeholder: Ref = inject('placeholder')
 const releaseSelect = inject('release-unmount-select', Function, true)
 const queryDataForId = inject('query-data-for-id', Function, true)
+const queryLifecycleAllowed = inject('query-lifecycle-allowed', () => true)
 const isConfirmSearch = inject('is-confirm-search', Function, true)
 const queryConditionWidth = inject('com-width', Function, true)
 const cascadeList = inject('cascade-list', Function, true)
@@ -246,6 +248,19 @@ const getCascadeFieldId = () => {
 
 const handleValueChange = () => {
   const value = Array.isArray(selectValue.value) ? [...selectValue.value] : selectValue.value
+  observationRuntimeGeneration += 1
+  if (
+    activeObservationRequest &&
+    ((!observationSupported(value) && activeObservationRequest.phase === 'initial') ||
+      (activeObservationRequest.phase === 'verification' &&
+        !sameSelectedValue(value, activeObservationRequest.selectedValue)))
+  ) {
+    invalidateObservation()
+  }
+  if (!activeObservationRequest) {
+    observationValidity.value = 'valid'
+    observationRenderOption.value = null
+  }
   if (!props.isConfig) {
     config.value.selectValue = Array.isArray(selectValue.value)
       ? [...selectValue.value]
@@ -341,10 +356,29 @@ const customSort = () => {
 }
 
 const handleFieldIdChange = (val: EnumValue) => {
+  if (!queryLifecycleAllowed()) return
   let change = false
+  const observationRequest = captureObservationRequest(val)
+  let observationHandled = false
   loading.value = true
   enumValueObj(val)
     .then(res => {
+      if (observationRequest && !observationRequestIsCurrent(observationRequest)) {
+        observationHandled = true
+        return
+      }
+      if (observationRequest && isLateSelectionObservation(observationRequest)) {
+        observationHandled = true
+        const mapped = mapObservationRows(res || [], observationRequest)
+        const selectedValue = selectValue.value
+        if (mapped.some(option => option.value === selectedValue)) {
+          observationRequest.selectedValue = selectedValue
+          setObservationState(observationRequest, 'valid', res || [])
+        } else {
+          beginObservationVerification(observationRequest)
+        }
+        return
+      }
       let oldArr = []
       if (selectValue.value?.length && config.value.multiple) {
         oldArr = [...selectValue.value]
@@ -412,7 +446,24 @@ const handleFieldIdChange = (val: EnumValue) => {
         setCascadeValueBack(config.value.mapValue)
       }
     })
+    .catch(error => {
+      if (observationRequest && !observationRequestIsCurrent(observationRequest)) {
+        observationHandled = true
+        return
+      }
+      if (observationRequest && isLateSelectionObservation(observationRequest)) {
+        observationHandled = true
+        observationRequest.selectedValue = selectValue.value
+        setObservationState(observationRequest, 'unverified')
+        return
+      }
+      throw error
+    })
     .finally(() => {
+      if (observationHandled) return
+      if (observationRequest && activeObservationRequest === observationRequest) {
+        activeObservationRequest = null
+      }
       let changeAuth = change
       change = false
       loading.value = false
@@ -636,6 +687,256 @@ watch(
 
 const searchText = ref('')
 const isFromRemote = ref(false)
+
+type ObservationRequest = {
+  id: number
+  phase: 'initial' | 'verification'
+  configRaw: object
+  conditionId: string
+  sourceGeneration: number
+  runtimeGeneration: number
+  selectedValue: string
+  requestInput: EnumValue
+  requestInputKey: string
+}
+
+const observationValidity = ref<'valid' | 'pending' | 'invalid' | 'unverified'>('valid')
+const observationRenderOption = shallowRef<{
+  label: string
+  value: string
+  disabled: boolean
+} | null>(null)
+const singleObservationKey = computed(() => `single-${observationValidity.value}`)
+const renderOptions = computed(() =>
+  observationRenderOption.value ? [...options.value, observationRenderOption.value] : options.value
+)
+let observationSourceGeneration = 0
+let observationRuntimeGeneration = 0
+let observationRequestSequence = 0
+let activeObservationRequest: ObservationRequest | null = null
+
+const sameSelectedValue = (left: any, right: any) => {
+  return JSON.stringify(left) === JSON.stringify(right)
+}
+
+const observationInputKey = (input: EnumValue) =>
+  JSON.stringify({
+    queryId: input.queryId,
+    displayId: input.displayId,
+    sort: input.sort,
+    sortId: input.sortId,
+    resultMode: input.resultMode,
+    searchText: input.searchText,
+    filter: input.filter
+  })
+
+const currentObservationInput = (): EnumValue => ({
+  queryId: config.value.field?.id,
+  displayId: config.value.displayId || config.value.field?.id,
+  sort: config.value.sort === 'customSort' ? 'asc' : config.value.sort,
+  sortId: config.value.sort === 'customSort' ? '' : config.value.sortId,
+  resultMode: config.value.resultMode || 0,
+  searchText: searchText.value,
+  filter: getCascadeFieldId()
+})
+
+const observationSupported = (value: any) =>
+  !props.isConfig &&
+  !config.value.multiple &&
+  config.value.displayFormat !== 1 &&
+  !isMobileDataV.value &&
+  config.value.optionValueSource === 1 &&
+  !isFromRemote.value &&
+  !disabledFirstItem.value &&
+  !config.value.required &&
+  (!config.value.optionFilter || config.value.optionFilter.length === 0) &&
+  !config.value.defaultValueFirstItem &&
+  Boolean(config.value.field?.id) &&
+  typeof value === 'string' &&
+  value.length > 0 &&
+  !unMountSelect?.value?.includes(config.value.id)
+
+const captureObservationRequest = (input: EnumValue): ObservationRequest | null => {
+  if (!queryLifecycleAllowed() || !observationSupported(selectValue.value)) return null
+  const request: ObservationRequest = {
+    id: ++observationRequestSequence,
+    phase: 'initial',
+    configRaw: toRaw(config.value),
+    conditionId: config.value.id,
+    sourceGeneration: observationSourceGeneration,
+    runtimeGeneration: observationRuntimeGeneration,
+    selectedValue: selectValue.value,
+    requestInput: cloneDeep(input),
+    requestInputKey: observationInputKey(input)
+  }
+  activeObservationRequest = request
+  return request
+}
+
+const observationRequestIsCurrent = (request: ObservationRequest) =>
+  activeObservationRequest === request &&
+  queryLifecycleAllowed() &&
+  request.configRaw === toRaw(config.value) &&
+  request.conditionId === config.value.id &&
+  request.sourceGeneration === observationSourceGeneration &&
+  observationInputKey(currentObservationInput()) === request.requestInputKey &&
+  observationSupported(selectValue.value)
+
+const invalidateObservation = () => {
+  const restoreFocus = singleHasFocus()
+  activeObservationRequest = null
+  observationValidity.value = 'valid'
+  observationRenderOption.value = null
+  loading.value = false
+  restoreSingleFocus(restoreFocus)
+}
+
+const singleHasFocus = () => {
+  const element = single.value?.$el
+  return typeof document !== 'undefined' && Boolean(element?.contains?.(document.activeElement))
+}
+
+const restoreSingleFocus = (restoreFocus: boolean) => {
+  if (restoreFocus) {
+    nextTick(() => single.value?.focus?.())
+  }
+}
+
+const mapObservationRows = (rows: any[], request: ObservationRequest) => {
+  const displayId = request.requestInput.displayId || request.requestInput.queryId
+  return (rows || [])
+    .filter(row => row !== null)
+    .map(row => `${row[displayId]}`)
+    .filter(value => {
+      const optionFilter = config.value.optionFilter
+      return !optionFilter?.length || optionFilter.some(item => filterValueEquals(item, value))
+    })
+    .filter((value, index, values) => values.indexOf(value) === index)
+    .map(value => ({ label: value, value, checked: false }))
+}
+
+const setObservationState = (
+  request: ObservationRequest,
+  validity: 'valid' | 'invalid' | 'unverified',
+  rows?: any[]
+) => {
+  if (!observationRequestIsCurrent(request)) return false
+  const restoreFocus = singleHasFocus()
+  if (rows) {
+    enumValueArr = [...rows]
+    options.value = mapObservationRows(rows, request)
+  }
+  observationValidity.value = validity
+  observationRenderOption.value =
+    validity === 'invalid' || validity === 'unverified'
+      ? {
+          label: `${request.selectedValue} — ${t(
+            validity === 'invalid'
+              ? 'v_query.observation_value_invalid'
+              : 'v_query.observation_value_unverified'
+          )}`,
+          value: request.selectedValue,
+          disabled: true
+        }
+      : null
+  loading.value = false
+  activeObservationRequest = null
+  restoreSingleFocus(restoreFocus)
+  return true
+}
+
+const beginObservationVerification = (request: ObservationRequest) => {
+  const restoreFocus = singleHasFocus()
+  const selectedValue = selectValue.value
+  const verification: ObservationRequest = {
+    ...request,
+    id: ++observationRequestSequence,
+    phase: 'verification',
+    runtimeGeneration: observationRuntimeGeneration,
+    selectedValue
+  }
+  activeObservationRequest = verification
+  observationValidity.value = 'pending'
+  observationRenderOption.value = null
+  loading.value = true
+  restoreSingleFocus(restoreFocus)
+  enumValueObj(cloneDeep(request.requestInput))
+    .then(rows => {
+      if (!observationRequestIsCurrent(verification)) return
+      const mapped = mapObservationRows(rows || [], verification)
+      const found = mapped.some(option => option.value === verification.selectedValue)
+      setObservationState(verification, found ? 'valid' : 'invalid', rows || [])
+    })
+    .catch(() => {
+      setObservationState(verification, 'unverified')
+    })
+}
+
+const isLateSelectionObservation = (request: ObservationRequest) => {
+  if (!observationRequestIsCurrent(request)) return false
+  return (
+    observationRuntimeGeneration !== request.runtimeGeneration &&
+    typeof selectValue.value === 'string' &&
+    selectValue.value.length > 0 &&
+    !sameSelectedValue(selectValue.value, request.selectedValue)
+  )
+}
+
+watch(
+  () => JSON.stringify(currentObservationInput()),
+  () => {
+    observationSourceGeneration += 1
+    if (activeObservationRequest) invalidateObservation()
+  },
+  { flush: 'sync' }
+)
+
+watch(
+  () => config.value,
+  () => {
+    observationSourceGeneration += 1
+    if (activeObservationRequest) invalidateObservation()
+  },
+  { flush: 'sync' }
+)
+
+watch(
+  () =>
+    JSON.stringify({
+      isConfig: props.isConfig,
+      multiple: config.value.multiple,
+      displayFormat: config.value.displayFormat,
+      required: config.value.required,
+      optionValueSource: config.value.optionValueSource,
+      conditionId: config.value.id,
+      defaultValueFirstItem: config.value.defaultValueFirstItem,
+      optionFilter: config.value.optionFilter,
+      fieldId: config.value.field?.id,
+      isMobileDataV: isMobileDataV.value,
+      isFromRemote: isFromRemote.value,
+      waitingForUnmount: unMountSelect?.value?.includes(config.value.id)
+    }),
+  () => {
+    if (activeObservationRequest && !observationSupported(selectValue.value)) {
+      observationSourceGeneration += 1
+      invalidateObservation()
+    }
+  },
+  { flush: 'sync' }
+)
+
+watch(
+  () => selectValue.value,
+  value => {
+    if (
+      activeObservationRequest?.phase === 'verification' &&
+      !sameSelectedValue(value, activeObservationRequest.selectedValue)
+    ) {
+      invalidateObservation()
+    }
+  },
+  { flush: 'sync' }
+)
 
 watch(
   () => config.value.valueSource,
@@ -884,6 +1185,9 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   eventBus.off('componentClick', componentClick)
+  observationSourceGeneration += 1
+  activeObservationRequest = null
+  loading.value = false
 })
 
 const onClear = () => {
@@ -940,7 +1244,7 @@ defineExpose({
   <el-select-v2
     v-else
     v-model="selectValue"
-    key="single"
+    :key="singleObservationKey"
     @click="selectHideClick"
     :placeholder="placeholderText"
     scrollbar-always-on
@@ -953,7 +1257,7 @@ defineExpose({
     filterable
     radio
     :popper-class="popperClass"
-    :options="options"
+    :options="renderOptions"
   >
     <template #default="{ item }">
       <el-radio-group v-model="selectValue">

@@ -1,0 +1,66 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-QSINGLE-DEFAULT-COPY-001-validation-r001",
+  "session_id": "S02.1",
+  "lane": "independent_validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDefaultRebuildDesign-r003.md",
+      "sha256": "d6fb3d4e78c60b2250635d6e88766ee8d7dc90d6f556630dd9bd0a49a912e5eb"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDefaultRebuildFixtures-r003.json",
+      "sha256": "3afaf76708fade4e62c5feda62066dec58d78c8ec9b98e9a18fea994820ca90e"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDefaultRebuildDesignReview-r002.md",
+      "sha256": "278fff04eb630b6c2ecfbfbd5bdd548f888c32dabf458b6777e960b73ae0cce1"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSINGLE-DEFAULT-COPY-001-ExecutionEvidence-r001.md",
+      "sha256": "0f2c1d23e696f88146563d3459cdc814d4a0fcea45bf7e537f99a2634c5e4dd5"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QSINGLE-DEFAULT-COPY-001-validation-r001.json",
+      "sha256": "8e036da4f2788a7ef07483b05050ecdf7bc412fef670042e54b9f0a7e46658d7"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-QSINGLE-DEFAULT-COPY-001-validation-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSINGLE-DEFAULT-COPY-001-Validation-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSINGLE-DEFAULT-COPY-001-Validation-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅独立复核QSINGLE-DEFAULT-COPY-001包的冻结合同及实现，Goal和权限未验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-QSINGLE-DEFAULT-COPY-001-validation-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSINGLE-DEFAULT-COPY-001-ExecutionEvidence-r001.md",
+  "working_directory": ".",
+  "execution_command": "复验Card/Context摘要及实际文件摘要；只读重新执行冻结12 identity runner，独立确认RED/GREEN同runner、同fixtures、RED为断言层且摘要一致；定向ESLint复跑。检查完整diff和源码算法：严格对照所有condition/node的KEEP/REGENERATE/REMOVE、默认/运行/级联值原值深拷贝、缺键语义、错误优先级、完整目标引用/目录校验、失败无partial、输入不可变/无共享嵌套对象、JSON roundtrip和确定性。查找未授权产品入口、网络/权限调用、既有QSINGLE修改。报告对照原Goal的package verdict及goal conformance双结论、findings与claim ceiling。不得修改被审包或其他Dashboard状态；只写指定Validation报告。"
+}

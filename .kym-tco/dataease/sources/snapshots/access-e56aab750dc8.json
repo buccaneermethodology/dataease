@@ -1,0 +1,2191 @@
+{
+  "doc_id": "access",
+  "title": "分享、嵌入、导出与权限",
+  "domains": [
+    "K03",
+    "K04",
+    "K05",
+    "K07",
+    "K09",
+    "K10"
+  ],
+  "facts": [
+    {
+      "id": "ACCESS-001",
+      "statement": "分享管理要求登录身份且拒绝公共链接身份；资源须是未删除的 dashboard/dataV leaf；管理员代理另外通过 InteractiveAuthApi.checkAuth。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareAuthorizationManage.java",
+          "start_line": 29,
+          "end_line": 61,
+          "symbol": "requireManage/resource",
+          "sha256": "71213691df0e2ba7d5fe4ee570032653c40e4ec37aba2003dce1fe391743e223"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-002",
+      "statement": "既有分享访问重新验证创建者、资源类型和组织绑定；权限服务存在时检查用户启用及 checkShareAuth；无服务时仅允许 uid=1、无注册资源且存在替补登录而无企业登录 Bean 的分支。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareAuthorizationManage.java",
+          "start_line": 43,
+          "end_line": 97,
+          "symbol": "requireValidShare/checkSubject",
+          "sha256": "71213691df0e2ba7d5fe4ee570032653c40e4ec37aba2003dce1fe391743e223"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-003",
+      "statement": "保存 Ticket 要求 UUID 非空且分享属于当前用户并通过管理权限；替换 Ticket 可删除旧记录生成新值，持久化 args、exp、uuid；删除也检查拥有者。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareTicketManage.java",
+          "start_line": 55,
+          "end_line": 132,
+          "symbol": "saveTicket/deleteTicket/isShareOwner",
+          "sha256": "3f9efa733e7b9e1503b6e770c5d378d45223bc75cbff9c6f306890153b77577a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-004",
+      "statement": "Ticket 验证对缺失、未知或 UUID 不符分别返回有效标记；首次访问持久化 accessTime 并视为未过期，后续按 exp 分钟计算，null/0 不过期，超过而非等于时过期。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareTicketManage.java",
+          "start_line": 191,
+          "end_line": 225,
+          "symbol": "validateTicket",
+          "sha256": "3f9efa733e7b9e1503b6e770c5d378d45223bc75cbff9c6f306890153b77577a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-005",
+      "statement": "proxyInfo 检查全局分享禁用、iframe 许可、分享存在及创建者授权、密码有效期策略；只有链接未过期、密码与 Ticket 有效且 Ticket 未过期才签发 Token，否则返回不含资源/创建者/Ticket参数的挑战信息。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 318,
+          "end_line": 368,
+          "symbol": "proxyInfo",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-006",
+      "statement": "validatePwd 仅比较解密的 UUID/密码并重验分享授权，不签发 Token；签发函数通过响应头返回 LinkTokenUtil 生成的链接 Token。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 392,
+          "end_line": 422,
+          "symbol": "validatePwd/generateLinkToken",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-007",
+      "statement": "链接 JWT 要求 issuer=dataease、audience=share、purpose=link、version=3，绑定分享/创建者/资源/组织；寿命最多八小时且不超过分享有效期；签名派生绑定 UUID、密码、期限、Ticket要求及访客权限等当前设置。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/util/LinkTokenUtil.java",
+          "start_line": 16,
+          "end_line": 62,
+          "symbol": "generate/verify/algorithm",
+          "sha256": "cc48908c7b6c7143538da931cb26af4e8b37156334ec9c99add8326588e5985d"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-008",
+      "statement": "链接请求仅允许 GET/POST，限定显式通用路径或带 DeLinkPermit 的匹配接口；指定资源类型查询须匹配链接资源；静态资源须在分享画布配置中且文件名不能含目录穿越结构。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/LinkTokenValidationManage.java",
+          "start_line": 58,
+          "end_line": 108,
+          "symbol": "checkRequestPath/checkStaticResource",
+          "sha256": "598ce091284863a7bb43675ba855da8a7b536531c205359dbfc235550cac1e97"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-009",
+      "statement": "链接请求路径验证抛 IllegalArgumentException 时拦截器返回 HTTP 403 与 DE-FORBIDDEN-FLAG。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/interceptor/LinkInterceptor.java",
+          "start_line": 10,
+          "end_line": 24,
+          "symbol": "preHandle",
+          "sha256": "5160721de3c6f6daaa1e45e1286b984cd2c7a3e168bc47b5da57ff242b2c8853"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-010",
+      "statement": "DeLinkAop 对链接身份拒绝编辑快照/main-edit；图表须与持久化 chart 的 sceneId、tableId 匹配；资源ID须匹配Token，只有 subResource=true 且父画布包含子screenId才允许子资源。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/interceptor/DeLinkAop.java",
+          "start_line": 49,
+          "end_line": 130,
+          "symbol": "logAround/checkChart/isSubResourceOf",
+          "sha256": "5e75a4e44d8a5440859eae80837c83f3d9a2c92916e733435b51c199f4c22de0"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-011",
+      "statement": "分享访客位权限定义明细=1、数据导出=2、图片导出=4；有许可时有效权限为分享设置与创建者权限交集，无许可的现有链接分支返回7；require 位不满足时抛异常。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/ShareVisitorPermissionManage.java",
+          "start_line": 15,
+          "end_line": 59,
+          "symbol": "currentPermissions/require",
+          "sha256": "eab3c908c1b51570afcfbfcc2c18644520d057f626f7e3d200cf4a22e9d255cb"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-012",
+      "statement": "Axios 请求优先发送 X-DE-LINK-TOKEN，否则发送嵌入 X-EMBEDDED-TOKEN；响应中的 x-de-link-token 写入链接 Store。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/config/axios/service.ts",
+          "start_line": 126,
+          "end_line": 130,
+          "symbol": "request interceptor",
+          "sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c"
+        },
+        {
+          "path": "core/core-frontend/src/config/axios/service.ts",
+          "start_line": 175,
+          "end_line": 183,
+          "symbol": "response interceptor",
+          "sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-013",
+      "statement": "EmbeddedApi 仅声明 XpackResource 嵌入管理契约：分页、创建/编辑/删除/重置、域名集合、initIframe、Token参数及注销；创建编辑删除重置标有 m:read。",
+      "kind": "implemented",
+      "scope": "仅SDK接口声明，不证明企业后端实现",
+      "evidence": [
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/embedded/api/EmbeddedApi.java",
+          "start_line": 29,
+          "end_line": 92,
+          "symbol": "EmbeddedApi",
+          "sha256": "31803d2c656f9a9da7133ea02e302e273aa855e4a8e30a5a782be0a0398b442a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-014",
+      "statement": "嵌入 Store 保存 token、busiFlag、outerParams、资源/图表ID等；setIframeData 把宿主消息字段写入状态，getIframeData 输出 embeddedToken 等字段。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/embedded.ts",
+          "start_line": 108,
+          "end_line": 121,
+          "symbol": "getIframeData",
+          "sha256": "fd45f7d0fac71e59a7d55c0285d54936e682ccde426c915faa3b24843c48a079"
+        },
+        {
+          "path": "core/core-frontend/src/store/modules/embedded.ts",
+          "start_line": 188,
+          "end_line": 200,
+          "symbol": "setIframeData",
+          "sha256": "fd45f7d0fac71e59a7d55c0285d54936e682ccde426c915faa3b24843c48a079"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-015",
+      "statement": "嵌入 iframe 的 initApi 向 /embedded/initIframe POST token 与 origin。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/embedded.ts",
+          "start_line": 1,
+          "end_line": 3,
+          "symbol": "initApi",
+          "sha256": "678632f03905500c327463aa8b37844f98b924059be83a250951076dc14e4826"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-016",
+      "statement": "嵌入交互函数在宿主窗口存在且传 eventName 时，以 dataease-embedded-interactive 消息类型向宿主 postMessage；methodName 分支直接返回。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/EmbeddedIntractive.ts",
+          "start_line": 1,
+          "end_line": 25,
+          "symbol": "interactive",
+          "sha256": "1bc75f4f5a17b7cfc6d8b42ade8bd48dfbc2cef6ce8e7a3682042d5f5a0ee694"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-017",
+      "statement": "图表明细导出首先要求访客 EXPORT_DATA；有链接Token且非DataEaseBi，或DataEaseBi无链接Token且配置非async时同步写Excel，其余分支加入导出任务。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 257,
+          "end_line": 265,
+          "symbol": "innerExportDetails",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 360,
+          "end_line": 381,
+          "symbol": "innerExportDetails",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-018",
+      "statement": "创建图表/数据集导出任务绑定当前 uid，记录 PENDING、进度0、参数、来源、文件名、时间和机器名；数据集先调用 getDatasetGroupInfoDTO，再交给对应异步执行器。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 253,
+          "end_line": 288,
+          "symbol": "addTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-019",
+      "statement": "数据集异步导出捕获 uid、代理组织、IP 并在线程中恢复，保存任务且校验许可；执行列过滤、行权限与导出筛选树，字段为空或无列权限时报错；结束记录成功/失败并 finally 清理 IP 和用户上下文。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 309,
+          "end_line": 391,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 510,
+          "end_line": 521,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-020",
+      "statement": "导出任务分页按当前 uid 和状态查询；删除及重试检查任务属于当前用户，重试仅允许 FAILED 并重设 PENDING 与进度0后按来源分发。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 103,
+          "end_line": 187,
+          "symbol": "delete/retry/pager",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-021",
+      "statement": "下载URI只能为当前用户任务生成；数据库记录下载创建时间，新记录有效期5分钟；JWT绑定 taskId、uid、ts与有效期。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 343,
+          "end_line": 367,
+          "symbol": "generateDownloadUri/getCurrentUserExportTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 527,
+          "end_line": 549,
+          "symbol": "buildDownloadTicket/resolveTicketSecret",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-022",
+      "statement": "下载校验要求Ticket与下载/导出记录存在，校验签名、任务ID、所有者UID、签发时间与有效期；通过后删除下载记录再返回任务。该方法未以当前登录UID代替Ticket绑定验证。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 478,
+          "end_line": 508,
+          "symbol": "validateDownloadTask",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-023",
+      "statement": "列权限把启用且选中的规则按用户/角色分组，用户规则优先；字段匹配项中任一opt为Desensitization就保留字段，但登记到脱敏映射的是该组匹配项的第一项get(0)，不保证是触发判断的脱敏项；无脱敏匹配则去除字段，无任何匹配则保留。规则查询在行/列API缺失或系统管理员时返回空规则。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 58,
+          "end_line": 141,
+          "symbol": "filterColumnPermissions/columnPermissions",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-024",
+      "statement": "行权限入口获取规则后解析字段，applyRowPermissions 将当前用户规则交给 WhereTree2Str；按角色入口过滤角色白名单；rowPermissionsTree 对系统管理员直接返回空规则，否则读取用户角色并查询启用规则。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 144,
+          "end_line": 210,
+          "symbol": "getRowPermissionsTree/applyRowPermissions/rowPermissionsTree",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-025",
+      "statement": "InteractiveAuthApi 声明资源登记/编辑/删除、checkAuth与queryAuth；checkShareAuth默认实现抛 UnsupportedOperationException，旧实现不能靠默认方法通过分享授权。",
+      "kind": "implemented",
+      "scope": "公共接口及默认方法，不证明企业实现",
+      "evidence": [
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/InteractiveAuthApi.java",
+          "start_line": 44,
+          "end_line": 86,
+          "symbol": "InteractiveAuthApi/checkShareAuth",
+          "sha256": "4689e9ec1eaf1c9573462de71e4290a2b0e0ce464094fff21f2da36cf01fe63d"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-026",
+      "statement": "替补登录 Bean 仅在缺少 loginServer 时启用，只接受 admin 名称与配置密码，返回uid=1的签名Token；不能由该实现推出企业用户登录行为。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/login/SubstituleLoginServer.java",
+          "start_line": 19,
+          "end_line": 57,
+          "symbol": "SubstituleLoginServer",
+          "sha256": "88bc3cd9e72697e72726f25dfde3adaae9d2331ffc8902356a316fd08c383ad4"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-027",
+      "statement": "前端用户API封装查询、创建、编辑、删除、角色绑定与组织切换；SDK UserApi 对详情、编辑、删除声明菜单/资源级 DePermit，具体企业持久化不由此接口证明。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/user.ts",
+          "start_line": 3,
+          "end_line": 56,
+          "symbol": "user API",
+          "sha256": "3da26d76b63181f545c530c4172362d273c320ccb4a3b552871729b57c5e8706"
+        },
+        {
+          "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/user/api/UserApi.java",
+          "start_line": 53,
+          "end_line": 100,
+          "symbol": "UserApi",
+          "sha256": "d8609182c9d3a660af3007e8e5f880a0a45e84b9ec536ba4336cc456977a5ab3"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-028",
+      "statement": "登录或桌面模式前端从 getRoleRouters 生成并动态加入可访问路由；路径不可访问时转首个授权菜单或404，组织无权时回工作台。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/permission.ts",
+          "start_line": 95,
+          "end_line": 150,
+          "symbol": "router guard",
+          "sha256": "4eb7df67800cfbe0e577d6d4fec67be5f24ce178c8119d35552842f3d791f46b"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-029",
+      "statement": "后端 standalone Profile 默认激活；distributed 引入 distributed 依赖并在编译时排除 io/dataease/substitute/**。",
+      "kind": "configured",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 134,
+          "end_line": 147,
+          "symbol": "profiles",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        },
+        {
+          "path": "core/core-backend/pom.xml",
+          "start_line": 272,
+          "end_line": 299,
+          "symbol": "distributed profile",
+          "sha256": "533cdf48bcf4277d266caafa5a725215f43862682cf5392cfea494a2d4a241d5"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-030",
+      "statement": "前端图表导出经统一 request POST innerExportDetails/innerExportDataSetDetails 并请求 blob；SDK 对两者分别声明 export_view/export_detail 资源权限，参数为 ChartExcelRequest。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/chart.ts",
+          "start_line": 118,
+          "end_line": 136,
+          "symbol": "innerExportDetails/innerExportDataSetDetails",
+          "sha256": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/chart/ChartDataApi.java",
+          "start_line": 35,
+          "end_line": 43,
+          "symbol": "ChartDataApi",
+          "sha256": "e422b3c5c89892f37d6a16ed79bda3c01e268e36f2975a4e4460c6d4dadcd4d1"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-031",
+      "statement": "导出中心 SDK 声明分页记录、删除、下载、生成下载URI、重试与导出限制接口，分页声明 m:read，下载Ticket请求参数声明可选但业务管理器会拒绝空值。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/exportCenter/ExportCenterApi.java",
+          "start_line": 24,
+          "end_line": 59,
+          "symbol": "ExportCenterApi",
+          "sha256": "8e0db91b6886b23293998d3c3d799d765b15d6c882e657fb74f5b356145f3a1a"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-032",
+      "statement": "分享开关先查管理权限，以uid:resourceId为键在JVM内加锁再调用事务方法；已有记录则删除当前创建者资源的全部分享和各UUID Ticket；新建记录包含Snowflake ID、创建者、组织、资源、随机8位UUID及访客权限0，并按资源类型设置1/2后saveAndFlush。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 119,
+          "end_line": 170,
+          "symbol": "switcher/doSwitcher",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-033",
+      "statement": "编辑分享UUID校验存在、非空、重复和8至16位字母数字格式，通过后先级联更新Ticket UUID再保存分享；编辑有效期把null转0；密码编辑要求现有分享并保存密码和autoPwd。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 172,
+          "end_line": 230,
+          "symbol": "editUuid/editExp/editPwd",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-034",
+      "statement": "链接操作栏PDF入口和PreviewCanvas下载处理都检查shareAllows(4)；canvasDownload事件携type进入downloadCanvas2，默认img；shareAllows只根据前端linkToken与visitorPermissions位判断，不构成服务端鉴权证据。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/components/data-visualization/canvas/LinkOptBar.vue",
+          "start_line": 111,
+          "end_line": 139,
+          "symbol": "exportPDF",
+          "sha256": "f16671e9c5696242913dc7a47c0a5e2a8d320a1c60f2efc5489769fc07a1d553"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/PreviewCanvas.vue",
+          "start_line": 185,
+          "end_line": 215,
+          "symbol": "downloadH2/canvasDownload",
+          "sha256": "e99a734e0e619c756f4babd53844e02d07f33c5555ed516959eb1730fa473370"
+        },
+        {
+          "path": "core/core-frontend/src/utils/utils.ts",
+          "start_line": 268,
+          "end_line": 278,
+          "symbol": "shareAllows/exportPermission",
+          "sha256": "a7fb6747e042abcc8926f7475fbdbc2d5fcd96f53e1b6c61b32cf6f29db2dc45"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-035",
+      "statement": "downloadCanvas2先等待本次DOM使用的资源图片，再用domToPng按不低于3的scale渲染；img以PNG下载，其他type用JsPDF按DOM尺寸方向写一页PNG后保存PDF；失败回调并记录错误。PreviewShow的canvasDownload订阅固定选择img。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/imgUtils.ts",
+          "start_line": 165,
+          "end_line": 201,
+          "symbol": "downloadCanvas2",
+          "sha256": "4de80b9bf1d30c10bdd3f6e085d29732324fa9539694d7fcdd90a98788ac7b65"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/PreviewShow.vue",
+          "start_line": 112,
+          "end_line": 119,
+          "symbol": "download",
+          "sha256": "ce6d84f38fa1d658b5d1416050521892c232f59024c6edfdecfa81deca35b245"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/PreviewShow.vue",
+          "start_line": 211,
+          "end_line": 217,
+          "symbol": "canvasDownload",
+          "sha256": "ce6d84f38fa1d658b5d1416050521892c232f59024c6edfdecfa81deca35b245"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-036",
+      "statement": "图片导出准备仅等待当前DOM src/background实际引用的缓存图片；加载失败或中止抛异常取消导出，然后等待引用img.decode完成。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/resourceImageCache.ts",
+          "start_line": 91,
+          "end_line": 115,
+          "symbol": "waitForResourceImages",
+          "sha256": "c6187c3279003bb6c0feca04b34d0d3a1c19135a09ecd8ef28f0f4fbbc1ef2c8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-037",
+      "statement": "导出路径由绝对归一化基目录、taskId目录和taskId.xlsx构成，并以Path.startsWith检查目录包含关系；旧导出时间分支使用经文件名校验的原始文件名；删除遍历再次检查归一化路径。此实现的字符串归一化不是符号链接真实路径证明。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 386,
+          "end_line": 475,
+          "symbol": "resolveExportTaskDirectory/resolveDownloadTarget/validateExportPath",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-038",
+      "statement": "导出文件名校验拒绝空值、斜线、反斜线、双点、NUL和ISO控制字符；ExportTaskFileTarget用Files创建目录与读写文件；下载使用try-with-resources传输，IOException设置HTTP500。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/FileUtils.java",
+          "start_line": 21,
+          "end_line": 38,
+          "symbol": "validateUploadFilename",
+          "sha256": "ed3494e65bfd43c7f2f9300e5d51ef72f7cbb42844882f436ce57f4cae8e09a8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportTaskFileTarget.java",
+          "start_line": 41,
+          "end_line": 55,
+          "symbol": "newInputStream/newOutputStream",
+          "sha256": "39cbe96dff80abb86378009ce66a7f3e1182f6931f69c6018a03e1c59eac8b60"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 730,
+          "end_line": 740,
+          "symbol": "download",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-039",
+      "statement": "行权限查询汇总用户、角色和sysParams规则；按用户白名单或角色交集剔除规则；代码虽解析部门白名单，在此循环没有部门白名单过滤条件；sysParams规则解析表达式树并替换变量。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 188,
+          "end_line": 240,
+          "symbol": "rowPermissionsTree",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-040",
+      "statement": "系统变量替换递归处理子树，保留替换成功项；内置userId实际取用户account，并支持邮箱/姓名/电话/组织名；自定义变量仅匹配有效ID，文本in/not in拼接选值，其余取单值；无法解析返回null并从树移除该项。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/PermissionManage.java",
+          "start_line": 243,
+          "end_line": 329,
+          "symbol": "replaceSysVariables/replaceSysVariableValue/handleSysVariable",
+          "sha256": "19bdcd8699babb74e8bf1b0c47b621e202bd065e122a9ce268b29527cf508782"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-041",
+      "statement": "脱敏支持全脱敏、保留中间三位、首尾三位和自定义首M尾N或M至N；短文本采用预定义占位或X占位，M>N/长度<M返回*** ***；数据集buildPreviewData和普通表transTableNormal按字段脱敏映射调用该算法。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/utils/ChartDataBuild.java",
+          "start_line": 1333,
+          "end_line": 1400,
+          "symbol": "desensitizationValue/transTableNormal",
+          "sha256": "c1ec97c855182d9745e055c235edae17d709f6f11c83048639da0ba512a8562d"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 552,
+          "end_line": 585,
+          "symbol": "buildPreviewData",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-042",
+      "statement": "分享查询切面拦截字段枚举和字段树：链接身份的显式userId须等于当前uid，查询/显示/排序/筛选字段须在当前分享画布componentData JSON中；解析异常或未知请求类型拒绝。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/interceptor/ShareQueryScopeAop.java",
+          "start_line": 31,
+          "end_line": 86,
+          "symbol": "checkQuery/checkRequest/requireFields",
+          "sha256": "cff74987e93d662de8e9befb7b401394007d1b1504411bd564592ccf84c333d1"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-043",
+      "statement": "核心MVC把LinkInterceptor注册到所有路径；可视化辅助名称读取要求正ID、登录且非链接身份，基于持久化资源类型调用READ权限；权限服务缺失时仅实际uid1替补模式允许，返回仅id/name。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/config/DeMvcConfig.java",
+          "start_line": 49,
+          "end_line": 54,
+          "symbol": "addInterceptors",
+          "sha256": "aceb1b6d0243ca2efda40c391406f68b1640229a1581c8ac3ca1febb7cdf4e8a"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 246,
+          "end_line": 277,
+          "symbol": "findResourceName/requireVisualizationPermission",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-044",
+      "statement": "visualization-read-security/Regression.java是可执行main回归资产：用Mockito模拟资源与权限提供方，断言最小响应、READ/MANAGE区别、匿名/分享拒绝、企业权限服务缺失拒绝和替补模式边界；本次仅读源码，未运行。",
+      "kind": "implemented",
+      "scope": "测试资产内容；模拟依赖，不证明真实跨组织运行行为",
+      "evidence": [
+        {
+          "path": "tests/visualization-read-security/Regression.java",
+          "start_line": 50,
+          "end_line": 130,
+          "symbol": "Regression.main",
+          "sha256": "1de51023a0997855f2cb16c0abe0b453108a16d5522c1bb72ab2f144985fff05"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-045",
+      "statement": "static-resource-security/Regression.java包含图片扩展名/内容、活动SVG、超限输入、模板路径穿越拒绝及HTTP内容安全响应头断言；测试为静态资源边界资产，不能替代导出端到端或分享Token测试，本次未运行。",
+      "kind": "implemented",
+      "scope": "测试资产内容；未运行",
+      "evidence": [
+        {
+          "path": "tests/static-resource-security/Regression.java",
+          "start_line": 20,
+          "end_line": 55,
+          "symbol": "Regression.main",
+          "sha256": "c6b7dbd72f25401d07c7e8258ef4187c631655a997ec92f2874a9783cd746fb0"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-046",
+      "statement": "画布Excel管理器读取core画布与图表，用户指定viewIdList时只保留画布组件中且在选择列表的图表并按选择顺序排列；给ChartExtRequest设置当前uid后逐图表导出，最终生成Excel文件；资源不存在抛异常，无图表返回null。",
+      "kind": "implemented",
+      "scope": "当前源码静态行为；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationExportManage.java",
+          "start_line": 56,
+          "end_line": 106,
+          "symbol": "exportExcel",
+          "sha256": "8d3499d51807c050ad0524bdd7d45b4b2fbfaf0b60cf6ac3c8b6708c79d1a789"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-047",
+      "statement": "Entrances通信回调只处理带de-embedded标记的消息，先await ensureDekey；event.origin等于当前origin时直接setIframeData、置isIframe、记录event.source为宿主并发initIframe事件，不调用跨源initApi。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/Entrances.vue",
+          "start_line": 17,
+          "end_line": 29,
+          "symbol": "communicationCb",
+          "sha256": "413c1837e22ead4d5d05d55fbcbce96d8860e503badd1c458010eb182151763b"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-048",
+      "statement": "跨源握手将event.origin经btoa后调用rsaEncryp，再把embeddedToken与加密origin交给initApi；仅res.msg为空时写Store、iframe标记与宿主并发initIframe，有msg或initApi Promise拒绝显示域名匹配错误。ensureDekey及origin加密发生在该Promise catch之外，不应把所有初始化失败都描述为域名提示。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/Entrances.vue",
+          "start_line": 17,
+          "end_line": 46,
+          "symbol": "communicationCb/showError",
+          "sha256": "413c1837e22ead4d5d05d55fbcbce96d8860e503badd1c458010eb182151763b"
+        },
+        {
+          "path": "core/core-frontend/src/utils/encryption.ts",
+          "start_line": 24,
+          "end_line": 46,
+          "symbol": "ensureDekey/getDekeyParts",
+          "sha256": "78cb78b7f59cf7312e72663107aea58e60a25fbdedc376a7c1c3b81c5ef42006"
+        },
+        {
+          "path": "core/core-frontend/src/utils/encryption.ts",
+          "start_line": 62,
+          "end_line": 66,
+          "symbol": "rsaEncryp",
+          "sha256": "78cb78b7f59cf7312e72663107aea58e60a25fbdedc376a7c1c3b81c5ef42006"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-049",
+      "statement": "Entrances挂载前对有登录Token或非iframe的指定preview URL、已有embeddedToken、de-link URL分别发initIframe(false)并早退；否则获取dekey、注册message监听、向parent以*发ready消息。卸载前移除同一监听；检测top/self异常时按iframe处理。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/component/embedded-iframe/Entrances.vue",
+          "start_line": 48,
+          "end_line": 80,
+          "symbol": "isInIframe/onBeforeMount/onBeforeUnmount",
+          "sha256": "413c1837e22ead4d5d05d55fbcbce96d8860e503badd1c458010eb182151763b"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-050",
+      "statement": "异步数据集导出对orderChecked字段构造asc排序；查总数后把用于分片计算的totalCount取实际总数与dataset导出限额较小值，再按sheetLimit和extractPageSize计算sheet/page数量。SQL页通常用sheet偏移加页偏移与extractPageSize；单页sheet分支改用offset0和sheetSize。本段不证明末页实际返回行数绝不超过逻辑限额。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 392,
+          "end_line": 435,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-051",
+      "statement": "异步数据集每页查询携带dsMap/isCross和复制后的prepared参数，Provider结果交buildPreviewData并传入desensitizationList；从返回data按字段dataeaseName读取行，首批加字段名表头，后续追加行，以setDatasetCellValue写单元格，故Excel内容消费的是该脱敏处理后的结果。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 435,
+          "end_line": 496,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 140,
+          "end_line": 149,
+          "symbol": "applyPreparedParams",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 937,
+          "end_line": 954,
+          "symbol": "setDatasetCellValue",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-052",
+      "statement": "异步数据集按sheet/page进度更新IN_PROGRESS，完成遍历后加水印，通过ExportTaskFileTarget输出流写workbook并flush/close；既有后续处理负责成功/失败状态与上下文清理。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "implemented",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 498,
+          "end_line": 521,
+          "symbol": "startDatasetTask",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-053",
+      "statement": "数据集与图表导出限额配置默认各100000；限额管理器type为空或view时取viewLimit，否则取datasetLimit。异步导出页大小配置默认50000，sheetLimit固定1000000。",
+      "scope": "当前源码静态分支；未运行",
+      "kind": "configured",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterLimitManage.java",
+          "start_line": 7,
+          "end_line": 21,
+          "symbol": "getExportLimit",
+          "sha256": "d9836d24f3f38424c376bcbd19e8dd2dd3c32498142fd7b9dc00ffc27f97cca6"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterDownLoadManage.java",
+          "start_line": 108,
+          "end_line": 126,
+          "symbol": "extractPageSize/sheetLimit",
+          "sha256": "8787f7a77140c948ff8b5f908f2d4726580725eac8972421f8f0f1219f038f33"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/util/ExportCenterUtils.java",
+          "start_line": 13,
+          "end_line": 19,
+          "symbol": "getExportLimit",
+          "sha256": "2036a2ba022e976b308dba12cd0314178a4c89747c0a475492081da9f48d1444"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-054",
+      "statement": "图表导出的addTask重载记录任务后，busiFlag为dashboard时调用startPanelViewTask，否则调用startDataVViewTask；此重载不调用startDatasetTask。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 253,
+          "end_line": 271,
+          "symbol": "addTask(ChartExcelRequest,busiFlag)",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-055",
+      "statement": "数据集导出的addTask重载先读取数据集分组，记录任务后调用startDatasetTask；它与ChartExcelRequest重载分别分派。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/exportCenter/manage/ExportCenterManage.java",
+          "start_line": 273,
+          "end_line": 288,
+          "symbol": "addTask(DataSetExportRequest)",
+          "sha256": "6aedad304fe269374e78aca32b59fbd8f2910ca7cadde3d99ad7fd32c90450f8"
+        }
+      ]
+    },
+    {
+      "id": "ACCESS-056",
+      "statement": "generateLinkToken调用LinkTokenUtil.generate并通过响应头返回链接Token；validatePwd是独立方法，不调用此签发函数。",
+      "kind": "implemented",
+      "scope": "当前源码静态分支；未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/share/manage/XpackShareManage.java",
+          "start_line": 417,
+          "end_line": 422,
+          "symbol": "generateLinkToken",
+          "sha256": "58ceea0bc0f737f5a1ef3cbf681a62b0deef9c8b300ff75d9ef5386016e1807c"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F08",
+      "name": "通过链接分享和预览",
+      "depth": "core",
+      "summary": "通过链接分享和预览的已读源码行为与公共契约",
+      "contract": {
+        "trigger": [
+          "ACCESS-005"
+        ],
+        "inputs": [
+          "ACCESS-003",
+          "ACCESS-005"
+        ],
+        "outputs": [
+          "ACCESS-005",
+          "ACCESS-006"
+        ],
+        "preconditions": [
+          "ACCESS-001",
+          "ACCESS-002"
+        ],
+        "state_changes": [
+          "ACCESS-003",
+          "ACCESS-004",
+          "ACCESS-032",
+          "ACCESS-033"
+        ],
+        "postconditions": [
+          "ACCESS-006",
+          "ACCESS-007"
+        ],
+        "invariants": [
+          "ACCESS-007",
+          "ACCESS-008",
+          "ACCESS-010",
+          "ACCESS-042"
+        ],
+        "failures": [
+          "ACCESS-004",
+          "ACCESS-005",
+          "ACCESS-009"
+        ],
+        "permissions": [
+          "ACCESS-001",
+          "ACCESS-002",
+          "ACCESS-011"
+        ],
+        "implementation": [
+          "ACCESS-005",
+          "ACCESS-006",
+          "ACCESS-012",
+          "ACCESS-032",
+          "ACCESS-033",
+          "ACCESS-042",
+          "ACCESS-043",
+          "ACCESS-056"
+        ],
+        "dependencies": [
+          "ACCESS-025"
+        ],
+        "data": [
+          "ACCESS-003",
+          "ACCESS-004"
+        ],
+        "tests": [
+          "ACCESS-044"
+        ]
+      },
+      "limits": [
+        "已补读创建关闭、UUID级联与局部专用权限切面；未运行浏览器、过期或多JVM并发验证；测试资产只覆盖相邻读取身份边界，不证明分享全链。"
+      ]
+    },
+    {
+      "id": "F09",
+      "name": "将内容嵌入其他系统",
+      "depth": "core",
+      "summary": "将内容嵌入其他系统的已读源码行为与公共契约",
+      "contract": {
+        "trigger": [
+          "ACCESS-015",
+          "ACCESS-047",
+          "ACCESS-049"
+        ],
+        "inputs": [
+          "ACCESS-014",
+          "ACCESS-015",
+          "ACCESS-047",
+          "ACCESS-048"
+        ],
+        "outputs": [
+          "ACCESS-013",
+          "ACCESS-016",
+          "ACCESS-048",
+          "ACCESS-049"
+        ],
+        "preconditions": [
+          "ACCESS-013",
+          "ACCESS-047",
+          "ACCESS-048",
+          "ACCESS-049"
+        ],
+        "state_changes": [
+          "ACCESS-014",
+          "ACCESS-047",
+          "ACCESS-048"
+        ],
+        "postconditions": [
+          "ACCESS-012",
+          "ACCESS-047",
+          "ACCESS-048"
+        ],
+        "invariants": [
+          "ACCESS-012",
+          "ACCESS-048",
+          "ACCESS-049"
+        ],
+        "failures": [
+          "ACCESS-048"
+        ],
+        "permissions": [
+          "ACCESS-013",
+          "ACCESS-048"
+        ],
+        "implementation": [
+          "ACCESS-012",
+          "ACCESS-014",
+          "ACCESS-015",
+          "ACCESS-016",
+          "ACCESS-047",
+          "ACCESS-048",
+          "ACCESS-049"
+        ],
+        "dependencies": [
+          "ACCESS-013",
+          "ACCESS-048"
+        ],
+        "data": [
+          "ACCESS-014",
+          "ACCESS-047",
+          "ACCESS-048"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "已核实主仓Entrances同源/跨源握手、加密origin、状态与监听生命周期；后端签发、域名校验、过期、注销与应用持久化仅有SDK契约证据，未推断其实现。",
+        "未运行宿主浏览器握手或失败测试；ensureDekey/加密异常不在initApi.catch内。"
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "导出分析结果",
+      "depth": "core",
+      "summary": "导出分析结果的已读源码行为与公共契约",
+      "contract": {
+        "trigger": [
+          "ACCESS-017",
+          "ACCESS-030",
+          "ACCESS-034"
+        ],
+        "inputs": [
+          "ACCESS-017",
+          "ACCESS-018",
+          "ACCESS-030",
+          "ACCESS-050",
+          "ACCESS-053"
+        ],
+        "outputs": [
+          "ACCESS-017",
+          "ACCESS-021",
+          "ACCESS-035",
+          "ACCESS-046",
+          "ACCESS-051",
+          "ACCESS-052"
+        ],
+        "preconditions": [
+          "ACCESS-017",
+          "ACCESS-019",
+          "ACCESS-034",
+          "ACCESS-036",
+          "ACCESS-050"
+        ],
+        "state_changes": [
+          "ACCESS-018",
+          "ACCESS-019",
+          "ACCESS-022",
+          "ACCESS-052"
+        ],
+        "postconditions": [
+          "ACCESS-019",
+          "ACCESS-022",
+          "ACCESS-035",
+          "ACCESS-038",
+          "ACCESS-051",
+          "ACCESS-052"
+        ],
+        "invariants": [
+          "ACCESS-020",
+          "ACCESS-021",
+          "ACCESS-022",
+          "ACCESS-037",
+          "ACCESS-038",
+          "ACCESS-050",
+          "ACCESS-053"
+        ],
+        "failures": [
+          "ACCESS-019",
+          "ACCESS-020",
+          "ACCESS-022",
+          "ACCESS-036",
+          "ACCESS-038"
+        ],
+        "permissions": [
+          "ACCESS-011",
+          "ACCESS-017",
+          "ACCESS-020",
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-034",
+          "ACCESS-041"
+        ],
+        "implementation": [
+          "ACCESS-017",
+          "ACCESS-018",
+          "ACCESS-019",
+          "ACCESS-034",
+          "ACCESS-035",
+          "ACCESS-036",
+          "ACCESS-037",
+          "ACCESS-038",
+          "ACCESS-046",
+          "ACCESS-050",
+          "ACCESS-051",
+          "ACCESS-052",
+          "ACCESS-053",
+          "ACCESS-054",
+          "ACCESS-055"
+        ],
+        "dependencies": [
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-041",
+          "ACCESS-051",
+          "ACCESS-053"
+        ],
+        "data": [
+          "ACCESS-018",
+          "ACCESS-021",
+          "ACCESS-037",
+          "ACCESS-038",
+          "ACCESS-050",
+          "ACCESS-051",
+          "ACCESS-052"
+        ],
+        "tests": [
+          "ACCESS-045"
+        ]
+      },
+      "limits": [
+        "已补读前端PNG/PDF与核心Excel/任务下载路径；未运行浏览器导出、下载并发或文件系统符号链接测试；静态资源测试资产不等于导出端到端测试；不声称全部产品入口均已运行验证。",
+        "限额记录的是源码逻辑计数和分页分支，末页实际行数、跨sheet单页offset及所有导出入口一致性均未运行验证。"
+      ]
+    },
+    {
+      "id": "F15",
+      "name": "管理用户、组织与数据权限",
+      "depth": "core",
+      "summary": "管理用户、组织与数据权限的已读源码行为与公共契约",
+      "contract": {
+        "trigger": [
+          "ACCESS-027",
+          "ACCESS-028"
+        ],
+        "inputs": [
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-027"
+        ],
+        "outputs": [
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-025",
+          "ACCESS-041"
+        ],
+        "preconditions": [
+          "ACCESS-026"
+        ],
+        "state_changes": [
+          "ACCESS-027"
+        ],
+        "postconditions": [
+          "ACCESS-023",
+          "ACCESS-024"
+        ],
+        "invariants": [
+          "ACCESS-001",
+          "ACCESS-002",
+          "ACCESS-025",
+          "ACCESS-039",
+          "ACCESS-040"
+        ],
+        "failures": [
+          "ACCESS-001",
+          "ACCESS-002",
+          "ACCESS-025",
+          "ACCESS-026"
+        ],
+        "permissions": [
+          "ACCESS-001",
+          "ACCESS-002",
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-025",
+          "ACCESS-027",
+          "ACCESS-039",
+          "ACCESS-042",
+          "ACCESS-043"
+        ],
+        "implementation": [
+          "ACCESS-023",
+          "ACCESS-024",
+          "ACCESS-026",
+          "ACCESS-028",
+          "ACCESS-039",
+          "ACCESS-040",
+          "ACCESS-041",
+          "ACCESS-042",
+          "ACCESS-043"
+        ],
+        "dependencies": [
+          "ACCESS-025",
+          "ACCESS-027",
+          "ACCESS-029"
+        ],
+        "data": [
+          "ACCESS-023",
+          "ACCESS-024"
+        ],
+        "tests": [
+          "ACCESS-044"
+        ]
+      },
+      "limits": [
+        "已补读行规则白名单、变量替换、脱敏算法及core身份消费/专用切面；V3UserUtil、TokenUtils和通用DePermit切面定义未在当前sdk/core源文件定位，不能推测其来源或实现；企业用户组织持久化仍只确认公共接口；测试资产使用模拟权限提供方且未运行。"
+      ]
+    },
+    {
+      "id": "F23",
+      "name": "导出任务中心",
+      "depth": "navigation",
+      "summary": "导出任务中心的已读源码行为与公共契约",
+      "contract": {
+        "trigger": [
+          "ACCESS-020",
+          "ACCESS-031"
+        ],
+        "inputs": [
+          "ACCESS-020",
+          "ACCESS-021"
+        ],
+        "outputs": [
+          "ACCESS-020",
+          "ACCESS-021"
+        ],
+        "preconditions": [],
+        "state_changes": [
+          "ACCESS-020",
+          "ACCESS-022"
+        ],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [
+          "ACCESS-020",
+          "ACCESS-022"
+        ],
+        "permissions": [],
+        "implementation": [
+          "ACCESS-020",
+          "ACCESS-021",
+          "ACCESS-022",
+          "ACCESS-037",
+          "ACCESS-038"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "导航深度；没有运行任务中心UI或调度测试。"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "ACCESS-R001",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-001",
+      "evidence_fact_ids": [
+        "ACCESS-001"
+      ]
+    },
+    {
+      "id": "ACCESS-R002",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-002",
+      "evidence_fact_ids": [
+        "ACCESS-002"
+      ]
+    },
+    {
+      "id": "ACCESS-R003",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-003",
+      "evidence_fact_ids": [
+        "ACCESS-003"
+      ]
+    },
+    {
+      "id": "ACCESS-R004",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-004",
+      "evidence_fact_ids": [
+        "ACCESS-004"
+      ]
+    },
+    {
+      "id": "ACCESS-R005",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-005",
+      "evidence_fact_ids": [
+        "ACCESS-005"
+      ]
+    },
+    {
+      "id": "ACCESS-R006",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-006",
+      "evidence_fact_ids": [
+        "ACCESS-006"
+      ]
+    },
+    {
+      "id": "ACCESS-R007",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-007",
+      "evidence_fact_ids": [
+        "ACCESS-007"
+      ]
+    },
+    {
+      "id": "ACCESS-R008",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-008",
+      "evidence_fact_ids": [
+        "ACCESS-008"
+      ]
+    },
+    {
+      "id": "ACCESS-R009",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-009",
+      "evidence_fact_ids": [
+        "ACCESS-009"
+      ]
+    },
+    {
+      "id": "ACCESS-R010",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-010",
+      "evidence_fact_ids": [
+        "ACCESS-010"
+      ]
+    },
+    {
+      "id": "ACCESS-R011",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-011",
+      "evidence_fact_ids": [
+        "ACCESS-011"
+      ]
+    },
+    {
+      "id": "ACCESS-R012",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-012",
+      "evidence_fact_ids": [
+        "ACCESS-012"
+      ]
+    },
+    {
+      "id": "ACCESS-R013",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-025",
+      "evidence_fact_ids": [
+        "ACCESS-025"
+      ]
+    },
+    {
+      "id": "ACCESS-R014",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-032",
+      "evidence_fact_ids": [
+        "ACCESS-032"
+      ]
+    },
+    {
+      "id": "ACCESS-R015",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-033",
+      "evidence_fact_ids": [
+        "ACCESS-033"
+      ]
+    },
+    {
+      "id": "ACCESS-R016",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-042",
+      "evidence_fact_ids": [
+        "ACCESS-042"
+      ]
+    },
+    {
+      "id": "ACCESS-R017",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F08",
+      "to": "ACCESS-043",
+      "evidence_fact_ids": [
+        "ACCESS-043"
+      ]
+    },
+    {
+      "id": "ACCESS-R018",
+      "type": "TEST_ASSET_FOR",
+      "from": "ACCESS-044",
+      "to": "F08",
+      "evidence_fact_ids": [
+        "ACCESS-044"
+      ]
+    },
+    {
+      "id": "ACCESS-R019",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-012",
+      "evidence_fact_ids": [
+        "ACCESS-012"
+      ]
+    },
+    {
+      "id": "ACCESS-R020",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-013",
+      "evidence_fact_ids": [
+        "ACCESS-013"
+      ]
+    },
+    {
+      "id": "ACCESS-R021",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-014",
+      "evidence_fact_ids": [
+        "ACCESS-014"
+      ]
+    },
+    {
+      "id": "ACCESS-R022",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-015",
+      "evidence_fact_ids": [
+        "ACCESS-015"
+      ]
+    },
+    {
+      "id": "ACCESS-R023",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-016",
+      "evidence_fact_ids": [
+        "ACCESS-016"
+      ]
+    },
+    {
+      "id": "ACCESS-R024",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-011",
+      "evidence_fact_ids": [
+        "ACCESS-011"
+      ]
+    },
+    {
+      "id": "ACCESS-R025",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-017",
+      "evidence_fact_ids": [
+        "ACCESS-017"
+      ]
+    },
+    {
+      "id": "ACCESS-R026",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-018",
+      "evidence_fact_ids": [
+        "ACCESS-018"
+      ]
+    },
+    {
+      "id": "ACCESS-R027",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-019",
+      "evidence_fact_ids": [
+        "ACCESS-019"
+      ]
+    },
+    {
+      "id": "ACCESS-R028",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-020",
+      "evidence_fact_ids": [
+        "ACCESS-020"
+      ]
+    },
+    {
+      "id": "ACCESS-R029",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-021",
+      "evidence_fact_ids": [
+        "ACCESS-021"
+      ]
+    },
+    {
+      "id": "ACCESS-R030",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-022",
+      "evidence_fact_ids": [
+        "ACCESS-022"
+      ]
+    },
+    {
+      "id": "ACCESS-R031",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-023",
+      "evidence_fact_ids": [
+        "ACCESS-023"
+      ]
+    },
+    {
+      "id": "ACCESS-R032",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-024",
+      "evidence_fact_ids": [
+        "ACCESS-024"
+      ]
+    },
+    {
+      "id": "ACCESS-R033",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-030",
+      "evidence_fact_ids": [
+        "ACCESS-030"
+      ]
+    },
+    {
+      "id": "ACCESS-R034",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-034",
+      "evidence_fact_ids": [
+        "ACCESS-034"
+      ]
+    },
+    {
+      "id": "ACCESS-R035",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-035",
+      "evidence_fact_ids": [
+        "ACCESS-035"
+      ]
+    },
+    {
+      "id": "ACCESS-R036",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-036",
+      "evidence_fact_ids": [
+        "ACCESS-036"
+      ]
+    },
+    {
+      "id": "ACCESS-R037",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-037",
+      "evidence_fact_ids": [
+        "ACCESS-037"
+      ]
+    },
+    {
+      "id": "ACCESS-R038",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-038",
+      "evidence_fact_ids": [
+        "ACCESS-038"
+      ]
+    },
+    {
+      "id": "ACCESS-R039",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-041",
+      "evidence_fact_ids": [
+        "ACCESS-041"
+      ]
+    },
+    {
+      "id": "ACCESS-R040",
+      "type": "TEST_ASSET_FOR",
+      "from": "ACCESS-045",
+      "to": "F10",
+      "evidence_fact_ids": [
+        "ACCESS-045"
+      ]
+    },
+    {
+      "id": "ACCESS-R041",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-046",
+      "evidence_fact_ids": [
+        "ACCESS-046"
+      ]
+    },
+    {
+      "id": "ACCESS-R042",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-001",
+      "evidence_fact_ids": [
+        "ACCESS-001"
+      ]
+    },
+    {
+      "id": "ACCESS-R043",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-002",
+      "evidence_fact_ids": [
+        "ACCESS-002"
+      ]
+    },
+    {
+      "id": "ACCESS-R044",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-023",
+      "evidence_fact_ids": [
+        "ACCESS-023"
+      ]
+    },
+    {
+      "id": "ACCESS-R045",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-024",
+      "evidence_fact_ids": [
+        "ACCESS-024"
+      ]
+    },
+    {
+      "id": "ACCESS-R046",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-025",
+      "evidence_fact_ids": [
+        "ACCESS-025"
+      ]
+    },
+    {
+      "id": "ACCESS-R047",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-026",
+      "evidence_fact_ids": [
+        "ACCESS-026"
+      ]
+    },
+    {
+      "id": "ACCESS-R048",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-027",
+      "evidence_fact_ids": [
+        "ACCESS-027"
+      ]
+    },
+    {
+      "id": "ACCESS-R049",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-028",
+      "evidence_fact_ids": [
+        "ACCESS-028"
+      ]
+    },
+    {
+      "id": "ACCESS-R050",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-029",
+      "evidence_fact_ids": [
+        "ACCESS-029"
+      ]
+    },
+    {
+      "id": "ACCESS-R051",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-039",
+      "evidence_fact_ids": [
+        "ACCESS-039"
+      ]
+    },
+    {
+      "id": "ACCESS-R052",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-040",
+      "evidence_fact_ids": [
+        "ACCESS-040"
+      ]
+    },
+    {
+      "id": "ACCESS-R053",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-041",
+      "evidence_fact_ids": [
+        "ACCESS-041"
+      ]
+    },
+    {
+      "id": "ACCESS-R054",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-042",
+      "evidence_fact_ids": [
+        "ACCESS-042"
+      ]
+    },
+    {
+      "id": "ACCESS-R055",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F15",
+      "to": "ACCESS-043",
+      "evidence_fact_ids": [
+        "ACCESS-043"
+      ]
+    },
+    {
+      "id": "ACCESS-R056",
+      "type": "TEST_ASSET_FOR",
+      "from": "ACCESS-044",
+      "to": "F15",
+      "evidence_fact_ids": [
+        "ACCESS-044"
+      ]
+    },
+    {
+      "id": "ACCESS-R057",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-020",
+      "evidence_fact_ids": [
+        "ACCESS-020"
+      ]
+    },
+    {
+      "id": "ACCESS-R058",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-021",
+      "evidence_fact_ids": [
+        "ACCESS-021"
+      ]
+    },
+    {
+      "id": "ACCESS-R059",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-022",
+      "evidence_fact_ids": [
+        "ACCESS-022"
+      ]
+    },
+    {
+      "id": "ACCESS-R060",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-031",
+      "evidence_fact_ids": [
+        "ACCESS-031"
+      ]
+    },
+    {
+      "id": "ACCESS-R061",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-037",
+      "evidence_fact_ids": [
+        "ACCESS-037"
+      ]
+    },
+    {
+      "id": "ACCESS-R062",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F23",
+      "to": "ACCESS-038",
+      "evidence_fact_ids": [
+        "ACCESS-038"
+      ]
+    },
+    {
+      "id": "ACCESS-R063",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-047",
+      "evidence_fact_ids": [
+        "ACCESS-047"
+      ]
+    },
+    {
+      "id": "ACCESS-R064",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-048",
+      "evidence_fact_ids": [
+        "ACCESS-048"
+      ]
+    },
+    {
+      "id": "ACCESS-R065",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F09",
+      "to": "ACCESS-049",
+      "evidence_fact_ids": [
+        "ACCESS-049"
+      ]
+    },
+    {
+      "id": "ACCESS-R066",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-050",
+      "evidence_fact_ids": [
+        "ACCESS-050"
+      ]
+    },
+    {
+      "id": "ACCESS-R067",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-051",
+      "evidence_fact_ids": [
+        "ACCESS-051"
+      ]
+    },
+    {
+      "id": "ACCESS-R068",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-052",
+      "evidence_fact_ids": [
+        "ACCESS-052"
+      ]
+    },
+    {
+      "id": "ACCESS-R069",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F10",
+      "to": "ACCESS-053",
+      "evidence_fact_ids": [
+        "ACCESS-053"
+      ]
+    },
+    {
+      "id": "ACCESS-X001",
+      "type": "CALLS",
+      "from": "ACCESS-048",
+      "to": "ACCESS-015",
+      "evidence_fact_ids": [
+        "ACCESS-048",
+        "ACCESS-015"
+      ]
+    },
+    {
+      "id": "ACCESS-X002",
+      "type": "UI_CALLS_API",
+      "from": "ACCESS-015",
+      "to": "ACCESS-013",
+      "evidence_fact_ids": [
+        "ACCESS-015",
+        "ACCESS-013"
+      ]
+    },
+    {
+      "id": "ACCESS-X003",
+      "type": "API_EXPOSES_CAPABILITY",
+      "from": "ACCESS-013",
+      "to": "F09",
+      "evidence_fact_ids": [
+        "ACCESS-013"
+      ]
+    },
+    {
+      "id": "ACCESS-X004",
+      "type": "API_EXPOSES_CAPABILITY",
+      "from": "ACCESS-031",
+      "to": "F23",
+      "evidence_fact_ids": [
+        "ACCESS-031"
+      ]
+    },
+    {
+      "id": "ACCESS-X005",
+      "type": "CALLS",
+      "from": "ACCESS-047",
+      "to": "ACCESS-014",
+      "evidence_fact_ids": [
+        "ACCESS-047",
+        "ACCESS-014"
+      ]
+    },
+    {
+      "id": "ACCESS-X006",
+      "type": "CALLS",
+      "from": "ACCESS-048",
+      "to": "ACCESS-014",
+      "evidence_fact_ids": [
+        "ACCESS-048",
+        "ACCESS-014"
+      ]
+    },
+    {
+      "id": "ACCESS-X007",
+      "type": "CALLS",
+      "from": "ACCESS-005",
+      "to": "ACCESS-004",
+      "evidence_fact_ids": [
+        "ACCESS-005",
+        "ACCESS-004"
+      ]
+    },
+    {
+      "id": "ACCESS-X008",
+      "type": "CALLS",
+      "from": "ACCESS-005",
+      "to": "ACCESS-002",
+      "evidence_fact_ids": [
+        "ACCESS-005",
+        "ACCESS-002"
+      ]
+    },
+    {
+      "id": "ACCESS-X009",
+      "type": "CALLS",
+      "from": "ACCESS-005",
+      "to": "ACCESS-056",
+      "evidence_fact_ids": [
+        "ACCESS-005",
+        "ACCESS-056"
+      ]
+    },
+    {
+      "id": "ACCESS-X010",
+      "type": "CALLS",
+      "from": "ACCESS-056",
+      "to": "ACCESS-007",
+      "evidence_fact_ids": [
+        "ACCESS-056",
+        "ACCESS-007"
+      ]
+    },
+    {
+      "id": "ACCESS-X011",
+      "type": "CALLS",
+      "from": "ACCESS-017",
+      "to": "ACCESS-011",
+      "evidence_fact_ids": [
+        "ACCESS-017",
+        "ACCESS-011"
+      ]
+    },
+    {
+      "id": "ACCESS-X012",
+      "type": "CALLS",
+      "from": "ACCESS-017",
+      "to": "ACCESS-054",
+      "evidence_fact_ids": [
+        "ACCESS-017",
+        "ACCESS-054"
+      ]
+    },
+    {
+      "id": "ACCESS-X013",
+      "type": "CALLS",
+      "from": "ACCESS-055",
+      "to": "ACCESS-019",
+      "evidence_fact_ids": [
+        "ACCESS-055",
+        "ACCESS-019"
+      ]
+    },
+    {
+      "id": "ACCESS-X014",
+      "type": "CALLS",
+      "from": "ACCESS-035",
+      "to": "ACCESS-036",
+      "evidence_fact_ids": [
+        "ACCESS-035",
+        "ACCESS-036"
+      ]
+    },
+    {
+      "id": "ACCESS-X015",
+      "type": "CAPABILITY_READS_WRITES_DATA",
+      "from": "F08",
+      "to": "ACCESS-004",
+      "evidence_fact_ids": [
+        "ACCESS-004"
+      ]
+    },
+    {
+      "id": "ACCESS-X016",
+      "type": "CAPABILITY_READS_WRITES_DATA",
+      "from": "F10",
+      "to": "ACCESS-052",
+      "evidence_fact_ids": [
+        "ACCESS-052"
+      ]
+    }
+  ],
+  "doc_type": "static_knowledge",
+  "version": "0.1",
+  "status": "static_verified",
+  "output_path": "kb/generated/access.md",
+  "metadata": {
+    "owner": "DataEase维护者",
+    "updated_at": "2026-10-14T02:29:33.213987+00:00",
+    "source_repo": "https://github.com/buccaneermethodology/dataease",
+    "source_revision": "24ffb4c08a7532af26e8cd3966e5e42726a40af4",
+    "source_scope": "当前工作区V3可访问源码；提交定位与文件摘要共同绑定，忽略/本地材料以摘要为准；静态范围",
+    "depends_on_docs": []
+  }
+}

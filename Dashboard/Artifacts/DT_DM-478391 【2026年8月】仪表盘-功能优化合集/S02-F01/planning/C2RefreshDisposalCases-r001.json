@@ -1,0 +1,83 @@
+{
+  "schema_version": "s02_c2_refresh_disposal_cases_v1",
+  "case_set_id": "C2-REFRESH-DISPOSAL-20261027-r001",
+  "status": "candidate_unreviewed",
+  "authority": {
+    "goal_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "goal_sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+    "goal_id": "DE-S02-F01",
+    "phase_order": "P1 UI MVP first; complete original acceptance remains mandatory"
+  },
+  "source_scope": [
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "core/core-frontend/tests/filter-copy-mvp-maps/check.mjs"
+  ],
+  "setup": {
+    "per_case_fresh_component": true,
+    "prepare_result": "success_then_activate",
+    "refresh_when_case_says": "replace strict-preparation instance with normal current instance",
+    "side_effects_allowed": [],
+    "oracle": "per-resource destroy invocation count and current-reference state"
+  },
+  "axes": {
+    "map_fixture": ["map-flow", "map-heat", "map-symbolic", "map-polygon", "bubble-map-polygon", "map-point", "bubble-map-point"],
+    "ordinary_refresh": [false, true],
+    "cleanup_order": ["unmount_then_handle_dispose", "handle_dispose_then_unmount"]
+  },
+  "invariants": [
+    "Each distinct owned instance receives at most one production destroy invocation.",
+    "Without refresh, the prepared/current instance is destroyed once under either order.",
+    "After refresh, the old prepared instance and new current instance are each destroyed once under either order.",
+    "Repeated unmount and handle.dispose after either order do not increase any destroy count.",
+    "The current instance reference is cleared synchronously before its destroy call.",
+    "No query, Store publication, or target mutation is caused by teardown."
+  ],
+  "forbidden_collapses": [
+    "Do not merge old prepared instance and refreshed current instance identities.",
+    "Do not treat a thrown destroy as proof of successful SDK/GPU release.",
+    "Do not treat component doubles as real-browser reachability or vendor SDK acceptance.",
+    "Do not count these cases as chart-type denominator coverage."
+  ],
+  "expected_red": {
+    "case_ids": ["C2-RD-001", "C2-RD-002", "C2-RD-003", "C2-RD-004", "C2-RD-005", "C2-RD-006", "C2-RD-007"],
+    "fingerprint": "refreshed + unmount_then_handle_dispose causes current instance destroyCount=2",
+    "expected_assertion_failures": 7,
+    "execution_errors": 0
+  },
+  "builder_constraints": {
+    "contract_and_cases_write_excluded": true,
+    "no_goal_or_authority_changes": true,
+    "no_permission_stub_substitution": true,
+    "no_scope_expansion": true
+  },
+  "cases": [
+    {"case_id":"C2-RD-001","fixture":"map-flow","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-002","fixture":"map-heat","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-003","fixture":"map-symbolic","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-004","fixture":"map-polygon","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-005","fixture":"bubble-map-polygon","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-006","fixture":"map-point","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-007","fixture":"bubble-map-point","refresh":true,"order":"unmount_then_handle_dispose","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-008","fixture":"map-flow","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-009","fixture":"map-heat","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-010","fixture":"map-symbolic","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-011","fixture":"map-polygon","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-012","fixture":"bubble-map-polygon","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-013","fixture":"map-point","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-014","fixture":"bubble-map-point","refresh":false,"order":"unmount_then_handle_dispose","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-015","fixture":"map-flow","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-016","fixture":"map-heat","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-017","fixture":"map-symbolic","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-018","fixture":"map-polygon","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-019","fixture":"bubble-map-polygon","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-020","fixture":"map-point","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-021","fixture":"bubble-map-point","refresh":true,"order":"handle_dispose_then_unmount","expected_counts":[1,1],"expected_current_ref":null},
+    {"case_id":"C2-RD-022","fixture":"map-flow","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-023","fixture":"map-heat","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-024","fixture":"map-symbolic","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-025","fixture":"map-polygon","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-026","fixture":"bubble-map-polygon","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-027","fixture":"map-point","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null},
+    {"case_id":"C2-RD-028","fixture":"bubble-map-point","refresh":false,"order":"handle_dispose_then_unmount","expected_counts":[1],"expected_current_ref":null}
+  ]
+}

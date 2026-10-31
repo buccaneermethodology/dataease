@@ -1,0 +1,285 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-authority-materials-preparation-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "那么，请准备这些权威材料",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "整理当前可核实的源码事实与尚缺的维护者/隔离环境权威材料，提供不含秘密的填写模板并接续S02执行台账；不推断未知身份、权限、fencing或可信时间策略。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsRequest-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/AuthorityMaterialIntakeTemplate-r001.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码或现有DG-02候选",
+      "生成或声称存在真实权限实现/身份代际/fencing/可信时间权威",
+      "写入密码、Token、私有仓库源码或机密连接信息",
+      "使用standalone、mock或admin替代真实权限验证",
+      "改变Goal分母、Scope Delta或第三轮finding disposition",
+      "启动DG-02第四轮评审/论证"
+    ],
+    "maximum_claim": "只声明已准备一份来源可追溯的权威材料请求包及空白intake模板；不声明权威材料已取得、设计冻结、Builder准入、产品行为、权限验证或Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "preserve the full Goal denominator and completion rule",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "bind this preparation to the user request and prior authorization boundaries",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r003.md",
+      "revision": "d1e8578f22d6958cd3ddde03bdf7dfd621658318a4a7e47f39e4efa769476050",
+      "domains": [
+        "authority",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "authoritative inventory of the third-round unresolved findings and evidence needed",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r004.md",
+      "revision": "e3eafb37c88a1c4d92bbdb815da35d5ea8602cd54ed252ec472ab6361cf25ae6",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "identify the reviewed candidate; do not create or imply r005",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "validation",
+        "dependency"
+      ],
+      "reason": "current isolation/provider/account readiness and safe setup boundary",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "current S01/F01 conditional entry boundary",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r316.json",
+      "revision": "a7ce5d3b89cf0f705980426d8ff42601931e0fc63528fcfd446a72d9762e0a4c",
+      "domains": [
+        "topology",
+        "claim ceiling"
+      ],
+      "reason": "current active lane, review cap, and external dependencies",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "f3b43e6b2107e66c3e2e96eb3f56ee39d7226f7d4143acab34adbdc35ea5ee8d",
+      "domains": [
+        "dashboard state",
+        "dependency"
+      ],
+      "reason": "append-only task history and full 10/26/16 denominator",
+      "applicability": "authority material intake and current blocker refresh"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/AuthApi.java",
+      "revision": "f51dd4cdd76b28c4e9618eb06aba08a42c2b1db916568aa6d343098aabd5d06d",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "source contract only; read/save permission API signatures",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/InteractiveAuthApi.java",
+      "revision": "4689e9ec1eaf1c9573462de71e4290a2b0e0ce464094fff21f2da36cf01fe63d",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "source contract only; permission check signatures",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/ResourceAuthApi.java",
+      "revision": "4555a5fcd67e83f7f27fcc4cc6b1fc512c039cfdf41d71de4a68ea666dfec06c",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "source contract only; resource subject query signatures",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/user/SubstituteUserServer.java",
+      "revision": "d1ad0833e7b8e1c8604cc8f26bb9fb9fff80c22836441513f89ed60d04b49d1a",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "standalone fallback behavior; never treat as real multi-user authorization",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/login/SubstituleLoginServer.java",
+      "revision": "88bc3cd9e72697e72726f25dfde3adaae9d2331ffc8902356a316fd08c383ad4",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "standalone fallback login/logout/token behavior; never treat as real session authority",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "frontend cached user identity fields and local clear behavior",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-frontend/src/utils/logout.ts",
+      "revision": "878cb98f412c6c9263d615aaa59a1b7eb6aeaa18c41259f09861a517897d3434",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "frontend logout path and local cleanup behavior",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatabaseTimeManage.java",
+      "revision": "87cc563d477754329cc530e948a3cf491a7812698c8bcf0fd6f915bfd99ecdd8",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "database timestamp helper definition; not evidence of clipboard trusted time",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+      "revision": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "current call site showing database time used for datasource scheduler status",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+      "revision": "579bfaf261b3d9a2325554f2e21f6ac44c7bd3a66f611661d97bcd05188de844",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "pure TTL comparison semantics only; no trusted clock source",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    },
+    {
+      "path": ".gitmodules",
+      "revision": "720091481e34953421f42c136418c8c59852e77a4225cbab6974678554e63ca4",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "declared de-xpack gitlink URL; not proof of access or implementation availability",
+      "applicability": "prepare source-grounded evidence map; source observation does not substitute for product authority"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "AUTH-MATERIAL-SOURCE-ARRIVES",
+      "condition": "维护者提供权限模块/已授权隔离环境的可核验来源",
+      "action": "核验仓库/版本/POM/运行Profile与实际服务端读写权限边界，并绑定可信证据",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "AUTH-MATERIAL-SCHEMA-CHANGE",
+      "condition": "Goal、Review r003、S01 Entry Packet或源码输入摘要发生变化",
+      "action": "扩展required read set并重建本包的来源/阻塞映射；不追加DG-02评审轮次",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "preservation_statement": "完整保留原始10项Goal AC、26项must-have、16项产品义务；文档只准备外部证据入口，不将未知标成通过。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_documentary_preparation",
+    "reason": "单Agent只整理已经审查的authority gaps及可访问源码事实；不委派、不实施产品语义、不做第四轮评审。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-query-cascade-identity-rebinding-review-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立审查一个精确有界的查询级联身份重绑纯函数候选，判断case/source mapping和Builder entry readiness；保留原Goal分母及真实权限阻塞。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读复核CascadeIdentityRebindingDesign-r001及fixtures、QueryCascade/Select源码和原始Goal约束；给出可实现性与独立设计结论。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/CascadeIdentityRebindingDesignReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改设计、fixtures或产品源码",
+      "把纯函数准入升级为产品适配、UI或权限实现",
+      "缩减10项Goal AC或16项产品义务"
+    ],
+    "maximum_claim": "仅独立审查有限纯级联身份重绑设计及实现准入；不代表产品功能、权限验证或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r001.md",
+      "applicability": "independent design review input",
+      "reason": "verify source-grounded design, original authority, implementation boundaries and claim ceiling",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "revision": "da3d7e54c840a007eec1587bc803934285332539190c9ff50ce8ab34243acd25"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r001.json",
+      "applicability": "independent design review input",
+      "reason": "verify source-grounded design, original authority, implementation boundaries and claim ceiling",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "revision": "69209c937438745dcb14e0a811b7f1a9a027c12eac05fae406d0e1c35fce5517"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGaps.json",
+      "revision": "0a6e1718b0cad911c479ed7faef73664d0bf9d565383d36e226df23f93ec410c",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaDiscovery-r002.md",
+      "revision": "f3cdef883e90eea8750f97c511a6a1960868296d7dc28355c0e471c89045afb9",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeMatrix-r002.md",
+      "revision": "04656b366beffab8f99826efcf2a835d24c7a6ee1f53ea911896b9702a046804",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+      "revision": "9278dfa7490a43bdc13f1d1fa7c9165ed578d48ca6c955b74af00f880c72c765",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+      "revision": "c761633b315dde7463c635999dcdf34a14941c1fe56804e1148acdc2aa789c61",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignReview-r005.md",
+      "revision": "551fafabfeb597790800f673f1b9402a0457a4e7675073deb1aafa27e6b86564",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterShapeReview-r002.md",
+      "revision": "5a5569efafd9b8a4a5ce912b54c22d33842995c7e40b76c55b6d35f4ae9e6124",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryReferencePipelineDesignReview-r001.md",
+      "applicability": "independent design review input",
+      "reason": "verify source-grounded design, original authority, implementation boundaries and claim ceiling",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "revision": "fb87206aefc67022a2289ccab90d947f93ffdc43cd6415c7ab28d70bdde39070"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPIPE-001-Validation-r001.md",
+      "revision": "e5cc1d01c0a6287b79f09d8d2c01c098112c1d28cd8686f2974b2f554875aae8",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "revision": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/copy.ts",
+      "revision": "0586a15314c00206be53f585d598204cc481f5d6cd48e3699c681a27b8b4ce16",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+      "revision": "9c0d15e3ad7a383c65c2e4af6a23c2377c064d4f7b30906990536b3dd94b0285",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts",
+      "revision": "c234fc3ca42cecdc59aa5c9a5414eb7904837e6bd23da8a64fa178a999386b1a",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-pipeline.ts",
+      "revision": "7066211a16f981cbd05df0c5e41d97f2d01b445b397c948f9ce2344ae34b9d10",
+      "applicability": "source-grounded adapter design input",
+      "reason": "确认现存输入形态、身份、节点/字段和事务入口的真实契约",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r002.md",
+      "revision": "b8b88c2817c1e616dcce6319e9c59fb90123bc4e4c5a22774326acd3c5f883ea",
+      "applicability": "delta review input",
+      "reason": "verify r002 repair or inherited accepted design against source and review",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r002.json",
+      "revision": "40a0f6702aeb28195a840a1886b051bdca63b7cf7178471d8637e7496ef17e12",
+      "applicability": "delta review input",
+      "reason": "verify r002 repair or inherited accepted design against source and review",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r001.md",
+      "revision": "46b4b20e0e185ddb56eeb5ea53030386732e4faea2e0adab7ec04c1937c5ef77",
+      "applicability": "delta review input",
+      "reason": "verify r002 repair or inherited accepted design against source and review",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesign-r007.md",
+      "revision": "bf67232e7a54d7a92e7eff866182298fe0b151f01edec5293286add96aeee47f",
+      "applicability": "delta review input",
+      "reason": "verify r002 repair or inherited accepted design against source and review",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CascadeIdentityRebindingDesign-r001.md",
+      "revision": "fbd39a595c1efba93029132e43c6ba36aa023253b2404267bd7498825221c081",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CascadeIdentityRebindingFixtures-r001.json",
+      "revision": "ef29e826d412810da0c1bf09703586cee7465dc93a7ee5ce15e93bf68eb5b277",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "revision": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r002.md",
+      "revision": "b8b88c2817c1e616dcce6319e9c59fb90123bc4e4c5a22774326acd3c5f883ea",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r002.md",
+      "revision": "a2fb345e0af77809197b309b6f1c88106f1179e861a15dc86fd333cefd017372",
+      "applicability": "independent design review input",
+      "reason": "verify exact input/output contract, source field lifecycle and authority boundary",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_contract_gap",
+      "condition": "字段生命周期、复杂shape或产品提交入口不能从当前源码证明",
+      "mode": "deterministic",
+      "action": "记录具体缺口并将产品Builder readiness判为NOT_READY",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_ambiguity",
+      "condition": "多个合法解释影响完整复制或既有Goal oracle",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "分别呈现候选及其证据，不替Goal选择未授权规则",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "完整10项Goal AC、16项产品义务和真实权限未验证状态保持不变。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "用户要求独立审查高语义风险的查询产品适配候选。",
+    "route": "independent_semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "Goal完整分母",
+    "设计和fixtures摘要",
+    "查询配置实际源码链",
+    "QPIPE边界与此前独立复核",
+    "产品准入及权限缺口"
+  ],
+  "output_refs": null
+}

@@ -1,0 +1,915 @@
+{
+  "schema_version": "query_schema_lifecycle_fixtures_v1",
+  "artifact_id": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-r002",
+  "status": "candidate_revision_pending_independent_review",
+  "claim_ceiling": "源码派生的字段生命周期及事务边界候选；不是完整产品schema、实现或运行验收。",
+  "goal_denominator": {
+    "goal_acceptance_criteria": 10,
+    "must_haves": 26,
+    "product_obligations": 16,
+    "permissions": "BLOCKED / NOT_RUN"
+  },
+  "identity_domains": [
+    {
+      "kind": "canvas_component",
+      "example": "component-src -> component-target",
+      "mapping": "authority-provided unique component id map"
+    },
+    {
+      "kind": "query_condition",
+      "example": "condition-src -> condition-target",
+      "mapping": "fresh unique target condition id"
+    },
+    {
+      "kind": "dataset_query_field",
+      "example": [
+        "dataset-src",
+        "query-src",
+        "field-src"
+      ],
+      "mapping": "three independent authority-provided id maps"
+    },
+    {
+      "kind": "cascade_node",
+      "example": "cascade-src -> cascade-target",
+      "mapping": "fresh unique target node id"
+    },
+    {
+      "kind": "component_key",
+      "example": "checkedFieldsMap[component-src]",
+      "mapping": "target component id map; never a display name"
+    }
+  ],
+  "cases": [
+    {
+      "id": "QSL-001",
+      "purpose": "rebind the minimal supported select configuration while discarding source runtime selection",
+      "status": "candidate_oracle",
+      "input": {
+        "condition": {
+          "id": "condition-src",
+          "name": "Region",
+          "dataset": {
+            "id": "dataset-src"
+          },
+          "field": {
+            "id": "field-src",
+            "name": "Region"
+          },
+          "displayId": "field-src",
+          "displayType": "0",
+          "multiple": false,
+          "defaultValueCheck": true,
+          "defaultValue": "north",
+          "selectValue": "south",
+          "mapValue": [
+            "source-mapped"
+          ],
+          "checkedFields": [
+            "component-src"
+          ],
+          "checkedFieldsMap": {
+            "component-src": "field-src"
+          }
+        },
+        "identity_map": {
+          "condition-src": "condition-target",
+          "dataset-src": "dataset-target",
+          "field-src": "field-target",
+          "component-src": "component-target"
+        },
+        "target_enum": [
+          "north",
+          "east"
+        ]
+      },
+      "expected": {
+        "condition": {
+          "id": "condition-target",
+          "defaultValueCheck": true,
+          "defaultValue": "north",
+          "selectValue": "<target-initialized>",
+          "mapValue": "<recomputed-from-target-enum>",
+          "dataset.id": "dataset-target",
+          "field.id": "field-target",
+          "displayId": "field-target",
+          "checkedFields": [
+            "component-target"
+          ],
+          "checkedFieldsMap": {
+            "component-target": "field-target"
+          }
+        },
+        "source_runtime_values_copied": false,
+        "status_limit": "仅源码候选；对本设计不运行产品适配器"
+      }
+    },
+    {
+      "id": "QSL-002",
+      "purpose": "preserve a dynamic time rule without freezing a computed absolute date",
+      "status": "partial_oracle",
+      "input": {
+        "condition": {
+          "displayType": "7",
+          "timeType": "dynamic",
+          "relativeToCurrentRange": "last-7-days",
+          "timeNum": 7,
+          "relativeToCurrentType": "day",
+          "arbitraryTime": "<source-runtime-date>",
+          "selectValue": [
+            "<source-start>",
+            "<source-end>"
+          ]
+        }
+      },
+      "expected": {
+        "rule_fields": "KEEP when the target supports the same time shape",
+        "computed_selectValue": "RESET",
+        "unsupported_target": "REJECT",
+        "full_nested_timeRange_schema": "unknown"
+      }
+    },
+    {
+      "id": "QSL-003",
+      "purpose": "rebind a composite cascade reference and assign an independent node identity",
+      "status": "candidate_oracle",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "node-src",
+              "datasetId": "dataset-src--condition-src--field-src",
+              "fieldId": "field-src",
+              "name": "Region",
+              "selectValue": [
+                "south"
+              ],
+              "currentSelectValue": [
+                "south"
+              ]
+            }
+          ]
+        ],
+        "identity_map": {
+          "dataset-src": "dataset-target",
+          "condition-src": "condition-target",
+          "field-src": "field-target"
+        }
+      },
+      "expected": {
+        "cascade": [
+          [
+            {
+              "id": "<fresh-node-id>",
+              "datasetId": "dataset-target--condition-target--field-target",
+              "fieldId": "field-target",
+              "name": "<target-authority-label>",
+              "selectValue": "<target-initialized>",
+              "currentSelectValue": "<target-runtime-initialized>"
+            }
+          ]
+        ],
+        "whole_json_string_replacement_allowed": false
+      }
+    },
+    {
+      "id": "QSL-004",
+      "purpose": "reject a missing field mapping",
+      "status": "candidate_oracle",
+      "input": {
+        "condition": {
+          "id": "condition-src",
+          "field": {
+            "id": "field-src"
+          }
+        },
+        "identity_map": {
+          "condition-src": "condition-target"
+        }
+      },
+      "expected": {
+        "result": "REJECT",
+        "reason": "MISSING_FIELD_MAPPING",
+        "target_mutation": false,
+        "history_append": false,
+        "preview_or_query": false
+      }
+    },
+    {
+      "id": "QSL-005",
+      "purpose": "reject ambiguous duplicate identity mapping",
+      "status": "candidate_oracle",
+      "input": {
+        "condition": {
+          "id": "condition-src",
+          "field": {
+            "id": "field-src"
+          }
+        },
+        "identity_map": {
+          "field-src": [
+            "field-target-a",
+            "field-target-b"
+          ]
+        }
+      },
+      "expected": {
+        "result": "REJECT",
+        "reason": "AMBIGUOUS_IDENTITY",
+        "target_mutation": false
+      }
+    },
+    {
+      "id": "QSL-006",
+      "purpose": "reject a malformed composite reference rather than guessing by label",
+      "status": "candidate_oracle",
+      "input": {
+        "cascade": [
+          [
+            {
+              "datasetId": "dataset-src--condition-src",
+              "fieldId": "field-src",
+              "name": "Region"
+            }
+          ]
+        ]
+      },
+      "expected": {
+        "result": "REJECT",
+        "reason": "MALFORMED_OR_AMBIGUOUS_COMPOSITE_ID",
+        "name_based_fallback": false,
+        "target_mutation": false
+      }
+    },
+    {
+      "id": "QSL-007",
+      "purpose": "preserve default intent but surface a default missing from target enum",
+      "status": "candidate_oracle",
+      "input": {
+        "condition": {
+          "defaultValueCheck": true,
+          "defaultValue": "south",
+          "selectValue": "south"
+        },
+        "target_enum": [
+          "north",
+          "east"
+        ]
+      },
+      "expected": {
+        "default_rule": "KEEP_AS_INTENT",
+        "runtime_select": "RESET",
+        "observation": "retain configured value and display invalid when absent from target enum",
+        "confirmation": "BLOCK until the candidate is resolved",
+        "target_state_before_resolution": "unchanged",
+        "history_preview_query_effects_before_resolution": 0,
+        "scope_note": "This target-default migration rule is distinct from the separately user-authorized single late-response C verification."
+      }
+    },
+    {
+      "id": "QSL-008",
+      "purpose": "reject unknown persisted or historical keys until a versioned policy exists",
+      "status": "candidate_boundary",
+      "input": {
+        "condition": {
+          "id": "condition-src",
+          "field": {
+            "id": "field-src"
+          },
+          "legacyExtensionV": {
+            "opaque": true
+          }
+        },
+        "schema_revision": "unknown"
+      },
+      "expected": {
+        "result": "REJECT",
+        "reason": "UNKNOWN_SCHEMA_OR_KEY",
+        "target_propValue_unchanged": true,
+        "target_cascade_unchanged": true,
+        "history_cursor_unchanged": true,
+        "preview_count_unchanged": true,
+        "query_count_unchanged": true,
+        "silent_drop": false,
+        "silent_passthrough": false
+      }
+    },
+    {
+      "id": "QSL-009",
+      "purpose": "parameters remain supported by parent scope and are not silently modeled as ordinary text select",
+      "status": "unknown_requires_source_schema",
+      "input": {
+        "condition": {
+          "displayType": "8",
+          "parameters": [
+            {
+              "opaque": "<real-parameter-shape>"
+            }
+          ],
+          "parametersCheck": true,
+          "parametersList": [
+            "<unknown-versioned-shape>"
+          ]
+        }
+      },
+      "expected": {
+        "parameter_schema": "unknown",
+        "permanent_rejection_of_parameter_shapes": false,
+        "product_builder_admission": "not granted by this fixture"
+      }
+    },
+    {
+      "id": "QSL-010",
+      "purpose": "cycles or broken cascade closure reject as a whole",
+      "status": "candidate_oracle",
+      "input": {
+        "cascade": [
+          [
+            "condition-A -> condition-B",
+            "condition-B -> condition-A"
+          ]
+        ]
+      },
+      "expected": {
+        "result": "REJECT",
+        "reason": "CYCLE_OR_BROKEN_REFERENCE_CLOSURE",
+        "partial_candidate_published": false
+      }
+    },
+    {
+      "id": "QSL-011",
+      "purpose": "revalidate target revision before atomic commit",
+      "status": "candidate_oracle",
+      "input": {
+        "prepared_target_revision": 41,
+        "current_target_revision": 42,
+        "prepared_candidate": {
+          "propValue": "<candidate>",
+          "cascade": "<candidate>"
+        }
+      },
+      "expected": {
+        "result": "REJECT_AND_REPREPARE",
+        "target_propValue_unchanged": true,
+        "target_cascade_unchanged": true,
+        "history_append": false,
+        "preview_or_query": false
+      }
+    },
+    {
+      "id": "QSL-012",
+      "purpose": "successful commit publishes both query roots once, then requests one preview",
+      "status": "design_candidate_requires_runtime_validation",
+      "input": {
+        "prepared_revision": 41,
+        "current_revision": 41,
+        "authorized": "<actual-auth-check-required>",
+        "candidate": {
+          "propValue": "<complete-value>",
+          "cascade": "<complete-cascade>"
+        }
+      },
+      "expected": {
+        "publication": "single synchronous state action",
+        "revision": 42,
+        "history_append_count": 1,
+        "preview_or_query_count": 1,
+        "repeat_callback_effect": 0,
+        "vue_runtime_atomicity": "not proven"
+      }
+    },
+    {
+      "id": "QSL-013",
+      "purpose": "permission denial blocks candidate preparation/commit without substituting a mock",
+      "status": "acceptance_blocked_not_run",
+      "input": {
+        "actor": "readonly-user",
+        "permission_evidence": "unavailable-real-multiuser-environment"
+      },
+      "expected": {
+        "result": "NOT_RUN",
+        "standalone_admin_or_mock_substitution": false,
+        "goal_permission_claim": "BLOCKED / NOT_RUN"
+      }
+    },
+    {
+      "id": "QSL-014",
+      "purpose": "unknown options and checked-field extensions must be discovered before freezing a whitelist",
+      "status": "unknown_requires_expanded_source_read",
+      "input": {
+        "condition": {
+          "optionFilter": "<versioned-rule>",
+          "checkedFieldsMapArrCustom": "<dynamic-field>"
+        }
+      },
+      "expected": {
+        "schema_knowledge_state": "unknown",
+        "runtime_result": "REJECT",
+        "reason": "UNKNOWN_SCHEMA_OR_KEY",
+        "target_mutation": false,
+        "next_action": "complete producer/consumer/version inventory"
+      }
+    },
+    {
+      "id": "QSL-015",
+      "purpose": "honor the maintainer decision for a late successful enum response when the user changed the single selection to C",
+      "status": "user_authorized_contract_candidate",
+      "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md#QOBS-ASYNC-01",
+      "input": {
+        "initial_enum_response": "does not contain C",
+        "user_selection": "C",
+        "source_raw_revision_request_identity": "still current",
+        "verification_request": "one additional enum request"
+      },
+      "expected": {
+        "verification_request_count": 1,
+        "loading": "ends when the verification response settles",
+        "if_C_present": "refresh enum and keep C valid",
+        "if_C_absent": "keep C and render it as invalid; do not silently clear it",
+        "repeat_verification": "none",
+        "query_side_effect": "none from observation alone"
+      }
+    }
+  ],
+  "review_findings_addressed": {
+    "QSLR-01": "exact known default field inventory added; unknown semantics reject before write",
+    "QSLR-02": "not closed; this remains a broad discovery matrix and does not admit a product adapter",
+    "QSLR-03": "late C policy fixed from user decision; missing target default remains invalid and blocks candidate confirmation",
+    "QSLR-04": "unknown key now has one execution result UNKNOWN_SCHEMA_OR_KEY then REJECT before write"
+  },
+  "known_default_field_inventory": [
+    {
+      "path": "id",
+      "semantic": "condition identity; allocate fresh unique target ID",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "name",
+      "semantic": "user-facing condition label; never an identity key",
+      "candidate_action": "KEEP",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "showError",
+      "semantic": "known default key without enough consumer evidence for all shapes",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "timeGranularity",
+      "semantic": "time rule granularity",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "timeGranularityMultiple",
+      "semantic": "time range granularity",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "field",
+      "semantic": "authoritative dataset field object rebuilt from target IDs",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "displayId",
+      "semantic": "target display field ID",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "sortId",
+      "semantic": "target sort field ID",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "sort",
+      "semantic": "sort direction/configuration",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultMapValue",
+      "semantic": "configured default mapping against target enum",
+      "candidate_action": "KEEP_AND_REVALIDATE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "mapValue",
+      "semantic": "derived current mapping value",
+      "candidate_action": "RESET",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "conditionType",
+      "semantic": "condition control subtype",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "conditionValueOperatorF",
+      "semantic": "first condition operator",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "conditionValueF",
+      "semantic": "first configured condition value",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "conditionValueOperatorS",
+      "semantic": "second condition operator",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "conditionValueS",
+      "semantic": "second configured condition value",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultConditionValueOperatorF",
+      "semantic": "first default condition operator",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultConditionValueF",
+      "semantic": "first default condition value",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultConditionValueOperatorS",
+      "semantic": "second default condition operator",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultConditionValueS",
+      "semantic": "second default condition value",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "timeType",
+      "semantic": "fixed/dynamic rule mode",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "relativeToCurrent",
+      "semantic": "relative time rule",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "required",
+      "semantic": "required-field policy",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "timeNum",
+      "semantic": "relative time amount",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "relativeToCurrentType",
+      "semantic": "relative time unit",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "around",
+      "semantic": "relative time boundary direction",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "parametersStart",
+      "semantic": "parameter boundary semantics not established",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "parametersEnd",
+      "semantic": "parameter boundary semantics not established",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "arbitraryTime",
+      "semantic": "fixed time rule input; not a computed runtime result",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "timeNumRange",
+      "semantic": "relative range amount",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "relativeToCurrentTypeRange",
+      "semantic": "relative range unit",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "aroundRange",
+      "semantic": "relative range direction",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "arbitraryTimeRange",
+      "semantic": "range rule input",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "auto",
+      "semantic": "known default key without enough consumer evidence for all shapes",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultValue",
+      "semantic": "configured default intent; target enum must validate it",
+      "candidate_action": "KEEP_AND_REVALIDATE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "selectValue",
+      "semantic": "runtime selected value",
+      "candidate_action": "RESET",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "optionValueSource",
+      "semantic": "value source mode; target capability must support it",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "valueSource",
+      "semantic": "source descriptor shape/version not proven",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "dataset",
+      "semantic": "authoritative target dataset descriptor rebuilt by ID",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "visible",
+      "semantic": "visibility configuration",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "defaultValueCheck",
+      "semantic": "whether configured default is active",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "multiple",
+      "semantic": "single/multiple mode",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "displayType",
+      "semantic": "query display shape; unsupported target rejects",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "checkedFields",
+      "semantic": "target component mapping IDs",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "parameters",
+      "semantic": "nested parameter schema/version not established",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "parametersCheck",
+      "semantic": "parameter-enabled flag only after shape support",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "parametersList",
+      "semantic": "nested parameter list schema/version not established",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "checkedFieldsMap",
+      "semantic": "component keys and field IDs both mapped by authoritative IDs",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:8-65"
+    },
+    {
+      "path": "hideConditionSwitching",
+      "semantic": "control display configuration",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "resultMode",
+      "semantic": "enum/result mode configuration",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "relativeToCurrentRange",
+      "semantic": "relative time range rule",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "timeRange",
+      "semantic": "nested dynamic window rule; inspect every child key",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "setTimeRange",
+      "semantic": "time range editor/configuration flag",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "showEmpty",
+      "semantic": "empty option visibility",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "defaultNumValueStart",
+      "semantic": "configured numeric range start",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "defaultNumValueEnd",
+      "semantic": "configured numeric range end",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "numValueEnd",
+      "semantic": "runtime numeric range end input",
+      "candidate_action": "RESET",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "numValueStart",
+      "semantic": "runtime numeric range start input",
+      "candidate_action": "RESET",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "displayFormat",
+      "semantic": "display format",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "oldTreeLoad",
+      "semantic": "legacy tree compatibility flag without version policy",
+      "candidate_action": "UNKNOWN_SCHEMA_OR_KEY then REJECT",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "treeDatasetId",
+      "semantic": "target tree dataset identity",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "treeCheckedList",
+      "semantic": "runtime tree selection",
+      "candidate_action": "RESET",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "defaultValueFirstItem",
+      "semantic": "default-first-item policy evaluated on target options",
+      "candidate_action": "KEEP_AND_REVALIDATE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    },
+    {
+      "path": "treeFieldList",
+      "semantic": "target tree field IDs",
+      "candidate_action": "REBIND",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:80-137"
+    }
+  ],
+  "nested_time_range_field_inventory": [
+    {
+      "path": "timeRange.intervalType",
+      "semantic": "time-window interval mode",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.dynamicWindow",
+      "semantic": "dynamic window flag",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.maximumSingleQuery",
+      "semantic": "maximum query window configuration",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.regularOrTrends",
+      "semantic": "time window mode",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.regularOrTrendsValue",
+      "semantic": "time window value",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.relativeToCurrent",
+      "semantic": "relative time rule",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.timeNum",
+      "semantic": "relative time amount",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.relativeToCurrentType",
+      "semantic": "relative unit",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.around",
+      "semantic": "relative boundary direction",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.timeNumRange",
+      "semantic": "relative range amount",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.relativeToCurrentTypeRange",
+      "semantic": "relative range unit",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    },
+    {
+      "path": "timeRange.aroundRange",
+      "semantic": "relative range direction",
+      "candidate_action": "KEEP_IF_COMPATIBLE",
+      "source_ref": "core/core-frontend/src/custom-component/v-query/options.ts:119-132"
+    }
+  ],
+  "unknown_key_policy": {
+    "knowledge_state": "unknown",
+    "execution_result": "REJECT",
+    "reason_code": "UNKNOWN_SCHEMA_OR_KEY",
+    "write_point": "before target mutation",
+    "unchanged_on_reject": [
+      "target propValue",
+      "target cascade",
+      "history cursor",
+      "snapshot count",
+      "preview count",
+      "query count"
+    ],
+    "versioned_legacy_exception": "only an independently evidenced version-specific mapping may change this result"
+  }
+}

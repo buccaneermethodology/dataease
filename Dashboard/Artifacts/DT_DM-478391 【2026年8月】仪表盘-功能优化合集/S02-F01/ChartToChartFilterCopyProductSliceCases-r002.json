@@ -1,0 +1,511 @@
+{
+  "schema_version": "s02_chart_to_chart_filter_copy_product_cases_v1",
+  "case_set_id": "S02-F01-CHART-TO-CHART-PRODUCT-001",
+  "revision": "r002",
+  "design_ref": "ChartToChartFilterCopyProductSliceDesign-r002.md",
+  "frozen_for_builder": false,
+  "status": "CANDIDATE_FOR_INDEPENDENT_REVIEW",
+  "goal_digest_ref": "Goal.final.json",
+  "scope_delta": "none",
+  "mvp_matrix": {
+    "source_type": "ordinary-bar",
+    "target_type": "ordinary-line",
+    "target_must_be_empty": true,
+    "dataset_must_match": true
+  },
+  "fixture": {
+    "identity": {
+      "uid": "user-A",
+      "oid": "org-A"
+    },
+    "dataset": {
+      "id": "dataset-1",
+      "fields": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0,
+          "name": "Region"
+        }
+      ]
+    },
+    "source": {
+      "id": "BAR-1",
+      "type": "ordinary-bar",
+      "tableId": "dataset-1",
+      "customFilter": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "tree",
+            "subTree": {
+              "logic": "or",
+              "items": [
+                {
+                  "type": "item",
+                  "fieldId": "FIELD_REGION",
+                  "filterType": "enum",
+                  "term": "in",
+                  "enumValue": [
+                    "North"
+                  ],
+                  "timeType": "year",
+                  "value": "",
+                  "filterTypeTime": "dateValue",
+                  "timeValue": "",
+                  "dynamicTimeSetting": {},
+                  "subTree": null
+                },
+                {
+                  "type": "item",
+                  "fieldId": "FIELD_REGION",
+                  "filterType": "enum",
+                  "term": "in",
+                  "enumValue": [
+                    "Central"
+                  ],
+                  "timeType": "year",
+                  "value": "",
+                  "filterTypeTime": "dateValue",
+                  "timeValue": "",
+                  "dynamicTimeSetting": {},
+                  "subTree": null
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "fieldList": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0,
+          "name": "Region"
+        }
+      ]
+    },
+    "target": {
+      "id": "LINE-1",
+      "type": "ordinary-line",
+      "tableId": "dataset-1",
+      "fields": [
+        {
+          "id": "FIELD_REGION",
+          "deType": 0
+        }
+      ],
+      "customFilter": {
+        "logic": "and",
+        "items": []
+      }
+    },
+    "expected_rows": [
+      "row-North-1",
+      "row-Central-1"
+    ],
+    "unexpected_rows": [
+      "row-South-1"
+    ],
+    "expected_filter_payload": {
+      "schemaVersion": 1,
+      "logic": "and",
+      "items": [
+        {
+          "type": "tree",
+          "subTree": {
+            "logic": "or",
+            "items": [
+              {
+                "type": "item",
+                "fieldId": "FIELD_REGION",
+                "filterType": "enum",
+                "term": "in",
+                "enumValue": [
+                  "North"
+                ],
+                "timeType": "year",
+                "value": "",
+                "filterTypeTime": "dateValue",
+                "timeValue": "",
+                "dynamicTimeSetting": {},
+                "subTree": null
+              },
+              {
+                "type": "item",
+                "fieldId": "FIELD_REGION",
+                "filterType": "enum",
+                "term": "in",
+                "enumValue": [
+                  "Central"
+                ],
+                "timeType": "year",
+                "value": "",
+                "filterTypeTime": "dateValue",
+                "timeValue": "",
+                "dynamicTimeSetting": {},
+                "subTree": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "MVP-E2E-001",
+      "kind": "product-ui-e2e",
+      "title": "柱图配置→复制→同数据集空折线图粘贴→预览→保存重开",
+      "actions": [
+        "在来源柱图 UI 配置 FIELD_REGION in North OR FIELD_REGION in Central",
+        "点击专用复制",
+        "打开同 dataset 的普通折线图空目标",
+        "点击专用粘贴",
+        "观察目标 query 和渲染结果",
+        "显式保存且等待 save success",
+        "关闭并重开仪表板"
+      ],
+      "expected": {
+        "source_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "target_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "target_source_tree_deep_independent": true,
+        "same_dataset_api_calls": 1,
+        "same_dataset_api_result": true,
+        "target_logical_calcdata_dispatches": 1,
+        "query_payload_customFilter_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "tree",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "North"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  },
+                  {
+                    "type": "item",
+                    "fieldId": "FIELD_REGION",
+                    "filterType": "enum",
+                    "term": "in",
+                    "enumValue": [
+                      "Central"
+                    ],
+                    "timeType": "year",
+                    "value": "",
+                    "filterTypeTime": "dateValue",
+                    "timeValue": "",
+                    "dynamicTimeSetting": {},
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "rendered_row_ids": {
+          "includes": [
+            "row-North-1",
+            "row-Central-1"
+          ],
+          "excludes": [
+            "row-South-1"
+          ]
+        },
+        "system_clipboard_writes": 0,
+        "autosave_requests": 0,
+        "explicit_save_successes": 1,
+        "reopened_target_tree_equals": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "FIELD_REGION",
+              "filterType": "enum",
+              "deType": 0,
+              "term": "in",
+              "enumValue": [
+                "North"
+              ],
+              "value": "",
+              "timeType": "year",
+              "filterTypeTime": "dateValue",
+              "timeValue": "",
+              "dynamicTimeSetting": {},
+              "subTree": null
+            }
+          ]
+        },
+        "source_and_other_charts_unchanged": true
+      },
+      "forbidden": [
+        "helper-only completion",
+        "partial target tree",
+        "system clipboard",
+        "auto save",
+        "claim permission acceptance"
+      ]
+    },
+    {
+      "id": "MVP-NEG-001",
+      "kind": "sync-negative",
+      "title": "local dataSet ID 不同则不调用 API 且无副作用",
+      "setup": {
+        "target_tableId": "dataset-2"
+      },
+      "expected": {
+        "api_calls": 0,
+        "target_unchanged": true,
+        "clipboard_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null
+      }
+    },
+    {
+      "id": "MVP-NEG-002",
+      "kind": "sync-negative",
+      "title": "same-dataset API reject/timeout/malformed/false 均 fail closed",
+      "variants": [
+        "empty tree",
+        "empty group",
+        "missing fieldId",
+        "unknown target fieldId",
+        "source/target field deType mismatch",
+        "non-enum",
+        "unknown node type",
+        "dynamic time",
+        "malformed JSON",
+        "corrupted storage"
+      ],
+      "expected": {
+        "target_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null
+      }
+    },
+    {
+      "id": "MVP-NEG-003",
+      "kind": "sync-negative",
+      "title": "仅接受冻结的文本单叶过滤树与目标字段",
+      "variants": [
+        "empty tree",
+        "missing fieldId",
+        "unknown target fieldId",
+        "deType mismatch",
+        "non-enum",
+        "multi-leaf",
+        "nested group",
+        "dynamic time",
+        "malformed JSON",
+        "corrupted storage"
+      ],
+      "expected": {
+        "target_unchanged": true,
+        "clipboard_unchanged_on_copy_reject": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "error_message": "过滤条件不匹配，请重新复制"
+      }
+    },
+    {
+      "id": "MVP-NEG-004",
+      "kind": "sync-negative",
+      "title": "身份、组织和 TTL 失效不可消费",
+      "variants": [
+        "50 supported text-enum leaves and exactly 1000000 UTF-8 payload bytes accepted by cap predicate",
+        "51 leaves rejected",
+        "1000001 UTF-8 payload bytes rejected",
+        "multi-byte enum value measured by TextEncoder"
+      ],
+      "expected": {
+        "reject": true,
+        "target_unchanged": true,
+        "snapshot_delta": 0,
+        "query_delta": 0,
+        "save_delta": 0,
+        "success_message": null
+      }
+    },
+    {
+      "id": "MVP-NEG-005",
+      "kind": "sync-negative",
+      "title": "容量正交边界",
+      "variants": [
+        "50 leaves and 1000000 bytes accepted by cap oracle",
+        "51 leaves rejected",
+        "1000001 UTF-8 payload bytes rejected",
+        "multi-byte text measured by TextEncoder"
+      ],
+      "expected": {
+        "no_truncation": true,
+        "previous_clipboard_retained_on_copy_reject": true
+      }
+    },
+    {
+      "id": "MVP-NEG-006",
+      "kind": "async-product-observation",
+      "title": "query 失败不显示预览成功且不写保存",
+      "variants": [
+        "query reject",
+        "query timeout",
+        "stale response after view change"
+      ],
+      "expected": {
+        "target_tree_remains_complete_unsaved": true,
+        "success_message": null,
+        "autosave_requests": 0,
+        "save_requests": 0,
+        "no_mixed_new_tree_old_chart_result": true
+      }
+    },
+    {
+      "id": "MVP-NEG-007",
+      "kind": "product-save-observation",
+      "title": "保存失败与未保存关闭均不伪称重开持久成功",
+      "variants": [
+        "canvasSave failure",
+        "leave without save"
+      ],
+      "expected": {
+        "durable_claim": null,
+        "existing_save_error_visible": true,
+        "autosave_requests": 0
+      }
+    },
+    {
+      "id": "MVP-NEG-008",
+      "kind": "permission-bounded-observation",
+      "title": "现有 editor/save access gates 不绕过，真实角色仍未验证",
+      "variants": [
+        "editor mode hides actions when preview",
+        "server rejects normal canvas save"
+      ],
+      "expected": {
+        "no_direct_backend_write": true,
+        "use_existing_canvas_save": true,
+        "real_permission_status": "BLOCKED_NOT_RUN",
+        "standalone_not_permission_oracle": true
+      }
+    }
+  ],
+  "blocked_claims": [
+    "真实只读用户不得读取/复制/粘贴",
+    "来源读取授权",
+    "目标编辑权实时重验",
+    "撤权与恢复",
+    "真实权限模块",
+    "S01 ORIG-02",
+    "其他图表组合",
+    "非空目标覆盖确认",
+    "普通表/透视表/查询组件",
+    "完整F01 AC",
+    "完整S02 Goal",
+    "非文本/非枚举/动态过滤树"
+  ],
+  "trust_requirements": {
+    "same_identity_red_green": true,
+    "product_ui_e2e_required": true,
+    "builder_must_not_edit_frozen_cases": true,
+    "unit_or_helper_harness_not_sufficient": true
+  }
+}

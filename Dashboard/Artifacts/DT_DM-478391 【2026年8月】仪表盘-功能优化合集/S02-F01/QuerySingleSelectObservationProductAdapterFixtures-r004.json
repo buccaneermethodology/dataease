@@ -1,0 +1,2124 @@
+{
+  "schema_version": "qobs_async_product_adapter_fixtures_v4",
+  "design_ref": "QuerySingleSelectObservationProductAdapterDesign-r004.md",
+  "undefined_encoding": {
+    "$undefined": true,
+    "meaning": "JavaScript undefined only; explicit null remains null"
+  },
+  "request_input": {
+    "queryId": "f-name",
+    "displayId": "f-label",
+    "sort": "asc",
+    "sortId": "",
+    "resultMode": 0,
+    "searchText": "",
+    "filter": [
+      {
+        "fieldId": "parent-id",
+        "operator": "in",
+        "value": [
+          "P1"
+        ]
+      }
+    ]
+  },
+  "case_state_rule": "PA-001..PA-011 initial/expected包含state_schema全部字段，允许逐例附加观测字段；PA-011采用legacy_callback_state扩展，selectedValue为本地ref、configSnapshot.selectValue为配置字段，不强制相等。PA-012单独route_test_schema，不是终态oracle，不受state_schema终态完整性断言。每例独立起始。",
+  "state_schema": [
+    "identity.documentEpoch",
+    "identity.componentRaw",
+    "identity.conditionRaw",
+    "identity.designRevision",
+    "identity.tokenGeneration",
+    "identity.sourceGeneration",
+    "identity.runtimeGeneration",
+    "identity.requestId",
+    "requestInputKey",
+    "selectedValue",
+    "acceptedOptions",
+    "renderOnlyOptions",
+    "validity",
+    "loading",
+    "configSnapshot.id",
+    "configSnapshot.fieldId",
+    "configSnapshot.displayId",
+    "configSnapshot.defaultValue",
+    "configSnapshot.selectValue",
+    "configSnapshot.mapValue",
+    "configSnapshot.cascadeFilter",
+    "effects.enumRequestsStarted",
+    "effects.verificationRequests",
+    "effects.responsesSettled",
+    "effects.observationQueries",
+    "effects.userSelectionQueries",
+    "effects.observationDefaultWrites",
+    "effects.observationMapWrites",
+    "effects.observationCascadeWrites",
+    "effects.releaseSelectCalls"
+  ],
+  "cases": [
+    {
+      "id": "PA-001",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "capturedRequest": {
+        "requestId": 41,
+        "runtimeGeneration": 1,
+        "selectedValue": "A",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "events": [
+        "initial response values [A,X] resolves",
+        "then sync key/identity check",
+        "issue request 42 with exact captured input",
+        "finally 41 cannot close loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        },
+        "nextRequestInput": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "verificationCapture": {
+          "requestId": 42,
+          "runtimeGeneration": 2,
+          "selectedValue": "C"
+        }
+      }
+    },
+    {
+      "id": "PA-002",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "capturedRequest": {
+        "requestId": 42,
+        "runtimeGeneration": 2,
+        "selectedValue": "C",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "events": [
+        "verification response values ['A', 'C', 'X']",
+        "then accepts response",
+        "finally current request closes loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "C",
+          "X"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 2,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "PA-003",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "capturedRequest": {
+        "requestId": 42,
+        "runtimeGeneration": 2,
+        "selectedValue": "C",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "events": [
+        "verification response values ['A', 'X']",
+        "then accepts response",
+        "finally current request closes loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "X"
+        ],
+        "renderOnlyOptions": [
+          {
+            "label": "C — 当前值不在可用选项中",
+            "value": "C",
+            "disabled": true
+          }
+        ],
+        "validity": "invalid",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 2,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "PA-004",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "capturedRequest": {
+        "requestId": 42,
+        "runtimeGeneration": 2,
+        "selectedValue": "C",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "events": [
+        "verification request rejects",
+        "then rejection branch preserves accepted options",
+        "finally current request closes loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [
+          {
+            "label": "C — 当前值尚未核实",
+            "value": "C",
+            "disabled": true
+          }
+        ],
+        "validity": "unverified",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 2,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "PA-005",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "user changes C to D; current value/map are synchronously written by existing user handler",
+        "runtime generation increments; requestId stays 42; old loading ends",
+        "request 42 then/finally resolves late and writes nothing"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 3,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "D",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "D",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 2,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "PA-006",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 3,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "D",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "D",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 2,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "current request 43 starts after D change",
+        "old request 42 then/finally resolves"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 3,
+          "requestId": 43
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "D",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "D",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 3,
+          "verificationRequests": 1,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 2,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "prehistory": "本例起点已发41首次请求与42唯一核对，共2次；41已settled。D选择及其一次用户查询已计入初态；当前事件仅新起43并迟到42，不再计D选择。"
+    },
+    {
+      "id": "PA-007",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "同mount将config raw同步替换为raw-B，sourceGeneration从1增到2；新配置默认B，本地初始B，实际options为[B,C]，其余替换字段按expected.configSnapshot（selectValue在下一事件前为B）",
+        "用户在raw-B主动选择C一次：runtimeGeneration从1到2，userSelectionQueries从0到1，mapValue=[]（本例原始枚举没有C映射）",
+        "新请求42针对raw-B/C发起；同mount requestId从41到42，不重置",
+        "旧请求41 then/finally到达，不写raw-B或其loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-B",
+          "conditionRaw": "raw-B",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 2,
+          "runtimeGeneration": 2,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "B",
+          "C"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "B",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "runtimeMappingRowsAtUserSelection": [
+        {
+          "f-label": "B",
+          "f-name": "B-code"
+        }
+      ]
+    },
+    {
+      "id": "PA-008",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "user clears; local select/config selectValue become JS undefined, mapValue becomes []; runtime generation increments and old loading closes",
+        "request 41 settles late with no writes"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": {
+          "$undefined": true
+        },
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": {
+            "$undefined": true
+          },
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "PA-009",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "请求41已捕获P1；同raw真实cascadeFilter由P1改P2，当前同步请求投影也变P2；Vue watcher尚未执行",
+        "旧41 then从真实当前输入算得P2，与独立capturedRequest.P1不同，零写入",
+        "旧41 finally再次同步算得P2，零写入；此时source/token generation仍1，不能靠generation通过测试",
+        "随后source watcher/invalidation运行，使sourceGeneration与tokenGeneration各1→2并结束旧请求loading；debounce实际发起42(P2)，请求42重新持有loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 2,
+          "sourceGeneration": 2,
+          "runtimeGeneration": 1,
+          "requestId": 42
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P2"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P2"
+        },
+        "effects": {
+          "enumRequestsStarted": 2,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        },
+        "expectedCallbacks": {
+          "request41ThenWrites": 0,
+          "request41FinallyWrites": 0,
+          "request41LoadingWrites": 0,
+          "request42OwnsLoading": true
+        }
+      },
+      "capturedRequest": {
+        "requestId": 41,
+        "sourceGeneration": 1,
+        "runtimeGeneration": 1,
+        "selectedValue": "A",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        }
+      },
+      "observations": [
+        {
+          "at": "same_raw_mutation_completed_before_vue_watcher_or_old_then",
+          "state": {
+            "identity": {
+              "documentEpoch": 1,
+              "componentRaw": "raw-A",
+              "conditionRaw": "raw-A",
+              "designRevision": 1,
+              "tokenGeneration": 1,
+              "sourceGeneration": 1,
+              "runtimeGeneration": 1,
+              "requestId": 41
+            },
+            "requestInputKey": {
+              "queryId": "f-name",
+              "displayId": "f-label",
+              "sort": "asc",
+              "sortId": "",
+              "resultMode": 0,
+              "searchText": "",
+              "filter": [
+                {
+                  "fieldId": "parent-id",
+                  "operator": "in",
+                  "value": [
+                    "P2"
+                  ]
+                }
+              ]
+            },
+            "selectedValue": "A",
+            "acceptedOptions": [
+              "A",
+              "B"
+            ],
+            "renderOnlyOptions": [],
+            "validity": "valid",
+            "loading": true,
+            "configSnapshot": {
+              "id": "q1",
+              "fieldId": "f-name",
+              "displayId": "f-label",
+              "defaultValue": "A",
+              "selectValue": "A",
+              "mapValue": [],
+              "cascadeFilter": "P2"
+            },
+            "effects": {
+              "enumRequestsStarted": 1,
+              "verificationRequests": 0,
+              "responsesSettled": 0,
+              "observationQueries": 0,
+              "userSelectionQueries": 0,
+              "observationDefaultWrites": 0,
+              "observationMapWrites": 0,
+              "observationCascadeWrites": 0,
+              "releaseSelectCalls": 0
+            }
+          },
+          "capturedKeyStill": "P1",
+          "computedCurrentKey": "P2"
+        },
+        {
+          "at": "after_request41_then_before_watcher",
+          "state": {
+            "identity": {
+              "documentEpoch": 1,
+              "componentRaw": "raw-A",
+              "conditionRaw": "raw-A",
+              "designRevision": 1,
+              "tokenGeneration": 1,
+              "sourceGeneration": 1,
+              "runtimeGeneration": 1,
+              "requestId": 41
+            },
+            "requestInputKey": {
+              "queryId": "f-name",
+              "displayId": "f-label",
+              "sort": "asc",
+              "sortId": "",
+              "resultMode": 0,
+              "searchText": "",
+              "filter": [
+                {
+                  "fieldId": "parent-id",
+                  "operator": "in",
+                  "value": [
+                    "P2"
+                  ]
+                }
+              ]
+            },
+            "selectedValue": "A",
+            "acceptedOptions": [
+              "A",
+              "B"
+            ],
+            "renderOnlyOptions": [],
+            "validity": "valid",
+            "loading": true,
+            "configSnapshot": {
+              "id": "q1",
+              "fieldId": "f-name",
+              "displayId": "f-label",
+              "defaultValue": "A",
+              "selectValue": "A",
+              "mapValue": [],
+              "cascadeFilter": "P2"
+            },
+            "effects": {
+              "enumRequestsStarted": 1,
+              "verificationRequests": 0,
+              "responsesSettled": 0,
+              "observationQueries": 0,
+              "userSelectionQueries": 0,
+              "observationDefaultWrites": 0,
+              "observationMapWrites": 0,
+              "observationCascadeWrites": 0,
+              "releaseSelectCalls": 0
+            }
+          },
+          "decision": "captured/current key mismatch; no callback writes"
+        },
+        {
+          "at": "after_request41_finally_before_watcher",
+          "state": {
+            "identity": {
+              "documentEpoch": 1,
+              "componentRaw": "raw-A",
+              "conditionRaw": "raw-A",
+              "designRevision": 1,
+              "tokenGeneration": 1,
+              "sourceGeneration": 1,
+              "runtimeGeneration": 1,
+              "requestId": 41
+            },
+            "requestInputKey": {
+              "queryId": "f-name",
+              "displayId": "f-label",
+              "sort": "asc",
+              "sortId": "",
+              "resultMode": 0,
+              "searchText": "",
+              "filter": [
+                {
+                  "fieldId": "parent-id",
+                  "operator": "in",
+                  "value": [
+                    "P2"
+                  ]
+                }
+              ]
+            },
+            "selectedValue": "A",
+            "acceptedOptions": [
+              "A",
+              "B"
+            ],
+            "renderOnlyOptions": [],
+            "validity": "valid",
+            "loading": true,
+            "configSnapshot": {
+              "id": "q1",
+              "fieldId": "f-name",
+              "displayId": "f-label",
+              "defaultValue": "A",
+              "selectValue": "A",
+              "mapValue": [],
+              "cascadeFilter": "P2"
+            },
+            "effects": {
+              "enumRequestsStarted": 1,
+              "verificationRequests": 0,
+              "responsesSettled": 0,
+              "observationQueries": 0,
+              "userSelectionQueries": 0,
+              "observationDefaultWrites": 0,
+              "observationMapWrites": 0,
+              "observationCascadeWrites": 0,
+              "releaseSelectCalls": 0
+            }
+          },
+          "decision": "key复核仍不匹配；不得关闭loading，等待原source watcher/invalidation负责清理"
+        }
+      ]
+    },
+    {
+      "id": "PA-010",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "capturedRequest": {
+        "requestId": 41,
+        "runtimeGeneration": 1,
+        "selectedValue": "A",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "events": [
+        "request 41 rejects",
+        "adapter marks unverified; no retry; current finally closes loading"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 2,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [
+          {
+            "label": "C — 当前值尚未核实",
+            "value": "C",
+            "disabled": true
+          }
+        ],
+        "validity": "unverified",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "prehistory": "用户A→C发生在initial之前；runtimeGeneration=2及userSelectionQueries=1已包含该事件，events不再次选择C。"
+    },
+    {
+      "id": "PA-011",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [
+            "A-code"
+          ],
+          "cascadeFilter": "P1",
+          "defaultValueCheck": true,
+          "defaultMapValue": [
+            "A-code"
+          ],
+          "optionValueSource": 1,
+          "multiple": false,
+          "required": false,
+          "optionFilter": [],
+          "defaultValueFirstItem": false
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0,
+          "legacyDefaultWrites": 0,
+          "legacyMapWrites": 0,
+          "legacyDefaultMapWrites": 0,
+          "legacyCascadeCalls": 0,
+          "legacyCascadeCurrentValueWrites": 0,
+          "legacyQueryDataForIdCalls": 0,
+          "legacySelectValueWrites": 0
+        },
+        "legacyRuntime": {
+          "isConfig": false,
+          "isFromRemote": false,
+          "disabledFirstItem": false,
+          "unMountSelect": [],
+          "enumValueArr": [
+            {
+              "f-label": "A",
+              "f-name": "A-code"
+            },
+            {
+              "f-label": "B",
+              "f-name": "B-code"
+            }
+          ],
+          "visibleOptions": [
+            {
+              "label": "A",
+              "value": "A",
+              "checked": false
+            },
+            {
+              "label": "B",
+              "value": "B",
+              "checked": false
+            }
+          ],
+          "cascade": [
+            [
+              {
+                "datasetId": "201--q1",
+                "selectValue": [
+                  "A-code"
+                ],
+                "currentSelectValue": [
+                  "A-code"
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "events": [
+        "responseRows=[{f-label:X,f-name:X-code}]；runtimeGeneration未变，未改选路径走legacy，observation adapterCalls=0，不发核对",
+        "then先重建enumValueArr及可见options=[X]；本地A不在valArr，清本地selectValue与config.defaultValue为JS undefined，change=true；不写config.selectValue",
+        "then以新原始enum行计算setDefaultMapValue([undefined])=[]；写map/defaultMap，调用setCascadeValueBack一次：运行态仅currentSelectValue=[]，保留cascade.selectValue=[A-code]",
+        "finally关闭loading；defaultValueCheck=true、isFromRemote=false，局部select保持undefined；unMountSelect不含q1，releaseSelect=0；再次写map=[]；changeAuth=true触发legacy queryDataForId(q1)一次，然后第二次setCascadeValueBack([])",
+        "没有用户选择，不增加userSelectionQueries；observation默认/map/cascade/查询写入计数全部0；config.selectValue在此回调边界仍A"
+      ],
+      "expected": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": {
+          "$undefined": true
+        },
+        "acceptedOptions": [
+          "X"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "pending",
+        "loading": false,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": {
+            "$undefined": true
+          },
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1",
+          "defaultValueCheck": true,
+          "defaultMapValue": [],
+          "optionValueSource": 1,
+          "multiple": false,
+          "required": false,
+          "optionFilter": [],
+          "defaultValueFirstItem": false
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0,
+          "legacyDefaultWrites": 1,
+          "legacyMapWrites": 2,
+          "legacyDefaultMapWrites": 1,
+          "legacyCascadeCalls": 2,
+          "legacyCascadeCurrentValueWrites": 2,
+          "legacyQueryDataForIdCalls": 1,
+          "legacySelectValueWrites": 0
+        },
+        "route": "legacy-existing-source-behavior",
+        "adapterCalls": 0,
+        "legacyRuntime": {
+          "isConfig": false,
+          "isFromRemote": false,
+          "disabledFirstItem": false,
+          "unMountSelect": [],
+          "enumValueArr": [
+            {
+              "f-label": "X",
+              "f-name": "X-code"
+            }
+          ],
+          "visibleOptions": [
+            {
+              "label": "X",
+              "value": "X",
+              "checked": false
+            }
+          ],
+          "cascade": [
+            [
+              {
+                "datasetId": "201--q1",
+                "selectValue": [
+                  "A-code"
+                ],
+                "currentSelectValue": []
+              }
+            ]
+          ]
+        }
+      },
+      "case_kind": "legacy_callback_state",
+      "boundary": "从已有mounted普通单选的enumValueObj响应进入then，到finally与其中同步调用完成；没有用户change事件，不模拟Element因程序model赋值再发change。实际Vue联动仍需验证。",
+      "responseRows": [
+        {
+          "f-label": "X",
+          "f-name": "X-code"
+        }
+      ],
+      "capturedRequest": {
+        "requestId": 41,
+        "runtimeGeneration": 1,
+        "selectedValue": "A",
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        }
+      },
+      "counter_semantics": "legacy*Writes按源码赋值次数计，不是值差异数；map赋值两次、cascade helper两次，即使第二次仍[]也计数。legacyQueryDataForIdCalls为注入函数调用，不等于网络请求或用户选择查询。"
+    },
+    {
+      "id": "PA-012",
+      "initial": {
+        "identity": {
+          "documentEpoch": 1,
+          "componentRaw": "raw-A",
+          "conditionRaw": "raw-A",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "sourceGeneration": 1,
+          "runtimeGeneration": 1,
+          "requestId": 41
+        },
+        "requestInputKey": {
+          "queryId": "f-name",
+          "displayId": "f-label",
+          "sort": "asc",
+          "sortId": "",
+          "resultMode": 0,
+          "searchText": "",
+          "filter": [
+            {
+              "fieldId": "parent-id",
+              "operator": "in",
+              "value": [
+                "P1"
+              ]
+            }
+          ]
+        },
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOptions": [],
+        "validity": "valid",
+        "loading": true,
+        "configSnapshot": {
+          "id": "q1",
+          "fieldId": "f-name",
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [],
+          "cascadeFilter": "P1"
+        },
+        "effects": {
+          "enumRequestsStarted": 1,
+          "verificationRequests": 0,
+          "responsesSettled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 0,
+          "observationDefaultWrites": 0,
+          "observationMapWrites": 0,
+          "observationCascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      },
+      "events": [
+        "evaluate each fallback predicate independently before request dispatch"
+      ],
+      "expected": {
+        "fallback_matrix": [
+          {
+            "id": "F01",
+            "predicate": "multiple=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F02",
+            "predicate": "isConfig=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F03",
+            "predicate": "optionValueSource=0 or 2",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F04",
+            "predicate": "displayFormat=1",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F05",
+            "predicate": "isMobileDataV=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F06",
+            "predicate": "isFromRemote=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F07",
+            "predicate": "unMountSelect contains current id",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F08",
+            "predicate": "disabledFirstItem=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F09",
+            "predicate": "required=true or non-empty optionFilter or defaultValueFirstItem=true",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          },
+          {
+            "id": "F10",
+            "predicate": "empty selected value or field id absent",
+            "adapterCalls": 0,
+            "route": "legacy-existing-source-behavior"
+          }
+        ],
+        "adapterCalls": 0
+      },
+      "case_kind": "route_test_schema",
+      "schema_exception": "本例仅路由谓词矩阵，不是state transition；expected只按route_test_schema校验，不能报告完整终态已覆盖。"
+    }
+  ],
+  "verification_requirements": [
+    "real Vue mount with deferred enumValueObj",
+    "assert exact request inputs/order/count",
+    "assert raw/input/generation/request gating before then and finally writes",
+    "assert config/cascade/default/map side-effect counts",
+    "assert invalid/unverified text and accessibility label in Element Select",
+    "cover mobile/remote/unmount/Flat/legacy fallbacks and mount/unmount",
+    "PA-011用给定原始enum行验证本地ref/config字段差异、legacy副作用归属及Element实际change事件；静态oracle不等于Vue验收。"
+  ],
+  "route_test_schema": {
+    "case_ids": [
+      "PA-012"
+    ],
+    "initial": "完整基准state，仅作各独立predicate测试背景",
+    "expected_required": [
+      "fallback_matrix",
+      "adapterCalls"
+    ],
+    "matrix_row_required": [
+      "id",
+      "predicate",
+      "adapterCalls",
+      "route"
+    ],
+    "assertion": "每行独立修改一个predicate，再断言route/adapterCalls；不推断legacy执行终态。"
+  },
+  "option_field_semantics": {
+    "acceptedOptions": "PA-001..011实际组件options.value的value列表投影，不是隐藏observer缓存。PA-011另列visibleOptions完整对象。",
+    "selectedValue": "Select.vue本地selectValue ref。",
+    "configSnapshot.selectValue": "props.config.selectValue；PA-011按纯legacy回调边界不假定程序赋值会触发el-select @change。"
+  },
+  "repair_source_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationProductAdapterDesignReview-r003.md",
+      "sha256": "19a9535bccc473e8a7fdb5d3761f282cfb729455b77f678547ce4a075a0b9f9f"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "sha256": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4"
+    }
+  ],
+  "legacy_callback_state_schema": {
+    "case_ids": [
+      "PA-011"
+    ],
+    "extra_initial_and_expected_fields": [
+      "configSnapshot.defaultValueCheck",
+      "configSnapshot.defaultMapValue",
+      "configSnapshot.optionValueSource",
+      "configSnapshot.multiple",
+      "configSnapshot.required",
+      "configSnapshot.optionFilter",
+      "configSnapshot.defaultValueFirstItem",
+      "legacyRuntime",
+      "effects.legacyDefaultWrites",
+      "effects.legacyMapWrites",
+      "effects.legacyDefaultMapWrites",
+      "effects.legacyCascadeCalls",
+      "effects.legacyCascadeCurrentValueWrites",
+      "effects.legacyQueryDataForIdCalls",
+      "effects.legacySelectValueWrites"
+    ],
+    "local_config_selection_equality_required": false
+  }
+}

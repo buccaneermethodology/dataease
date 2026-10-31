@@ -1,0 +1,82 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-CHART-PLUGIN-INVENTORY-ENTRY-TRACE-r001",
+  "session_id": "DE-EXEC-S038",
+  "lane": "design",
+  "role": "design",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/FullAcceptancePhaseCrosswalk-r001.json",
+      "sha256": "e0a5d2aee17d9d11354d32de02b68debc4b0e7d6cc20b9b0899c55c400e284cf"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeUiProgress-r009.json",
+      "sha256": "a87ecfb722413c410d1a72350e1860983b795f362ca37acf5090da75793c773d"
+    },
+    {
+      "path": "core/core-frontend/src/api/plugin.ts",
+      "sha256": "7446ef5e22451261fa49256954c742ff2ab51da1bfb93475ce6d2f330512ed86"
+    },
+    {
+      "path": "sdk/api/api-base/src/main/java/io/dataease/api/xpack/plugin/PluginApi.java",
+      "sha256": "b37faeaec3b8443c668649baf82b7b1d74bcdf7eb6453f45a2870c8b8a807af8"
+    },
+    {
+      "path": "sdk/api/api-base/src/main/java/io/dataease/api/xpack/plugin/vo/PluginVO.java",
+      "sha256": "779dd83e89168b98e7c92d5abe999c0994242fe795176f1fb1d62a058ca8e9ee"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/index.ts",
+      "sha256": "4cc0f5c25718d030c4b6b5e1607b8fa4cae0c80142c4a464087ab411c9cb7ac5"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/app.ts",
+      "sha256": "6454ff42a6ac42bb66f2aab35370059291e2caafd5229da185d193ce77576eac"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/home/RestIndexController.java",
+      "sha256": "e5c9a73015036c8d9f3fcf96471a071495ba7e5a26f3f25c55e0e47a217ff429"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/home/manage/DeIndexManage.java",
+      "sha256": "c19466a04b27d7fd25ee5e2c242939d5325806c88d79fa7b22fef60ed810b2f4"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-CHART-PLUGIN-INVENTORY-ENTRY-TRACE-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-12"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ChartPluginMetadataEntryTrace-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ChartPluginInventoryProbePlan-r001.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ChartPluginMetadataEntryTrace-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ChartPluginInventoryProbePlan-r001.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "具体fixture/修复方案可执行性，不是完整MVP/权限/Goal通过",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SymbolicFreshRuntimePlan-r002.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "chart-plugin-inventory-entry-trace-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r552.json",
+  "working_directory": ".",
+  "execution_command": "只读源追踪及安全metadata probe候选设计，不UI/HTTP/DB动作。目标释放当前插件安装数unknown/类型分母入口证据：沿公开main/SDK PluginApi.query、frontend桥接/ChartViewManager/实际controller前缀/OpenAPI配置找已证实只读元数据入口；可扩读core/core-frontend/src、core/core-backend公开源码、sdk契约，禁止读取de-xpack实现/插件js包/专有资源/密钥/许可证内容，禁止install/prepare/confirm/update/uninstall请求。只给正常应用Axios/HMAC可用的只读probe计划（源码定位、路径是否已证实、允许输出字段id/name/flag/version/type/数量；不含icon/svg/js/许可证）。可建议仅取OpenAPI中的相关路径或实际frontend注册类型metadata；区分installed、loaded、eligible，401/404/null/前端门关闭不能当安装数0。路径未证实就标未知，不猜作正式事实。一次完整返回所有发现/已查无问题/未查原因/阻塞和最小后续，产出两个指定candidate，不能宣称真实插件盘点或Goal通过；原49/38/权限保持。"
+}

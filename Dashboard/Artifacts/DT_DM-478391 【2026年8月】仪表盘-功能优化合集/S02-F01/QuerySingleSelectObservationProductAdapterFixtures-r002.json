@@ -1,0 +1,550 @@
+{
+  "schema_version": "qobs_async_product_adapter_fixtures_v2",
+  "design_ref": "QuerySingleSelectObservationProductAdapterDesign-r002.md",
+  "support_predicate": {
+    "isConfig": false,
+    "optionValueSource": 1,
+    "multiple": false,
+    "displayFormat_not": 1,
+    "field_id": "f-name",
+    "defaultValueFirstItem": false,
+    "required": false,
+    "optionFilter": [],
+    "selected_at_request_start": "non-empty string"
+  },
+  "request_input": {
+    "queryId": "f-name",
+    "displayId": "f-label",
+    "sort": "asc",
+    "sortId": "",
+    "resultMode": 0,
+    "searchText": "",
+    "filter": [
+      {
+        "fieldId": "parent-id",
+        "operator": "in",
+        "value": [
+          "P1"
+        ]
+      }
+    ]
+  },
+  "initial_state": {
+    "documentEpoch": 1,
+    "componentRaw": "raw-component-A",
+    "conditionRaw": "raw-component-A",
+    "designRevision": 1,
+    "sourceGeneration": 1,
+    "runtimeGeneration": 1,
+    "requestId": 41,
+    "selectedValue": "A",
+    "acceptedOptions": [
+      "A",
+      "B"
+    ],
+    "validity": "valid",
+    "loading": true,
+    "config": {
+      "defaultValue": "A",
+      "selectValue": "A",
+      "mapValue": [
+        "A"
+      ],
+      "cascade": [
+        "P1"
+      ]
+    },
+    "effects": {
+      "requestsStarted": 1,
+      "retries": 0,
+      "settled": 0,
+      "observationQueries": 0,
+      "defaultWrites": 0,
+      "mapWrites": 0,
+      "cascadeWrites": 0,
+      "releaseSelectCalls": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "QOBS-PA-001",
+      "events": [
+        "user selects C: selected=C, runtimeGeneration=2",
+        "request 41 resolves success values=[A,X]",
+        "current finally 41"
+      ],
+      "final": {
+        "requestId": 42,
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "validity": "pending",
+        "loading": true,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 1,
+          "settled": 1,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        },
+        "verificationInput": "same as captured request_input",
+        "verificationCapture": {
+          "runtimeGeneration": 2,
+          "selectedValue": "C",
+          "requestId": 42
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-002",
+      "events": [
+        "starting from QOBS-PA-001",
+        "request 42 resolves success values=[A,C,X]",
+        "current finally 42"
+      ],
+      "final": {
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "C",
+          "X"
+        ],
+        "validity": "valid",
+        "loading": false,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 1,
+          "settled": 2,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-003",
+      "events": [
+        "starting from QOBS-PA-001",
+        "request 42 resolves success values=[A,X]",
+        "current finally 42"
+      ],
+      "final": {
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "X"
+        ],
+        "renderOnlyOption": {
+          "label": "C — 当前值不在可用选项中",
+          "value": "C",
+          "disabled": true
+        },
+        "validity": "invalid",
+        "loading": false,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 1,
+          "settled": 2,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-004",
+      "events": [
+        "starting from QOBS-PA-001",
+        "request 42 rejects",
+        "current finally 42"
+      ],
+      "final": {
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "renderOnlyOption": {
+          "label": "C — 当前值尚未核实",
+          "value": "C",
+          "disabled": true
+        },
+        "validity": "unverified",
+        "loading": false,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 1,
+          "settled": 2,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-005",
+      "events": [
+        "starting from QOBS-PA-001 before request 42 settles",
+        "user selects D: runtimeGeneration=3, requestId remains 42; handler invalidates verification and closes old loading",
+        "request 42 resolves success values=[A,C,X]",
+        "then and finally 42 execute"
+      ],
+      "final": {
+        "requestId": 42,
+        "selectedValue": "D",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "validity": "pending",
+        "loading": false,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "D",
+          "mapValue": [
+            "D"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 1,
+          "settled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-006",
+      "events": [
+        "request 41 starts on raw A with input filter P1",
+        "same raw A filter changes to P2 and sourceGeneration increments to 2 before debounce fires",
+        "request 41 then/finally settles"
+      ],
+      "final": {
+        "sourceGeneration": 2,
+        "requestId": 41,
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "loading": false,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [
+            "A"
+          ],
+          "cascade": [
+            "P2"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 1,
+          "retries": 0,
+          "settled": 0,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        },
+        "staleResponseWrites": 0
+      }
+    },
+    {
+      "id": "QOBS-PA-007",
+      "events": [
+        "request 41 starts on raw A",
+        "same resource id now supplies new raw B with selected C, options [B,C], own current requestId=1/loading=true",
+        "request 41 then/finally settles"
+      ],
+      "final": {
+        "documentEpoch": 1,
+        "componentRaw": "raw-component-B",
+        "conditionRaw": "raw-component-B",
+        "designRevision": 1,
+        "sourceGeneration": 1,
+        "runtimeGeneration": 1,
+        "requestId": 1,
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "B",
+          "C"
+        ],
+        "validity": "pending",
+        "loading": true,
+        "config": {
+          "id": "q1",
+          "field": {
+            "id": "f-name"
+          },
+          "displayId": "f-label",
+          "defaultValue": "B",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 1,
+          "retries": 0,
+          "settled": 0,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        },
+        "staleResponseWrites": 0,
+        "staleFinallyLoadingWrites": 0
+      },
+      "initial": {
+        "documentEpoch": 1,
+        "componentRaw": "raw-component-A",
+        "conditionRaw": "raw-component-A",
+        "designRevision": 1,
+        "sourceGeneration": 1,
+        "runtimeGeneration": 1,
+        "requestId": 41,
+        "selectedValue": "A",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "validity": "valid",
+        "loading": true,
+        "config": {
+          "id": "q1",
+          "field": {
+            "id": "f-name"
+          },
+          "displayId": "f-label",
+          "defaultValue": "A",
+          "selectValue": "A",
+          "mapValue": [
+            "A"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 1,
+          "retries": 0,
+          "settled": 0,
+          "observationQueries": 0,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-008",
+      "events": [
+        "request 41 starts with A",
+        "user clears to undefined; handler invalidates request and synchronously closes its loading",
+        "request 41 settles late"
+      ],
+      "final": {
+        "selectedValue": {
+          "$undefined": true
+        },
+        "requestId": 41,
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "loading": false,
+        "validity": "pending",
+        "retries": 0,
+        "observationQueries": 0,
+        "defaultWrites": 0,
+        "staleResponseWrites": 0,
+        "staleFinallyLoadingWrites": 0,
+        "clear_state_encoding": {
+          "$undefined": true
+        }
+      },
+      "initial_selected_encoding": {
+        "$undefined": true
+      }
+    },
+    {
+      "id": "QOBS-PA-009",
+      "events": [
+        "request 41 starts",
+        "user selects D and current request 42 starts; loading=true",
+        "old request 41 then/finally settles"
+      ],
+      "final": {
+        "requestId": 42,
+        "selectedValue": "D",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "loading": true,
+        "validity": "pending",
+        "staleResponseWrites": 0,
+        "staleFinallyLoadingWrites": 0,
+        "effects": {
+          "requestsStarted": 2,
+          "retries": 0,
+          "settled": 0,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    },
+    {
+      "id": "QOBS-PA-010",
+      "events": [
+        "request 41 starts with A",
+        "user selects C while pending",
+        "request 41 rejects",
+        "current finally 41"
+      ],
+      "final": {
+        "selectedValue": "C",
+        "acceptedOptions": [
+          "A",
+          "B"
+        ],
+        "validity": "unverified",
+        "loading": false,
+        "verificationRequests": 0,
+        "automaticRetries": 0,
+        "config": {
+          "defaultValue": "A",
+          "selectValue": "C",
+          "mapValue": [
+            "C"
+          ],
+          "cascade": [
+            "P1"
+          ]
+        },
+        "effects": {
+          "requestsStarted": 1,
+          "retries": 0,
+          "settled": 1,
+          "observationQueries": 0,
+          "userSelectionQueries": 1,
+          "defaultWrites": 0,
+          "mapWrites": 0,
+          "cascadeWrites": 0,
+          "releaseSelectCalls": 0
+        }
+      }
+    }
+  ],
+  "fallback_cases": [
+    {
+      "id": "QOBS-PA-F01",
+      "predicate": "multiple=true",
+      "path": "legacy unchanged"
+    },
+    {
+      "id": "QOBS-PA-F02",
+      "predicate": "isConfig=true",
+      "path": "legacy unchanged"
+    },
+    {
+      "id": "QOBS-PA-F03",
+      "predicate": "optionValueSource in [0,2]",
+      "path": "legacy unchanged"
+    },
+    {
+      "id": "QOBS-PA-F04",
+      "predicate": "displayFormat=1 (Flat)",
+      "path": "legacy unchanged"
+    },
+    {
+      "id": "QOBS-PA-F05",
+      "predicate": "required, non-empty optionFilter, defaultValueFirstItem, no field, empty initial value",
+      "path": "legacy unchanged; no verification request for undefined"
+    }
+  ],
+  "verification_requirements": [
+    "real Vue mount with deferred enumValueObj",
+    "assert exact request parameters and count",
+    "assert query/default/map/cascade/release side effects",
+    "assert invalid/unverified label and accessible text",
+    "cover component unmount and new config identity"
+  ],
+  "serialization": {
+    "undefined_sentinel": {
+      "$undefined": true
+    },
+    "rule": "JSON fixtures use this tagged object for JavaScript undefined; do not interpret it as null."
+  }
+}

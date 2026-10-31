@@ -1,0 +1,64 @@
+        Field2SQLObj.field2sqlObj(sqlMeta, fields, allFields, crossDs, dsMap, Utils.getParams(allFields), null, pluginManage);
+        WhereTree2Str.transFilterTrees(sqlMeta, rowPermissionsTree, allFields, crossDs, dsMap, Utils.getParams(allFields), null, pluginManage);
+        Order2SQLObj.getOrders(sqlMeta, datasetGroupInfoDTO.getSortFields(), allFields, crossDs, dsMap, Utils.getParams(allFields), null, pluginManage);
+        String querySQL;
+        if (multFieldValuesRequest.getResultMode() == 0) {
+            querySQL = SQLProvider.createQuerySQLWithLimit(sqlMeta, false, needOrder, false, 0, 1000);
+        } else {
+            querySQL = SQLProvider.createQuerySQL(sqlMeta, false, needOrder, false);
+        }
+        querySQL = provider.rebuildSQL(querySQL, sqlMeta, crossDs, dsMap);
+        logger.debug("filter tree sql: " + querySQL);
+
+        // 通过数据源请求数据
+        // 调用数据源的calcite获得data
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        datasourceRequest.setQuery(querySQL);
+        datasourceRequest.setDsList(dsMap);
+        datasourceRequest.setIsCross(crossDs);
+        applyPreparedParams(datasourceRequest, sqlMap);
+
+        Map<String, Object> data = provider.fetchResultField(datasourceRequest);
+        List<String[]> rows = (List<String[]>) data.get("data");
+
+        // 重新构造data
+        Set<String> pkSet = new HashSet<>();
+        rows = rows.stream().filter(row -> {
+            boolean hasEmpty = false;
+            int emptyCount = 0;
+            for (String s : row) {
+                if (StringUtils.isBlank(s)) {
+                    emptyCount++;
+                    hasEmpty = true; // 标记已遇到第一个null
+                } else if (hasEmpty) {
+                    return false; // 在null后出现非null元素，不符合要求
+                }
+            }
+            return emptyCount != row.length;
+        }).toList();
+        List<BaseTreeNodeDTO> treeNodes = rows.stream().map(row -> buildTreeNode(row, pkSet)).flatMap(Collection::stream).collect(Collectors.toList());
+        List<BaseTreeNodeDTO> tree = DatasetUtils.mergeDuplicateTree(treeNodes, "root");
+        return tree;
+    }
+
+    private List<BaseTreeNodeDTO> buildTreeNode(String[] row, Set<String> pkSet) {
+        List<BaseTreeNodeDTO> nodes = new ArrayList<>();
+        List<String> parentPkList = new ArrayList<>();
+        for (int i = 0; i < row.length; i++) {
+            String text = row[i];
+            if (StringUtils.isEmpty(text)) {
+                continue;
+            }
+            parentPkList.add(text);
+            String val = String.join(TreeUtils.SEPARATOR, parentPkList);
+            String parentVal = i == 0 ? TreeUtils.DEFAULT_ROOT : row[i - 1];
+            String pk = String.join(TreeUtils.SEPARATOR, parentPkList);
+            if (pkSet.contains(pk)) continue;
+            pkSet.add(pk);
+            BaseTreeNodeDTO node = new BaseTreeNodeDTO(val, parentVal, StringUtils.isNotBlank(text) ? text.trim() : text, pk + TreeUtils.SEPARATOR + i);
+            nodes.add(node);
+        }
+        return nodes;
+
+    }
+}

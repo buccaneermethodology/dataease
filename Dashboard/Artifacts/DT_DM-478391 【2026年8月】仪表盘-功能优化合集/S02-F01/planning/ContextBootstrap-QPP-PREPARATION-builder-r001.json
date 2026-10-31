@@ -1,0 +1,587 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPP-PREPARATION-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按已通过的QPP r006设计与合同实现detached纯准备/复验helper及同身份fixture runner；不接产品UI/Store或权限。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "实现唯一准入目标：QPP r006 31-case冻结域的prepare/revalidate helper与同身份runner；复用真实QTARGET，不修改冻结资产。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-BuilderEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改Goal、Design、Fixtures、Contract及既有QTARGET/QCARRIER源码/测试",
+      "连接UI、Pinia、owner、snapshot、query、preview、save、权限、网络或共享缓存",
+      "扩大支持shape或用mock替代真实QTARGET",
+      "把RED/GREEN或Builder自检写成独立Validation或Goal完成"
+    ],
+    "maximum_claim": "仅Builder candidate：detached helper/runner满足QPP r006冻结域；不能声明产品活动链路、真实权限或S02 Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md",
+      "revision": "e07eba2e04340d2aecb97ab063bcbc4a9efe81d5026f30ea04fe1aee74f3cab0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r001.md",
+      "revision": "5bdf606bd906a5cf39a2807bf018225499ff59512aa0c420591d696f89e46b04",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r001.md",
+      "revision": "41a5181dfb5413b51e2389552b1535d2c54b134066891a9af774c1636de548b0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r004.md",
+      "revision": "622cc9073c4d743773ab5ea3fc49e645dcf78964c7ee0e4dad8c19a0aea8c240",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r004.json",
+      "revision": "60ee481389712e66515a516c39968963737fe172b9b6a790abfb2b9feef80aae",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildDesign-r008.md",
+      "revision": "89ec61d05223f113af04bfdf4be27b43b65dc00d52ab14ff9ebd3e1536ce22ee",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildFixtures-r008.json",
+      "revision": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-target-rebuild.ts",
+      "revision": "3e46cb7e34532670c561347a9322c5692e6679df2203632ad54670d4fb311fe6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-target-rebuild.test.ts",
+      "revision": "74b8218ff52407d65dc4beb46d8d646b8fdbc5a7dc97b349d1c816f08a69e243",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/api/dataset.ts",
+      "revision": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "sdk/api/api-base/src/main/java/io/dataease/api/dataset/dto/EnumValueRequest.java",
+      "revision": "5e710393ee609c76b1ddcd3bc62902779092aa3d3e58d2308cd155abfdd9c8ba",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+      "revision": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MaintainerDecision-QOBS-ASYNC-01-r001.md",
+      "revision": "d85931cea91604e95c5c97f30a041c42d30df81953f03a7ab564ed81f85f9761",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r169.json",
+      "revision": "23f2563650a47d080873de08b4c693a200a25bc44e104fe574a455740a04b1f5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核对 r002 设计与原始 Goal、上游 QTARGET 合同及当前公开源码的一致性。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r003.md",
+      "revision": "65941ae9f11ade269f29deadb294a900d585aaa1a2309794a9e1ebef181dcd17",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "核实上一轮两个精确blocking finding及其 disposition。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r005.md",
+      "revision": "bf8cfdff6fa807d9247b742604106efcd78f55ae1c39fb8373549fc516e8aaed",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r005是否针对r004唯一阻断完成最小修订，并检查冻结分母与边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r005.json",
+      "revision": "ba46537208afd9c512ca43dd982e587bac086d424e4a30e1444e2509ff157b67",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r005是否针对r004唯一阻断完成最小修订，并检查冻结分母与边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r004.md",
+      "revision": "363a909eeb2b7565f7a988d9aaeea2bf8eb3f0132f91f597d2138ccf16b68fb1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r005是否针对r004唯一阻断完成最小修订，并检查冻结分母与边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r170.json",
+      "revision": "8260c7b01e4e4b29f73f993bf2a4ef7023b4e8dfce5e7c3d16a0483505c6d80a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r005是否针对r004唯一阻断完成最小修订，并检查冻结分母与边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r006.md",
+      "revision": "e95436c10ce9ad6bf1a3540fdcb908a87e94649a42b86d4407cb12fb75dd23af",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r006针对r005 finding的修订与依赖边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r006.json",
+      "revision": "26e89c627d996fa54597e9b1ef969100adb46868e3221a4dc1648d3effcedd7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r006针对r005 finding的修订与依赖边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r005.md",
+      "revision": "32d8325f22b7f0842c9abe8db6590c66fb6549f2b9d588b0495fc77052ed4b7f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r006针对r005 finding的修订与依赖边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r171.json",
+      "revision": "58ad58d9632015c81915b2e4e5701db6f6733ffd909c70fdb4f179f0cb817fee",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核r006针对r005 finding的修订与依赖边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+      "revision": "absent_at_builder_start",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+      "revision": "absent_at_builder_start",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-BuilderEvidence-r001.md",
+      "revision": "absent_at_builder_start",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r006.md",
+      "revision": "f8b3625a4f601ba7e5e5896ea2732cb48836bf224b609f92c3c63e1ad859ceaa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationContract-r001.json",
+      "revision": "28e7caa0f4e0e4f2ccd54717cfc7b2fd761e252548ec1ddbf03ad2fad01053ea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "执行QPP窄helper实现并校验冻结合同、依赖与写入边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r172.json",
+      "revision": "9269b428bda350f4028c5d508e371b338a1bf61393fd63411a805716ab22606c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "固定本轮Builder准入及执行边界。",
+      "applicability": "S02-QPP-PREPARATION-builder-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_or_contract_drift",
+      "mode": "deterministic",
+      "condition": "r003 fixture/design/source ref digest differs from this baseline",
+      "action": "stop the delta review and rebaseline the changed sources",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "the repaired oracle still conflicts with parent Goal or actual QTARGET/Select behavior",
+      "action": "record evidence and minimum blocker; do not repair the candidate",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "新detached helper与runner为跨源/测试文件的高语义风险实现，按冻结合同和可信RED/GREEN准入。",
+    "route": "contract_first_builder_with_validation"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "r005 findings QPPR5-01/02",
+    "r006 Design/Fixtures delta",
+    "all same-input success case output equality",
+    "QPP-031 true displayId mismatch plus recomputed requestKey",
+    "QTARGET r008 inherited shape and enumerated value-only transforms",
+    "all 31 case identities/patches/error stages",
+    "Goal denominator, S01 and permission blocker"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10 AC、26 must-have、16产品义务及S01状态不变；权限BLOCKED/NOT_RUN；不得将detached helper合同扩写为产品接线验收。"
+  },
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-BuilderEvidence-r001.md"
+  ],
+  "provenance": null
+}

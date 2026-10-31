@@ -1,0 +1,45 @@
+{
+  "case_id": "MVP-UI-08-09-INDICATOR-ABORT-OLDSTATE-r001",
+  "source_contract": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "sha256": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55"
+  },
+  "fixture": {
+    "dashboard": "1312476889213964288",
+    "source": "7520741153101058048",
+    "target": "7520752064427724800",
+    "source_filter": "500 + 六店，完整树",
+    "target_filter": "200 + 六店，用户正常编辑",
+    "old_sum": 6761,
+    "candidate_sum": 5093
+  },
+  "protocol": [
+    "正常copy source500→target正常编辑200并query，等待snapshot缓存及两次读数稳定",
+    "独立读实际wrapper/setupState与Pinia target view/element/details/origin/lastRequest/pure/page/native Vue UID/DOM节点身份及完整snapshot $state、无关组件配置",
+    "本主page路由仅abort该indicator候选500；实际请求/失败/全部API path记账，不读取headers，记录save/updateCanvas路径",
+    "确认后等待failure，收敛overlay，按同一reader捕获旧状态与原PNG；全量差异保留不强制通过",
+    "撤销所有route/listener，正常退出不save，拒绝草稿恢复并读findById original500"
+  ],
+  "read_mapping": {
+    "details": "dv.canvasViewDataInfo[id]",
+    "origin": "dv.canvasViewOriginDataInfo[id]",
+    "lastRequest": "dv.lastViewRequestInfo[id]",
+    "pure": "dv.pureCanvasViewDataInfo[id]",
+    "page": "dv.canvasViewInfo[id].pageInfo",
+    "native": "wrapper.chartComponent.$ + vnode.el",
+    "snapshot": "snapshotStore.$state"
+  },
+  "expected": [
+    "candidate一次实际getData且受控network abort；不是后端真实故障",
+    "before/after被测active投影相同，target保持用户200/6761，旧clip保留",
+    "native UID/DOM身份可直接比；SDK destroy调用次数未instrument，不宣称0",
+    "实际捕获全API路径的窗口中save/saveCanvas/updateCanvas请求0，仅此page和窗口"
+  ],
+  "claim_ceiling": "单个indicator受控失败的明确旧状态维度，不是全部old-state/所有类型/权限或Goal完成",
+  "forbidden": [
+    "直接修改Store/clipboard/身份/时钟",
+    "调用SDK destroy或绕过禁用入口",
+    "保存资源/直接写DB/改生产源码",
+    "将未捕获字段或SDK destroy计数写通过"
+  ]
+}

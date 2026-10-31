@@ -1,0 +1,1236 @@
+{
+  "schema_version": "s02_date_axis_ui_protocol_v1",
+  "created_at": "2026-10-30T18:44:15.861324+00:00",
+  "kind": "frozen_plan_ui_technical_helper_not_new_design_not_acceptance",
+  "card": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/date-axis-ui-protocol-author-r001-card.json",
+    "canonical_sha256": "a5b09581dad70bd4113d01efbb9028394c16a0318959b2ba04d5881fbb6453c2",
+    "lane": "design",
+    "acceptance_criteria_ids": [
+      "AC-MVP-F01-01",
+      "AC-MVP-F01-09"
+    ]
+  },
+  "claim_ceiling": "仅源码和限定旧非认证native静态核；本作者未执行UI/DB/源码修改；不是独立验证，不重开旧设计/实现预算。",
+  "ui_executed": false,
+  "db_executed": false,
+  "product_source_modified": false,
+  "independent_validation": false,
+  "acceptance": false,
+  "original_scope": {
+    "obligations": 38,
+    "P1": 12,
+    "P2": 26,
+    "builtin_types": 49,
+    "fully_accepted_types": 0,
+    "real_permissions": "BLOCKED/NOT_RUN",
+    "plugin_installed": "unknown"
+  },
+  "scope_preservation": "保留原38义务、49内置类型和真实权限边界；六型helper不提升类型全验收，不替代冻结计划，不新增日期业务合同。",
+  "bound_inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/RuntimeMissingColumnsPlan-r001.json",
+      "sha256": "1c80cfa3da6a2a319d200f1cea356176eccd5cc0389546013d52ff204ac5c8cc"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/drag-item/DimensionItem.vue",
+      "sha256": "b5366f6a074a24d653c03bf4265be7e214ecf160fb2aa247d5b6c259dba8cdab"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/drag-item/QuotaItem.vue",
+      "sha256": "2fdbe94e8da5a835cd405f9f64aa3b1fc96e5e7a747b75aa6f77ada5c539a0d2"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/util/DateFormatUtil.ts",
+      "sha256": "2af757a56c47a72cb950747f57dd08633b678f09bda28f1e333bf09441981c29"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "sha256": "9c64555a38982216c1688012fdf7fa02433fce3b25553bd6e4ab9dffd12381fd"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r575.json",
+      "sha256": "7f80e4009b189984ed709bfd5adcc397a4c868e0da8e8fcbaa27c166cb64c3c1"
+    }
+  ],
+  "source_refs": [
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/drag-item/DimensionItem.vue",
+      "sha256": "b5366f6a074a24d653c03bf4265be7e214ecf160fb2aa247d5b6c259dba8cdab",
+      "line_ranges": [
+        [
+          144,
+          160
+        ],
+        [
+          233,
+          238
+        ],
+        [
+          302,
+          304
+        ],
+        [
+          433,
+          459
+        ],
+        [
+          525,
+          537
+        ],
+        [
+          616,
+          674
+        ]
+      ],
+      "finding": "外层字段菜单trigger=click；deType1显示日期菜单；年月日command=y_M_d写dateStyle；date_sub写datePattern；handler不写dateShowFormat。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/drag-item/QuotaItem.vue",
+      "sha256": "2fdbe94e8da5a835cd405f9f64aa3b1fc96e5e7a747b75aa6f77ada5c539a0d2",
+      "line_ranges": [
+        [
+          219,
+          222
+        ],
+        [
+          350,
+          355
+        ],
+        [
+          472,
+          477
+        ],
+        [
+          506,
+          519
+        ]
+      ],
+      "finding": "汇总菜单写summary；multi-scatter排除该菜单；本组件没有日期粒度编辑菜单。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/util/DateFormatUtil.ts",
+      "sha256": "2af757a56c47a72cb950747f57dd08633b678f09bda28f1e333bf09441981c29",
+      "line_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "finding": "y_M_d/date_sub映射YYYY-MM-DD和date picker；不是轴菜单入口。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "sha256": "9c64555a38982216c1688012fdf7fa02433fce3b25553bd6e4ab9dffd12381fd",
+      "line_ranges": [
+        [
+          490,
+          506
+        ],
+        [
+          530,
+          534
+        ],
+        [
+          715,
+          726
+        ],
+        [
+          784,
+          805
+        ],
+        [
+          827,
+          845
+        ],
+        [
+          1037,
+          1068
+        ],
+        [
+          2378,
+          2420
+        ],
+        [
+          2751,
+          2828
+        ]
+      ],
+      "finding": "维度/指标变化calcData快照；正常更新按钮取数；multi-scatter日期横轴走DimensionItem、指标走QuotaItem；bar-range日期同步仅限实际日期侧。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/locales/zh-CN.ts",
+      "sha256": "d56a7775b9042158c3ebf00a681f12ca7b09abd3333665f445d1e9cd4d3eef45",
+      "line_ranges": [
+        [
+          1450,
+          1452
+        ],
+        [
+          1670,
+          1687
+        ]
+      ],
+      "finding": "日期显示、日期格式、年月日、yyyy-MM-dd及求和的实际中文文案；locale另有日，不等于此处年月日菜单。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "sha256": "9f160c78f24bf50be80c9510529682267530dcc28d203478074af4add865c74b",
+      "line_ranges": [
+        [
+          92,
+          117
+        ]
+      ],
+      "finding": "getData复制请求；stock-line请求xAxis[0].sort强制desc。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stock-line.ts",
+      "sha256": "fbbc31c1f88c5a7999940d7ed798542d0e158d0eaddedd40de1d848e8322a413",
+      "line_ranges": [
+        [
+          215,
+          226
+        ],
+        [
+          703,
+          703
+        ]
+      ],
+      "finding": "四指标上限；[openAxis,closeAxis,minAxis,maxAxis]=chart.yAxis。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/editor-senior/components/dialog/TableThresholdEdit.vue",
+      "sha256": "058e56d0cc1977f9d23695a940830c74e2fc7861d41167bef4bcd62ae6c86cf7",
+      "line_ranges": [
+        [
+          12,
+          15
+        ],
+        [
+          489,
+          494
+        ]
+      ],
+      "finding": "DateFormatUtil当前调用位置为阈值日期输入。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/node_modules/element-plus-secondary/es/components/dropdown/src/dropdown.mjs",
+      "sha256": "3f69489854c252ac26b12d12336b4eb5f19f9a2cd8d861ea25f775e843eafd64",
+      "line_ranges": [
+        [
+          1,
+          10
+        ],
+        [
+          41,
+          55
+        ],
+        [
+          70,
+          74
+        ]
+      ],
+      "finding": "本机已安装包dropdown复用tooltip trigger；默认role=menu。",
+      "evidence_level": "source_verified"
+    },
+    {
+      "path": "core/core-frontend/node_modules/element-plus-secondary/es/components/tooltip/src/trigger.mjs",
+      "sha256": "647fff09d7e06639fe81dfdc6966f29ffbc2e6ba4dea47974a9da6b71d2aa8c8",
+      "line_ranges": [
+        [
+          5,
+          11
+        ]
+      ],
+      "finding": "本机已安装包tooltip默认trigger=hover。",
+      "evidence_level": "source_verified"
+    }
+  ],
+  "evidence_levels": {
+    "source_verified": "静态源码/当前已安装包证实；不代表浏览器执行",
+    "historical_native_observed": "固定旧调用及文本输出，限旧时点和输出层",
+    "candidate_pending_DOM": "当前浏览器未核的locator/步骤，执行者须先核唯一可见DOM"
+  },
+  "date_properties": {
+    "dateStyle": {
+      "meaning": "日期显示粒度",
+      "menu": [
+        "日期显示",
+        "年月日"
+      ],
+      "value": "y_M_d",
+      "handler": "DimensionItem.dateStyle",
+      "evidence_level": "source_verified"
+    },
+    "datePattern": {
+      "meaning": "日期分隔格式",
+      "menu": [
+        "日期格式",
+        "yyyy-MM-dd(1990-01-01)"
+      ],
+      "value": "date_sub",
+      "alternative": {
+        "value": "date_split",
+        "menu": "yyyy/MM/dd(1990/01/01)"
+      },
+      "handler": "DimensionItem.datePattern",
+      "evidence_level": "source_verified"
+    },
+    "dateShowFormat": {
+      "required_new_value": null,
+      "observation": "本轴菜单handler未写；当前前端搜索未找到写入点。",
+      "policy": "记录真实前态/请求及缺省，不当作dateStyle同义开关，不直接Store补值，不新增固定必需值；与冻结oracle冲突交主Agent诊断。"
+    },
+    "DateFormatUtil": {
+      "mapping": {
+        "y_M_d+date_sub": "YYYY-MM-DD",
+        "y_M_d+date_split": "YYYY/MM/DD",
+        "y_M_d_picker": "date"
+      },
+      "role": "当前调用是阈值日期输入；不直接驱动轴菜单或SQL粒度。",
+      "evidence_level": "source_verified"
+    }
+  },
+  "candidate_locators": {
+    "evidence_level": "candidate_pending_DOM",
+    "axis_row": "#pane-data .ed-row.drag-data；按configuration.ui_name对应当前实际标题定位；带斜杠的说明串未必是单DOM文本。",
+    "date_marker": ".node-id_private[data-id=\"1793083721147\"]",
+    "field_trigger": "当前轴行中含上述marker的.item-axis，外层正常click",
+    "root_menu": ".drop-style:visible；仅本次可见根菜单中按日期显示/日期格式精确子文本定位.inner-dropdown-menu并hover",
+    "submenu": ".data-dropdown_popper_mr9:visible .drop-style.sub:visible，内部精确年月日或规范化后的完整格式文案",
+    "pre_action_guards": [
+      "count=1",
+      "visible且属于当前target轴",
+      "确认菜单为本次打开，子菜单实际出现",
+      "若role/portal/文案歧义，先读取当前DOM再缩小定位"
+    ],
+    "forbidden": [
+      "全页匹配日或first()消歧",
+      "固定旧屏幕坐标",
+      "Vue handler/Store直接调用或配置赋值",
+      "菜单active当作HTTP通过"
+    ]
+  },
+  "normal_ui_steps": [
+    {
+      "step": "U01",
+      "action": "在实际target正常打开数据tab，按configuration清空指定可选轴并拖入字段；坐标从当前可见DOM矩形计算，读取最终UI字段顺序。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U02",
+      "action": "在xAxis实际轴行内按.node-id_private[data-id=\"1793083721147\"]定位唯一date标签；轴行和标签count=1且可见后正常click其.item-axis。外层click已由源码证实。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U03",
+      "action": "只在本次可见根.drop-style菜单内定位精确日期显示，hover其.inner-dropdown-menu；等待右侧可见.data-dropdown_popper_mr9子菜单。嵌套默认hover已由当前已安装包源码证实。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U04",
+      "action": "在本次可见.drop-style.sub子菜单内精确定位年月日，唯一且可见后正常click；不要全页点击日。读取content-active/勾选和括号文案；handler值应为dateStyle=y_M_d。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U05",
+      "action": "若当前不是date_sub，重开同date标签菜单，hover日期格式，在可见子菜单正常click完整文案yyyy-MM-dd(1990-01-01)。如有文本空白先读取并规范化再定位；已date_sub则保留。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U06",
+      "action": "仅configuration明确summary=sum的数值字段需要求和；若当前不是，通过同字段正常click→汇总方式→求和。multi-scatter不强制sum或空summary。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U07",
+      "action": "正常click更新图表数据，捕获该target/type/dataset的新/chartData/getData，核request_guards并等待成功响应和实际fieldsReady/renderready。配置探索列入setup窗口，不能加入formal paste候选计数。",
+      "evidence_level": "candidate_pending_DOM"
+    },
+    {
+      "step": "U08",
+      "action": "请求满足冻结配置后复用原ONE_BASIC_COLUMN_CAPTURE缺列流程；本helper不新增日期业务用例，不重测已经通过的数学。",
+      "evidence_level": "candidate_pending_DOM"
+    }
+  ],
+  "request_guards": {
+    "window": "更新后的配置请求单列setup；不能与正式paste operation候选计数混合。",
+    "endpoint": "/chartData/getData",
+    "identity": {
+      "target_id": "等于执行前从选中DOM和descriptor实际记录的targetId，不凭标题",
+      "dataset_id": "1312472054565572608",
+      "resource_id": "1312476889213964288",
+      "type": "等于row.type",
+      "frozen_fixture_target_id": "7520752064427724800",
+      "note": "冻结fixture只是定位线索；差异必须记录，不能静默换样本。"
+    },
+    "axes": "每轴id数组和顺序等于row.configuration；记录dataeaseName/deType/summary；明确清空轴可不存在或为空数组。",
+    "date_axis": {
+      "axis": "xAxis",
+      "id": "1793083721147",
+      "dataeaseName": "f_e7365583a5389143",
+      "deType": 1,
+      "groupType": "d",
+      "dateStyle": "y_M_d",
+      "datePattern": "date_sub",
+      "dateShowFormat": "记录真实值/缺省，不新增固定必需值"
+    },
+    "date_pattern_scope": "date_sub为本helper正常dash路径；如合法冻结前态为date_split，记录差异并交主Agent核oracle，不静默替换原验收语义。",
+    "numeric_summary": "只核row.required_summaries明确sum字段；multi-scatter不强制sum/空串。",
+    "stock_sort": "getData会将stock-line请求xAxis[0].sort改desc，不能要求HTTP为asc；date粒度和yAxis顺序仍独立核。",
+    "readiness": "等该target请求成功响应、fieldsReady及renderready；无请求/错误/未ready保留失败，恢复另记。",
+    "response_limit": "旧13日分组或multi-scatter14原始行仅旧时点参考；新请求按真实filter和冻结CSV/oracle解释，不固定旧行数为新must-have。",
+    "capture_minimum": [
+      "request index/time/target/type/dataset",
+      "完整相关axis对象及最终顺序",
+      "dateStyle/datePattern/dateShowFormat实际值和有无",
+      "响应状态及必要结果引用",
+      "setup与formal窗口边界"
+    ],
+    "redaction": "不存登录、认证header、Cookie、set-cookie、Token或无关业务信息。"
+  },
+  "rows": [
+    {
+      "type": "bar-range",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "xAxis",
+            "ui_name": "类别轴 / 维度",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ]
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "开始值 / 时间维度或指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          },
+          {
+            "axis": "yAxisExt",
+            "ui_name": "结束值 / 时间维度或指标",
+            "fields": [
+              {
+                "name": "target",
+                "id": "1793083721162",
+                "dataeaseName": "f_7be0ea79b26a2bbe",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          }
+        ],
+        "clear_optional_axes": [
+          "drillFields"
+        ]
+      },
+      "frozen_old_math": [
+        {
+          "mode": "sum",
+          "dimensions": [
+            "date"
+          ],
+          "metrics": [
+            "amount",
+            "target"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 22
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "bar-range",
+        "ordered_axis_ids": {
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721146"
+          ],
+          "yAxisExt": [
+            "1793083721162"
+          ]
+        },
+        "required_summaries": [
+          {
+            "axis": "yAxis",
+            "id": "1793083721146",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxisExt",
+            "id": "1793083721162",
+            "summary": "sum"
+          }
+        ],
+        "empty_axes_if_present": [
+          "drillFields"
+        ]
+      },
+      "ui_executed": false,
+      "acceptance": false,
+      "special_notes": [
+        "yAxis=amount、yAxisExt=target均为数值，不要触发或假定两侧日期样式同步。"
+      ]
+    },
+    {
+      "type": "bidirectional-bar",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "xAxis",
+            "ui_name": "类别轴 / 维度",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ]
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "值轴 / 指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          },
+          {
+            "axis": "yAxisExt",
+            "ui_name": "副轴值 / 指标",
+            "fields": [
+              {
+                "name": "target",
+                "id": "1793083721162",
+                "dataeaseName": "f_7be0ea79b26a2bbe",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          }
+        ],
+        "clear_optional_axes": [
+          "drillFields"
+        ]
+      },
+      "frozen_old_math": [
+        {
+          "mode": "sum",
+          "dimensions": [
+            "date"
+          ],
+          "metrics": [
+            "amount",
+            "target"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 25
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "bidirectional-bar",
+        "ordered_axis_ids": {
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721146"
+          ],
+          "yAxisExt": [
+            "1793083721162"
+          ]
+        },
+        "required_summaries": [
+          {
+            "axis": "yAxis",
+            "id": "1793083721146",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxisExt",
+            "id": "1793083721162",
+            "summary": "sum"
+          }
+        ],
+        "empty_axes_if_present": [
+          "drillFields"
+        ]
+      },
+      "ui_executed": false,
+      "acceptance": false
+    },
+    {
+      "type": "bullet-graph",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "xAxis",
+            "ui_name": "类别 / 维度",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ]
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "实际值 / 指标",
+            "fields": [
+              {
+                "name": "open",
+                "id": "1793083721158",
+                "dataeaseName": "f_e898a398ee087348",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          },
+          {
+            "axis": "yAxisExt",
+            "ui_name": "目标值 / 指标",
+            "fields": [
+              {
+                "name": "target",
+                "id": "1793083721162",
+                "dataeaseName": "f_7be0ea79b26a2bbe",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          }
+        ],
+        "clear_optional_axes": [
+          "extStack",
+          "drillFields"
+        ]
+      },
+      "frozen_old_math": [
+        {
+          "mode": "sum",
+          "dimensions": [
+            "date"
+          ],
+          "metrics": [
+            "open",
+            "target"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 31
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "bullet-graph",
+        "ordered_axis_ids": {
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721158"
+          ],
+          "yAxisExt": [
+            "1793083721162"
+          ]
+        },
+        "required_summaries": [
+          {
+            "axis": "yAxis",
+            "id": "1793083721158",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxisExt",
+            "id": "1793083721162",
+            "summary": "sum"
+          }
+        ],
+        "empty_axes_if_present": [
+          "extStack",
+          "drillFields"
+        ]
+      },
+      "ui_executed": false,
+      "acceptance": false
+    },
+    {
+      "type": "multi-scatter",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "extColor",
+            "ui_name": "颜色 / 维度",
+            "fields": [
+              {
+                "name": "shop",
+                "id": "1793083721149",
+                "dataeaseName": "f_a392ef5e59f0e162",
+                "deType": 0
+              }
+            ]
+          },
+          {
+            "axis": "xAxis",
+            "ui_name": "横轴 / 时间维度或指标",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ],
+            "note": "日期按已有日粒度；不能把shop丢进此轴"
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "纵轴 / 指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2
+              }
+            ]
+          },
+          {
+            "axis": "yAxisExt",
+            "ui_name": "明暗 / 指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2
+              }
+            ]
+          }
+        ],
+        "clear_optional_axes": [
+          "extBubble"
+        ]
+      },
+      "frozen_old_math": [
+        {
+          "mode": "raw",
+          "dimensions": [
+            "shop",
+            "date"
+          ],
+          "metrics": [
+            "amount"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 16
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "multi-scatter",
+        "ordered_axis_ids": {
+          "extColor": [
+            "1793083721149"
+          ],
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721146"
+          ],
+          "yAxisExt": [
+            "1793083721146"
+          ]
+        },
+        "required_summaries": [],
+        "empty_axes_if_present": [
+          "extBubble"
+        ]
+      },
+      "ui_executed": false,
+      "acceptance": false,
+      "special_notes": [
+        "xAxis的date为groupType=d/deType=1，shop只放extColor。",
+        "冻结数学为raw；只记录真实summary/aggregate，不添加sum或空串约束。"
+      ]
+    },
+    {
+      "type": "quadrant",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "xAxis",
+            "ui_name": "类别 / 维度",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ]
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "横轴 / 指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          },
+          {
+            "axis": "yAxisExt",
+            "ui_name": "纵轴 / 指标",
+            "fields": [
+              {
+                "name": "amount",
+                "id": "1793083721146",
+                "dataeaseName": "f_279128a5b9f8601b",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ]
+          }
+        ],
+        "clear_optional_axes": [
+          "extBubble",
+          "drillFields"
+        ]
+      },
+      "frozen_old_math": [
+        {
+          "mode": "sum",
+          "dimensions": [
+            "date"
+          ],
+          "metrics": [
+            "amount"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 19
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "quadrant",
+        "ordered_axis_ids": {
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721146"
+          ],
+          "yAxisExt": [
+            "1793083721146"
+          ]
+        },
+        "required_summaries": [
+          {
+            "axis": "yAxis",
+            "id": "1793083721146",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxisExt",
+            "id": "1793083721146",
+            "summary": "sum"
+          }
+        ],
+        "empty_axes_if_present": [
+          "extBubble",
+          "drillFields"
+        ]
+      },
+      "ui_executed": false,
+      "acceptance": false
+    },
+    {
+      "type": "stock-line",
+      "configuration": {
+        "axes": [
+          {
+            "axis": "xAxis",
+            "ui_name": "日期 / 维度",
+            "fields": [
+              {
+                "name": "date",
+                "id": "1793083721147",
+                "dataeaseName": "f_e7365583a5389143",
+                "deType": 1
+              }
+            ]
+          },
+          {
+            "axis": "yAxis",
+            "ui_name": "开盘价-收盘价-最低价-最高价 / 指标",
+            "fields": [
+              {
+                "name": "open",
+                "id": "1793083721158",
+                "dataeaseName": "f_e898a398ee087348",
+                "deType": 2,
+                "summary": "sum"
+              },
+              {
+                "name": "close",
+                "id": "1793083721159",
+                "dataeaseName": "f_443a573d1caa2756",
+                "deType": 2,
+                "summary": "sum"
+              },
+              {
+                "name": "low",
+                "id": "1793083721161",
+                "dataeaseName": "f_f77a5b042f6ebc49",
+                "deType": 2,
+                "summary": "sum"
+              },
+              {
+                "name": "high",
+                "id": "1793083721160",
+                "dataeaseName": "f_bb89d8e0fe324551",
+                "deType": 2,
+                "summary": "sum"
+              }
+            ],
+            "note": "最终读取请求yAxis id顺序须open/close/low/high；旧drag修正序列不等最终数组次序"
+          }
+        ],
+        "clear_optional_axes": []
+      },
+      "frozen_old_math": [
+        {
+          "mode": "sum",
+          "dimensions": [
+            "date"
+          ],
+          "metrics": [
+            "open",
+            "close",
+            "low",
+            "high"
+          ],
+          "ref": {
+            "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+            "line": 28
+          }
+        }
+      ],
+      "original_capture_columns_if_not_reusable": [
+        "full_source_clip_target_equality",
+        "reopen_result_oracle",
+        "exact_reopen_tree"
+      ],
+      "date_axis": "xAxis",
+      "date_component": "DimensionItem",
+      "normal_ui_steps": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "request_guard": {
+        "common_ref": "request_guards",
+        "type_equals": "stock-line",
+        "ordered_axis_ids": {
+          "xAxis": [
+            "1793083721147"
+          ],
+          "yAxis": [
+            "1793083721158",
+            "1793083721159",
+            "1793083721161",
+            "1793083721160"
+          ]
+        },
+        "required_summaries": [
+          {
+            "axis": "yAxis",
+            "id": "1793083721158",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxis",
+            "id": "1793083721159",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxis",
+            "id": "1793083721161",
+            "summary": "sum"
+          },
+          {
+            "axis": "yAxis",
+            "id": "1793083721160",
+            "summary": "sum"
+          }
+        ],
+        "empty_axes_if_present": [],
+        "xAxis_sort": "desc"
+      },
+      "ui_executed": false,
+      "acceptance": false,
+      "special_notes": [
+        "最终DOM和HTTP yAxis顺序均核open/close/low/high，不从拖入循环推断。",
+        "fixture按日SUM，不扩称真实金融OHLC。"
+      ]
+    }
+  ],
+  "historical_native": {
+    "path": "/Users/xiaomei/.codex/sessions/2026/10/15/rollout-2026-10-15T19-02-35-01a14272-6279-7601-bc9b-b7def784b978.jsonl",
+    "allowed_window": [
+      88700,
+      89900
+    ],
+    "line_hash_policy": "原始JSONL行含换行SHA256；不hash持续append整文件",
+    "read_policy": "只用非认证js code和同call_id文本输出；不复制代码/trace/base64/认证。",
+    "date_menu_operation_in_window": "未找到显式日期显示→年月日操作；本次菜单locator保持candidate_pending_DOM。",
+    "records": [
+      {
+        "type": "multi-scatter",
+        "call_id": "call_1241e4b83a5b40af9d21a87fd7744b1b",
+        "call_line": 89225,
+        "call_line_sha256_including_newline": "cf2719811fbc13b64aaf8d9f48db1fd51fab64ccf582eb0dfd28f3264bec692f",
+        "output_line": 89228,
+        "output_line_sha256_including_newline": "9df12759766349563295875a4586ab60540e8cee16b98209c2be5337b9a9f25d",
+        "observation": "旧清横轴拖date、颜色shop并更新；输出date/shop/amount/amount。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "quadrant",
+        "call_id": "call_217112b0759a43aaae141ab6dcd4662e",
+        "call_line": 89263,
+        "call_line_sha256_including_newline": "7a8c734f4b44378c0a0d7a3cdc9b2ce6389600103423ac786bf17389c91c8730",
+        "output_line": 89266,
+        "output_line_sha256_including_newline": "92a9ca865735fb2e40c19b36a2e43815ff2488f515a136680879970f9e50ad63",
+        "observation": "旧UI为date类别、横纵amount求和。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "bar-range",
+        "call_id": "call_3efc99b1eccd4588a9535c7d8716ccfe",
+        "call_line": 89295,
+        "call_line_sha256_including_newline": "4bd40b44ccd7a59012fe42b115dd92da3a5eeb4d5ee2764e0e9c803667c299bf",
+        "output_line": 89298,
+        "output_line_sha256_including_newline": "aef56916b8950dff315d77489989b4c1507985ab31d7c459ece0b66c638cf2c2",
+        "observation": "旧拖字段更新summary两向成功；不单独证明冻结target字段及原始axes。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "bidirectional-bar",
+        "call_id": "call_571759fd4c61431abb2aca36bb38dfb4",
+        "call_line": 89300,
+        "call_line_sha256_including_newline": "d15b780db87dcbd7e2e73c5a7d90d2404a87a245fbb5ea9834b6b7105d568a1c",
+        "output_line": 89303,
+        "output_line_sha256_including_newline": "f9d534fa04a5cacef0a30a9b11e77d1c1d9d0d8a5b784114d44a8570a5134bc1",
+        "observation": "旧UI为date/amount求和/target求和。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "stock-line",
+        "call_id": "call_adc266db9b344783b17bc00e447da4ca",
+        "call_line": 89312,
+        "call_line_sha256_including_newline": "db66a50ee76de089798b0da8f5048d09963291263041a0f6ea61bb0ab5488a4c",
+        "output_line": 89315,
+        "output_line_sha256_including_newline": "672ac581102385e47a7fc3c0fbb3e402f1c518b548de872c414910a121dfeaa0",
+        "observation": "初次open/close/low/high循环拖入，实际UI为open/high/low/close；保留失败观测。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "stock-line",
+        "call_id": "call_99219c637c4e43f7b1f3902ceda0351a",
+        "call_line": 89319,
+        "call_line_sha256_including_newline": "6458bd340fe216dffa9d8f1aa56996eddb617c5485f53c769aca03f387b27d20",
+        "output_line": 89322,
+        "output_line_sha256_including_newline": "6ab678f45343623abb42acee6e87d8699a1b4693c8be755b7934bd7467aab472",
+        "observation": "旧坐标下清空重拖后UI为open/close/low/high；恢复为另一次观测，旧循环不能当新协议固定顺序。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "stock-line/bullet-graph",
+        "call_id": "call_74ea11e00b0741bbab2cc5ee72cdbe2f",
+        "call_line": 89324,
+        "call_line_sha256_including_newline": "eb8335e8015d2ba73a2025b14a7252d13904fce7627a5cfd1f8efc882e37cf1d",
+        "output_line": 89327,
+        "output_line_sha256_including_newline": "6e918acf24d45ebda2de443fc530e86c194e1abde81c14e6dc4f51a974bf237f",
+        "observation": "旧stock更新summary两向成功，后bullet UI为date/open求和/target求和。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      },
+      {
+        "type": "bullet-graph",
+        "call_id": "call_d26b7a978c16462cb412967f9dd580aa",
+        "call_line": 89331,
+        "call_line_sha256_including_newline": "a7e0cfb46c55025ad068ae8b8d2bad69d695b0362690db0587c9572c8eab4e3b",
+        "output_line": 89334,
+        "output_line_sha256_including_newline": "e0c49adbe98e04e2d869d897957fc503b45645f2422bf92d6a26add5548ebef9",
+        "observation": "旧bullet正常更新summary两向成功。",
+        "limit": "旧时点UI文字或summary，不证明日期菜单或物理HTTP；calls=1是逻辑计数。",
+        "evidence_level": "historical_native_observed"
+      }
+    ]
+  },
+  "unknowns": [
+    "当前portal结构、role、可见菜单数量及精确文本空白未观察。",
+    "当前六型dateStyle/datePattern/dateShowFormat与真实请求axes未观察。",
+    "旧summary逻辑calls=1不是物理HTTP请求数证据。",
+    "未核后端日期截断/时区及其它日期变体；冻结日粒度oracle边界保留。"
+  ],
+  "minimal_next_action": "主Agent待共享浏览器空闲，在一个date字段用正常click→hover→年月日核DOM，再按U07核setup请求，随后顺序复用六型原缺列流程；作者不碰浏览器。",
+  "author_checks": {
+    "json_parse": true,
+    "six_unique_types": true,
+    "configurations_equal_frozen_plan": true,
+    "seven_bound_input_hashes_verified": true,
+    "source_hashes_verified": true,
+    "native_call_ids_and_raw_line_refs_verified": true,
+    "layer": "作者结构/摘要自检，不是独立验证"
+  }
+}

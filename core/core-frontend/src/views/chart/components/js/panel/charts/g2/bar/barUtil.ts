@@ -1,4 +1,8 @@
 import {
+  hasFilterPasteInteraction,
+  isFilterPasteInteractionAllowed
+} from '@/views/chart/components/js/panel/common/filter-paste-interaction'
+import {
   handleBreakLineMultiDimension,
   handleIgnoreData,
   handleSetZeroMultiDimension,
@@ -452,6 +456,7 @@ function activateHoverTooltip(chart: G2Chart, wrapper: HTMLElement) {
 }
 
 export function switchTooltipWrapperHost(chart: Chart, mode: TooltipDisplayMode) {
+  if (!isFilterPasteInteractionAllowed(chart)) return
   const wrapper = getTooltipWrapper(chart.container)
   const chartContainer = document.getElementById(chart.container)
   const host = mode === 'hover' ? document.body : chartContainer
@@ -484,6 +489,7 @@ export function switchTooltipWrapperHost(chart: Chart, mode: TooltipDisplayMode)
     host.appendChild(wrapper)
   }
 
+  wrapper.style.removeProperty('display')
   Object.assign(wrapper.style, {
     position: mode === 'hover' ? 'fixed' : 'absolute',
     inset: mode === 'hover' ? '0 auto auto 0' : '0',
@@ -507,7 +513,11 @@ export function createTooltipWrapper(chart: Chart) {
     g2TooltipWrapper = document.createElement('div')
     g2TooltipWrapper.id = wrapperId
     g2TooltipWrapper.style.pointerEvents = 'none'
-    document.body.appendChild(g2TooltipWrapper)
+    if (isFilterPasteInteractionAllowed(chart)) document.body.appendChild(g2TooltipWrapper)
+    else {
+      g2TooltipWrapper.style.display = 'none'
+      document.getElementById(chart.container)?.appendChild(g2TooltipWrapper)
+    }
   }
   switchTooltipWrapperHost(chart, 'hover')
   return g2TooltipWrapper
@@ -858,8 +868,10 @@ function resetHoverTooltipPosition(tooltip: HTMLElement) {
 function markHoverTooltipPositionReady(
   container: string,
   tooltipWrapper: HTMLElement,
-  tooltip: HTMLElement
+  tooltip: HTMLElement,
+  chart?: Chart
 ) {
+  if (!isFilterPasteInteractionAllowed(chart)) return
   if (
     tooltip.dataset.deTooltipPositionReady === 'true' ||
     tooltip.dataset.deTooltipPositionPending === 'true'
@@ -871,7 +883,9 @@ function markHoverTooltipPositionReady(
   tooltip.dataset.deTooltipPositionPending = 'true'
   // 先绘制一次最终坐标，再恢复 AntV 后续 left/top 平滑过渡
   frameState.hoverReadyFrame = window.requestAnimationFrame(() => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     frameState.hoverReadyFrame = window.requestAnimationFrame(() => {
+      if (!isFilterPasteInteractionAllowed(chart)) return
       frameState.hoverReadyFrame = undefined
       tooltip.removeAttribute('data-de-tooltip-position-pending')
       if (
@@ -900,6 +914,7 @@ function fitCarouselTooltipInChart(
 
   // 等待 G2 完成内容和原始位置计算后再进行边界修正
   frameState.fitFrame = window.requestAnimationFrame(() => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     frameState.fitFrame = undefined
     if (
       !tooltip.isConnected ||
@@ -983,6 +998,8 @@ export function listenerTooltipShow(newChart: G2Chart, chart: Chart) {
   // 公共渲染入口和轮播入口可能同时接入，按图表实例保证只注册一次
   tooltipShowListenerCharts.add(newChart)
   newChart.on('tooltip:show', event => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
+    switchTooltipWrapperHost(chart, getTooltipDisplayMode(chart.container))
     const tooltipWrapper = getTooltipWrapper(chart.container)
     if (!tooltipWrapper) return
 
@@ -998,6 +1015,7 @@ export function listenerTooltipShow(newChart: G2Chart, chart: Chart) {
       if (tooltip.dataset.deTooltipLeaveBound !== 'true') {
         tooltip.dataset.deTooltipLeaveBound = 'true'
         tooltip.addEventListener('mouseleave', () => {
+          if (!isFilterPasteInteractionAllowed(chart)) return
           tooltip.style.visibility = 'hidden'
           tooltipWrapper.dispatchEvent(new CustomEvent(TOOLTIP_HOVER_LEAVE_EVENT))
         })
@@ -1062,10 +1080,13 @@ export function listenerTooltipShow(newChart: G2Chart, chart: Chart) {
       )}px`
       activateHoverTooltip(newChart, tooltipWrapper)
       tooltip.style.visibility = 'visible'
-      markHoverTooltipPositionReady(chart.container, tooltipWrapper, tooltip)
+      markHoverTooltipPositionReady(chart.container, tooltipWrapper, tooltip, chart)
       syncHoverTooltipEllipsisTitles(tooltip)
     })
   })
   newChart.on('tooltip:hide', () => releaseActiveHoverTooltip(newChart))
-  newChart.on('afterdestroy', () => releaseActiveHoverTooltip(newChart))
+  newChart.on('afterdestroy', () => {
+    releaseActiveHoverTooltip(newChart)
+    if (hasFilterPasteInteraction(chart)) getTooltipWrapper(chart.container)?.remove()
+  })
 }

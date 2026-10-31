@@ -1,0 +1,78 @@
+                visualizationOuterParamsTargetViewInfoRepository.deleteByParamsInfoIds(paramsInfoIds);
+            }
+            visualizationOuterParamsInfoRepository.deleteByParamsIds(paramsIds);
+        }
+        visualizationOuterParamsRepository.deleteByVisualizationId(dvId);
+    }
+
+    public List<VisualizationViewTableDTO> getVisualizationViewDetails(Long dvId) {
+        QCoreChartView ccv = QCoreChartView.coreChartView;
+        QCoreDatasetTableField field = QCoreDatasetTableField.coreDatasetTableField;
+
+        return queryFactory
+                .select(Projections.fields(
+                        VisualizationViewTableDTO.class,
+                        ccv.id,
+                        ccv.title,
+                        ccv.sceneId,
+                        ccv.tableId,
+                        ccv.type,
+                        ccv.render,
+                        Projections.fields(
+                                DatasetTableFieldDTO.class,
+                                field.id.as("id"),
+                                field.originName.as("originName"),
+                                field.name.as("name"),
+                                field.type.as("type"),
+                                field.deType.as("deType")
+                        )
+                ))
+                .from(ccv)
+                .leftJoin(field).on(ccv.tableId.eq(field.datasetGroupId))
+                .where(ccv.sceneId.eq(dvId)
+                        .and(ccv.id.isNotNull())
+                        .and(ccv.type.ne("VQuery")))
+                .fetch();
+    }
+
+    public DataVisualizationVO findDvInfo(Long dvId, String dvType, String resourceTable) {
+        if ("snapshot".equals(resourceTable)) {
+            return findSnapshotDvInfo(dvId, dvType);
+        } else {
+            return findNormalDvInfo(dvId, dvType);
+        }
+    }
+
+    public DataVisualizationVO findNormalDvInfo(Long dvId, String dvType) {
+        DataVisualizationInfo entity = dataVisualizationInfoRepository.findDvInfoEntity(dvId, dvType)
+                .orElseThrow(() -> new EntityNotFoundException("Data Visualization not found with id: " + dvId));
+        DataVisualizationVO vo = new DataVisualizationVO();
+        BeanUtils.copyBean(vo, entity);
+        return vo;
+    }
+
+    public DataVisualizationVO findSnapshotDvInfo(Long dvId, String dvType) {
+        SnapshotDataVisualizationInfo entity = snapshotDataVisualizationInfoRepository.findSnapshotDvInfoEntity(dvId, dvType)
+                .orElseThrow(() -> new EntityNotFoundException("Snapshot Data Visualization not found with id: " + dvId));
+        DataVisualizationVO vo = new DataVisualizationVO();
+        BeanUtils.copyBean(vo, entity);
+        return vo;
+    }
+
+    public List<VisualizationReportFilterVO> queryReportFilter(Long dvId, Long taskId) {
+        // 1. 查询实体列表
+        List<VisualizationReportFilter> entities = reportFilterRepository
+                .findByResourceIdAndTaskId(dvId, taskId);
+        // 2. 转换为VO列表
+        return entities.stream()
+                .map(this::convertToVo)
+                .collect(Collectors.toList());
+    }
+
+    private VisualizationReportFilterVO convertToVo(VisualizationReportFilter entity) {
+        VisualizationReportFilterVO vo = new VisualizationReportFilterVO();
+        BeanUtils.copyBean(vo, entity);
+        return vo;
+    }
+
+}

@@ -1,0 +1,32 @@
+{
+  "case": "MVP-UI-02/11-empty-target-save-window-r003",
+  "original_contract": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "sha256": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55"
+  },
+  "prior_review": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md",
+    "sha256": "6a8440d0911488a06ed7720f76350679cd7b5c2a1c5cfbd0bd4b2eae2a32d617"
+  },
+  "goal": "只补F3的本主page完整API持久请求观察窗口；不追认旧未观测历史，不扩为所有来源DB无写",
+  "protocol": [
+    "固定source map500复制，indicator目标正常UI清空，不query/save",
+    "预冻结driver记录全部本page非认证API method/path，图表query请求/响应完整记录，捕获save/saveCanvas/updateCanvas",
+    "DOM observer记录安装/停止时点与选择器，空目标paste一次，无覆盖确认点击；成功后继续观察6.5秒覆盖snapshot缓存周期",
+    "正常退出丢弃并findById恢复，全部监听精确撤销；只据真实window审计声明无持久API"
+  ],
+  "expected": {
+    "source": "7520741153101058048",
+    "target": "7520752064427724800",
+    "empty_reason": "empty_source",
+    "candidate_requests": 1,
+    "sum": 5093,
+    "persistence_paths": 0
+  },
+  "remaining_ceiling": [
+    "只有本page/窗口，不是任意外部来源无写",
+    "不证明同一prepared实例或所有图表/全部old-state",
+    "真实权限与38/49不升级"
+  ],
+  "review_budget": "空源目标证据累计3/3最终，前r001+r002保持，不开第4轮"
+}

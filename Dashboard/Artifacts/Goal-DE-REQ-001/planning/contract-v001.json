@@ -1,0 +1,29 @@
+{
+  "schema_version": "de_requirement_kb_contract_v1",
+  "goal_id": "DE-REQ-001",
+  "raw_intent_ref": "planning/raw-user-intent-v001.txt",
+  "authority": {
+    "primary": "docs/DataEase_Requirements_V1_20261014.md",
+    "references": [
+      "docs/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表….md",
+      "docs/DT_DM-478391 【2026年8月】仪表盘-功能优化合集（过滤器支持复制、查询条件支持过滤、表格移动端打开支持全屏、透视表…/Attachments/未知.png"
+    ],
+    "conflict_rule": "primary_source_wins"
+  },
+  "scope": {
+    "features": ["F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08"],
+    "confirmed_decision_ids": "Q01-Q156",
+    "explicit_exclusions": ["Q157", "cross_feature_conflict_adjudication", "implementation_claims", "unadjudicated_original_suggestions"]
+  },
+  "acceptance_criteria": [
+    {"id":"AC-01","predicate":"JSON 真源完整记录来源层级、版本、状态、用途边界、依赖与内容摘要；主文档是唯一权威决策源，原始文档/图片仅作参考。"},
+    {"id":"AC-02","predicate":"JSON 覆盖 F01-F08 各自的 TSP、决策条目、验收条件、未决/待证项和流程图，并保留全局范围、原始未裁事项、技术验证清单和 Q01-Q156 版本边界。"},
+    {"id":"AC-03","predicate":"明确 Q157 与跨功能冲突审查不在本版本；将原文建议、选填项和未裁定内容保持为非强制/待裁事项。"},
+    {"id":"AC-04","predicate":"需求真源具有专用结构合同与确定性 JSON-to-Markdown 渲染；Markdown 明确是 JSON 投影且禁止手工维护。"},
+    {"id":"AC-05","predicate":"校验检查必需字段、8 个功能 ID、来源文件存在及摘要、Q 决策覆盖声明与投影一致性；重复生成结果字节一致。"},
+    {"id":"AC-06","predicate":"现有 KB 阅读入口提供可发现链接；不破坏现有源码核实 KB 结构或投影。"},
+    {"id":"AC-07","predicate":"全程不修改 DataEase 产品实现，不将需求状态写成已实现/已运行/已验收。"}
+  ],
+  "claim_ceiling": "candidate requirement baseline and deterministic reader projection; no product implementation, runtime, cross-feature consistency, performance, security, compliance, or user-acceptance claim",
+  "termination": "AC evidence is recorded, independent review status is explicit, Dashboard closeout and stop-gate state reflect evidence without false completion."
+}

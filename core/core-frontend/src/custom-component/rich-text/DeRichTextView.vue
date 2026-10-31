@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="richRoot"
     class="rich-main-class"
     :class="{ 'edit-model': canEdit }"
     @keydown.stop
@@ -58,7 +59,24 @@ import 'tinymce/plugins/directionality'
 import 'tinymce/plugins/nonbreaking'
 import 'tinymce/plugins/pagebreak'
 import './plugins' //自定义插件
-import { computed, nextTick, reactive, ref, toRefs, watch, onMounted, PropType } from 'vue'
+import {
+  computed,
+  nextTick,
+  reactive,
+  ref,
+  shallowRef,
+  toRefs,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  PropType
+} from 'vue'
+import { cloneDeep } from 'lodash-es'
+import type {
+  PasteBinding,
+  PasteReady,
+  PreparedQuery
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
 import { snapshotStoreWithOut } from '@/store/modules/data-visualization/snapshot'
 import eventBus from '@/utils/eventBus'
 import { guid } from '@/views/visualized/data/dataset/form/util'
@@ -83,6 +101,8 @@ const userStore = useUserStoreWithOut()
 import { useI18n } from '@/hooks/web/useI18n'
 const { t } = useI18n()
 const props = defineProps({
+  pasteBinding: { type: Object as PropType<PasteBinding>, required: false },
+  view: { type: Object as PropType<ChartObj>, required: false },
   scale: {
     type: Number,
     required: false,
@@ -123,7 +143,61 @@ const props = defineProps({
   }
 })
 
-const { element, editMode, active, disabled, showPosition, suffixId } = toRefs(props)
+const { editMode, active, disabled, showPosition, suffixId } = toRefs(props)
+const filterPasteBinding = shallowRef<PasteBinding | undefined>(props.pasteBinding)
+const element = computed(() => filterPasteBinding.value?.current.value.element ?? props.element)
+const effectiveView = computed(
+  () =>
+    filterPasteBinding.value?.current.value.view ??
+    props.view ??
+    canvasViewInfo.value[element.value.id]
+)
+const isPasteActive = () =>
+  !filterPasteBinding.value || filterPasteBinding.value.current.value.phase === 'active'
+const richRoot = ref<HTMLElement | null>(null)
+type RichEditor = NonNullable<ReturnType<typeof tinymce.get>>
+let richEditor: RichEditor | undefined
+let editorInitialized = false
+let editorFailure: unknown = null
+let richAlive = true
+let paragraphTimer: ReturnType<typeof setTimeout> | undefined
+let pendingPreparationFailure: (() => void) | undefined
+let installEditorInteractions: (() => void) | undefined
+let currentPaste = () => true
+const editorWaiters = new Set<{ resolve(editor: RichEditor): void; reject(error: unknown): void }>()
+const documentCleanups = new Map<RichEditor, Array<() => void>>()
+const addEditorCleanup = (editor: RichEditor, cleanup: () => void) => {
+  const cleanups = documentCleanups.get(editor) ?? []
+  cleanups.push(cleanup)
+  documentCleanups.set(editor, cleanups)
+}
+const cleanupEditor = (editor?: RichEditor) => {
+  if (!editor) return
+  const cleanups = documentCleanups.get(editor) ?? []
+  documentCleanups.delete(editor)
+  cleanups.forEach(cleanup => cleanup())
+}
+const cleanupEditors = () => Array.from(documentCleanups.keys()).forEach(cleanupEditor)
+const editorInteractive = (editor: RichEditor) =>
+  richAlive && richEditor === editor && editorInitialized && !editorFailure && isPasteActive()
+const { emitter: richEmitter } = useEmitt()
+let fieldChannel: string | undefined
+const failEditorWaiters = (error: unknown) => {
+  editorWaiters.forEach(waiter => waiter.reject(error))
+  editorWaiters.clear()
+}
+const listenEditorDocument = (
+  editor: RichEditor,
+  doc: Document,
+  name: string,
+  callback: (event: MouseEvent) => void
+) => {
+  const handler = (event: Event) => {
+    if (editorInteractive(editor)) callback(event as MouseEvent)
+  }
+  doc.addEventListener(name, handler)
+  addEditorCleanup(editor, () => doc.removeEventListener(name, handler))
+}
 const state = reactive({
   emptyValue: '-',
   data: null,
@@ -200,100 +274,136 @@ const init = ref({
     width: '400px' // 或者使用 table_default_styles 设置宽度，单位为 px
   },
   setup: function (editor) {
+    cleanupEditor(richEditor)
+    richEditor = editor
+    editorInitialized = false
+    editorFailure = null
+    let interactionsInstalled = false
+    const onEditorFailure = error => {
+      if (!richAlive || richEditor !== editor) return
+      editorFailure = error || new Error('rich_editor_failed')
+      failEditorWaiters(error)
+      pendingPreparationFailure?.()
+    }
+    editor.on('Error SkinLoadError PluginLoadError LanguageLoadError', onEditorFailure)
+    editor.on('remove', () => {
+      cleanupEditor(editor)
+      if (richEditor !== editor) return
+      editorInitialized = false
+      richEditor = undefined
+      failEditorWaiters(new Error('rich_editor_removed'))
+      pendingPreparationFailure?.()
+    })
     let cloneHandle = null // 用于存储克隆的手柄
     let originalHandle = null // 用于存储原始手柄
+    let originalHandleDisplay
+    const releaseHandle = () => {
+      if (originalHandle) originalHandle.style.display = originalHandleDisplay
+      cloneHandle?.parentNode?.removeChild(cloneHandle)
+      cloneHandle = null
+      originalHandle = null
+    }
+    addEditorCleanup(editor, releaseHandle)
     editor.on('init', () => {
-      const doc = editor.getDoc()
-      // 监测 mouseup、mousedown 和 mousemove 事件
-      // 1.单元格问题 因为缩放问题 导致拖拽的坐标系有偏差，此处隐藏原有拖拽定位bar,并根据
-      // 缩放比例动态调整时间定位bar的位置，这会代理鼠标移速和bar移速不同步问题，不过bar定位是准确的
-      // 可以解决因为缩放导致tinymce 内部坐标系出错问题
-      doc.addEventListener('mousedown', event => {
-        nextTick(() => {
-          originalHandle = event.target.closest('.ephox-snooker-resizer-bar-dragging')
-          if (originalHandle) {
-            // 克隆原始手柄
-            cloneHandle = originalHandle.cloneNode(true)
-            cloneHandle.style.zIndex = 9999 // 提升克隆手柄的层级
-            originalHandle.style.display = 'none' // 隐藏原始手柄
-            // 将克隆手柄添加到原手柄的父元素中
-            const parentDiv = originalHandle.parentNode // 获取原手柄的父元素
-            parentDiv.appendChild(cloneHandle) // 将克隆手柄添加到父元素中
+      if (!richAlive || richEditor !== editor) return
+      editorInitialized = true
+      editorFailure = null
+      installEditorInteractions = () => {
+        if (interactionsInstalled || !editorInteractive(editor)) return
+        interactionsInstalled = true
+        const doc = editor.getDoc()
+        // 监测 mouseup、mousedown 和 mousemove 事件
+        // 1.单元格问题 因为缩放问题 导致拖拽的坐标系有偏差，此处隐藏原有拖拽定位bar,并根据
+        // 缩放比例动态调整时间定位bar的位置，这会代理鼠标移速和bar移速不同步问题，不过bar定位是准确的
+        // 可以解决因为缩放导致tinymce 内部坐标系出错问题
+        listenEditorDocument(editor, doc, 'mousedown', event => {
+          nextTick(() => {
+            if (!editorInteractive(editor)) return
+            releaseHandle()
+            originalHandle = (event.target as Element | null)?.closest?.(
+              '.ephox-snooker-resizer-bar-dragging'
+            )
+            if (originalHandle) {
+              // 克隆原始手柄
+              cloneHandle = originalHandle.cloneNode(true)
+              cloneHandle.style.zIndex = 9999 // 提升克隆手柄的层级
+              originalHandleDisplay = originalHandle.style.display
+              originalHandle.style.display = 'none' // 隐藏原始手柄
+              // 将克隆手柄添加到原手柄的父元素中
+              const parentDiv = originalHandle.parentNode // 获取原手柄的父元素
+              parentDiv.appendChild(cloneHandle) // 将克隆手柄添加到父元素中
+            }
+          })
+        })
+
+        // 监听 mousemove 事件以更新克隆手柄位置
+        listenEditorDocument(editor, doc, 'mousemove', event => {
+          if (cloneHandle) {
+            // // 计算鼠标移动的距离
+            if (cloneHandle.offsetHeight > cloneHandle.offsetWidth) {
+              // 计算鼠标移动的距离
+              const offsetX = event.movementX * props.scale // 使用缩放比例进行调整
+              cloneHandle.style.left = `${cloneHandle.offsetLeft + offsetX}px` // 更新克隆手柄的位置
+            } else {
+              // 计算鼠标移动的距离
+              const offsetY = event.movementY * props.scale // 使用缩放比例进行调整
+              cloneHandle.style.top = `${cloneHandle.offsetTop + offsetY}px` // 更新克隆手柄的位置
+            }
           }
         })
-      })
 
-      // 监听 mousemove 事件以更新克隆手柄位置
-      doc.addEventListener('mousemove', event => {
-        if (cloneHandle) {
-          // // 计算鼠标移动的距离
-          if (cloneHandle.offsetHeight > cloneHandle.offsetWidth) {
-            // 计算鼠标移动的距离
-            const offsetX = event.movementX * props.scale // 使用缩放比例进行调整
-            cloneHandle.style.left = `${cloneHandle.offsetLeft + offsetX}px` // 更新克隆手柄的位置
-          } else {
-            // 计算鼠标移动的距离
-            const offsetY = event.movementY * props.scale // 使用缩放比例进行调整
-            cloneHandle.style.top = `${cloneHandle.offsetTop + offsetY}px` // 更新克隆手柄的位置
-          }
+        // 监听 mouseup 事件以结束调整
+        listenEditorDocument(editor, doc, 'mouseup', () => releaseHandle())
+
+        // 函数：根据缩放比例调整 .mce-resizehandle 的位置和大小
+        const adjustResizeHandles = (aLeft, aTop) => {
+          nextTick(() => {
+            if (!editorInteractive(editor)) return
+            const nodeRt = doc.getElementById('mceResizeHandlene')
+            const nodeRb = doc.getElementById('mceResizeHandlese')
+            const nodeLb = doc.getElementById('mceResizeHandlesw')
+            if (nodeRt) {
+              nodeRt.style.left = `${aLeft}px`
+            }
+            if (nodeRb) {
+              nodeRb.style.left = `${aLeft}px`
+              nodeRb.style.top = `${aTop}px`
+            }
+            if (nodeLb) {
+              nodeLb.style.top = `${aTop}px`
+            }
+          })
         }
-      })
 
-      // 监听 mouseup 事件以结束调整
-      doc.addEventListener('mouseup', event => {
-        if (cloneHandle) {
-          // 显示原始手柄并移除克隆手柄
-          originalHandle.style.display = ''
-          if (cloneHandle) {
-            cloneHandle.parentNode?.removeChild(cloneHandle) // 获取原手柄的父元素
+        // 监听 ObjectSelected 事件，点击表格时触发调整
+        editor.on('ObjectSelected', event => {
+          if (!editorInteractive(editor)) return
+          if (event.target.nodeName === 'TABLE') {
+            adjustResizeHandles(
+              event.target.offsetWidth + event.target.offsetLeft,
+              event.target.offsetHeight + event.target.offsetTop
+            )
           }
-          cloneHandle = null
-          originalHandle = null
-        }
-      })
+        })
 
-      // 函数：根据缩放比例调整 .mce-resizehandle 的位置和大小
-      const adjustResizeHandles = (aLeft, aTop) => {
-        nextTick(() => {
-          const nodeRt = doc.getElementById('mceResizeHandlene')
-          const nodeRb = doc.getElementById('mceResizeHandlese')
-          const nodeLb = doc.getElementById('mceResizeHandlesw')
-          if (nodeRt) {
-            nodeRt.style.left = `${aLeft}px`
-          }
-          if (nodeRb) {
-            nodeRb.style.left = `${aLeft}px`
-            nodeRb.style.top = `${aTop}px`
-          }
-          if (nodeLb) {
-            nodeLb.style.top = `${aTop}px`
+        // 监听 ObjectResized 事件，更新调整大小句柄
+        // 在表格调整大小结束时
+        // 解决移动表格corner点位resize时因为缩放导致的坐标系放大问题，进而导致移动错位问题
+        editor.on('ObjectResized', function (e) {
+          if (!editorInteractive(editor)) return
+          const { target, width, height, origin } = e
+          if (target.nodeName === 'TABLE' && origin.indexOf('corner') > -1) {
+            // 将最终调整的宽高根据缩放比例重设
+            target.style.width = `${width}px`
+            target.style.height = `${height}px`
+          } else if (target.nodeName === 'TABLE' && origin.indexOf('bar-col') > -1) {
+            // do nothing
           }
         })
       }
-
-      // 监听 ObjectSelected 事件，点击表格时触发调整
-      editor.on('ObjectSelected', event => {
-        if (event.target.nodeName === 'TABLE') {
-          adjustResizeHandles(
-            event.target.offsetWidth + event.target.offsetLeft,
-            event.target.offsetHeight + event.target.offsetTop
-          )
-        }
-      })
-
-      // 监听 ObjectResized 事件，更新调整大小句柄
-      // 在表格调整大小结束时
-      // 解决移动表格corner点位resize时因为缩放导致的坐标系放大问题，进而导致移动错位问题
-      editor.on('ObjectResized', function (e) {
-        const { target, width, height, origin } = e
-        if (target.nodeName === 'TABLE' && origin.indexOf('corner') > -1) {
-          // 将最终调整的宽高根据缩放比例重设
-          target.style.width = `${width}px`
-          target.style.height = `${height}px`
-        } else if (target.nodeName === 'TABLE' && origin.indexOf('bar-col') > -1) {
-          // do nothing
-        }
-      })
+      if (isPasteActive()) installEditorInteractions()
+      editorWaiters.forEach(waiter => waiter.resolve(editor))
+      editorWaiters.clear()
     })
   }
 })
@@ -305,6 +415,7 @@ const editStatus = computed(() => {
 watch(
   () => active.value,
   val => {
+    if (!richAlive || !isPasteActive()) return
     if (!val) {
       const ed = tinymce.get(tinymceId)
       if (canEdit.value) {
@@ -322,6 +433,7 @@ watch(
 watch(
   () => myValue.value,
   () => {
+    if (!richAlive || !isPasteActive()) return
     if (canEdit.value) {
       const ed = tinymce.get(tinymceId)
       element.value.propValue.textValue = ed?.getContent()
@@ -351,31 +463,37 @@ const wrapperStyle = computed(() => {
 useEmitt({
   name: 'vertical-change-' + tinymceId,
   callback: align => {
-    element.value.propValue.verticalAlign = align
+    if (richAlive && isPasteActive()) element.value.propValue.verticalAlign = align
   }
 })
 
+const syncFieldChannel = () => {
+  const next = richAlive && isPasteActive() ? 'fieldSelect-' + element.value.id : undefined
+  if (fieldChannel === next) return
+  if (fieldChannel) richEmitter.off(fieldChannel, fieldSelect)
+  fieldChannel = next
+  if (next) richEmitter.on(next, fieldSelect)
+}
 const viewInit = () => {
-  useEmitt({
-    name: 'fieldSelect-' + element.value.id,
-    callback: function (val) {
-      fieldSelect(val)
-    }
-  })
-  tinymce.init({})
+  if (!richAlive || !isPasteActive()) return
+  syncFieldChannel()
+  if (!filterPasteBinding.value) tinymce.init({})
   myValue.value = assignment(element.value.propValue.textValue)
 }
 const initCurFieldsChange = () => {
-  if (!canEdit.value) {
+  if (richAlive && isPasteActive() && !canEdit.value) {
     myValue.value = assignment(element.value.propValue.textValue)
     const ed = tinymce.get(tinymceId)
-    ed.setContent(myValue.value)
+    ed?.setContent(myValue.value)
   }
 }
 
 const jumpTargetAdaptor = () => {
-  setTimeout(() => {
-    const paragraphs = document.querySelectorAll('p')
+  clearTimeout(paragraphTimer)
+  paragraphTimer = setTimeout(() => {
+    if (!richAlive || !currentPaste()) return
+    const root = richEditor?.getBody() ?? richRoot.value
+    const paragraphs = root?.querySelectorAll('p') ?? []
     paragraphs.forEach(p => {
       // 如果 p 标签已经有 onclick 且包含 event.stopPropagation，则跳过
       if (
@@ -444,6 +562,7 @@ const encodeHTMLEntities = text => {
   return textarea.innerHTML
 }
 const initFontFamily = htmlText => {
+  if (!richAlive || (filterPasteBinding.value && !canEdit.value)) return
   const regex = /font-family:\s*([^;"]+);/g
   let match
   while ((match = regex.exec(htmlText)) !== null) {
@@ -454,6 +573,7 @@ const initFontFamily = htmlText => {
   }
 }
 const fieldSelect = field => {
+  if (!richAlive || !isPasteActive()) return
   const ed = tinymce.get(tinymceId)
   const fieldId = 'changeText-' + guid()
   const value =
@@ -468,6 +588,7 @@ const fieldSelect = field => {
   snapshotStore.resetStyleChangeTimes()
 }
 const onClick = () => {
+  if (!richAlive || !isPasteActive()) return
   if (canEdit.value) {
     const ed = tinymce.get(tinymceId)
     if (!ed?.selection) {
@@ -500,6 +621,8 @@ const resetSelect = (node?) => {
 
 const computedCanEdit = computed<boolean>(() => {
   return (
+    richAlive &&
+    isPasteActive() &&
     ['canvas', 'canvasDataV', 'edit'].includes(showPosition.value) &&
     editStatus.value &&
     canEdit.value === false &&
@@ -524,7 +647,10 @@ const editActive = computed<boolean>(() => {
 })
 
 const setEdit = () => {
+  if (!richAlive || !isPasteActive()) return
+  const editor = richEditor
   setTimeout(() => {
+    if (!editor || !editorInteractive(editor)) return
     if (computedCanEdit.value && editActive.value) {
       canEdit.value = true
       element.value['editing'] = true
@@ -535,16 +661,23 @@ const setEdit = () => {
     }
   })
 }
+let reShowVersion = 0
 const reShow = () => {
+  const version = ++reShowVersion
   editShow.value = false
   nextTick(() => {
+    if (!richAlive || !isPasteActive() || version !== reShowVersion) return
     editShow.value = true
-    editCursor()
+    nextTick(() => {
+      if (richAlive && isPasteActive() && version === reShowVersion) editCursor()
+    })
   })
 }
 
 const editCursor = () => {
+  const editor = richEditor
   setTimeout(() => {
+    if (!editor || !editorInteractive(editor) || !editor.getBody()?.isConnected) return
     const myDiv = document.getElementById(tinymceId)
     // Focus the cursor on the end of the text
     const range = document.createRange()
@@ -597,6 +730,10 @@ const checkCompareCalc = view => {
 }
 
 const calcData = (view: Chart, callback) => {
+  if (!richAlive || !isPasteActive()) {
+    callback?.()
+    return
+  }
   isError.value = false
   updateEmptyValue(view)
   if (view.tableId || view['dataFrom'] === 'template') {
@@ -658,7 +795,7 @@ const calcData = (view: Chart, callback) => {
   }
 }
 
-const initCurFields = chartDetails => {
+const initCurFields = (chartDetails, notify = true) => {
   dataRowFiledName.value = []
   dataRowSelect.value = {}
   dataRowNameSelect.value = {}
@@ -712,16 +849,20 @@ const initCurFields = chartDetails => {
       dataRowNameSelectSource.value[sourceFieldNameIdMap[key]] = rowDataValueSource
     }
   }
-  element.value.propValue['innerType'] = chartDetails.type
-  element.value.propValue['render'] = chartDetails.render
-  nextTick(() => {
-    initCurFieldsChange()
-    eventBus.emit('initCurFields-' + element.value.id)
-  })
+  if (notify && isPasteActive()) {
+    element.value.propValue['innerType'] = chartDetails.type
+    element.value.propValue['render'] = chartDetails.render
+    nextTick(() => {
+      if (!richAlive || !isPasteActive()) return
+      initCurFieldsChange()
+      eventBus.emit('initCurFields-' + element.value.id)
+    })
+  }
 }
 
 // 初始化此处不必刷新
 const renderChart = viewInfo => {
+  if (!richAlive || !isPasteActive()) return
   //do renderView
   updateEmptyValue(viewInfo)
   initCurFieldsChange()
@@ -782,7 +923,219 @@ onMounted(() => {
   viewInit()
 })
 
+// 比较本次内容，忽略 TinyMCE 编辑元数据和等价的 CSS/属性序列化。
+const normalizedRichContent = (html: string) => {
+  const root = document.createElement('div')
+  root.innerHTML = html
+  root.querySelectorAll('[data-mce-bogus="all"],br[data-mce-bogus]').forEach(node => node.remove())
+  root.querySelectorAll<HTMLElement>('*').forEach(node => {
+    Array.from(node.attributes).forEach(attribute => {
+      if (attribute.name.startsWith('data-mce-')) node.removeAttribute(attribute.name)
+    })
+    if (node.hasAttribute('style')) node.setAttribute('style', node.style.cssText)
+  })
+  // 仅根层标准block之间的ASCII排版缩进可忽略；行内空格/NBSP/pre正文原样保留。
+  const blocks = new Set([
+    'P',
+    'DIV',
+    'TABLE',
+    'UL',
+    'OL',
+    'BLOCKQUOTE',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6'
+  ])
+  const children = Array.from(root.childNodes || [])
+  const block = (node?: Node) =>
+    node?.nodeType === 1 && blocks.has(node.nodeName) && !(node as HTMLElement).style?.display
+  children.forEach((child, index) => {
+    if (
+      child.nodeType === 3 &&
+      /^[ \t\r\n]+$/.test(child.textContent ?? '') &&
+      block(children[index - 1]) &&
+      block(children[index + 1])
+    )
+      child.parentNode?.removeChild(child)
+  })
+  return root
+}
+const sameRichContent = (actual: string, expected: string) =>
+  normalizedRichContent(expected).isEqualNode(normalizedRichContent(actual))
+const prepareFilterPaste = async (
+  input: PreparedQuery,
+  binding: PasteBinding,
+  isCurrent: () => boolean
+): Promise<PasteReady> => {
+  if (input.kind !== 'queried' || !richAlive || input.response.type !== 'rich-text')
+    return { ok: false, reason: 'preparation_unavailable' }
+  filterPasteBinding.value = binding
+  currentPaste = () => richAlive && isCurrent()
+  let timer: ReturnType<typeof setTimeout>
+  let stopContent: (() => void) | undefined
+  let rejectContent: ((error: Error) => void) | undefined
+  const dispose = () => {
+    if (!richAlive) return
+    richAlive = false
+    clearTimeout(paragraphTimer)
+    pendingPreparationFailure?.()
+    failEditorWaiters(new Error('paste_cancelled'))
+    stopContent?.()
+    if (fieldChannel) richEmitter.off(fieldChannel, fieldSelect)
+    fieldChannel = undefined
+    cleanupEditors()
+    richEditor?.remove()
+    richEditor = undefined
+  }
+  try {
+    if (!currentPaste() || editorFailure) throw new Error('rich_editor_failed')
+    const response = cloneDeep(input.response)
+    const data = response.data as unknown as {
+      fields: ChartViewField[]
+      sourceFields: ChartViewField[]
+      tableRow: Record<string, unknown>[]
+    }
+    if (
+      !data ||
+      !Array.isArray(data.fields) ||
+      !Array.isArray(data.sourceFields) ||
+      !Array.isArray(data.tableRow)
+    )
+      throw new Error('rich_data_invalid')
+    state.data = response.data
+    state.viewDataInfo = response
+    state.totalItems = response.totalItems ?? 0
+    initReady.value = true
+    updateEmptyValue(response)
+    initCurFields(response, false)
+    let preparedContent = ''
+    const assertEditor = (editor: RichEditor) => {
+      const body = editor.getBody()
+      if (
+        !richAlive ||
+        !currentPaste() ||
+        editorFailure ||
+        richEditor !== editor ||
+        !editorInitialized ||
+        !editor.initialized
+      )
+        throw new Error('rich_editor_failed')
+      if (!body?.isConnected) throw new Error('rich_editor_disconnected')
+      const size = body.getBoundingClientRect()
+      if (size.width <= 1 || size.height <= 1) throw new Error('rich_editor_disconnected')
+      return body
+    }
+    const assertContent = (editor: RichEditor) => {
+      const body = assertEditor(editor)
+      if (
+        !sameRichContent(editor.getContent(), preparedContent) ||
+        !sameRichContent(body.innerHTML, preparedContent)
+      )
+        throw new Error('rich_editor_content_changed')
+    }
+    const preparation = async () => {
+      const editor = await new Promise<RichEditor>((resolve, reject) => {
+        if (richEditor && editorInitialized) resolve(richEditor)
+        else editorWaiters.add({ resolve, reject })
+      })
+      assertEditor(editor)
+      const content = assignment(element.value.propValue.textValue) || ''
+      preparedContent = content
+      await new Promise<void>((resolve, reject) => {
+        rejectContent = reject
+        const check = () => {
+          void nextTick().then(() => {
+            try {
+              const body = assertEditor(editor)
+              if (
+                sameRichContent(editor.getContent(), content) &&
+                sameRichContent(body.innerHTML, content)
+              )
+                resolve()
+            } catch (error) {
+              reject(error)
+            }
+          })
+        }
+        stopContent = () => editor.off('SetContent LoadContent', check)
+        editor.on('SetContent LoadContent', check)
+        myValue.value = content
+        editor.setContent(content)
+      })
+      assertContent(editor)
+      return editor
+    }
+    const editor = await Promise.race([
+      preparation(),
+      new Promise<never>((_, reject) => {
+        pendingPreparationFailure = () => {
+          const error = new Error('rich_editor_failed')
+          rejectContent?.(error)
+          reject(error)
+        }
+        timer = setTimeout(() => reject(new Error('rich_editor_timeout')), 10000)
+      })
+    ])
+    assertContent(editor)
+    const metadata = {
+      kind: 'rich-text' as const,
+      drillFilters: cloneDeep(response.drillFilters || []),
+      fields: cloneDeep(data.fields),
+      innerType: response.type,
+      render: response.render
+    }
+    return {
+      ok: true,
+      handle: {
+        key: props.suffixId,
+        binding,
+        instance: editor,
+        get metadata() {
+          assertContent(editor)
+          return metadata
+        },
+        dispose
+      }
+    }
+  } catch {
+    dispose()
+    return { ok: false, reason: 'paste_render_failed' }
+  } finally {
+    clearTimeout(timer)
+    stopContent?.()
+    pendingPreparationFailure = undefined
+  }
+}
+watch(
+  () => [isPasteActive(), element.value.id],
+  () => {
+    syncFieldChannel()
+    if (richAlive && isPasteActive() && editorInitialized) {
+      try {
+        installEditorInteractions?.()
+      } catch (error) {
+        console.warn('Rich text editing interactions unavailable', error)
+      }
+    }
+  },
+  { flush: 'sync' }
+)
+onBeforeUnmount(() => {
+  richAlive = false
+  clearTimeout(paragraphTimer)
+  pendingPreparationFailure?.()
+  failEditorWaiters(new Error('rich_unmounted'))
+  if (fieldChannel) richEmitter.off(fieldChannel, fieldSelect)
+  cleanupEditors()
+  if (filterPasteBinding.value) richEditor?.remove()
+})
+
 defineExpose({
+  canPrepareFilterPaste: () => richAlive && effectiveView.value?.type === 'rich-text',
+  prepareFilterPaste,
   calcData,
   renderChart
 })

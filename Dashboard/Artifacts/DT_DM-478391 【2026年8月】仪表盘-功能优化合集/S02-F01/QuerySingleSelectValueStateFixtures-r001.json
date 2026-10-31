@@ -1,0 +1,410 @@
+{
+  "status": "READY_FOR_INDEPENDENT_DESIGN_REVIEW",
+  "slice": "QVALUE-001",
+  "card_sha256": "5b131b0cc018febbcd83cc7d5bffa1ffafc4691ec05729f2d2a1aabae03d0ed5",
+  "signature": "prepareSingleSelectValueState(input:unknown): {ok:true,value:{design:SingleSelectDesignValues,runtime:SingleSelectRuntimeValues}} | {ok:false,reason:INVALID_INPUT|UNSUPPORTED_FIELD|UNSUPPORTED_SHAPE}",
+  "input_keys": [
+    "displayType",
+    "multiple",
+    "optionValueSource",
+    "defaultValueCheck",
+    "defaultValueFirstItem",
+    "defaultValue",
+    "defaultMapValue",
+    "selectValue",
+    "mapValue"
+  ],
+  "design_keys": [
+    "displayType",
+    "multiple",
+    "optionValueSource",
+    "defaultValueCheck",
+    "defaultValueFirstItem",
+    "defaultValue",
+    "defaultMapValue"
+  ],
+  "runtime_keys": [
+    "displayType",
+    "multiple",
+    "optionValueSource",
+    "defaultValueCheck",
+    "defaultValueFirstItem",
+    "defaultValue",
+    "defaultMapValue",
+    "selectValue",
+    "mapValue"
+  ],
+  "exact_constraints": {
+    "displayType": "0",
+    "multiple": false,
+    "optionValueSource": 1,
+    "defaultValueCheck": true,
+    "defaultValueFirstItem": false,
+    "defaultValue": "非空字符串",
+    "defaultMapValue": "恰一个非空字符串，不要求等defaultValue",
+    "selectValue": "非空字符串，可不同于defaultValue",
+    "mapValue": "恰一个非空字符串，不要求等defaultMapValue"
+  },
+  "algorithm": [
+    "验证普通JSON对象、所有值JSON合法且无访问器/非plain原型/循环/undefined/非有限数字，否则INVALID_INPUT",
+    "根键恰九键，缺键/多键UNSUPPORTED_FIELD",
+    "按exact_constraints验证，失败UNSUPPORTED_SHAPE",
+    "显式七字段构造design；defaultMapValue新数组；不保留selectValue/mapValue",
+    "另行构造runtime七字段及独立defaultMapValue数组；selectValue=design.defaultValue，mapValue=[...design.defaultMapValue]；不共用任何数组"
+  ],
+  "field_matrix": [
+    {
+      "field": "displayType",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "multiple",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "optionValueSource",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "defaultValueCheck",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "defaultValueFirstItem",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "defaultValue",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "defaultMapValue",
+      "extract": "KEEP",
+      "hydrate": "KEEP_DEEP_COPY"
+    },
+    {
+      "field": "selectValue",
+      "extract": "REMOVE",
+      "hydrate": "REGENERATE_FROM_DEFAULT"
+    },
+    {
+      "field": "mapValue",
+      "extract": "REMOVE",
+      "hydrate": "REGENERATE_FROM_DEFAULT"
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC-QVALUE-001",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A",
+            "defaultMapValue": [
+              "A-code"
+            ]
+          },
+          "runtime": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "selectValue": "A",
+            "mapValue": [
+              "A-code"
+            ]
+          }
+        }
+      },
+      "purpose": "默认A/运行B分离，runtime恢复A而非B"
+    },
+    {
+      "id": "TC-QVALUE-002",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "C",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "C",
+            "defaultMapValue": [
+              "A-code"
+            ]
+          },
+          "runtime": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "C",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "selectValue": "C",
+            "mapValue": [
+              "A-code"
+            ]
+          }
+        }
+      },
+      "purpose": "不猜显示值与编码相等"
+    },
+    {
+      "id": "TC-QVALUE-003",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "Z",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "design": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A",
+            "defaultMapValue": [
+              "A-code"
+            ]
+          },
+          "runtime": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 1,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "selectValue": "A",
+            "mapValue": [
+              "A-code"
+            ]
+          }
+        }
+      },
+      "purpose": "仅改变源运行值不能改变输出"
+    },
+    {
+      "id": "TC-QVALUE-004",
+      "input": {
+        "displayType": "0",
+        "multiple": true,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_SHAPE"
+      }
+    },
+    {
+      "id": "TC-QVALUE-005",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": true,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_SHAPE"
+      }
+    },
+    {
+      "id": "TC-QVALUE-006",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_SHAPE"
+      }
+    },
+    {
+      "id": "TC-QVALUE-007",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": null,
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_SHAPE"
+      }
+    },
+    {
+      "id": "TC-QVALUE-008",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code",
+          "C-code"
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_SHAPE"
+      }
+    },
+    {
+      "id": "TC-QVALUE-009",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 1,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A-code"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B-code"
+        ],
+        "id": "q"
+      },
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_FIELD"
+      }
+    },
+    {
+      "id": "TC-QVALUE-010",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_INPUT"
+      }
+    }
+  ],
+  "invariants": [
+    "源深度不变",
+    "design缺少selectValue/mapValue自身键",
+    "design与runtime及input任意数组均不共享",
+    "runtime.mapValue与runtime.defaultMapValue也不共享",
+    "改变源运行值不改变design/runtime；改变design.default后水合跟随默认",
+    "不查询枚举/时间/ID生成/网络，不评价默认值是否存在",
+    "成功完整两个对象；失败仅ok/reason无partial",
+    "深冻输入可用；修改任一输出不得影响另一输出或输入"
+  ],
+  "builder_write_candidates": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-value-state.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-value-state.test.ts"
+  ],
+  "remaining": "仅值投影；非完整Query carrier/schema，不含id/field/dataset/cascade/参数/日期，不改已有default-copy，不接UI/Store/权限。原26义务保持。",
+  "checks": "JSON与构造自检，未实现/未测试"
+}

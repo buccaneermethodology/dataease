@@ -1,0 +1,535 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "用户要求继续S02 Goal直至完成并加快执行，设计审核后进入实现；真实多用户权限环境和权限模块来源暂缺，相关验收继续BLOCKED/NOT_RUN。请独立审查SOURCE-LIFECYCLE r002有限设计，裁定设计事实与精确实现准入，不改写Goal分母/S01/产品代码。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立Frame-first/Boundary/Evolution复核生命周期设计r002，特别核对carrier内存私有存储与保存重开兼容、同commit原子发布、snapshot历史缺carrier失活顺序、save capture与异步dirty清理。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、Goal、设计作者文件或fixtures",
+      "模拟真实权限、保存、Store/snapshot或浏览器行为",
+      "把NOT_READY边界或有限观察提升成已验证产品能力",
+      "缩减Goal原始义务/S01状态或宣称Goal完成"
+    ],
+    "maximum_claim": "仅对SOURCE-LIFECYCLE设计r002出具独立语义结论与有界Builder准入 verdict；无产品/权限/Goal完成主张。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ScopeDeltaAudit-r001.md",
+      "revision": "73a4144097f0ded056d2ac3adfb502bd796a2d318662e81dde56f9e30a5ee278",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignHydrationDesign-r001.md",
+      "revision": "a94fb59549f28965d24c5500cc9010059be5abcbb713c1e9c24583e8465f9646",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignHydrationFixtures-r001.json",
+      "revision": "38c9ec999096dc9f3e3ce803f1e9266d90f38c1ea8a3bbf20ca05bf85f81ddbe",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignHydrationDesignReview-r001.md",
+      "revision": "fb282bec0b34d6223891cf1e26c21761a44946cd8f51fea036c2f86b8bea3f7c",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesign-r007.md",
+      "revision": "bf67232e7a54d7a92e7eff866182298fe0b151f01edec5293286add96aeee47f",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierDesign-r001.md",
+      "revision": "17f8f65d876b5f8eda0493b209687bf007e634743dc517363efe82a7c4f7ae32",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QCARRIER-001-Validation-r001.md",
+      "revision": "a3f107bcf0b829ee8817c34c653c9a2459a5169dcd6d19f89a5f032fb66c559c",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QCARRIER-001-Validation-r002.md",
+      "revision": "1e576e7aff21e497bcfdd903e9506f2fe9f227773fdacfb1b9a2ad5e2dd4fd66",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QE2E-001-Validation-r001.md",
+      "revision": "8d0a516946871746464ddce613dd6c90526220e04ddf8db99645bd64e73e4cb1",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "86fddf5dc5a44dcdce0e0895b10ee22265490174fe3018e05ccca614cf35c1db",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "8928113933cbf62c96d397d3fed90c6dae5ab0012fe40cfb6280ce9575bc5a3d",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "revision": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/pages/panel/ViewWrapper.vue",
+      "revision": "1ab352a32720fe8116170c6a341a7cf95bf20ac7f8892b7a8b5353e671b971d4",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/pages/panel/DashboardPreview.vue",
+      "revision": "bf87e67002ff7c23640fa86196afbe1f7d91f305dd7031e4b4be03aa722ca4cc",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/data-visualization/PreviewCanvas.vue",
+      "revision": "e99a734e0e619c756f4babd53844e02d07f33c5555ed516959eb1730fa473370",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/components/data-visualization/canvas/DePreview.vue",
+      "revision": "4fc0511d5fa932f33f6c81b8ed9b6c4677cf730fe21e36103661b40b4120b852",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleDesign-r001.md",
+      "revision": "43c60b0528b4d1c5e9819ef86934846170036d85d10ca0b79b19de0d4c808a22",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r001.json",
+      "revision": "56b8c0525c4c35df2512db37fab0a77c47470896234ea1b1198880f7f19ec790",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r109.json",
+      "revision": "602b775aa10e20d0c161d0526c554d443859ff42549f80aaa211a0b048bcb5cc",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+      "reason": "核查来源/历史/发布缺口与安全新建及用户设计更新子集，不缩Goal分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleDesign-r002.md",
+      "revision": "d1d2e0c8fb5c13bd67cd025192118ea1a7add7698e62101711d96cdbb8731765",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本次独立复核对象/完整Goal界限/当前验证时点。",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r002.json",
+      "revision": "95048b33a24d66f98652bb68c64fc7fb19b1ac068f728f9a94262e64a148778a",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本次独立复核对象/完整Goal界限/当前验证时点。",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md",
+      "revision": "863357ddfbefdf55f715d0d6e9dd8b87f8fc6e5526c5317034822c8facce2044",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本次独立复核对象/完整Goal界限/当前验证时点。",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r004.md",
+      "revision": "49a51a7747207c3f4ea457cc6e8725aef294da2c5c496e95b87faa90c451395f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本次独立复核对象/完整Goal界限/当前验证时点。",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r140.json",
+      "revision": "4caa6d5f4c61e453398b898d466814a1e6eff51b0df1f8b50f6925b8a1e551c3",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本次独立复核对象/完整Goal界限/当前验证时点。",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "subset-readiness",
+      "condition": "旧历史来源未明被用于阻断新建或明确用户设计确认路径",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "沿真实创建/确认/发布入口辨别依赖，分别给子集准入和剩余限制，不把排除历史当完成Goal",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "lifecycle-contradiction",
+      "condition": "时序oracle与源码调用顺序或引用语义冲突",
+      "mode": "deterministic",
+      "action": "追踪直接调用者，列具体反例与最小修订；不自行修设计",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_semantic_review",
+    "reason": "对r002新生命周期候选作独立只读双verdict，识别具体源证据范围并确认下一可执行target；不修设计或实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "10完整时序见证及2消费者oracle",
+    "新建/用户设计更新与旧历史路径分离",
+    "SOURCE-02A/B/C逐项因果及实施前置",
+    "Topology-109与QE2E/QCARRIER边界"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10项AC、26项must-have、16项产品义务保持；真实权限BLOCKED/NOT_RUN；S01不在范围。"
+  },
+  "snapshot": {
+    "snapshot_id": "S02-QSSDH-SOURCE-LIFECYCLE-design-review-r002",
+    "parent_snapshot_ref": null
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户授权先完成界面MVP再补齐复杂场景，完整验收未删减；继续设计和build直到完整Goal达成。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "按第二轮独立Review唯一精确指令修正LSC052尚未取得Observer快照；最终3/3候选不改变行为合同。",
+    "objective": "按第二轮独立Review唯一精确指令修正LSC052尚未取得Observer快照；最终3/3候选不改变行为合同。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionDesign-r003.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionCases-r003.json"
+    ],
+    "forbidden_actions": [
+      "不修改旧r001/r002/任何review/生产/runner/Goal",
+      "不扩大修复或改其余案例身份/错误通道/初态",
+      "不发Builder准入或宣称通过"
+    ],
+    "maximum_claim": "仅两个字段的最终设计候选机械修复，原10/26/16和第三轮预算保留。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionDesign-r002.md",
+      "revision": "2a8e940113daf9db67dd90e2407ab71299ce57a5b483d9eb99cee40a0d869c93",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionCases-r002.json",
+      "revision": "21879ba9f72564408b782396e5c3882f440259426f92a884a531411945c9523b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineStageConstructionDesignReview-r002.md",
+      "revision": "1c055cadbb9dda6de2b9fa8015f174857f957299e4e1c09c62412234a16c33ba",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal为10 AC/26 must-have/16产品义务且Scope Delta none；旧Chart→Chart r003与事务合同r003各自3/3且不得重开；AM-09仍NEEDS_REVISION；S01 F01 CONDITIONAL；真实权限环境BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design",
+    "reason": "按第二轮独立Review唯一精确指令修正LSC052尚未取得Observer快照；最终3/3候选不改变行为合同。",
+    "task_id": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003",
+    "recorded_at": "2026-10-27T02:20:15.082896+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r407.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r408.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "LINE-STAGE-CONSTRUCTION-DESIGN-LITERAL-REPAIR-r003",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "maximum_claim": "仅两个字段的最终设计候选机械修复，原10/26/16和第三轮预算保留。",
+  "design_objective": "按第二轮独立Review唯一精确指令修正LSC052尚未取得Observer快照；最终3/3候选不改变行为合同。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionCases-r003.json"
+}

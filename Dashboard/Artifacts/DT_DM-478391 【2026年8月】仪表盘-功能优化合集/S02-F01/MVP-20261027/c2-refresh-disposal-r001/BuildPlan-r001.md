@@ -1,0 +1,9 @@
+# C2 刷新后清理精确修复执行安排
+
+原Goal已授权实现，S039准备r002明确C2V-005阻止P1退出；U1–U4已独立有界通过。此处由Orchestrator明确安排新设计r003覆盖的有限工程，不把设计审查当实施授权，不新增产品要求。
+
+只修当前组件在稳定准备/普通刷新已完成后的两个释放入口：引用先null，再destroy；releaseMapPreparation同实例先null再cancel。保留active scope与错误通道，禁止改所有renderer/ready/G2 scope/Store/query/权限。原C2整包3/3 BLOCKED历史不改、不整包第四轮。本新设计3/3已用完；其50案例现在冻结不许Builder修改。若语义必须变化则报告阻塞而非自行改oracle。新有限实现单独独立验证，不能自动提升P1/49型/Goal。
+
+先新harness编译真实当前SFC与真实map/G2-scope控制路径，getter仅harness transform，按Cases-r003全部50案执行。对旧strict主SDK/current对象及SDK body按fixture身份分层同步采样；G2 bar/line真实分支必须先读回owner，全部其它cleanup doubles不抛，同realm Error对象关联。原28ID及计数与冻结case不改。先冻结runner hash，写前执行RED语义指纹且execution0，若有执行错误修harness重冻并保留失败；不得改产品消除harness错误，不预填RED总数。GREEN同runner全50，原maps317及G2相关回归、源码和新runner定向lint，记录基线差异。禁止安装、启动/重启服务、浏览器/数据库保存、提交。BDD/README写明层次及未验。
+
+实现只上述一个SFC的最小diff；不格式化周边、不覆盖其它既有改动。完整38与49及真实权限NOT_RUN不变。产物包括SourceDelta、RunnerFreeze、RED/GREEN/logs/exit、BuildEvidence、ValidationHandoff。Builder不写独立验收报告或Goal状态。

@@ -1,0 +1,13 @@
+# 符号地图代表明细过滤实现验证交接 r001
+
+实际生产diff只有SymbolicMapHandler.java明细SQLMeta创建后，调用已导入BeanUtils.copyBean(sqlMeta2,sqlMeta1)及一行注释。该副本在轴变换前创建，保留图表/外部/行过滤三片段与三dialect映射；原table重建、字段投影、Provider流程和ChartDataBuild代表明细输出均不变。新测试Java与Python runner均为冻结见证；未改POM、SDK、权限替补/XPack或L7。
+
+独立设计审查第1/3轮有界通过。其两项P1已落实：非空组恰1个代表且其原始ID属于同一坐标组匹配行；DIALECT使用真实DE_CALC_FIELD_PLACEHOLDER_901/902/903与三map；CROSS由dsMap两个条目进入真实cross生成分支，rebuild seam直接返回SQL，不做非cross替换。fetch始终只执行收到的SQL，未按expected_ids补过滤。no-filter和EMPTY对照均保留。
+
+冻结runner在精确写前源码运行RED：1PASS/10语义FAIL/0execution，11例聚合oracle均通过，失败均为明细ID集合/代表行/过滤元数据遗漏；无过滤对照通过。当前同Cases/Java/runner身份GREEN：11PASS/0FAIL/0execution。两次的compile/stdout/stderr、实际库来源manifest与完整生成SQL已保存evidence；Mockito启动有已保留提示，不能写双侧stderr为空。定向git diff --check通过。
+
+每次runner把当前七个实际生产源（Handler、SQLProvider、Field2SQLObj、Table2SQLObj、Dimension2SQLObj、Quota2SQLObj、ChartDataBuild）编译到独立/tmp；SDK等依赖来自现有CoreApplication.jar的292个库和target/classes支持类，不安装、不写target或改二进制。manifest保存全部来源及摘要。H2内存合成6行是SQL/代表明细语义见证，外部连接/方言、计数字段和命名边界是显式seam。没有运行Spring、真实MySQL/跨库供应商或真实多用户权限测试。
+
+真实浏览器旧响应的CMV-N02是触发证据，但当前8100仍为既有旧jar，尚未由源码构建的新后端重放该场景；不得将H2 GREEN冒充本地symbolic图已修复。当前唯一产品源码修复是候选，等待本实现首轮1/3独立验证；原38义务、49/49双侧局部观察与0/49完整类型、真实权限BLOCKED/NOT_RUN均保持。原C2预算3/3和ubo残余未重开。
+
+验证要求：复验完整冻结输入、写前/当前diff、11独立数据oracle、相同identity RED/GREEN及原设计两P1，独立重跑至少GREEN并复放RED（可/tmp，禁止改冻结资产）。源码测试若发现问题查全再返回，不首阻断返回；仅写指定报告。检查Provider类来源与seam，不扩展通用SQL框架；完整Maven/build/实际服务加载与UI仍明确NOT_RUN。

@@ -1,0 +1,232 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPAD-REBUILD-001-repair-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户已授权S02实施并要求加快；独立Validation发现F-QPAD-VAL-001，冻结合同要求严格ISO UTC，用户原始目标未更改。修复仅处理不可能日历日期被JS Date.parse规范化接受的问题。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "Delta repair：仅严格验证规范ISO UTC日历日期；拒绝2026-02-30等不存在日期并新增候选防御回归，冻结六个identity不变。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-ordinary-select-rebuild.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-ordinary-select-rebuild.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-RepairEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改Goal/设计/fixtures/review/admission",
+      "扩大普通Select合同或接受日期格式语义",
+      "接产品入口/UI/Store/网络/权限/保存",
+      "修改其他QPAD或其他切片",
+      "使用standalone/admin/mock替代权限验收"
+    ],
+    "maximum_claim": "仅修复并验证F-QPAD-VAL-001涉及的严格ISO UTC日历日期；不代表完整产品或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r003.md",
+      "revision": "4c21dbcc99a9add2aecff52f847fbb708df17ccf8eea21c3e4a1c7adb67cd4e5",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r003.json",
+      "revision": "0b0bc78a268f057356ae4354698949541a450f8ff18ec7b62614fe8474e5edbf",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r003.md",
+      "revision": "eaf64f971b9a0e685484c18e072ac796ba5a439933f69419a58a9b9b1c14560b",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPAD-REBUILD-001-Validation-r001.md",
+      "revision": "c6d29927a0b4647a25f0f4c98f545fde786932d8090f5780e3f672d3c14f0b50",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-ordinary-select-rebuild.ts",
+      "revision": "b41eb530d0f86a81b0df01b6ce3570b17f57da8036fec08189cc663dd4af056b",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-ordinary-select-rebuild.test.ts",
+      "revision": "c13e8db5b03c4511e538ea5e3f95580071263070343b9ba13740c062ab432f90",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-ExecutionEvidence-r001.md",
+      "revision": "647ca59f341c9a7baac254cadf5a7c49f148a960e98fc1b814611e96d7c60cce",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r048.json",
+      "revision": "0b8faee2c451fe7688bc6cb122932bba8cfd148e8adb49fc1e1f5e7d91b3c4bc",
+      "applicability": "bounded finding repair input",
+      "reason": "确认finding、冻结合同、准入范围及实现/runner现状",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "contract-drift",
+      "condition": "修复要求变更冻结合同、identity或Goal义务",
+      "mode": "deterministic",
+      "action": "fail closed并报告，不修改合同",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner-unavailable",
+      "condition": "现有runner或依赖不可用",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "不安装依赖；报告受限验证",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "只处置F-QPAD-VAL-001；保留六个冻结identity与完整Goal义务，权限仍未验证。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_builder_followed_by_independent_delta_validation",
+    "reason": "一项P2 finding可在既有受审纯函数及测试范围内修复，随后独立Delta Validation。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "冻结六identity",
+    "修复前finding与精确日历反例",
+    "断言级RED/GREEN与定向lint"
+  ],
+  "output_refs": null
+}

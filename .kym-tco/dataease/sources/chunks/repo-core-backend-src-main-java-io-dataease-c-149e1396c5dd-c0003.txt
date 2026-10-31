@@ -1,0 +1,428 @@
+                        result.add(new CellRangeAddress(lastRowIndex + offsetHeight, curRowIndex + offsetHeight - 1, curColIndex, curColIndex));
+                    }
+                    if (curRowIndex.equals(end) && curColValue.equals(lastColValue) && curRowIndex - lastRowIndex > 0) {
+                        curRange.add(new Integer[]{lastRowIndex, curRowIndex});
+                        result.add(new CellRangeAddress(lastRowIndex + offsetHeight, curRowIndex + offsetHeight, curColIndex, curColIndex));
+                    }
+                    if (!StringUtils.equals(lastColValue.toString(), curColValue.toString())) {
+                        lastColValue = curColValue;
+                        lastRowIndex = curRowIndex;
+                    }
+                }
+            }
+            preRange = curRange;
+        }
+        return result;
+    }
+
+    private static boolean validateHeaderGroup(TableHeader header, List<ChartViewFieldDTO> fields) {
+        if (header == null) {
+            return false;
+        }
+        var columns = header.getHeaderGroupConfig().getColumns();
+        if (CollectionUtils.isEmpty(columns)) {
+            return false;
+        }
+        var leafColumn = getHeaderLeafColumn(columns);
+        if (CollectionUtils.isEmpty(leafColumn) || leafColumn.size() != fields.size()) {
+            return false;
+        }
+        for (int i = 0; i < leafColumn.size(); i++) {
+            var a = leafColumn.get(i);
+            var b = fields.get(i).getDataeaseName();
+            if (!StringUtils.equals(a, b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static List<String> getHeaderLeafColumn(List<TableHeader.ColumnInfo> columns) {
+        var result = new ArrayList<String>();
+        for (TableHeader.ColumnInfo column : columns) {
+            if (CollectionUtils.isEmpty(column.getChildren())) {
+                result.add(getHeaderColumnField(column));
+            } else {
+                result.addAll(getHeaderLeafColumn(column.getChildren()));
+            }
+        }
+        return result;
+    }
+
+    private static String getHeaderColumnField(TableHeader.ColumnInfo column) {
+        // 新版表头使用 field，历史配置仍使用 key，校验和导出统一按此规则读取。
+        return StringUtils.isNotBlank(column.getField()) ? column.getField() : column.getKey();
+    }
+
+    private static Integer getDepth(TableHeader.ColumnInfo column, Integer parentDepth) {
+        if (org.springframework.util.CollectionUtils.isEmpty(column.getChildren())) {
+            return parentDepth;
+        } else {
+            Integer depth = 0;
+            for (TableHeader.ColumnInfo child : column.getChildren()) {
+                depth = Math.max(depth, getDepth(child, parentDepth + 1));
+            }
+            return depth;
+        }
+    }
+
+    private static CellStyle getNumericCellStyle(Workbook workbook, BigDecimal value, Map<String, CellStyle> numericStyles) {
+        // 默认数值格式按实际小数位生成，避免大数显示为科学计数法；同一导出内复用样式。
+        String numberFormat = buildAutoNumberFormat(value.stripTrailingZeros().toPlainString());
+        return numericStyles.computeIfAbsent(numberFormat, key -> {
+            CellStyle style = workbook.createCellStyle();
+            style.setDataFormat(workbook.createDataFormat().getFormat(key));
+            return style;
+        });
+    }
+
+    private static void setNumericCellValue(Cell cell, BigDecimal value) {
+        cell.setCellValue(value.stripTrailingZeros().doubleValue());
+    }
+
+    private static void createCell(TableHeader tableHeader, TableHeader.ColumnInfo column, Integer width, Integer depth, Sheet sheet, CellStyle cellStyle, Integer totalDepth, Map<String, Row> rowMap, List<ChartViewFieldDTO> xAxis) {
+        if (org.springframework.util.CollectionUtils.isEmpty(column.getChildren())) {
+            Integer toDepth = totalDepth - 1 > depth ? totalDepth - 1 : depth;
+            if (depth.equals(toDepth)) {
+                Cell cell = rowMap.get("row" + depth).createCell(width);
+                cell.setCellStyle(cellStyle);
+                cell.setCellValue(getDeFieldName(xAxis, getHeaderColumnField(column)));
+            } else {
+                for (int i = depth; i <= toDepth; i++) {
+                    Cell cell1 = rowMap.get("row" + i).createCell(width);
+                    cell1.setCellValue(getDeFieldName(xAxis, getHeaderColumnField(column)));
+                    cell1.setCellStyle(cellStyle);
+                }
+                CellRangeAddress region = new CellRangeAddress(depth, toDepth, width, width);
+                sheet.addMergedRegion(region);
+                RegionUtil.setBorderTop(BorderStyle.THIN, region, sheet);
+                RegionUtil.setBorderRight(BorderStyle.THIN, region, sheet);
+                RegionUtil.setBorderBottom(BorderStyle.THIN, region, sheet);
+                RegionUtil.setBorderLeft(BorderStyle.THIN, region, sheet);
+                Cell mergedCell = rowMap.get("row" + depth).getCell(width);
+                mergedCell.setCellStyle(cellStyle);
+
+            }
+        } else {
+            Cell cell1 = rowMap.get("row" + depth).createCell(width);
+            cell1.setCellValue(getGroupName(tableHeader, column));
+            cell1.setCellStyle(cellStyle);
+            Cell cell2 = rowMap.get("row" + depth).createCell(width + column.getWidth() - 1);
+            cell2.setCellValue(getGroupName(tableHeader, column));
+            cell2.setCellStyle(cellStyle);
+            CellRangeAddress region = new CellRangeAddress(depth, depth, width, width + column.getWidth() - 1);
+            sheet.addMergedRegion(region);
+            RegionUtil.setBorderTop(BorderStyle.THIN, region, sheet);
+            RegionUtil.setBorderRight(BorderStyle.THIN, region, sheet);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, region, sheet);
+            RegionUtil.setBorderLeft(BorderStyle.THIN, region, sheet);
+            Cell mergedCell = rowMap.get("row" + depth).getCell(width);
+            mergedCell.setCellStyle(cellStyle);
+            int subWith = width;
+            for (TableHeader.ColumnInfo child : column.getChildren()) {
+                createCell(tableHeader, child, subWith, depth + 1, sheet, cellStyle, totalDepth, rowMap, xAxis);
+                subWith = subWith + child.getWidth();
+            }
+        }
+    }
+
+    private static String getGroupName(TableHeader tableHeader, TableHeader.ColumnInfo column) {
+        // 新版分组名称直接保存在节点上，旧配置才从 meta 中查找。
+        if (column.getTitle() != null) {
+            return column.getTitle();
+        }
+        List<TableHeader.MetaInfo> meta = tableHeader.getHeaderGroupConfig().getMeta();
+        if (CollectionUtils.isEmpty(meta)) {
+            return "";
+        }
+        String field = getHeaderColumnField(column);
+        for (TableHeader.MetaInfo metaInfo : meta) {
+            if (StringUtils.equals(metaInfo.getField(), field)) {
+                return metaInfo.getName();
+            }
+        }
+        return "";
+    }
+
+    private static String getDeFieldName(List<ChartViewFieldDTO> xAxis, String key) {
+        for (ChartViewFieldDTO xAxi : xAxis) {
+            if (xAxi.getDataeaseName().equals(key)) {
+                return StringUtils.isNotBlank(xAxi.getChartShowName()) ? xAxi.getChartShowName() : xAxi.getName();
+            }
+        }
+        return "";
+    }
+
+    private static Integer setWidth(TableHeader.ColumnInfo column, Integer parentWidth) {
+        if (org.springframework.util.CollectionUtils.isEmpty(column.getChildren())) {
+            column.setWidth(parentWidth);
+            return parentWidth;
+        } else {
+            Integer depth = 0;
+            for (TableHeader.ColumnInfo child : column.getChildren()) {
+                depth = depth + setWidth(child, 1);
+            }
+            column.setWidth(depth);
+            return depth;
+        }
+    }
+
+    private static String cellValue(FormatterCfgDTO formatterCfgDTO, BigDecimal value) {
+        if (formatterCfgDTO.getType().equalsIgnoreCase("percent")) {
+            return value.stripTrailingZeros().toPlainString();
+        } else {
+            return value.divide(BigDecimal.valueOf(formatterCfgDTO.getUnit())).stripTrailingZeros().toPlainString();
+        }
+    }
+
+    private static CellStyle createCellStyle(Workbook workbook, FormatterCfgDTO formatter, String value) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        DataFormat format = workbook.createDataFormat();
+
+        if (formatter == null) {
+            cellStyle.setDataFormat(format.getFormat("General"));
+            return cellStyle;
+        }
+        String formatStr = "";
+        if (formatter.getType().equals("auto")) {
+            formatStr = buildAutoNumberFormat(value);
+            switch (formatter.getUnit()) {
+                case 1000:
+                    formatStr = formatStr + (formatter.getUnitLanguage().equalsIgnoreCase("ch") ? "\"千\"" : "\"K\"");
+                    break;
+                case 10000:
+                    formatStr = formatStr + "\"万\"";
+                    break;
+                case 1000000:
+                    formatStr = formatStr + (formatter.getUnitLanguage().equalsIgnoreCase("ch") ? "\"百万\"" : "\"M\"");
+                    break;
+                case 100000000:
+                    formatStr = formatStr + "\"亿\"";
+                    break;
+                case 1000000000:
+                    formatStr = formatStr + "\"B\"";
+                    break;
+                default:
+                    break;
+            }
+            if (formatter.getThousandSeparator()) {
+                formatStr = "#,##" + formatStr;
+            }
+            if (StringUtils.isNotEmpty(formatter.getSuffix())) {
+                if (formatter.getSuffix().equals("%")) {
+                    formatStr = formatStr + "\"%\"";
+                } else {
+                    formatStr = formatStr + "\"" + formatter.getSuffix() + "\"";
+                }
+            }
+        }
+        if (formatter.getType().equals("value")) {
+            if (formatter.getDecimalCount() > 0) {
+                formatStr = "0." + new String(new char[formatter.getDecimalCount()]).replace('\0', '0');
+            } else {
+                formatStr = "0";
+            }
+            switch (formatter.getUnit()) {
+                case 1000:
+                    formatStr = formatStr + (formatter.getUnitLanguage().equalsIgnoreCase("ch") ? "\"千\"" : "\"K\"");
+                    break;
+                case 10000:
+                    formatStr = formatStr + "\"万\"";
+                    break;
+                case 1000000:
+                    formatStr = formatStr + (formatter.getUnitLanguage().equalsIgnoreCase("ch") ? "\"百万\"" : "\"M\"");
+                    break;
+                case 100000000:
+                    formatStr = formatStr + "\"亿\"";
+                    break;
+                case 1000000000:
+                    formatStr = formatStr + "\"B\"";
+                    break;
+                default:
+                    break;
+            }
+            if (formatter.getThousandSeparator()) {
+                formatStr = "#,##" + formatStr;
+            }
+            if (StringUtils.isNotEmpty(formatter.getSuffix())) {
+                if (formatter.getSuffix().equals("%")) {
+                    formatStr = formatStr + "\"%\"";
+                } else {
+                    formatStr = formatStr + "\"" + formatter.getSuffix() + "\"";
+                }
+            }
+        } else if (formatter.getType().equals("percent")) {
+            if (formatter.getDecimalCount() > 0) {
+                formatStr = "0." + new String(new char[formatter.getDecimalCount()]).replace('\0', '0');
+            } else {
+                formatStr = "0";
+            }
+            formatStr = formatStr + "%";
+        }
+        if (StringUtils.isNotEmpty(formatStr)) {
+            cellStyle.setDataFormat(format.getFormat(formatStr));
+        } else {
+            return null;
+        }
+        return cellStyle;
+    }
+
+    private static String buildAutoNumberFormat(String value) {
+        String formatStr = "0";
+        if (StringUtils.isBlank(value)) {
+            return formatStr;
+        }
+        int decimalIndex = value.indexOf('.');
+        if (decimalIndex < 0 || decimalIndex == value.length() - 1) {
+            return formatStr;
+        }
+        int decimalCount = value.length() - decimalIndex - 1;
+        return formatStr + "." + new String(new char[decimalCount]).replace('\0', '#');
+    }
+
+    private static String buildFormatterStyleCacheKey(FormatterCfgDTO formatter, String value) {
+        return String.join("|",
+                StringUtils.defaultString(formatter.getType()),
+                StringUtils.defaultString(formatter.getUnitLanguage()),
+                String.valueOf(formatter.getUnit()),
+                String.valueOf(formatter.getDecimalCount()),
+                String.valueOf(formatter.getThousandSeparator()),
+                StringUtils.defaultString(formatter.getSuffix()),
+                buildAutoNumberFormat(value)
+        );
+    }
+
+    @Override
+    public List<String> getFieldData(ChartViewDTO view, Long fieldId, String fieldType) throws Exception {
+        return chartDataManage.getFieldData(view, fieldId, fieldType);
+    }
+
+    @Override
+    public List<String> getDrillFieldData(ChartViewDTO view, Long fieldId) throws Exception {
+        return chartDataManage.getDrillFieldData(view, fieldId);
+    }
+
+    @DeLog(id = "#p0", ot = LogOT.EXPORT, st = LogST.PANEL)
+    public void exportPanelViewLog(Long id) {
+    }
+
+    @DeLog(id = "#p0", ot = LogOT.EXPORT, st = LogST.SCREEN)
+    public void exportScreenViewLog(Long id) {
+    }
+
+    public static boolean isSummaryEnabled(ChartViewDTO viewInfo) {
+        if (viewInfo == null || viewInfo.getCustomAttr() == null) return false;
+        String type = viewInfo.getType();
+        if (!StringUtils.equalsAnyIgnoreCase(type, "table-info", "table-normal")) return false;
+        Map<String, Object> basicStyle = (Map<String, Object>) viewInfo.getCustomAttr().get("basicStyle");
+        if (basicStyle == null) return false;
+        return basicStyle.get("showSummary") != null && (Boolean) basicStyle.get("showSummary");
+    }
+
+    public static SummaryConfig parseSummaryConfig(ChartViewDTO viewInfo) {
+        SummaryConfig config = new SummaryConfig();
+        config.tableInfo = viewInfo.getType().equalsIgnoreCase("table-info");
+        Map<String, Object> basicStyle = (Map<String, Object>) viewInfo.getCustomAttr().get("basicStyle");
+        config.summaryLabel = (basicStyle.get("summaryLabel") != null && StringUtils.isNotBlank(basicStyle.get("summaryLabel").toString()))
+                ? basicStyle.get("summaryLabel").toString()
+                : (Lang.isChinese() ? "总计" : "Total");
+
+        List<Map<String, Object>> seriesSummary = basicStyle.get("seriesSummary") != null
+                ? (List<Map<String, Object>>) basicStyle.get("seriesSummary") : null;
+
+        List<ChartViewFieldDTO> summaryFields;
+        if (viewInfo.getType().equalsIgnoreCase("table-info")) {
+            summaryFields = viewInfo.getXAxis().stream()
+                    .filter(field -> Arrays.asList(DeTypeConstants.DE_INT, DeTypeConstants.DE_FLOAT).contains(field.getDeType()))
+                    .collect(Collectors.toList());
+        } else {
+            summaryFields = viewInfo.getYAxis();
+        }
+
+        for (ChartViewFieldDTO field : summaryFields) {
+            String fName = field.getDataeaseName();
+            String sType = "sum";
+            boolean sShow = true;
+            if (seriesSummary != null) {
+                for (Map<String, Object> s : seriesSummary) {
+                    if (fName.equals(s.get("field"))) {
+                        sType = s.get("summary") == null ? "sum" : s.get("summary").toString();
+                        sShow = s.get("show") == null || (Boolean) s.get("show");
+                        break;
+                    }
+                }
+            }
+            config.summaryTypeMap.put(fName, sType);
+            config.summaryShowMap.put(fName, sShow);
+        }
+        return config;
+    }
+
+    public static void accumulatePageStats(SummaryAccumulator acc, List<Object[]> pageDetails,
+                                           List<ChartViewFieldDTO> allColumns, SummaryConfig config) {
+        if (pageDetails == null) return;
+        for (Object[] row : pageDetails) {
+            acc.totalCount++;
+            for (int j = 0; j < allColumns.size() && j < row.length; j++) {
+                ChartViewFieldDTO field = allColumns.get(j);
+                String fName = field.getDataeaseName();
+                if (!config.summaryShowMap.containsKey(fName) || !config.summaryShowMap.get(fName)) continue;
+                String sType = config.summaryTypeMap.get(fName);
+                if (sType == null || "custom".equals(sType)) continue;
+                Object valObj = row[j];
+                if (valObj == null || StringUtils.isBlank(valObj.toString())) continue;
+                try {
+                    BigDecimal val = new BigDecimal(valObj.toString());
+                    switch (sType) {
+                        case "max":
+                            BigDecimal curMax = acc.maxMap.get(fName);
+                            if (curMax == null || val.compareTo(curMax) > 0) acc.maxMap.put(fName, val);
+                            break;
+                        case "min":
+                            BigDecimal curMin = acc.minMap.get(fName);
+                            if (curMin == null || val.compareTo(curMin) < 0) acc.minMap.put(fName, val);
+                            break;
+                        default:
+                            acc.sumMap.merge(fName, val, BigDecimal::add);
+                            acc.countMap.merge(fName, 1L, Long::sum);
+                            if ("var_pop".equals(sType) || "stddev_pop".equals(sType)) {
+                                acc.sumOfSquaresMap.merge(fName, val.multiply(val), BigDecimal::add);
+                            }
+                            break;
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Object[] buildSummaryRow(List<ChartViewFieldDTO> allColumns, SummaryConfig config,
+                                           SummaryAccumulator acc, Map<String, BigDecimal> customSumResult) {
+        Object[] totalRow = new Object[allColumns.size()];
+        for (int j = 0; j < allColumns.size(); j++) {
+            ChartViewFieldDTO field = allColumns.get(j);
+            String fName = field.getDataeaseName();
+            if (config.summaryShowMap.containsKey(fName) && config.summaryShowMap.get(fName)) {
+                String sType = config.summaryTypeMap.get(fName);
+                switch (sType) {
+                    case "custom":
+                        totalRow[j] = customSumResult != null && customSumResult.get(fName) != null
+                                ? customSumResult.get(fName).toPlainString() : null;
+                        break;
+                    case "max":
+                        totalRow[j] = acc.maxMap.get(fName) != null ? acc.maxMap.get(fName).toPlainString() : null;
+                        break;
+                    case "min":
+                        totalRow[j] = acc.minMap.get(fName) != null ? acc.minMap.get(fName).toPlainString() : null;
+                        break;
+                    case "avg":
+                        BigDecimal sum = acc.sumMap.get(fName);
+                        Long cnt = acc.countMap.get(fName);
+                        if (sum != null && cnt != null && cnt > 0) {
+                            totalRow[j] = sum.divide(BigDecimal.valueOf(cnt), 8, java.math.RoundingMode.HALF_UP).toPlainString();
+                        }
+                        break;
+                    case "sum":
+                        totalRow[j] = acc.sumMap.get(fName) != null ? acc.sumMap.get(fName).toPlainString() : null;
+                        break;

@@ -1,0 +1,71 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S00-KYM-TCO-FINAL",
+  "session_id": "S00-KYM-TCO-UPDATE",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md",
+    "sha256": "45cdc9ce3f70e0acd49c9364e2f6fa3e05aed498e61177a2d0bf6b5838cec525"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/candidate-final-manifest.json",
+      "sha256": "2c57456d7fc1671d00dc035e5a965317325005afd074c9ebdce407f30938b225"
+    },
+    {
+      "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/review.md",
+      "sha256": "4cd831f82755718c5ce0deb67c9b79dc6b99a7e465b6653f8846e02e635982f1"
+    },
+    {
+      "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/repair-disposition.md",
+      "sha256": "7727cc181ec52a89caf7ea9ae91c29495971739d3144df3dd08deee5160ec1a8"
+    }
+  ],
+  "mode": "delta",
+  "snapshot": {
+    "snapshot_id": "S00-KYM-R007-TCO-R003",
+    "parent_snapshot_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/candidate-manifest.json"
+  },
+  "delta_read_set": [
+    ".kym-tco/dataease/kym/revisions/kym-r007.json",
+    ".kym-tco/dataease/tco/models/tco-r003.json",
+    ".kym-tco/dataease/tco/proposals/coverage-kym-r007-r003.json",
+    ".kym-tco/dataease/config.json",
+    "Dashboard/Sessions.md",
+    "Dashboard/Decisions.md",
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/Closeout.md",
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/repair-disposition.md",
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/kym-package-final.json",
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/tco-package-final.json",
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/review.md"
+  ],
+  "acceptance_criteria_ids": [
+    "sources",
+    "decisions",
+    "profiles",
+    "coverage",
+    "packages"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/review-final.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/review-final.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "候选KYM/TCO语义与来源复核，不代表产品实现",
+    "authority_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/Closeout.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S00-KYM-TCO-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md",
+  "working_directory": ".",
+  "execution_command": "增量独立复核R01-R04已修复：r007 Q103定位、保留最大选中数未决及汇总下拉、S00文档审查时点；r003 F07/F08按功能投影，新增下拉coverage要求。检查当前包/Closeout/Dashboard候选状态一致、Profiles分母不变、无覆盖升级；旧未变部分复用原review，不重扫全部来源。只写review-final.md，明确可否candidate ready for downstream preview。"
+}

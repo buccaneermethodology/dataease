@@ -1,0 +1,523 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SAVED-CANVAS-OWNER-source-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读Validation detached Saved Canvas Owner helper source及同身份GREEN r002：复算Goal/contract/design/cases/runner/source hashes；独立重跑GREEN；核实40/40、完整API回执shape、对象引用/失效/注册/token语义、静态边界与既有创建型回归exit0；确认RED/GREEN runner/fixture/contract/order/runtime相同；检查r001 GREEN失败原样保留。不得改代码或测试、不得运行产品/权限验证，不授权产品接线。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立确认source helper符合r004合同并以same identity运行GREEN 40例及create-owner regression。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-source-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改source、runner、fixture、contract或产品UI/Store",
+      "运行真实权限或standalone/mock权限路径",
+      "覆盖GREEN-r001首次失败证据",
+      "将helper GREEN解释为产品或Goal验收通过",
+      "授权产品接线或关闭权限义务"
+    ],
+    "maximum_claim": "仅判断detached helper与same-identity GREEN r002/创建型回归；不代表产品或Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "项目规范",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "SP-010流程",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "原Goal",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerImplementationContract-r003.json",
+      "revision": "268225f040bc1062e9e62dc071bcd43fa75542c6943300e5f49fd07fc0926d82",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ],
+      "reason": "冻结实现合同",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "scope",
+        "acceptance"
+      ],
+      "reason": "Owner设计",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+      "revision": "f209c9552d2807e628c8334d5e2164114837ec9af2a4592b1332d89715d9a822",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "40例冻结fixture",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerImplementationContractReview-r003.md",
+      "revision": "5f434be1128fa5215b2bba8c5fa22bd00b5e37438836a5ecc4331b961bc00425",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "独立合同审查",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+      "revision": "5539326540d67c8c352e91bee1611d7783e6f02bd961b7030510f877b600dfc4",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "candidate runner",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts",
+      "revision": "2c58be150c8575636b55627fc1949f1beaf943cd5c562ad0e7be7c72825c6f03",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "既有创建回归源码只读查看",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "真实权限状态",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r199.json",
+      "revision": "90f968acef2d75f61215db7d7fd8e2f90cb1ea4b3d80f1d63efd26fba6c1a932",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "runner准入拓扑",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r001.stdout.txt",
+      "revision": "3caae840607c9d7ddbe8ef15fcb6ce8988ffbea49bd89ff9683cd26fb7793f36",
+      "domains": [
+        "validation"
+      ],
+      "reason": "原始RED证据",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r001.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "原始RED证据",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r001.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "domains": [
+        "validation"
+      ],
+      "reason": "原始RED证据",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r001.identity.json",
+      "revision": "3c8ee0f7e5639209529f3ab2669e6e94fa271942089e007aeddea51ee7c013b8",
+      "domains": [
+        "validation"
+      ],
+      "reason": "原始RED证据",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.stdout.txt",
+      "revision": "42ece40963b55aad47ac93aba9ba13c147181f334b72b03f6feeff3f2a6beda5",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r002 stdout",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r002 stderr",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r002 exit code",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.identity.json",
+      "revision": "f34be0f28ea1180b29c69777c5ff2f6af7d61c99daa38d1e90273e6b20d08d9f",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r002 identity manifest",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r001.md",
+      "revision": "f77f46bdd78cd017224faa0ec5d2ffca7e3833da6ab1e0a7c88e0828ef13b43b",
+      "domains": [
+        "validation"
+      ],
+      "reason": "prior independent finding baseline",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r002.md",
+      "revision": "08064ccf5d8bd108b423780bda480e00fdb26d93abf9282f9747f04065b43899",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "独立RED r002 finding baseline",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r003.stdout.txt",
+      "revision": "0816590917d5688a2aea04b81bfedc357d241e20116575c9340c466af026175d",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r003 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r003.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r003 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r003.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r003 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r003.identity.json",
+      "revision": "6d6daaa01ca3f389a0b4198145dea76b1b1c1bc210c5a7411e4cb92339dfc37a",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r003 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r201.json",
+      "revision": "ffec229d4a35160dd4540ccc1e392ad8a2ee54180cb1bd924c08d5a31e0f7949",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "runner repair r003 topology",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r003.md",
+      "revision": "9c6c11b02cf103eb90f03cefca91e945bd9c3cbbd1cf011d91e08245a8806350",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "prior independent finding",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r204.json",
+      "revision": "611dd33d37c90aed41390b35f3ad59124a14dedf321fa80fd99e7854da0286f2",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "actual candidate topology",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+      "revision": "5539326540d67c8c352e91bee1611d7783e6f02bd961b7030510f877b600dfc4",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "runner r004 implementation target",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r004.stdout.txt",
+      "revision": "d14fefc41e44f479427518b01fde35549f72468e3dbfde3c582e1ad1346d524d",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r004 durable outputs",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r004.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r004 durable outputs",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r004.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r004 durable outputs",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r004.identity.json",
+      "revision": "bae7bf5c684ef454a1dd9f663eeed03b62b428c90a51b0016af4e5c5813d2642",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED r004 durable outputs",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r207.json",
+      "revision": "45a5003fead3c8317c853ef91e36bb734c4b1417a8e0c443660a460e1dd389d2",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "source/GREEN candidate topology",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+      "revision": "5592e60c441c06b3fd5d27c5b714b9f541517cec71fc443fd092aa75f89509a2",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "detached helper implementation",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r004.md",
+      "revision": "5d288a57afeba8cfa0710676901b8fb5aee36a6f3d1693c0b8ba830ac429009c",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "accepted independent runner RED",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r004.identity.json",
+      "revision": "bae7bf5c684ef454a1dd9f663eeed03b62b428c90a51b0016af4e5c5813d2642",
+      "domains": [
+        "validation"
+      ],
+      "reason": "RED identity manifest",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r002.stdout.txt",
+      "revision": "9c65eb1a1393eb3641b4c4951562c5280091ce91936e14fb613c9d79bbce2165",
+      "domains": [
+        "validation"
+      ],
+      "reason": "GREEN r002 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r002.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "GREEN r002 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r002.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "domains": [
+        "validation"
+      ],
+      "reason": "GREEN r002 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r002.identity.json",
+      "revision": "bae7bf5c684ef454a1dd9f663eeed03b62b428c90a51b0016af4e5c5813d2642",
+      "domains": [
+        "validation"
+      ],
+      "reason": "GREEN r002 durable output",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.stdout.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "validation"
+      ],
+      "reason": "preserved initial GREEN failure",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.stderr.txt",
+      "revision": "2d49dd2cc3f311a8b745708566d984ed9d20b7e3c75e449a22cb932f4df8f18f",
+      "domains": [
+        "validation"
+      ],
+      "reason": "preserved initial GREEN failure",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.exitcode.txt",
+      "revision": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "domains": [
+        "validation"
+      ],
+      "reason": "preserved initial GREEN failure",
+      "applicability": "S02-SAVED-CANVAS-OWNER-source-validation-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "identity_drift",
+      "mode": "deterministic",
+      "condition": "runner/fixture/contract/case order/runtime identity不匹配",
+      "action": "blocked并要求重新基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "oracle_mismatch",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "source/GREEN输出与冻结40 case oracle或设计状态机不符",
+      "action": "partial并列出finding，不修改候选",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "trusted RED requires independent durable identity and semantic failure classification.",
+    "route": "semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "SCRED-03 findings and repaired code paths",
+    "r003 contract/r004 design/all 40 ordered identities",
+    "source absence and RED r003 raw stdout/stderr/exitcode/identity",
+    "per-case first begin oracle and execution classification",
+    "full API discriminant keys and opaque owner/token type assertions",
+    "040 foreign-owner generation comes from actual validation result",
+    "static source/export/API/dependency boundary is computed",
+    "all four create-regression dependency digests are bound and recorded",
+    "complete Goal scope/permission limits"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10/26/16、Scope Delta none、S01独立；真实权限BLOCKED/NOT_RUN，QPC产品接线NOT_READY；只评估detached helper same-identity GREEN，不关闭AC。"
+  }
+}

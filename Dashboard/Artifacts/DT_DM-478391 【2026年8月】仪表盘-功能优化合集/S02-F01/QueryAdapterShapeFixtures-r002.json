@@ -1,0 +1,215 @@
+{
+  "status": "源码派生合成oracle，非运行证据",
+  "card_sha256": "882499a0b5a333a8695ab1ae1431e07d770f99800e7fcd8e95c799568732f47a",
+  "backend_generation": {
+    "input_field_order": [
+      "f-province",
+      "f-city"
+    ],
+    "provider_rows": [
+      [
+        "浙江",
+        "杭州"
+      ]
+    ],
+    "flat_nodes_expected": [
+      {
+        "id": "浙江",
+        "pid": "root",
+        "text": "浙江",
+        "nodeType": "浙江-de-0"
+      },
+      {
+        "id": "浙江-de-杭州",
+        "pid": "浙江",
+        "text": "杭州",
+        "nodeType": "浙江-de-杭州-de-1"
+      }
+    ],
+    "frontend_value_expected": "浙江-de-杭州",
+    "provenance": "合成provider rows代入实际buildTreeNode算法；未执行Java/数据库"
+  },
+  "searchQuery_input": {
+    "queryComponentList": [
+      {
+        "id": "query-B",
+        "innerType": "VQuery",
+        "propValue": [
+          {
+            "id": "q-tree-new",
+            "displayType": "9",
+            "multiple": true,
+            "defaultValueCheck": true,
+            "defaultValue": [
+              "浙江-de-杭州"
+            ],
+            "selectValue": [
+              "江苏-de-南京"
+            ],
+            "treeFieldList": [
+              {
+                "id": "f-province",
+                "datasetGroupId": "201"
+              },
+              {
+                "id": "f-city",
+                "datasetGroupId": "201"
+              }
+            ],
+            "treeCheckedList": [
+              {
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "checkedFieldsMap": {
+                  "chart-B": "f-province"
+                }
+              },
+              {
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "checkedFieldsMap": {
+                  "chart-B": "f-city"
+                }
+              }
+            ],
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-province"
+            },
+            "parameters": []
+          }
+        ]
+      }
+    ],
+    "filter": [],
+    "curComponentId": "chart-B",
+    "firstLoad": true
+  },
+  "trace": {
+    "relationshipChartIndex": [
+      0,
+      1
+    ],
+    "ids_relevant": [
+      "f-province",
+      "f-city"
+    ],
+    "getValue_result": [
+      "浙江,杭州"
+    ],
+    "forMatterValue_result": [
+      "浙江,杭州"
+    ],
+    "getFieldId_valArr": [
+      "浙江",
+      "杭州"
+    ],
+    "getFieldId_indexArr": [
+      0,
+      1
+    ],
+    "getFieldId_result": [
+      "f-province,f-city",
+      [
+        "浙江,杭州"
+      ]
+    ]
+  },
+  "searchQuery_expected_filter": [
+    {
+      "filterId": "q-tree-new",
+      "componentId": "query-B",
+      "fieldId": "f-province,f-city",
+      "operator": "in",
+      "value": [
+        "浙江,杭州"
+      ],
+      "parameters": [],
+      "isTree": true
+    }
+  ],
+  "runtime_variant": {
+    "firstLoad": false,
+    "expected_filter": [
+      {
+        "filterId": "q-tree-new",
+        "componentId": "query-B",
+        "fieldId": "f-province,f-city",
+        "operator": "in",
+        "value": [
+          "江苏,南京"
+        ],
+        "parameters": [],
+        "isTree": true
+      }
+    ]
+  },
+  "copy_target_initialization": {
+    "defaultValue": [
+      "浙江-de-杭州"
+    ],
+    "selectValue": [
+      "浙江-de-杭州"
+    ],
+    "expected_first_and_later_filter_equal": [
+      {
+        "filterId": "q-tree-new",
+        "componentId": "query-B",
+        "fieldId": "f-province,f-city",
+        "operator": "in",
+        "value": [
+          "浙江,杭州"
+        ],
+        "parameters": [],
+        "isTree": true
+      }
+    ],
+    "constraint": "只在目标默认初始化完成且未被监听清空时；门控为候选设计，非现状保证"
+  },
+  "negative_old_fixture": {
+    "defaultValue": [
+      "node-city"
+    ],
+    "derived_valArr": [
+      "node-city"
+    ],
+    "derived_indexArr": [
+      0
+    ],
+    "derived_fieldId": "f-province",
+    "derived_value": [
+      "node-city"
+    ],
+    "verdict": "只能显示任意树节点，不是两层查询成功oracle"
+  },
+  "preconditions": [
+    "optionFilter属性缺省而非空数组；空数组在当前if(optionFilter)分支为truthy，会使getFieldId空result读取undefined.split，本例不隐瞒此边界",
+    "没有参数或额外外参过滤",
+    "provider行顺序确为省、市，两个值不含逗号或-de-且非空",
+    "treeCheckedList两层均绑定chart-B"
+  ],
+  "today_correction": {
+    "path": "core/core-frontend/src/custom-component/v-query/time-format.ts",
+    "lines": "149-151",
+    "old_reference": "r001宽泛93-165及正文约158起",
+    "claim": "仅更正定位，原UTC条件推导不因此成为运行通过"
+  },
+  "evidence": [
+    "sdk/common/src/main/java/io/dataease/utils/TreeUtils.java:18-19",
+    "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java:1213-1227,1231-1247",
+    "core/core-backend/src/main/java/io/dataease/dataset/utils/DatasetUtils.java:29-52",
+    "core/core-frontend/src/custom-component/v-query/Tree.vue:244-250",
+    "core/core-frontend/src/hooks/web/useFilter.ts:48-55,97-111,127-139,300,323-332,509-520,596-604"
+  ],
+  "verification": {
+    "json": "PASS",
+    "source_derived_arithmetic": "PASS",
+    "actual_searchQuery_execution": "NOT_RUN",
+    "backend_sql_semantics": "NOT_RUN",
+    "permission": "NOT_RUN"
+  }
+}

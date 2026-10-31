@@ -1,0 +1,2296 @@
+{
+  "schema_version": "qssdh_source_lifecycle_r002_candidate",
+  "status": "NOT_READY_FOR_PRODUCT_LIFECYCLE_ADMISSION",
+  "card_digest": "0012a1415bd59f1381263fa5380d68cf3cb28a5bd98a88782054780b207883f8",
+  "projection": "完整本合同状态投影；root保留完整普通condition，但外层只列与当前观察有关的组件键；未列外层属性KEEP。epoch/commit是合成见证，不构成真实来源证明。",
+  "cases": [
+    {
+      "id": "TC-QSOURCE-R2-001",
+      "title": "非模板空文档→新建空VQuery无carrier",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "empty",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "trusted_new_top_level_vquery"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-002",
+      "title": "首次完整确认A同commit建立design/runtime",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "confirmed_complete_candidate",
+            "candidate": {
+              "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 1,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-003",
+      "title": "确认失败/取消保留完整pending",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "validation_failure_or_cancel"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-004",
+      "title": "运行外参X不改变独立设计A",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "runtime_outer_value",
+            "value": "X"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-005",
+      "title": "明确受管编辑A→D发布第二commit",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "open_draft_from_design_carrier"
+          },
+          {
+            "type": "confirm_complete_design",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 1,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-006",
+      "title": "有效历史sidecar恢复全根A并分配新revision3，不追加",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0,
+            "selectedRoot": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "sidecar": {
+              "revision": 1,
+              "commitId": "commit-1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 3,
+          "commitId": "commit-3",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 3,
+            "commitId": "commit-3",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 0,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 1,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-007",
+      "title": "缺sidecar先失活新增能力，再保留原全根恢复",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0,
+            "selectedRoot": {
+              "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+            },
+            "sidecar": null
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "unmanaged",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": null,
+          "snapshotIndex": 0,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 1,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "readerTrace": [
+          "unavailable_before_pointer_change",
+          "unavailable_after_root",
+          "unavailable_before_native_events"
+        ],
+        "ordinarySave": "original_path_not_blocked",
+        "managedSaveCapture": "unavailable"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-008",
+      "title": "同commit capture最新550宽度，以设计槽覆盖运行C",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "synchronous_save_capture",
+            "expectedRevision": 1,
+            "expectedCommitId": "commit-1"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "capturedComponentData": {
+          "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+        },
+        "captureRevision": 1,
+        "captureCommitId": "commit-1",
+        "carrierMetadataSerialized": false
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-009",
+      "title": "capture后异步等待期间确认D/改宽580，不拼入旧payload",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "capture",
+            "revision": 1,
+            "commitId": "commit-1"
+          },
+          {
+            "type": "later_confirm_and_style_edit",
+            "design": "D",
+            "width": 580
+          },
+          {
+            "type": "send_captured_payload"
+          },
+          {
+            "type": "save_success_callback"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "074565f04b72c1c0e79a5a0224dfb54cde57c85350d6c87e9f8f96607296d185"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 1
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "sentComponentData": {
+          "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+        },
+        "dirtyMustRemain": true,
+        "currentSourceBehavior": "canvasSave当前回包无条件resetStyleChangeTimes；这里dirty=true是未实现候选要求，不是现有结果"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-010",
+      "title": "carrier/root commit不一致不得执行新增capture",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "revision": 0,
+            "commitId": "commit-0",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "managed_save_capture"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "revision": 0,
+            "commitId": "commit-0",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "capturedComponentData": null,
+        "reason": "REVISION_OR_COMMIT_MISMATCH",
+        "ordinarySave": "not_decided_or_changed_by_this_case"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-011",
+      "title": "保存JSON重开不重建私有来源证明",
+      "input": {
+        "state": null,
+        "events": [
+          {
+            "type": "load_persisted_component_json",
+            "componentData": {
+              "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+            },
+            "inMemorySidecar": null
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": null,
+          "phase": "unmanaged",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": false,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "promotion": "NOT_READY",
+        "reason": "已保存设计字段可显示，不等于有证新建/受管session来源；不得伪造carrier"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-012",
+      "title": "当前源码保存仍复制运行X及已有可枚举附加字段",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "static_clone_and_json_observation"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "current_source_static_observation_not_network_execution",
+        "currentComponentDataJsonRoundTrip": {
+          "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+        }
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-013",
+      "title": "向root直接挂carrier会被现有保存复制，是禁止方案反例",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "hypothetical_enumerable_root_metadata",
+            "metadata": {
+              "carrier": {
+                "origin": "untrusted-string"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": null,
+        "kind": "NOT_READY_REJECTED_PLACEMENT",
+        "currentCloneJsonWouldContainMetadata": true,
+        "reason": "无序列化排除规则；不实施该placement"
+      }
+    },
+    {
+      "id": "TC-QSOURCE-R2-014",
+      "title": "同commit可观察发布尚无产品门控证据",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "current_confirmClick",
+            "visibleIntermediatePropValue": [],
+            "nextTickWrites": [
+              "cascade",
+              "propValue"
+            ],
+            "nextNextTickEmits": [
+              "reRenderAll",
+              "queryData"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "state": null,
+        "kind": "NOT_READY_PRODUCT_ATOMICITY",
+        "reason": "候选single-slot/Capsule publication未接入；原有消费者不能由纯模型证明"
+      }
+    }
+  ],
+  "objects": {
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945": [],
+    "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": "",
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4
+      }
+    ],
+    "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "mapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "selectValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "X"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "X",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "mapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "selectValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "074565f04b72c1c0e79a5a0224dfb54cde57c85350d6c87e9f8f96607296d185": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 580,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "X"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "X",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    }
+  },
+  "resolution": "仅{$object:sha}递归替换为本文件完整值；SHA按展开后的UTF-8 canonical JSON(sort_keys,ensure_ascii=false,compact separators)计算。",
+  "required_read_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QSSDH-SOURCE-LIFECYCLE-design-r002.json",
+      "sha256": "0cc21044e86df2e810149a033f5cedb90b1ff4f1da7618419eb92dfed6fa9a8d"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleDesign-r001.md",
+      "sha256": "43c60b0528b4d1c5e9819ef86934846170036d85d10ca0b79b19de0d4c808a22"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r001.json",
+      "sha256": "56b8c0525c4c35df2512db37fab0a77c47470896234ea1b1198880f7f19ec790"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r001.md",
+      "sha256": "c94cfb7aa43b31e3a91095769ee85462f0d4a9d760cca99d4231337652566ff9"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "sha256": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559",
+      "reason": "直接新建调用链条件扩读"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "sha256": "f189476f0e47234188e959a1219ff52aedbfe84367b7d841a6189b29911b3dd2",
+      "reason": "直接新建调用链条件扩读"
+    }
+  ],
+  "governed_claim": "10项Goal AC+14项F01+Q066/Q067=26保持；真实权限BLOCKED/NOT_RUN，未执行Vue/Store/保存/数据库。"
+}

@@ -1,0 +1,141 @@
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/locales/en.ts
++++ core/core-frontend/src/locales/en.ts
+@@ -1449,6 +1449,9 @@
+       copy: 'Copy filter conditions',
+       paste: 'Paste filter conditions',
+       permission_stub: 'Permission test stub',
++      permission_read_source: 'Read source chart (development validation)',
++      permission_read_dataset: 'Read dataset (development validation)',
++      permission_edit_target: 'Edit target chart (development validation)',
+       allow: 'Allow (test)',
+       permission_unknown: 'Permission unknown; operation disabled',
+       permission_denied: 'Permission denied; operation disabled',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/locales/tw.ts
++++ core/core-frontend/src/locales/tw.ts
+@@ -1392,6 +1392,9 @@
+       copy: '複製過濾條件',
+       paste: '貼上過濾條件',
+       permission_stub: '權限測試樁',
++      permission_read_source: '讀取來源圖表（開發驗證）',
++      permission_read_dataset: '讀取資料集（開發驗證）',
++      permission_edit_target: '編輯目標圖表（開發驗證）',
+       allow: '允許（測試）',
+       permission_unknown: '權限未知，操作已停用',
+       permission_denied: '權限拒絕，操作已停用',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/locales/zh-CN.ts
++++ core/core-frontend/src/locales/zh-CN.ts
+@@ -1410,6 +1410,9 @@
+       copy: '复制过滤条件',
+       paste: '粘贴过滤条件',
+       permission_stub: '权限测试桩',
++      permission_read_source: '读取源图表（开发验证）',
++      permission_read_dataset: '读取数据集（开发验证）',
++      permission_edit_target: '编辑目标图表（开发验证）',
+       allow: '允许（测试）',
+       permission_unknown: '权限未知，操作已禁用',
+       permission_denied: '权限拒绝，操作已禁用',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/views/chart/components/editor/index.vue
++++ core/core-frontend/src/views/chart/components/editor/index.vue
+@@ -208,6 +208,8 @@
+   visible: filterCopyVisible,
+   enabled: filterCopyEnabled,
+   permission: filterCopyPermission,
++  permissions: filterCopyPermissions,
++  permissionRoles: filterCopyPermissionRoles,
+   copyReason: filterCopyReason,
+   pasteReason: filterPasteReason,
+   status: filterCopyStatus,
+@@ -3465,6 +3467,31 @@
+                                 </option>
+                               </select>
+                             </label>
++                            <template v-if="filterCopyEnabled">
++                              <label
++                                v-for="role in filterCopyPermissionRoles"
++                                :key="role"
++                                style="display: block"
++                              >
++                                {{
++                                  t('chart.filter_copy_mvp.permission_' + role.split('-').join('_'))
++                                }}
++                                <select
++                                  v-model="filterCopyPermissions[role]"
++                                  :data-testid="'chart-filter-permission-' + role"
++                                >
++                                  <option value="unknown">
++                                    {{ t('chart.filter_copy_mvp.permission_unknown') }}
++                                  </option>
++                                  <option value="allow">
++                                    {{ t('chart.filter_copy_mvp.allow') }}
++                                  </option>
++                                  <option value="deny">
++                                    {{ t('chart.filter_copy_mvp.permission_denied') }}
++                                  </option>
++                                </select>
++                              </label>
++                            </template>
+                             <p
+                               v-if="filterCopyStatus"
+                               role="status"
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
++++ core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
+@@ -978,7 +978,8 @@
+             clearG2SliderAdapter()
+             clearG2LegendPaginationAdapter()
+             myChart?.destroy()
+-            if (strict && Array.isArray(chart.data?.data) && chart.data.data.length === 0) {
++            const renderData = chart.type === 't-heatmap' ? chart.data?.tableRow : chart.data?.data
++            if (strict && Array.isArray(renderData) && renderData.length === 0) {
+               configEmptyDataStyle([], containerId)
+               myChart = null
+               return
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/readiness-source-snapshot-r001/core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts
++++ core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts
+@@ -1,4 +1,4 @@
+-import { computed, effectScope, onBeforeUnmount, ref, watch, type Ref } from 'vue'
++import { computed, effectScope, onBeforeUnmount, reactive, ref, watch, type Ref } from 'vue'
+ import { useRoute } from 'vue-router_2'
+ import { useCache } from '@/hooks/web/useCache'
+ import { useUserStoreWithOut } from '@/store/modules/user'
+@@ -48,7 +48,23 @@
+   const route = useRoute()
+   const { wsCache } = useCache()
+   const { t } = useI18n()
+-  const permission = ref<MvpPermission>('unknown')
++  const permissionRoles = ['read-source', 'read-dataset', 'edit-target'] as const
++  const permissions = reactive<Record<(typeof permissionRoles)[number], MvpPermission>>({
++    'read-source': 'unknown',
++    'read-dataset': 'unknown',
++    'edit-target': 'unknown'
++  })
++  // 三项共同限制 DEV 验证能力；不定义生产资源权限规则。
++  const permission = computed<MvpPermission>({
++    get: () => {
++      const values = permissionRoles.map(role => permissions[role])
++      if (values.includes('deny')) return 'deny'
++      return values.every(value => value === 'allow') ? 'allow' : 'unknown'
++    },
++    set: value => {
++      for (const role of permissionRoles) permissions[role] = value
++    }
++  })
+   const fields = ref<MvpField[]>([])
+   const fieldsReady = ref(false)
+   const changed = ref(0)
+@@ -299,6 +315,7 @@
+     const current = getMvpFilterClipboard()
+     return JSON.stringify(
+       {
++        permissions: { ...permissions },
+         source: describeMvpFilterTree(view.value?.customFilter),
+         clipboard: current
+           ? {
+@@ -330,6 +347,8 @@
+     visible,
+     enabled,
+     permission,
++    permissions,
++    permissionRoles,
+     copyReason,
+     pasteReason,
+     copy,

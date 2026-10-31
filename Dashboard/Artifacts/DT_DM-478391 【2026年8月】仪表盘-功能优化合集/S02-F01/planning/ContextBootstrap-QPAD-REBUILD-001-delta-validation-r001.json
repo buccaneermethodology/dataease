@@ -1,0 +1,242 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPAD-REBUILD-001-delta-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "用户授权继续实施S02并要求加快。首轮独立Validation报告F-QPAD-VAL-001后已按受限卡修复。现由未参与该修复的独立验证者只读复核修复及原Goal一致性；真实权限环境仍缺失且权限验收未验证。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "Delta Validation：复验F-QPAD-VAL-001，严格日历往返校验拒绝无效日期、接受合法闰日；保留六个冻结identity，复跑runner/lint及检查修复差异。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPAD-REBUILD-001-DeltaValidation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改实现、runner、设计、fixtures、旧报告及台账",
+      "将有限候选扩张为产品/权限验收",
+      "减少原Goal/产品义务分母"
+    ],
+    "maximum_claim": "只验证F-QPAD-VAL-001修复后的普通Select离线纯函数，不代表产品集成、权限或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r003.md",
+      "revision": "4c21dbcc99a9add2aecff52f847fbb708df17ccf8eea21c3e4a1c7adb67cd4e5",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r003.json",
+      "revision": "0b0bc78a268f057356ae4354698949541a450f8ff18ec7b62614fe8474e5edbf",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r003.md",
+      "revision": "eaf64f971b9a0e685484c18e072ac796ba5a439933f69419a58a9b9b1c14560b",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPAD-REBUILD-001-Validation-r001.md",
+      "revision": "c6d29927a0b4647a25f0f4c98f545fde786932d8090f5780e3f672d3c14f0b50",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-RepairEvidence-r001.md",
+      "revision": "b98a3996fe77db38a3dbae0242efb50fe7a0e2cd0b5bfd0a67c8433307c03167",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-ordinary-select-rebuild.ts",
+      "revision": "fb1da352181a36858fe1eeaaca80d2883063f7d8600dcafd5bc45bfd1bf91a7e",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-ordinary-select-rebuild.test.ts",
+      "revision": "4c708185bb969e7998149c536474c1c96c5603e7aaca6c19a9b018fae3b499ae",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-green.stdout.txt",
+      "revision": "65a9f0653e5f1cc39985b2cd6c864180d3265abab35b062584708988cfa80d0e",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPAD-REBUILD-001-repair-lint.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r049.json",
+      "revision": "ff2812766cd103d2875924fb082e4e96e13cd4f030df9a5ee36197409553883c",
+      "applicability": "independent delta validation input",
+      "reason": "对比上一Validation快照并检查本次修复和未关闭义务",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "new-drift",
+      "condition": "Goal/contract/authority/topology/inventory或修复范围出现变化",
+      "mode": "deterministic",
+      "action": "停止并重新建立完整基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner-unavailable",
+      "condition": "runner或lint无法执行",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "不安装依赖；报告缺失证据",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "只Delta复核日期校验修复；Goal 10项AC、14项F01义务及Q066/Q067共16项产品义务完整，真实权限继续NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_delta_validation",
+    "reason": "已存在首轮Validation和单一finding，修复仅改准入纯函数与runner；由原独立验证者检查差异并复跑。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "上一轮Validation snapshot与finding",
+    "修复前反例、修复实现和新增回归",
+    "RED/GREEN与定向ESLint"
+  ]
+}

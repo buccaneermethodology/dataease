@@ -1,0 +1,7 @@
+# 图片资源准备第三轮验证交接
+
+本Validation第3/3轮，只收敛r002唯一阻断R2-F1及建议R2-N1。生产代码未变，首轮F1-F4由第二轮已核销。
+
+新r005在共用deferred工厂对原promise挂独立catch观察器；不替换原promise、不吞掉被测await收到的reject，只避免旧SFC不消费该deferred时产生宿主unhandledRejection。所有由工厂创建的图片decode/finalDecode任务统一覆盖。网络pending由生产cache处理，baseline/current stderr均实测为空。
+
+src变更例保留complete=true及naturalWidth=120，用已加载其他图片的状态独立验证src身份守卫；不再同时依赖无尺寸拒绝。同字节r005运行冻结旧SFC RED及当前37/37 GREEN，日志和stderr均绑定Freeze-r005。请独立复跑核对没有执行异常、reject仍传给被测业务、所有已关闭问题不回归。仅有界代码/覆盖裁决；真实UI与鉴权仍NOT_RUN，38义务保留。

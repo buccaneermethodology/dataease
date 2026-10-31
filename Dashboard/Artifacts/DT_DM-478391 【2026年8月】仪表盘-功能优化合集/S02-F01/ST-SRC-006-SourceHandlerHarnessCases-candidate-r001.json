@@ -1,0 +1,783 @@
+{
+  "schema_version": "s02_local_source_harness_cases_candidate_v1",
+  "design_id": "ST-SRC-006-SourceHandlerHarnessDesign-r001",
+  "frozen_for_builder": false,
+  "execution_status": "NOT_RUN",
+  "cases": [
+    {
+      "case_id": "ST-SRC-006-RUNTIME-FIRST",
+      "variants": [
+        {
+          "variant_id": "SINGLE-ROOT",
+          "before": {
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "mapValue": [
+                "old-map"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "props": {
+              "isConfig": false
+            },
+            "selectValue": "old",
+            "options": [
+              {
+                "label": "A",
+                "value": "A"
+              },
+              {
+                "label": "B",
+                "value": "B"
+              }
+            ],
+            "enumValueArr": [
+              {
+                "label": "A",
+                "field": "a1"
+              },
+              {
+                "label": "B",
+                "field": "b1"
+              }
+            ],
+            "cascade": [
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": "old-parent",
+                  "currentSelectValue": "old-parent"
+                },
+                {
+                  "datasetId": "ds--child--field",
+                  "selectValue": "old-child",
+                  "currentSelectValue": "old-child"
+                }
+              ]
+            ],
+            "conditions": [],
+            "isFromFromCascade": false,
+            "componentWithSure": false
+          },
+          "expected": {
+            "selectValue": "A",
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "A",
+              "mapValue": [
+                "a1"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "cascade": [
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": "old-parent",
+                  "currentSelectValue": [
+                    "a1"
+                  ]
+                },
+                {
+                  "datasetId": "ds--child--field",
+                  "selectValue": "old-child",
+                  "currentSelectValue": "old-child"
+                }
+              ]
+            ],
+            "cascadeEvents": [
+              "child-select"
+            ],
+            "nextTickQueueLengthBeforeFlush": 1,
+            "nextTickQueueLengthAfterFlush": 0,
+            "isFromFromCascadeAfterFlush": false,
+            "conditions": [],
+            "confirmSearchCallsBeforeNextTick": [],
+            "confirmSearchCallsAfterNextTick": [
+              [
+                "parent",
+                true
+              ]
+            ],
+            "queryDataForIdCalls": [
+              "parent"
+            ],
+            "componentWithSure": false
+          },
+          "snapshot_fields": [
+            "config",
+            "selectValue",
+            "cascade",
+            "conditions",
+            "cascadeEvents",
+            "confirmSearchCallsBeforeNextTick",
+            "nextTickQueueLengthBeforeFlush",
+            "confirmSearchCallsAfterNextTick",
+            "queryDataForIdCalls",
+            "nextTickQueueLengthAfterFlush",
+            "isFromFromCascadeAfterFlush",
+            "componentWithSure"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ST-SRC-006-RUNTIME-MULTIPLE-FIRST",
+      "variants": [
+        {
+          "variant_id": "MULTI-ROOT",
+          "before": {
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": true,
+              "selectValue": [
+                "old"
+              ],
+              "mapValue": [
+                "old-map"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "props": {
+              "isConfig": false
+            },
+            "selectValue": [
+              "old"
+            ],
+            "options": [
+              {
+                "label": "A",
+                "value": "A"
+              },
+              {
+                "label": "B",
+                "value": "B"
+              }
+            ],
+            "enumValueArr": [
+              {
+                "label": "A",
+                "field": "a1"
+              },
+              {
+                "label": "B",
+                "field": "b1"
+              }
+            ],
+            "cascade": [],
+            "conditions": [],
+            "isFromFromCascade": false,
+            "componentWithSure": false
+          },
+          "expected": {
+            "selectValue": [
+              "A"
+            ],
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": true,
+              "selectValue": [
+                "A"
+              ],
+              "mapValue": [
+                "a1"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "cascadeEvents": [],
+            "nextTickQueueLengthBeforeFlush": 1,
+            "nextTickQueueLengthAfterFlush": 0,
+            "isFromFromCascadeAfterFlush": false,
+            "conditions": [],
+            "confirmSearchCallsBeforeNextTick": [],
+            "confirmSearchCallsAfterNextTick": [
+              [
+                "parent",
+                true
+              ]
+            ],
+            "cascade": [],
+            "queryDataForIdCalls": [
+              "parent"
+            ],
+            "componentWithSure": false
+          },
+          "snapshot_fields": [
+            "config",
+            "selectValue",
+            "cascade",
+            "conditions",
+            "cascadeEvents",
+            "confirmSearchCallsBeforeNextTick",
+            "nextTickQueueLengthBeforeFlush",
+            "confirmSearchCallsAfterNextTick",
+            "queryDataForIdCalls",
+            "nextTickQueueLengthAfterFlush",
+            "isFromFromCascadeAfterFlush",
+            "componentWithSure"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ST-SRC-006-CASCADE-FIRST",
+      "variants": [
+        {
+          "variant_id": "CASCADE-ROOT",
+          "before": {
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "mapValue": [],
+              "defaultMapValue": []
+            },
+            "props": {
+              "isConfig": false
+            },
+            "selectValue": "old",
+            "options": [
+              {
+                "label": "A",
+                "value": "A"
+              }
+            ],
+            "enumValueArr": [
+              {
+                "label": "A",
+                "field": "a1"
+              }
+            ],
+            "cascade": [],
+            "conditions": [],
+            "isFromFromCascade": true,
+            "componentWithSure": false
+          },
+          "expected": {
+            "selectValue": "A",
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "A",
+              "mapValue": [
+                "a1"
+              ],
+              "defaultMapValue": []
+            },
+            "cascadeEvents": [],
+            "nextTickQueueLengthAfterFlush": 0,
+            "isFromFromCascadeAfterFlush": false,
+            "conditions": [],
+            "nextTickQueueLengthBeforeFlush": 1,
+            "confirmSearchCallsBeforeNextTick": [],
+            "confirmSearchCallsAfterNextTick": [
+              [
+                "parent",
+                false
+              ]
+            ],
+            "cascade": [],
+            "queryDataForIdCalls": [
+              "parent"
+            ],
+            "componentWithSure": false
+          },
+          "snapshot_fields": [
+            "config",
+            "selectValue",
+            "cascade",
+            "conditions",
+            "cascadeEvents",
+            "confirmSearchCallsBeforeNextTick",
+            "nextTickQueueLengthBeforeFlush",
+            "confirmSearchCallsAfterNextTick",
+            "queryDataForIdCalls",
+            "nextTickQueueLengthAfterFlush",
+            "isFromFromCascadeAfterFlush",
+            "componentWithSure"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ST-SRC-006-EMPTY",
+      "variants": [
+        {
+          "variant_id": "NO-OPTIONS",
+          "before": {
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "mapValue": [
+                "old-map"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "props": {
+              "isConfig": false
+            },
+            "selectValue": "old",
+            "options": [],
+            "enumValueArr": [],
+            "cascade": [],
+            "conditions": [],
+            "isFromFromCascade": false,
+            "componentWithSure": false
+          },
+          "expected": {
+            "selectValue": "old",
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "mapValue": [
+                "old-map"
+              ],
+              "defaultMapValue": [
+                "old-default"
+              ]
+            },
+            "cascadeEvents": [],
+            "conditions": [],
+            "nextTickQueueLengthBeforeFlush": 0,
+            "nextTickQueueLengthAfterFlush": 0,
+            "isFromFromCascadeAfterFlush": false,
+            "confirmSearchCallsBeforeNextTick": [],
+            "confirmSearchCallsAfterNextTick": [],
+            "cascade": [],
+            "queryDataForIdCalls": [],
+            "componentWithSure": false
+          },
+          "snapshot_fields": [
+            "config",
+            "selectValue",
+            "cascade",
+            "conditions",
+            "cascadeEvents",
+            "confirmSearchCallsBeforeNextTick",
+            "nextTickQueueLengthBeforeFlush",
+            "confirmSearchCallsAfterNextTick",
+            "queryDataForIdCalls",
+            "nextTickQueueLengthAfterFlush",
+            "isFromFromCascadeAfterFlush",
+            "componentWithSure"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ST-SRC-006-CONFIG-CASCADE-CLEAR",
+      "variants": [
+        {
+          "variant_id": "CONFIG-PARENT",
+          "before": {
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "defaultValue": "old-default",
+              "mapValue": [],
+              "defaultMapValue": []
+            },
+            "props": {
+              "isConfig": true
+            },
+            "selectValue": "old",
+            "options": [
+              {
+                "label": "A",
+                "value": "A"
+              }
+            ],
+            "enumValueArr": [
+              {
+                "label": "A",
+                "field": "a1"
+              }
+            ],
+            "cascade": [
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": "old-parent",
+                  "currentSelectValue": "old-parent"
+                },
+                {
+                  "datasetId": "ds--child--field",
+                  "selectValue": "old-child",
+                  "currentSelectValue": "old-child"
+                }
+              ],
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": "old-parent-2",
+                  "currentSelectValue": "old-parent-2"
+                },
+                {
+                  "datasetId": "ds--child-source2--field",
+                  "selectValue": "source2",
+                  "currentSelectValue": "source2"
+                }
+              ],
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": "old-parent-3",
+                  "currentSelectValue": "old-parent-3"
+                },
+                {
+                  "datasetId": "ds--child-type7--field",
+                  "selectValue": "type7",
+                  "currentSelectValue": "type7"
+                }
+              ]
+            ],
+            "conditions": [
+              {
+                "id": "child",
+                "optionValueSource": 1,
+                "displayType": "0",
+                "selectValue": "old",
+                "defaultValue": [
+                  "old-default"
+                ],
+                "mapValue": [
+                  "old-map"
+                ],
+                "defaultMapValue": [
+                  "old-default-map"
+                ]
+              },
+              {
+                "id": "child-source2",
+                "optionValueSource": 2,
+                "displayType": "0",
+                "selectValue": "keep-source",
+                "defaultValue": "keep-source",
+                "mapValue": [
+                  "keep-source-map"
+                ],
+                "defaultMapValue": [
+                  "keep-source-default-map"
+                ]
+              },
+              {
+                "id": "child-type7",
+                "optionValueSource": 1,
+                "displayType": "7",
+                "selectValue": "keep-type",
+                "defaultValue": "keep-type",
+                "mapValue": [
+                  "keep-type-map"
+                ],
+                "defaultMapValue": [
+                  "keep-type-default-map"
+                ]
+              },
+              {
+                "id": "unmatched",
+                "optionValueSource": 1,
+                "displayType": "0",
+                "selectValue": "keep",
+                "defaultValue": "keep",
+                "mapValue": [
+                  "keep-map"
+                ],
+                "defaultMapValue": [
+                  "keep-default-map"
+                ]
+              }
+            ],
+            "isFromFromCascade": false,
+            "componentWithSure": false
+          },
+          "expected": {
+            "selectValue": "A",
+            "config": {
+              "id": "parent",
+              "field": {
+                "id": "field"
+              },
+              "displayId": "label",
+              "optionValueSource": 1,
+              "multiple": false,
+              "selectValue": "old",
+              "defaultValue": "A",
+              "mapValue": [
+                "a1"
+              ],
+              "defaultMapValue": [
+                "a1"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "child",
+                "optionValueSource": 1,
+                "displayType": "0",
+                "selectValue": {
+                  "$undefined": true
+                },
+                "defaultValue": [],
+                "mapValue": [],
+                "defaultMapValue": []
+              },
+              {
+                "id": "child-source2",
+                "optionValueSource": 2,
+                "displayType": "0",
+                "selectValue": "keep-source",
+                "defaultValue": "keep-source",
+                "mapValue": [
+                  "keep-source-map"
+                ],
+                "defaultMapValue": [
+                  "keep-source-default-map"
+                ]
+              },
+              {
+                "id": "child-type7",
+                "optionValueSource": 1,
+                "displayType": "7",
+                "selectValue": "keep-type",
+                "defaultValue": "keep-type",
+                "mapValue": [
+                  "keep-type-map"
+                ],
+                "defaultMapValue": [
+                  "keep-type-default-map"
+                ]
+              },
+              {
+                "id": "unmatched",
+                "optionValueSource": 1,
+                "displayType": "0",
+                "selectValue": "keep",
+                "defaultValue": "keep",
+                "mapValue": [
+                  "keep-map"
+                ],
+                "defaultMapValue": [
+                  "keep-default-map"
+                ]
+              }
+            ],
+            "cascade": [
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": [
+                    "a1"
+                  ],
+                  "currentSelectValue": [
+                    "a1"
+                  ]
+                },
+                {
+                  "datasetId": "ds--child--field",
+                  "selectValue": "old-child",
+                  "currentSelectValue": "old-child"
+                }
+              ],
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": [
+                    "a1"
+                  ],
+                  "currentSelectValue": [
+                    "a1"
+                  ]
+                },
+                {
+                  "datasetId": "ds--child-source2--field",
+                  "selectValue": "source2",
+                  "currentSelectValue": "source2"
+                }
+              ],
+              [
+                {
+                  "datasetId": "ds--parent--field",
+                  "selectValue": [
+                    "a1"
+                  ],
+                  "currentSelectValue": [
+                    "a1"
+                  ]
+                },
+                {
+                  "datasetId": "ds--child-type7--field",
+                  "selectValue": "type7",
+                  "currentSelectValue": "type7"
+                }
+              ]
+            ],
+            "cascadeEvents": [],
+            "nextTickQueueLengthBeforeFlush": 0,
+            "nextTickQueueLengthAfterFlush": 0,
+            "isFromFromCascadeAfterFlush": false,
+            "confirmSearchCallsBeforeNextTick": [],
+            "confirmSearchCallsAfterNextTick": [],
+            "queryDataForIdCalls": [],
+            "componentWithSure": false
+          },
+          "snapshot_fields": [
+            "config",
+            "selectValue",
+            "cascade",
+            "conditions",
+            "cascadeEvents",
+            "confirmSearchCallsBeforeNextTick",
+            "nextTickQueueLengthBeforeFlush",
+            "confirmSearchCallsAfterNextTick",
+            "queryDataForIdCalls",
+            "nextTickQueueLengthAfterFlush",
+            "isFromFromCascadeAfterFlush",
+            "componentWithSure"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ST-SRC-006-CONFIRM-GUARD",
+      "variants": [
+        {
+          "variant_id": "CONFIRM-PREVENTS",
+          "before": {
+            "id": "parent",
+            "componentWithSure": true,
+            "disabledFirstItem": false
+          },
+          "expected": {
+            "queryDataForIdCalls": [],
+            "returnValue": {
+              "$undefined": true
+            },
+            "componentWithSure": true,
+            "disabledFirstItem": false,
+            "id": "parent"
+          },
+          "snapshot_fields": [
+            "id",
+            "componentWithSure",
+            "disabledFirstItem",
+            "returnValue",
+            "queryDataForIdCalls"
+          ]
+        },
+        {
+          "variant_id": "FIRST-ITEM-OVERRIDE",
+          "before": {
+            "id": "parent",
+            "componentWithSure": true,
+            "disabledFirstItem": true
+          },
+          "expected": {
+            "queryDataForIdCalls": [
+              "parent"
+            ],
+            "returnValue": {
+              "$undefined": true
+            },
+            "componentWithSure": true,
+            "disabledFirstItem": true,
+            "id": "parent"
+          },
+          "snapshot_fields": [
+            "id",
+            "componentWithSure",
+            "disabledFirstItem",
+            "returnValue",
+            "queryDataForIdCalls"
+          ]
+        },
+        {
+          "variant_id": "NO-CONFIRM-ALLOWS",
+          "before": {
+            "id": "parent",
+            "componentWithSure": false,
+            "disabledFirstItem": false
+          },
+          "expected": {
+            "queryDataForIdCalls": [
+              "parent"
+            ],
+            "returnValue": {
+              "$undefined": true
+            },
+            "componentWithSure": false,
+            "disabledFirstItem": false,
+            "id": "parent"
+          },
+          "snapshot_fields": [
+            "id",
+            "componentWithSure",
+            "disabledFirstItem",
+            "returnValue",
+            "queryDataForIdCalls"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgc_decision_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "evaluated_at_utc", "record_revision", "control_revision", "eligible", "action", "reason_codes", "evidence_refs"],
+  "properties": {
+    "schema_version": {"const": "rgc_decision_v1"},
+    "decision_id": {"type": "string", "minLength": 1},
+    "evaluated_at_utc": {"type": "string", "format": "date-time"},
+    "record_revision": {"type": "integer", "minimum": 0},
+    "control_revision": {"type": "integer", "minimum": 0},
+    "eligible": {"type": "boolean"},
+    "action": {"enum": ["ACQUIRE_AND_DISPATCH", "OBSERVE_EXISTING", "SEND_CHECKPOINT", "RECOVER", "HANDOFF", "WAIT_UNIT_NOT_READY", "WAIT_DEPENDENCY", "WAIT_LEGITIMATE", "REBUILD_STATE", "BLOCK_AUTHORITY", "STOP_USER_CONTROL", "STOP_COMPLETE", "REQUEST_TOPOLOGY_APPROVAL", "REEVALUATE_ACTION_SPECIFIC_PREDICATE"]},
+    "reason_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "action_token": {"type": ["string", "null"]},
+    "logical_action_id": {"type": ["string", "null"]},
+    "owner_attempt_token": {"type": ["string", "null"]},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

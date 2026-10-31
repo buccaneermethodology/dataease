@@ -1,0 +1,341 @@
+                    dataSource.setUsername(configuration.getUsername());
+                }
+                if (StringUtils.isNotBlank(configuration.getPassword())) {
+                    dataSource.setPassword(configuration.getPassword());
+                }
+                dataSource.setInitialSize(configuration.getInitialPoolSize());
+                dataSource.setMaxTotal(configuration.getMaxPoolSize());
+                dataSource.setMinIdle(configuration.getMinPoolSize());
+                dataSource.setDefaultQueryTimeout(Integer.valueOf(configuration.getQueryTimeout()));
+                startSshSession(configuration, null, ds.getId());
+                dataSource.setUrl(configuration.getJdbc());
+                schema = JdbcSchema.create(rootSchema, ds.getSchemaAlias(), dataSource, null, configuration.getDataBase());
+                rootSchema.add(ds.getSchemaAlias(), schema);
+        }
+    }
+
+    private List<String[]> getDataResult(ResultSet rs) {
+        List<String[]> list = new LinkedList<>();
+        try {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            while (rs.next()) {
+                String[] row = new String[columnCount];
+                for (int j = 0; j < columnCount; j++) {
+                    int columnType = metaData.getColumnType(j + 1);
+                    switch (columnType) {
+                        case Types.DATE:
+                            if (rs.getDate(j + 1) != null) {
+                                row[j] = rs.getDate(j + 1).toString();
+                            }
+                            break;
+                        case Types.BOOLEAN:
+                            row[j] = rs.getBoolean(j + 1) ? "true" : "false";
+                            break;
+                        default:
+                            String columnTypeName = metaData.getColumnTypeName(j + 1);
+                            if ("blob".equalsIgnoreCase(columnTypeName) || "bytea".equalsIgnoreCase(columnTypeName) || "binary".equalsIgnoreCase(columnTypeName) || "varbinary".equalsIgnoreCase(columnTypeName)) {
+                                row[j] = readBinaryValue(rs, j + 1, columnTypeName);
+                            } else if ("bfile".equalsIgnoreCase(columnTypeName) || columnTypeName.toUpperCase().endsWith("XMLTYPE")) {
+                                row[j] = "";
+                            } else {
+                                row[j] = rs.getString(j + 1);
+                            }
+                            break;
+                    }
+                }
+                list.add(row);
+            }
+        } catch (Exception e) {
+            DEException.throwException(e.getMessage());
+        }
+        return list;
+    }
+
+    private String readBinaryValue(ResultSet rs, int columnIndex, String typeName) throws SQLException {
+        byte[] bytes;
+        long totalLength;
+        if ("bytea".equalsIgnoreCase(typeName) || "binary".equalsIgnoreCase(typeName) || "varbinary".equalsIgnoreCase(typeName)) {
+            bytes = rs.getBytes(columnIndex);
+            if (bytes == null) {
+                return "";
+            }
+            totalLength = bytes.length;
+        } else {
+            Blob blob = rs.getBlob(columnIndex);
+            if (blob == null) {
+                return "";
+            }
+            totalLength = blob.length();
+            if (totalLength <= 0) {
+                return "";
+            }
+            int blobReadLen = (int) Math.min(totalLength, 1024L);
+            bytes = blob.getBytes(1, blobReadLen);
+        }
+        int readLen = (int) Math.min(totalLength, 1024L);
+        StringBuilder sb = new StringBuilder(readLen * 2);
+        for (int i = 0; i < readLen && i < bytes.length; i++) {
+            sb.append(String.format("%02X", bytes[i] & 0xFF));
+        }
+        return totalLength > readLen ? sb.append("...").toString() : sb.toString();
+    }
+
+    private int transType2DeType(String type, DatasourceRequest datasourceRequest) {
+        DatasourceDTO datasource = datasourceRequest == null ? null : datasourceRequest.getDatasource();
+        return FieldUtils.transType2DeType(type, datasource == null ? null : datasource.getType());
+    }
+
+    private void validateTableAndSchema(DatasourceRequest datasourceRequest, DatasourceConfiguration configuration) {
+        String table = datasourceRequest.getTable();
+        if (StringUtils.isNotBlank(table)) {
+            List<String> realTables = getTables(datasourceRequest).stream()
+                    .map(DatasetTableDTO::getTableName)
+                    .toList();
+            boolean caseInsensitive = isCaseInsensitiveTableType(datasourceRequest.getDatasource().getType());
+            boolean tableExists = realTables.stream().anyMatch(t -> caseInsensitive
+                    ? StringUtils.equalsIgnoreCase(t, table)
+                    : StringUtils.equals(t, table));
+            if (!tableExists) {
+                DEException.throwException(Translator.get("i18n_invalid_table_name"));
+            }
+        }
+        String schema = configuration.getSchema();
+        if (StringUtils.isNotBlank(schema) && isSchemaValidatedType(datasourceRequest.getDatasource().getType())) {
+            List<String> schemas = getSchema(datasourceRequest);
+            boolean schemaExists = schemas.stream().anyMatch(s -> StringUtils.equals(s, schema));
+            if (!schemaExists) {
+                DEException.throwException("无效的 schema！");
+            }
+        }
+    }
+
+    private boolean isSchemaValidatedType(String type) {
+        return Arrays.asList("oracle", "db2", "sqlServer", "pg", "kingbase", "gaussdb", "redshift").contains(type);
+    }
+
+    private boolean isCaseInsensitiveTableType(String type) {
+        return Arrays.asList("mysql", "mariadb", "TiDB", "StarRocks", "doris", "mongo", "ck").contains(type);
+    }
+
+    private QueryAndParams getTableFiledSql(DatasourceRequest datasourceRequest) {
+        String sql = "";
+        List<String> bindParams = new ArrayList<>();
+        DatasourceConfiguration configuration = null;
+        String database = "";
+        DatasourceConfiguration.DatasourceType datasourceType = DatasourceConfiguration.DatasourceType.valueOf(datasourceRequest.getDatasource().getType());
+        switch (datasourceType) {
+            case StarRocks:
+            case doris:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Mysql.class);
+                if (StringUtils.isEmpty(configuration.getUrlType()) || configuration.getUrlType().equalsIgnoreCase("hostName")) {
+                    database = configuration.getDataBase();
+                } else {
+                    Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mysql://(.*):(\\d+)/(.*)");
+                    if (configuration.getJdbcUrl().startsWith("jdbc:mariadb")) {
+                        WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mariadb://(.*):(\\d+)/(.*)");
+                    }
+                    Matcher matcher = WITH_SQL_FRAGMENT.matcher(configuration.getJdbcUrl());
+                    matcher.find();
+                    String[] databasePrams = matcher.group(3).split("\\?");
+                    database = databasePrams[0];
+                }
+                if (database.contains(".")) {
+                    sql = "select * from " + quoteName(datasourceRequest.getTable(), '`') + " limit 0 offset 0 ";
+                } else {
+                    sql = bindQuery("SELECT COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT,IF(COLUMN_KEY='PRI',1,0),IF(EXTRA LIKE '%%auto_increment%%',1,0) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s", bindParams, database, datasourceRequest.getTable());
+                }
+                break;
+            case mysql:
+            case mongo:
+            case mariadb:
+            case TiDB:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Mysql.class);
+                if (StringUtils.isEmpty(configuration.getUrlType()) || configuration.getUrlType().equalsIgnoreCase("hostName")) {
+                    database = configuration.getDataBase();
+                } else {
+                    Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mysql://(.*):(\\d+)/(.*)");
+                    if (configuration.getJdbcUrl().startsWith("jdbc:mariadb")) {
+                        WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mariadb://(.*):(\\d+)/(.*)");
+                    }
+                    Matcher matcher = WITH_SQL_FRAGMENT.matcher(configuration.getJdbcUrl());
+                    matcher.find();
+                    String[] databasePrams = matcher.group(3).split("\\?");
+                    database = databasePrams[0];
+                }
+                sql = bindQuery("SELECT COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT,IF(COLUMN_KEY='PRI',1,0),IF(EXTRA LIKE '%%auto_increment%%',1,0) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s", bindParams, database, datasourceRequest.getTable());
+                break;
+            case oracle:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Oracle.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+                sql = bindQuery("""
+                        SELECT tc.COLUMN_NAME AS ColumnName,
+                               tc.DATA_TYPE,
+                               cc.COMMENTS,
+                               CASE
+                                   WHEN ac.COLUMN_NAME IS NOT NULL THEN 1
+                                   ELSE 0
+                                   END,
+                               tc.DATA_DEFAULT
+                        FROM ALL_TAB_COLUMNS tc
+                                 LEFT JOIN (SELECT cols.OWNER,
+                                                   cols.TABLE_NAME,
+                                                   cols.COLUMN_NAME
+                                            FROM ALL_CONSTRAINTS cons
+                                                     JOIN
+                                                 ALL_CONS_COLUMNS cols
+                                                 ON cons.OWNER = cols.OWNER
+                                                     AND cons.CONSTRAINT_NAME = cols.CONSTRAINT_NAME
+                                            WHERE cons.TABLE_NAME = %s
+                                              AND cons.CONSTRAINT_TYPE = 'P') ac
+                                           ON tc.OWNER = ac.OWNER
+                                               AND tc.TABLE_NAME = ac.TABLE_NAME
+                                               AND tc.COLUMN_NAME = ac.COLUMN_NAME
+                                 LEFT JOIN ALL_COL_COMMENTS cc
+                                           ON tc.owner = cc.owner AND tc.table_name = cc.table_name AND tc.column_name = cc.column_name
+                        WHERE tc.TABLE_NAME = %s
+                          AND tc.OWNER = %s
+                        ORDER BY tc.TABLE_NAME, tc.COLUMN_ID
+                        """, bindParams, datasourceRequest.getTable(), datasourceRequest.getTable(), configuration.getSchema());
+                break;
+            case db2:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Db2.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+                sql = bindQuery("SELECT COLNAME, TYPENAME, REMARKS, 0, 0 FROM SYSCAT.COLUMNS WHERE TABSCHEMA = %s AND TABNAME = %s ", bindParams, configuration.getSchema(), datasourceRequest.getTable());
+                break;
+            case sqlServer:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Sqlserver.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+
+                sql = bindQuery("""
+                        SELECT
+                            c.name,
+                            t.name,
+                            CAST(ep.value AS NVARCHAR(4000)),
+                            CASE
+                                WHEN pk.column_id IS NOT NULL THEN 1
+                                ELSE 0
+                                END,
+                            COLUMNPROPERTY(c.object_id, c.name, 'IsIdentity')
+                        FROM sys.columns AS c
+                                 INNER JOIN sys.objects AS o ON c.object_id = o.object_id
+                                 INNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id
+                                 LEFT JOIN sys.types AS t ON c.user_type_id = t.user_type_id
+                                 LEFT JOIN sys.extended_properties AS ep
+                                           ON c.object_id = ep.major_id
+                                               AND c.column_id = ep.minor_id
+                                               AND ep.name = 'MS_Description'
+                                 LEFT JOIN (
+                            SELECT ic.object_id, ic.column_id
+                            FROM sys.indexes i
+                                     INNER JOIN sys.index_columns ic
+                                                ON i.object_id = ic.object_id
+                                                    AND i.index_id = ic.index_id
+                            WHERE i.is_primary_key = 1
+                        ) pk ON c.object_id = pk.object_id AND c.column_id = pk.column_id
+                        WHERE o.name = %s
+                          AND s.name = %s
+                        ORDER BY c.column_id
+                        """, bindParams, datasourceRequest.getTable(), configuration.getSchema());
+                break;
+            case pg:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Pg.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+                sql = bindQuery("""
+                        SELECT a.attname     AS ColumnName,
+                               t.typname,
+                               b.description AS ColumnDescription,
+                               CASE
+                                   WHEN d.indisprimary THEN 1
+                                   ELSE 0
+                                   END,
+                               CASE
+                                   WHEN pg_get_expr(ad.adbin, ad.adrelid) LIKE 'nextval%%' THEN 1
+                        """ + (datasourceRequest.getDsVersion() > 9 ? """
+                                   WHEN a.attidentity = 'd' THEN 1
+                                   WHEN a.attidentity = 'a' THEN 1
+                        """ : "") + """
+                                   ELSE 0
+                                   END
+                        FROM pg_class c
+                                 JOIN pg_attribute a ON a.attrelid = c.oid
+                                 LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+                                 LEFT JOIN pg_description b ON a.attrelid = b.objoid AND a.attnum = b.objsubid
+                                 JOIN pg_type t ON a.atttypid = t.oid
+                                 LEFT JOIN pg_index d ON d.indrelid = a.attrelid AND d.indisprimary AND a.attnum = ANY (d.indkey)
+                        where c.relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = %s)
+                          AND c.relname = %s
+                          AND a.attnum > 0
+                          AND NOT a.attisdropped
+                        ORDER BY a.attnum;
+                        """, bindParams, configuration.getSchema(), datasourceRequest.getTable());
+                break;
+            case gaussdb:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), GaussDB.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+                sql = bindQuery("""
+                        SELECT a.attname     AS ColumnName,
+                               t.typname,
+                               b.description AS ColumnDescription,
+                               CASE
+                                   WHEN d.indisprimary THEN 1
+                                   ELSE 0
+                                   END,
+                               CASE
+                                   WHEN pg_get_expr(ad.adbin, ad.adrelid) LIKE 'nextval%%' THEN 1
+                        """ + (datasourceRequest.getDsVersion() > 9 ? """
+                                   WHEN a.attidentity = 'd' THEN 1
+                                   WHEN a.attidentity = 'a' THEN 1
+                        """ : "") + """
+                                   ELSE 0
+                                   END
+                        FROM pg_class c
+                                 JOIN pg_attribute a ON a.attrelid = c.oid
+                                 LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+                                 LEFT JOIN pg_description b ON a.attrelid = b.objoid AND a.attnum = b.objsubid
+                                 JOIN pg_type t ON a.atttypid = t.oid
+                                 LEFT JOIN pg_index d ON d.indrelid = a.attrelid AND d.indisprimary AND a.attnum = ANY (d.indkey)
+                        where c.relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = %s)
+                          AND c.relname = %s
+                          AND a.attnum > 0
+                          AND NOT a.attisdropped
+                        ORDER BY a.attnum;
+                        """, bindParams, configuration.getSchema(), datasourceRequest.getTable());
+                break;
+            case kingbase:
+                configuration = JsonUtil.parseObject(datasourceRequest.getDatasource().getConfiguration(), Kingbase.class);
+                if (StringUtils.isEmpty(configuration.getSchema())) {
+                    DEException.throwException(Translator.get("i18n_schema_is_empty"));
+                }
+                sql = bindQuery("""
+                        SELECT a.attname     AS ColumnName,
+                               t.typname,
+                               b.description AS ColumnDescription,
+                               CASE
+                                   WHEN d.indisprimary THEN 1
+                                   ELSE 0
+                                   END,
+                               CASE
+                                   WHEN pg_get_expr(ad.adbin, ad.adrelid) LIKE 'nextval%%' THEN 1
+                        """ + (datasourceRequest.getDsVersion() > 9 ? """
+                                   WHEN a.attidentity = 'd' THEN 1
+                                   WHEN a.attidentity = 'a' THEN 1
+                        """ : "") + """
+                                   ELSE 0
+                                   END
+                        FROM pg_class c
+                                 JOIN pg_attribute a ON a.attrelid = c.oid
+                                 LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+                                 LEFT JOIN pg_description b ON a.attrelid = b.objoid AND a.attnum = b.objsubid
+                                 JOIN pg_type t ON a.atttypid = t.oid
+                                 LEFT JOIN pg_index d ON d.indrelid = a.attrelid AND d.indisprimary AND a.attnum = ANY (d.indkey)

@@ -1,0 +1,239 @@
+{
+  "schema_version": "s02_mvp_independent_sql_oracle_v1",
+  "captured_at": "2026-10-27T03:44:01.484039+00:00",
+  "environment": "local isolated dataeasev3",
+  "source": "已持久化真实amount>200 AND OR(shop六枚举)；SQL直接独立核验，非调用被测copy/paste或图表API反推expected",
+  "queries": {
+    "matching_rows": "SELECT JSON_OBJECT('id',id,'amount',amount,'date',DATE_FORMAT(date,'%Y-%m-%d %H:%i:%s'),'purpose',purpose,'shop',shop) FROM demo_tea_material WHERE amount > 200 AND shop IN ('果元店','南都店','香橙店','乐园店','红叶店','水围店') ORDER BY id",
+    "bar_by_shop": "SELECT JSON_OBJECT('shop',shop,'sum_amount',sum_amount,'count',row_count) FROM (SELECT shop,SUM(amount) AS sum_amount,COUNT(*) AS row_count FROM demo_tea_material WHERE amount > 200 AND shop IN ('果元店','南都店','香橙店','乐园店','红叶店','水围店') GROUP BY shop) q ORDER BY shop",
+    "line_by_day": "SELECT JSON_OBJECT('date',day_value,'sum_amount',sum_amount,'count',row_count) FROM (SELECT DATE(date) AS day_value,SUM(amount) AS sum_amount,COUNT(*) AS row_count FROM demo_tea_material WHERE amount > 200 AND shop IN ('果元店','南都店','香橙店','乐园店','红叶店','水围店') GROUP BY DATE(date)) q ORDER BY day_value",
+    "unfiltered_totals": "SELECT JSON_OBJECT('rows',COUNT(*),'sum_amount',SUM(amount)) FROM demo_tea_material",
+    "actual_chart_axes": "SELECT JSON_OBJECT('id',CAST(id AS CHAR),'x_axis',x_axis,'y_axis',y_axis,'x_axis_ext',x_axis_ext,'y_axis_ext',y_axis_ext) FROM core_chart_view WHERE id IN (7518825758303719424,7518826617452367872,7518830600032096256)"
+  },
+  "results": {
+    "matching_rows": [
+      {
+        "id": 3,
+        "date": "2024-03-28 05:35:18",
+        "shop": "果元店",
+        "amount": 802,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 5,
+        "date": "2024-03-26 18:36:21",
+        "shop": "南都店",
+        "amount": 680,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 11,
+        "date": "2024-03-16 16:51:17",
+        "shop": "乐园店",
+        "amount": 563,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 12,
+        "date": "2024-03-21 09:33:37",
+        "shop": "果元店",
+        "amount": 337,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 13,
+        "date": "2024-03-23 13:17:04",
+        "shop": "果元店",
+        "amount": 743,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 14,
+        "date": "2024-03-10 22:30:29",
+        "shop": "水围店",
+        "amount": 208,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 15,
+        "date": "2024-03-25 08:59:12",
+        "shop": "水围店",
+        "amount": 357,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 16,
+        "date": "2024-03-19 06:08:16",
+        "shop": "果元店",
+        "amount": 579,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 17,
+        "date": "2024-03-05 23:41:43",
+        "shop": "香橙店",
+        "amount": 278,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 18,
+        "date": "2024-03-20 07:53:58",
+        "shop": "南都店",
+        "amount": 604,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 20,
+        "date": "2024-03-25 00:44:09",
+        "shop": "果元店",
+        "amount": 211,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 21,
+        "date": "2024-03-13 10:30:44",
+        "shop": "水围店",
+        "amount": 576,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 23,
+        "date": "2024-03-04 02:07:47",
+        "shop": "香橙店",
+        "amount": 277,
+        "purpose": "原料购进"
+      },
+      {
+        "id": 25,
+        "date": "2024-03-07 16:39:38",
+        "shop": "果元店",
+        "amount": 546,
+        "purpose": "原料购进"
+      }
+    ],
+    "bar_by_shop": [
+      {
+        "shop": "乐园店",
+        "count": 1,
+        "sum_amount": 563
+      },
+      {
+        "shop": "南都店",
+        "count": 2,
+        "sum_amount": 1284
+      },
+      {
+        "shop": "果元店",
+        "count": 6,
+        "sum_amount": 3218
+      },
+      {
+        "shop": "水围店",
+        "count": 3,
+        "sum_amount": 1141
+      },
+      {
+        "shop": "香橙店",
+        "count": 2,
+        "sum_amount": 555
+      }
+    ],
+    "line_by_day": [
+      {
+        "date": "2024-03-04",
+        "count": 1,
+        "sum_amount": 277
+      },
+      {
+        "date": "2024-03-05",
+        "count": 1,
+        "sum_amount": 278
+      },
+      {
+        "date": "2024-03-07",
+        "count": 1,
+        "sum_amount": 546
+      },
+      {
+        "date": "2024-03-10",
+        "count": 1,
+        "sum_amount": 208
+      },
+      {
+        "date": "2024-03-13",
+        "count": 1,
+        "sum_amount": 576
+      },
+      {
+        "date": "2024-03-16",
+        "count": 1,
+        "sum_amount": 563
+      },
+      {
+        "date": "2024-03-19",
+        "count": 1,
+        "sum_amount": 579
+      },
+      {
+        "date": "2024-03-20",
+        "count": 1,
+        "sum_amount": 604
+      },
+      {
+        "date": "2024-03-21",
+        "count": 1,
+        "sum_amount": 337
+      },
+      {
+        "date": "2024-03-23",
+        "count": 1,
+        "sum_amount": 743
+      },
+      {
+        "date": "2024-03-25",
+        "count": 2,
+        "sum_amount": 568
+      },
+      {
+        "date": "2024-03-26",
+        "count": 1,
+        "sum_amount": 680
+      },
+      {
+        "date": "2024-03-28",
+        "count": 1,
+        "sum_amount": 802
+      }
+    ],
+    "unfiltered_totals": [
+      {
+        "rows": 30,
+        "sum_amount": 11514
+      }
+    ],
+    "actual_chart_axes": [
+      {
+        "id": "7518825758303719424",
+        "x_axis": "[{\"id\":\"1715053944934\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"shop\",\"name\":\"shop\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_4a4cd188441bb10a\",\"groupType\":\"d\",\"type\":\"LONGTEXT\",\"precision\":null,\"scale\":null,\"deType\":0,\"deExtractType\":0,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_4a4cd188441bb10a\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"count\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false}]",
+        "y_axis": "[{\"id\":\"1715053944937\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"amount\",\"name\":\"amount\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_8cc276e515d2de6d\",\"groupType\":\"q\",\"type\":\"BIGINT\",\"precision\":null,\"scale\":null,\"deType\":2,\"deExtractType\":2,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_8cc276e515d2de6d\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"sum\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false}]",
+        "x_axis_ext": "[]",
+        "y_axis_ext": "[]"
+      },
+      {
+        "id": "7518826617452367872",
+        "x_axis": "[{\"id\":\"1715053944935\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"date\",\"name\":\"date\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_7fedb6b454fd0ddb\",\"groupType\":\"d\",\"type\":\"DATETIME\",\"precision\":null,\"scale\":null,\"deType\":1,\"deExtractType\":1,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_7fedb6b454fd0ddb\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"count\",\"sort\":\"asc\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":0,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":[],\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false}]",
+        "y_axis": "[{\"id\":\"1715053944937\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"amount\",\"name\":\"amount\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_8cc276e515d2de6d\",\"groupType\":\"q\",\"type\":\"BIGINT\",\"precision\":null,\"scale\":null,\"deType\":2,\"deExtractType\":2,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_8cc276e515d2de6d\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"sum\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false},{\"id\":\"-1\",\"datasourceId\":null,\"datasetTableId\":null,\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"*\",\"name\":\"记录数*\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"*\",\"groupType\":\"q\",\"type\":\"INT\",\"precision\":null,\"scale\":null,\"deType\":2,\"deExtractType\":null,\"extField\":1,\"checked\":true,\"columnIndex\":999,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":null,\"groupList\":null,\"otherGroup\":null,\"desensitized\":null,\"orderChecked\":null,\"params\":null,\"summary\":\"count\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false}]",
+        "x_axis_ext": "[]",
+        "y_axis_ext": "[]"
+      },
+      {
+        "id": "7518830600032096256",
+        "x_axis": "[{\"id\":\"1715053944934\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"shop\",\"name\":\"shop\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_4a4cd188441bb10a\",\"groupType\":\"d\",\"type\":\"LONGTEXT\",\"precision\":null,\"scale\":null,\"deType\":0,\"deExtractType\":0,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_4a4cd188441bb10a\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"count\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false},{\"id\":\"1715053944936\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"purpose\",\"name\":\"purpose\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_703aac67af8ea53d\",\"groupType\":\"d\",\"type\":\"LONGTEXT\",\"precision\":null,\"scale\":null,\"deType\":0,\"deExtractType\":0,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_703aac67af8ea53d\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"count\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false},{\"id\":\"1715053944935\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"date\",\"name\":\"date\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_7fedb6b454fd0ddb\",\"groupType\":\"d\",\"type\":\"DATETIME\",\"precision\":null,\"scale\":null,\"deType\":1,\"deExtractType\":1,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_7fedb6b454fd0ddb\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"count\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false},{\"id\":\"1715053944937\",\"datasourceId\":\"985188400292302848\",\"datasetTableId\":\"7193457660727922688\",\"datasetGroupId\":\"985189703189925888\",\"chartId\":null,\"originName\":\"amount\",\"name\":\"amount\",\"dbFieldName\":null,\"description\":null,\"dataeaseName\":\"f_8cc276e515d2de6d\",\"groupType\":\"q\",\"type\":\"BIGINT\",\"precision\":null,\"scale\":null,\"deType\":2,\"deExtractType\":2,\"extField\":0,\"checked\":true,\"columnIndex\":null,\"lastSyncTime\":null,\"dateFormat\":null,\"dateFormatType\":null,\"fieldShortName\":\"f_8cc276e515d2de6d\",\"groupList\":[],\"otherGroup\":null,\"desensitized\":false,\"orderChecked\":false,\"params\":[],\"summary\":\"sum\",\"sort\":\"none\",\"dateStyle\":\"y_M_d\",\"datePattern\":\"date_sub\",\"dateShowFormat\":\"y_M_d\",\"chartType\":\"bar\",\"compareCalc\":{\"type\":\"none\",\"resultData\":\"percent\",\"field\":null,\"custom\":null},\"logic\":null,\"filterType\":null,\"index\":null,\"formatterCfg\":{\"type\":\"auto\",\"unitLanguage\":\"ch\",\"unit\":1,\"suffix\":\"\",\"decimalCount\":2,\"thousandSeparator\":true},\"chartShowName\":null,\"filter\":[],\"customSort\":null,\"busiType\":null,\"hide\":false,\"field\":null,\"agg\":false}]",
+        "y_axis": "[]",
+        "x_axis_ext": "[]",
+        "y_axis_ext": "[]"
+      }
+    ]
+  },
+  "claim_ceiling": "独立预期数据，不是复制/粘贴/保存验收通过；actual_chart_axes用于既有日期/指标配置核对，需按其现格式/聚合核验"
+}

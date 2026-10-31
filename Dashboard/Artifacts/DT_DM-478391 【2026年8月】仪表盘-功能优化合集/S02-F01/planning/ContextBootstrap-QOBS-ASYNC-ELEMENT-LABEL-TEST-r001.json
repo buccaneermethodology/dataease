@@ -1,0 +1,244 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QOBS-ASYNC-ELEMENT-LABEL-TEST-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续实现S02冻结的QOBS语义：迟到成功只核对一次，核对结束loading关闭；C仍不存在时显示无效，失败时显示未核实。按真实ElSelectV2复现修复同一已选C标签刷新，并恢复键盘焦点；不扩大产品/权限范围。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "基于真实Element浏览器复现，为普通非移动单选的观察结果更新提供组件重建及焦点恢复，使ElSelectV2已选标签同步其更新后的disabled option标签。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/tests/filter-copy-query-observation-component/check.mjs"
+    ],
+    "forbidden_actions": [
+      "修改Select.vue或其他产品源码",
+      "修改冻结Goal、adapter设计或fixtures",
+      "安装依赖、变更package manifest/lockfile",
+      "声称真实权限、撤权、保存、完整F01或S02已验证"
+    ],
+    "maximum_claim": "仅验证Select.vue状态key更新能触发ElSelectV2重建并在异步状态切换后恢复焦点；不证明真实Element完整DOM/a11y或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "implementation",
+        "validation"
+      ],
+      "reason": "约束产品修改边界与测试要求。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "执行本轮SP-010硬门槛。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "保持完整Goal范围与权限证据边界。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterDesign-r004.md",
+      "revision": "f6a670229f79ac4a0e3c1443a787a8e52039e10c17451e25e01e3ca91509c709",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ],
+      "reason": "复用冻结adapter语义与支持域。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterFixtures-r004.json",
+      "revision": "c6d226e2428d1529e72cbbe799187a54cba10a1883619e266ff51c1e2911a1b4",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "固定一次核对、C状态显示和请求副作用契约。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationProductAdapterDesignReview-r004.md",
+      "revision": "4418e1749050228faa40f3d5c590e131dde485e24c60f66296b2f87b935c950b",
+      "domains": [
+        "semantic_review",
+        "implementation",
+        "validation"
+      ],
+      "reason": "绑定独立设计复审边界和剩余Element验证门槛。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectElementRenderingFixtures-r001.json",
+      "revision": "7ed327f6b2ae0931c280d5b4debe15b11351c64a3611668465054df196804845",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "固定真实Element标签、disabled和有限键盘行为。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QOBS-ASYNC-EL-RENDER-RED-GREEN-r001.md",
+      "revision": "53e3610a9e07ed1362b026523c6508144dc87d8a032b7813d1d3c26d69c92032",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "绑定真实浏览器复现与焦点恢复试验结果。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-observation-component/element-rendering.html",
+      "revision": "2c6499709bd43a9649592d9bd1ed7cb88008d391939074bf9da2064451198fb7",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "运行现有真实Element组件浏览器用例。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/node_modules/element-plus-secondary/package.json",
+      "revision": "local-installed-dependency",
+      "domains": [
+        "dependency",
+        "validation"
+      ],
+      "reason": "保持依赖不变并绑定当前Element实现版本。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-REPAIR-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "8928113933cbf62c96d397d3fed90c6dae5ab0012fe40cfb6280ce9575bc5a3d",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "检查实际单选key与焦点恢复机制。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-TEST-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-observation-component/element-rendering.html",
+      "revision": "2c6499709bd43a9649592d9bd1ed7cb88008d391939074bf9da2064451198fb7",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "绑定真实ElSelectV2浏览器复现与焦点恢复oracle。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-LABEL-TEST-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "browser_contract_regression",
+      "mode": "deterministic",
+      "condition": "产品Select.vue集成后浏览器标签/禁用/焦点结果与EL-001/002或PA-003/004冲突",
+      "action": "停止并修正当前窄实现，保留旧证据和失败用例。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "accessibility_scope_expansion",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "需要通过新增role或跨屏幕阅读器断言扩大本任务的a11y范围",
+      "action": "本任务仅记录限制；更宽修复转入新的设计与审查。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10项AC、26项must-have与16项产品义务保持；此测试不关闭产品/权限义务。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_product_ui_repair",
+    "reason": "按用户授权在已审设计语义内修复真实浏览器发现的组件标签缓存问题；不接产品复制/权限/保存链。",
+    "snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r139.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "真实ElSelectV2浏览器DOM",
+    "PA-001..005 Vue组件时序回归",
+    "无效/未核实已选标签状态刷新",
+    "更新后输入焦点保留与菜单收起",
+    "实际源码差异和原始Goal claim ceiling"
+  ],
+  "acceptance_criteria_ids": [
+    "EL-001-invalid-selected-value",
+    "EL-002-unverified-selected-value",
+    "PA-001",
+    "PA-003",
+    "PA-004",
+    "PA-005"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QOBS-ASYNC-ELEMENT-LABEL-TEST-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r139.json"
+  },
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterDesign-r004.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterFixtures-r004.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationProductAdapterDesignReview-r004.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectElementRenderingFixtures-r001.json",
+    "core/core-frontend/tests/filter-copy-query-observation-component/element-rendering.html",
+    "core/core-frontend/src/custom-component/v-query/Select.vue",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r138.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectElementRepair-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QOBS-ASYNC-EL-RENDER-RED-GREEN-r001.md",
+    "core/core-frontend/tests/filter-copy-query-observation-component/check.mjs",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r139.json"
+  ]
+}

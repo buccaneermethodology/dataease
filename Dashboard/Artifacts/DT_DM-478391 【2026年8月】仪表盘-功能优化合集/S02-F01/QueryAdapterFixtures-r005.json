@@ -1,0 +1,392 @@
+{
+  "status": "候选设计，非运行验证",
+  "card_sha256": "a9074f0cdb418e019e17604382625ed0989e08ea3911806a00d373339f727b3f",
+  "provenance": "合成事务状态fixture，简化配置仅证明版本一致性oracle，不证明产品配置schema或挂载合法",
+  "proposed_authoritative_state": "documentQueryState.active单一不可变aggregate引用",
+  "linearization_point": "documentQueryState.active = preparedAggregate；commitId/revision/root/design/effectPlan均在同一对象，禁止拆分更新",
+  "cases": [
+    {
+      "id": "paste-save-copy",
+      "initial": {
+        "documentId": "doc-B",
+        "revision": 12,
+        "commitId": "c12",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": []
+      },
+      "prepared": {
+        "documentId": "doc-B",
+        "revision": 13,
+        "commitId": "c13",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": [
+          {
+            "id": "c13:snapshot",
+            "status": "pending"
+          },
+          {
+            "id": "c13:preview",
+            "status": "pending"
+          }
+        ]
+      },
+      "expected_active": {
+        "documentId": "doc-B",
+        "revision": 13,
+        "commitId": "c13",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": [
+          {
+            "id": "c13:snapshot",
+            "status": "pending"
+          },
+          {
+            "id": "c13:preview",
+            "status": "pending"
+          }
+        ]
+      },
+      "expected_save_read": {
+        "revision": 13,
+        "commitId": "c13",
+        "queryConfig": {
+          "propValue": [
+            {
+              "id": "new",
+              "defaultValue": [
+                "浙江"
+              ]
+            }
+          ],
+          "cascade": []
+        }
+      },
+      "expected_copy_read": {
+        "propValue": [
+          {
+            "id": "new",
+            "defaultValue": [
+              "浙江"
+            ]
+          }
+        ],
+        "cascade": []
+      }
+    },
+    {
+      "id": "prepare-error",
+      "throw_at": "构造candidate",
+      "expected_active": {
+        "documentId": "doc-B",
+        "revision": 12,
+        "commitId": "c12",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": []
+      },
+      "expected_effect_count": 0
+    },
+    {
+      "id": "revision-drift",
+      "current_revision": 13,
+      "prepared_base_revision": 12,
+      "expected": "STALE；不发布，不覆盖13"
+    },
+    {
+      "id": "throw-before-publish",
+      "throw_at": "active赋值前",
+      "expected_commitId": "c12",
+      "expected": "UNCOMMITTED；门控恢复旧投影"
+    },
+    {
+      "id": "throw-after-publish",
+      "throw_at": "active赋值成功后通知回调",
+      "expected_commitId": "c13",
+      "expected": "COMMITTED_DEGRADED；carrier/root/revision同为13；不回滚至12"
+    },
+    {
+      "id": "tree-watch-during-hydrate",
+      "expected": "门控拦截id/treeFieldList监听的默认清空与getTreeOption；只登记c13待协调初始化"
+    },
+    {
+      "id": "snapshot-fails",
+      "expected_commitId": "c13",
+      "expected_save_query": {
+        "propValue": [
+          {
+            "id": "new",
+            "defaultValue": [
+              "浙江"
+            ]
+          }
+        ],
+        "cascade": []
+      },
+      "expected": "快照pending/failed独立记录；新设计不丢失，不显示完整成功；恢复不重发布"
+    },
+    {
+      "id": "notify-fails",
+      "expected_commitId": "c13",
+      "expected": "preview effect保持pending；按同commitId重试，不新增revision"
+    },
+    {
+      "id": "undo",
+      "expected_active": {
+        "documentId": "doc-B",
+        "revision": 14,
+        "commitId": "c14",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "old",
+                "defaultValue": [
+                  "旧"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": [],
+        "restoresCommitId": "c12"
+      },
+      "expected_save_revision": 14,
+      "expected_config": {
+        "propValue": [
+          {
+            "id": "old",
+            "defaultValue": [
+              "旧"
+            ]
+          }
+        ],
+        "cascade": []
+      }
+    },
+    {
+      "id": "redo",
+      "expected_active": {
+        "documentId": "doc-B",
+        "revision": 15,
+        "commitId": "c15",
+        "designByComponent": {
+          "query-B": {
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        },
+        "componentRoot": [
+          {
+            "id": "query-B",
+            "style": {
+              "left": 99
+            },
+            "propValue": [
+              {
+                "id": "new",
+                "defaultValue": [
+                  "浙江"
+                ]
+              }
+            ],
+            "cascade": []
+          }
+        ],
+        "effectPlan": [
+          {
+            "id": "c15:snapshot",
+            "status": "pending"
+          },
+          {
+            "id": "c15:preview",
+            "status": "pending"
+          }
+        ],
+        "restoresCommitId": "c13"
+      },
+      "expected_save_revision": 15,
+      "expected_config": {
+        "propValue": [
+          {
+            "id": "new",
+            "defaultValue": [
+              "浙江"
+            ]
+          }
+        ],
+        "cascade": []
+      }
+    },
+    {
+      "id": "save-inflight-edit",
+      "save_revision": 13,
+      "active_revision_on_response": 14,
+      "expected": "只确认保存了13；14仍dirty，不把当前14标已保存"
+    },
+    {
+      "id": "stale-async-enum",
+      "response_commitId": "c12",
+      "active_commitId": "c13",
+      "expected": "丢弃旧响应，不能改c13默认/选择/元数据"
+    }
+  ],
+  "verified_checks": [
+    "JSON可解析",
+    "case id唯一",
+    "paste root与carrier相等",
+    "undo/redo恢复内容但revision递增"
+  ],
+  "not_verified": [
+    "Vue同步watch门控完整性",
+    "运行消费与故障注入",
+    "真实权限",
+    "完整树参数日期形态"
+  ],
+  "evidence": {
+    "root": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts:521-523",
+    "save": "core/core-frontend/src/utils/canvasUtils.ts:843-864",
+    "tree": "core/core-frontend/src/custom-component/v-query/Tree.vue:108-151",
+    "snapshot": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts:87-95,126-155,196-220",
+    "condition": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1591-1629"
+  }
+}

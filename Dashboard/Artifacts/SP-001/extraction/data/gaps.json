@@ -1,0 +1,47 @@
+{
+  "lane": "data",
+  "gaps": [
+    {
+      "id": "DATA-G01",
+      "uncertainty": "已建立内置类型、Factory及8类引擎静态差异清单；运行期方言与外部插件仍未验证。",
+      "next_action": "需要隔离数据库与方言回归，插件实现按专有边界另审。"
+    },
+    {
+      "id": "DATA-G02",
+      "uncertainty": "完整鉴权切面及XPack权限实现不在本lane深读范围。",
+      "next_action": "与access lane拼接静态调用证据；实际身份矩阵需运行验证。"
+    },
+    {
+      "id": "DATA-G03",
+      "uncertainty": "迁移只核实调度器成功/失败/重试状态，未逐个证明SqlBlock幂等。",
+      "next_action": "按实际历史版本和目标数据库建立隔离升级验证。"
+    },
+    {
+      "id": "DATA-G04",
+      "uncertainty": "已补读CSV/Excel主要解析边界、远程文件预算、API参数入口与HTTP执行器控制；真实FTP/SMB及全部参数组合运行表现未验证。",
+      "next_action": "仅运行范围保留：隔离网络及文件夹具执行既有回归。"
+    },
+    {
+      "id": "DATA-G05",
+      "uncertainty": "已亲读并关联三项文件/API回归源码；本轮未运行，因此不能给出通过率。",
+      "next_action": "独立验证按产品核心场景补充静态复核或隔离测试证据。"
+    },
+    {
+      "id": "DATA-G06",
+      "uncertainty": "静态调用链已补读：主仓库搜索未见数据集表/字段缓存显式删除；Ehcache预建缓存expiry none与默认put八小时存在不同层语义。运行配置/并发和刷新时效未验证。",
+      "next_action": "针对实际启用缓存配置验证更新后的可见性，必要时另立修复任务。"
+    },
+    {
+      "id": "DATA-G07",
+      "uncertainty": "元数据事务与引擎DDL/文件写入跨资源原子性不由@Transactional自动证明。",
+      "next_action": "用失败注入核实部分接入失败时回滚/补偿行为。"
+    }
+  ],
+  "resolved_static_gaps": [
+    "CSV/Excel主要解析失败边界",
+    "API网络执行器大小/总时限/错误状态控制",
+    "缓存写入读取和通用删除设施及预建配置差异",
+    "内置Provider类型、连接分派和引擎差异索引",
+    "已有文件/API/SMB回归测试资产关联"
+  ]
+}

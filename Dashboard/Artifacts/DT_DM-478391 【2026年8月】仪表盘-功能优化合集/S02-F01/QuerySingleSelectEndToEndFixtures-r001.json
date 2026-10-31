@@ -1,0 +1,16 @@
+{
+  "schema_version": "s02_end_to_end_fixture_set_v1",
+  "design": "QuerySingleSelectEndToEndDesign-r001.md",
+  "cases": [
+    {"id":"TC-QE2E-001","source":"QPAYLOAD-001 default A/runtime B fixture + QPIPE-001 unique-target fixture","expected":"ok; complete design/runtime VQuery roots; plan rebinds target refs; runtime restores A, never B"},
+    {"id":"TC-QE2E-002","source":"QPAYLOAD-001 no-default fixture + QPIPE-001 unique-target fixture","expected":"ok; no default keys introduced; runtime mapValue=[]"},
+    {"id":"TC-QE2E-003","source":"QPIPE-001 empty-propValue fixture + valid payload target","expected":"REFERENCE_PIPELINE/QPROJ/INVALID_INPUT; no payload call"},
+    {"id":"TC-QE2E-004","source":"QPIPE-001 missing-target fixture + valid payload target","expected":"REFERENCE_PIPELINE/QMAP/MISSING_COMPONENT; no payload call"},
+    {"id":"TC-QE2E-005","source":"QPIPE-001 valid fixture + QPAYLOAD-001 target-id mismatch","expected":"CONTAINER/TARGET_ID_MISMATCH after reference pipeline succeeds"},
+    {"id":"TC-QE2E-006","source":"QPIPE-001 valid fixture + QTARGET missing-directory-field fixture","expected":"QTARGET/DIRECTORY/TARGET_UNRESOLVED; no partial payload"},
+    {"id":"TC-QE2E-007","source":"TC-QE2E-001","expected":"deep-frozen inputs unchanged; no mutable references shared across input/design/runtime"},
+    {"id":"TC-QE2E-008","source":"multiple simultaneous defects built from TC-QE2E-003 and TC-QE2E-005","expected":"QPIPE short-circuits before QPAYLOAD; observed real call sequence contains only pipeline stages"}
+  ],
+  "case_identity_rule":"These are new composition identities. Referenced child vectors are immutable inputs and retain their own identity; outcomes must be recomputed through real child modules, not copied as asserted results.",
+  "claim_ceiling":"Only the bounded detached single-select composition; no product wiring, real authorization, save/reopen, browser, or Goal completion claim."
+}

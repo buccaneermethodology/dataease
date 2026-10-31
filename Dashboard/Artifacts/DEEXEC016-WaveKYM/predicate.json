@@ -1,0 +1,54 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "wave-candidate-complete",
+  "source_completion_rule_id": "wave-contract",
+  "source_completion_rule_ref": "Dashboard/Artifacts/DEEXEC016-WaveKYM/scope-amendment.md",
+  "source_completion_rule_sha256": "2ba6369809dc34922feb958e7ee91925e98978f83761f16b20d1fafecc079842",
+  "issued_by_authority_ref": "Dashboard/Artifacts/DEEXEC016-WaveKYM/user-wave-request.md",
+  "issued_by_authority_sha256": "d1db03a6a20c88daeac6eb3578cd22d55d53b5a9f08e1c0d27dbeaaf36d9fb1a",
+  "issued_by_authority_id": "wave-user-request",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "wave-kym"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "goal",
+            "completion_rule",
+            "obligation_inventory",
+            "final_diff",
+            "independent_validation",
+            "closeout",
+            "dashboard_state",
+            "kb_disposition",
+            "original_plan_coverage",
+            "scope_delta_audit",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

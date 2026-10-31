@@ -1,0 +1,189 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QMAP-001-target-component-map-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求设计审核后立即开始S02实现并加快执行；仅实施独立审核接受的纯目标组件映射切片。原S02 Goal分母与真实权限阻塞保持不变。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "将QPROJ输出的typed引用与显式源/目标目录映射为QPREP所需componentMap；纯函数候选。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts",
+      "core/core-frontend/tests/filter-copy-query-target-component-map/query-target-component-map.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-red.snapshot.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-ExecutionEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改冻结QMAP design/fixtures、Goal、QPROJ/QPREP/pure-guards",
+      "修改QPROJ/QPREP现有测试与证据",
+      "接入UI/Store/权限/网络/时钟/持久化/随机ID",
+      "使用standalone/admin/mock替代权限",
+      "安装依赖或启动服务",
+      "名称映射或部分成功返回"
+    ],
+    "maximum_claim": "最多仅6项冻结QMAP case的纯目录映射候选；不代表目录真实可信、授权、产品目标支持、copy入口、完整query适配器、Goal AC、权限或S02完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "项目规范",
+      "reason": "实施/验证边界",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "SP-010 invariants",
+      "reason": "可信RED/GREEN与准入",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "权威Goal",
+      "reason": "保留完整目标分母",
+      "domains": [
+        "scope",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapDesign-r001.md",
+      "revision": "d0f94bc26549452e1a8a76467e37592a57d20f85cf363deb9e8daa36494b5f49",
+      "applicability": "QMAP冻结设计",
+      "reason": "算法、错误顺序及声明上限",
+      "domains": [
+        "implementation",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapFixtures-r001.json",
+      "revision": "5fc940f9e1352fadbf1077799b1377269193156249c959f01cdc687c2ac97426",
+      "applicability": "QMAP冻结用例",
+      "reason": "6 identity与oracle",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTargetComponentMapDesignReview-r001.md",
+      "revision": "8f26df52abb655a9479d7b6bba5181d1cec7a5fd408085bb700147a2c451052d",
+      "applicability": "独立语义预审",
+      "reason": "准入条件及产品边界",
+      "domains": [
+        "scope",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+      "revision": "9c0d15e3ad7a383c65c2e4af6a23c2377c064d4f7b30906990536b3dd94b0285",
+      "applicability": "QPROJ输入模型",
+      "reason": "typed引用结构",
+      "domains": [
+        "implementation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "QPREP映射消费契约",
+      "reason": "componentMap目标接口",
+      "domains": [
+        "implementation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "已有runner依赖",
+      "reason": "复用Node/esbuild验证能力",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen-input-drift",
+      "condition": "Goal/design/fixtures/review or relevant source digest changes",
+      "action": "停止执行，登记delta并rebaseline后重做准入",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner-unavailable",
+      "condition": "已安装Node/esbuild不可运行",
+      "action": "不安装依赖，记录实际阻断",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "本纯映射切片不排除原Goal内权限、产品schema、UI、保存、刷新、历史兼容与端到端义务；其余保持未验证并由后续Session覆盖。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_builder",
+    "reason": "QMAP独立语义审查有界通过，实施六项冻结纯组件映射合同"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "QMAP冻结6-case fixture",
+    "真实RED stdout/stderr/exit与源/runner/fixture快照",
+    "同6 identity GREEN",
+    "定向ESLint",
+    "精确差异及claim ceiling"
+  ]
+}

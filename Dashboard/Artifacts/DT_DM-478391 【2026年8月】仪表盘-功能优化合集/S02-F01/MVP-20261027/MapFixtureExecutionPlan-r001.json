@@ -1,0 +1,81 @@
+{
+  "delivery_id": "S02-MVP-MAP-FIXTURE-r001",
+  "goal": "DE-S02-F01",
+  "purpose": "为5类地图提供真实合法资源与独立经纬度，保留38项验收",
+  "actions": [
+    {
+      "kind": "copy_fixture_no_overwrite",
+      "source": "mapFiles/000/000.json",
+      "source_sha256": "8892e9ace47c9f52b81458ba87d170fba39c6fafd23efede971cce2a766dfa83",
+      "target": "/Users/xiaomei/opt/dataease3.0/data/map-origin/000/000.json"
+    },
+    {
+      "kind": "copy_fixture_no_overwrite",
+      "source": "mapFiles/156/156.json",
+      "source_sha256": "99adfeded5223848bbe37a0a12f8023e11ee12161c7800521c27db42fdeac275",
+      "target": "/Users/xiaomei/opt/dataease3.0/data/map-origin/156/156.json"
+    },
+    {
+      "kind": "normal_dataset_UI_field_role",
+      "dataset_id": "1312472054565572608",
+      "dataset_name": "S02_MVP_Runtime_20261027",
+      "fields": [
+        {
+          "id": "1793083721152",
+          "name": "longitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_44cdca304e84f8d6",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721153",
+          "name": "latitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_176ca8c7d8fa07b1",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721155",
+          "name": "end_longitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_1741df101a91258e",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721156",
+          "name": "end_latitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_dddf7a0fc8d331a7",
+          "datasetGroupId": "1312472054565572608"
+        }
+      ],
+      "change": "groupType q→d，仅角色；不改ID、name、DECIMAL值、不拼接坐标、不改SQL/物理表、不复制字段",
+      "normal_ui": "数据集编辑→指定字段省略号→转换为维度→刷新数据核30行→保存并返回→重开验证"
+    }
+  ],
+  "admission_predicates": [
+    "源mapFiles JSON可解析且SHA固定；目标不存在，存在则只读比较，相异则停止，不覆盖",
+    "当前data根已恢复为用户目录；只创建2个map-origin文件及所需目录，不改map/geo覆盖目录、不重启",
+    "目标是同一隔离数据集；四字段当前为q且ID/类型匹配baseline；其他字段保留",
+    "保存前后在正常UI看见19字段30行；坐标值与CSV一致；需API元数据时仅使用正常应用已呈现诊断，不读取凭据",
+    "任何观察失败只记录失败，不提高44/49角色数或0/49完整通过数"
+  ],
+  "restoration": "新文件为本次创建，失败时保留记录且不覆盖其他文件；元数据转换未保存可正常取消，已保存仅按同一四字段转换回指标恢复角色，不能回滚其他字段或数据",
+  "claims": "只证明fixture可用；后续同dataset图表复制/粘贴、实际地图绘制与正常保存重开仍需独立运行记录；真实权限BLOCKED/NOT_RUN",
+  "counterexamples": [
+    "不把已有成功图片当地图通过",
+    "世界/中国资源有HTTP响应不等于经纬度地图实际渲染",
+    "不将字段拼接/降精度作为替代",
+    "不改冻结CSV、不更换dataset身份复用旧clipboard",
+    "目标文件若异于repo原始资源不覆盖"
+  ],
+  "review_budget": "本地图fixture交付物设计最多3轮，不重开UiIntegrationDesignReview-r003或图片代码3/3"
+}

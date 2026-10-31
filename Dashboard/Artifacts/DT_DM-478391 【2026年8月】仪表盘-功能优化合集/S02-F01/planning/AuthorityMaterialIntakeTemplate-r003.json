@@ -1,0 +1,330 @@
+{
+  "schema_version": "s02_authority_material_intake_v1",
+  "intake_id": "S02-F01-AUTHORITY-MATERIALS-r003",
+  "status": "NOT_PROVIDED",
+  "goal_binding": {
+    "goal_id": "DE-S02-F01",
+    "goal_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+    "denominator": {
+      "goal_ac": 10,
+      "must_have": 26,
+      "product_obligations": 16,
+      "scope_delta": "none"
+    }
+  },
+  "permission_implementation": {
+    "status": "NOT_PROVIDED",
+    "authorized_source_locator": null,
+    "repository_or_package": null,
+    "branch_or_release": null,
+    "commit_or_digest": null,
+    "license_and_publication_boundary": null,
+    "module_pom_or_entrypoint": null,
+    "runtime_profile": null,
+    "actual_loaded_implementation_evidence": null,
+    "source_owner": null
+  },
+  "identity_and_session_authority": {
+    "status": "UNKNOWN",
+    "principal_fields": null,
+    "session_or_token_identity": null,
+    "generation_or_version_authority": null,
+    "generation_change_events": null,
+    "logout_and_user_org_switch_semantics": null,
+    "permission_revoke_restore_semantics": null,
+    "source_evidence_refs": []
+  },
+  "fencing_and_commit_authority": {
+    "status": "UNKNOWN",
+    "source_read_check": null,
+    "prepare_check": null,
+    "target_commit_check": null,
+    "stale_identity_or_permission_result": null,
+    "race_and_atomicity_semantics": null,
+    "source_evidence_refs": []
+  },
+  "trusted_time_authority": {
+    "status": "UNKNOWN",
+    "clock_source": null,
+    "wall_or_monotonic_semantics": null,
+    "allowed_drift_or_error": null,
+    "ttl_origin_and_expiry_binding": null,
+    "sleep_resume_offline_refresh_semantics": null,
+    "ttl_boundary_expected_results": null,
+    "source_evidence_refs": []
+  },
+  "business_semantics_authority": {
+    "status": "PARTIALLY_KNOWN",
+    "frozen_goal_requirements": {
+      "copy_failure_preserves_last_good_tree": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/sections/business_rules",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "复制失败保留上次有效树。",
+        "locator_note": "仓库根相对路径；JSON Pointer 指向 Goal.final.json 实际 sections.business_rules 字符串。"
+      },
+      "invalid_identity_cannot_consume_or_restore_old_payload": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/sections/business_rules",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "登出/换用户后旧树不可恢复。",
+        "locator_note": "仓库根相对路径；JSON Pointer 指向 Goal.final.json 实际 sections.business_rules 字符串。"
+      },
+      "rejected_operation_does_not_mutate_target_or_emit_success": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/must_have_ledger/20/requirement",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "AC-F01-Q014：取消/失败不得显示成功反馈，目标与预览保持原状；sections.business_rules 同时给出取消/失败不变且不触发查询。",
+        "locator_note": "仓库根相对路径；JSON Pointer /must_have_ledger/20/requirement 精确指向 AC-F01-Q014；business_rules 是补充依据。",
+        "source_refs": [
+          "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/must_have_ledger/20/requirement",
+          "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/sections/business_rules"
+        ]
+      },
+      "successful_path_preserves_required_immediate_preview": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/must_have_ledger/20/requirement",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "AC-F01-Q014：成功立即预览新条件；成功显示“过滤条件已应用”并按T刷新预览。",
+        "locator_note": "仓库根相对路径；JSON Pointer /must_have_ledger/20/requirement 精确指向 AC-F01-Q014。"
+      },
+      "read_refresh_retry_do_not_extend_payload_expiry": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/sections/business_rules",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "30分钟有效，不消耗、不续期，新复制重置。注意 retry 是对不续期不变量的适用解释，不是Goal原文词。",
+        "locator_note": "仓库根相对路径；JSON Pointer 指向 Goal.final.json 实际 sections.business_rules 字符串。"
+      },
+      "server_side_authorization_required": {
+        "value": true,
+        "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/must_have_ledger/22/requirement",
+        "source_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+        "quoted_or_interpreted_clause": "AC-F01-ORIG-01：U_view不可查看过滤条件、复制或粘贴；不能只隐藏按钮当鉴权通过。business_rules 要求身份/数据权/编辑权每次重验。",
+        "locator_note": "仓库根相对路径；JSON Pointer /must_have_ledger/22/requirement 精确指向 AC-F01-ORIG-01；business_rules 是补充依据。",
+        "source_refs": [
+          "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/must_have_ledger/22/requirement",
+          "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json#/sections/business_rules"
+        ]
+      }
+    },
+    "authority_needed_for_implementation_boundary": {
+      "failure_atomicity_and_storage_write_boundary": null,
+      "attempt_write_query_and_logical_preview_counter_definitions": null
+    },
+    "maintainer_decisions_still_unknown": {
+      "same_session_concurrency_winner": null,
+      "late_response_replay_and_duplicate_commit_semantics": null,
+      "successful_logical_preview_count": null
+    },
+    "source_evidence_refs": [],
+    "successful_logical_preview_candidate": {
+      "value": "one logical preview intent after successful commit",
+      "status": "CANDIDATE_NOT_FROZEN",
+      "source_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r001.md#失败原子性与副作用oracle",
+      "source_sha256": "55151a44c4d8ff2eed5893bda071e2c6e3d1ee69d8f0547ad2777e35d75fdc67",
+      "interpretation_boundary": "不是 Goal 原文或产品验收事实；由产品 owner 确认后才冻结。底层网络/API/query fan-out 单独计数。",
+      "source_excerpt": "成功候选oracle：完整替换而非逐片段应用，旧条件消失；源对象与目标无共享引用；仅一次逻辑预览意图，不能要求只有一次底层网络请求；不自动保存。",
+      "locator_note": "该文档标题锚点是章节导航；source_sha256 绑定完整文件字节，source_excerpt 是可搜索定位内容。候选不是冻结 Goal。"
+    },
+    "case_execution_order_authority": {
+      "status": "CASES_DEPENDENT",
+      "rule": "概览只作索引；细化场景 ID 唯一，独立初始化/事件顺序由冻结 Cases 定义。当前 Cases 未冻结，不将其当成待维护者业务政策。"
+    }
+  },
+  "isolated_permission_environment": {
+    "status": "NOT_AVAILABLE",
+    "instance_locator": null,
+    "front_end_and_backend_revision": null,
+    "permission_module_commit": null,
+    "runtime_profile_and_loaded_beans": null,
+    "isolated_database_confirmation": null,
+    "organization_and_resource_fixture": null,
+    "editor_account_alias": null,
+    "read_only_account_alias": null,
+    "administrator_account_alias": null,
+    "credential_storage_locator_only": null,
+    "baseline_authorization_snapshot": null,
+    "revoke_restore_runbook": null,
+    "permanent_token_created": null,
+    "startup_and_shutdown_method": null,
+    "ports": null,
+    "reset_and_restore_runbook": null,
+    "role_authorization_matrix": null,
+    "environment_evidence_refs": [],
+    "permanent_token_policy": "PROHIBITED",
+    "permanent_token_fact_status": "UNKNOWN"
+  },
+  "s01_f01_entry": {
+    "status": "CONDITIONAL",
+    "scope": "仅本 S02 切片依赖的 S01 F01 进入条件；不要求 S01 全功能终态",
+    "entry_packet_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+    "entry_packet_sha256": null,
+    "current_terminal_review_ref": null,
+    "current_stop_gate_receipt_ref": null,
+    "source_revision_and_submodule_revision": null,
+    "condition_inventory_status": "NOT_PROVIDED",
+    "remaining_conditions": null,
+    "condition_owner_evidence_refs": []
+  },
+  "evidence_manifest": [
+    {
+      "evidence_id": null,
+      "evidence_kind": null,
+      "owner": null,
+      "source_locator": null,
+      "version_commit_or_digest": null,
+      "retrieval_method": null,
+      "authority_scope": null,
+      "unsupported_scope": null,
+      "scenario_ids": [],
+      "predicate_refs": [],
+      "redaction_status": null,
+      "runtime_observation_or_contract_only": null,
+      "notes": null
+    }
+  ],
+  "evidence_rules": {
+    "required_per_item": [
+      "evidence_id",
+      "evidence_kind",
+      "owner",
+      "source_locator",
+      "version_commit_or_digest",
+      "retrieval_method",
+      "authority_scope",
+      "unsupported_scope",
+      "scenario_ids",
+      "predicate_refs",
+      "redaction_status",
+      "runtime_observation_or_contract_only"
+    ],
+    "secrets_allowed": false,
+    "unknown_values_must_remain_null": true,
+    "standalone_or_mock_substitute_allowed": false
+  },
+  "review_constraints": {
+    "cap_scope": "per_artifact",
+    "artifact_id": "S02-F01-authority-materials-package",
+    "artifact_round": 3,
+    "maximum_rounds_for_this_artifact": 3,
+    "dg02_artifact_rounds_used": 3,
+    "dg02_round_cap_applies_only_to_dg02_artifact": true,
+    "renaming_does_not_reset_rounds": true,
+    "reviewer_validator_must_return_full_issue_inventory": true,
+    "artifact_id_aliases": [
+      "S02-F01-AUTHORITY-MATERIALS"
+    ],
+    "review_budget_exhausted_after_this_round": true,
+    "post_review_correction": {
+      "review_rounds_used": "3/3",
+      "independent_review_status": "NOT_REVIEWED_AFTER_R003",
+      "reason": "仅修复 Review r003 点名的引用和文本不一致；不启动第4轮。"
+    }
+  },
+  "claim_ceiling": "材料接收与来源追踪包；不是权限实现、身份/时间 authority、隔离环境、设计冻结、产品验收或 Goal 完成证据。",
+  "scenario_authority_map": [
+    {
+      "scenario_id": "ID-01A",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-01B",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-02A",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-02B",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-02C",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-03A",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-03B",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "TIME-01A",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "TIME-01B",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "TIME-02A",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    },
+    {
+      "scenario_id": "ID-04",
+      "status": "NOT_PROVIDED",
+      "required_authority_or_evidence": null,
+      "evidence_refs": [],
+      "supported_predicates": [],
+      "unsupported_scope": null,
+      "owner": null
+    }
+  ],
+  "artifact_id": "S02-F01-authority-materials-package",
+  "artifact_id_aliases": [
+    "S02-F01-AUTHORITY-MATERIALS"
+  ]
+}

@@ -1,0 +1,713 @@
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 497,
+          "end_line": 516,
+          "symbol": "saveCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 605,
+          "end_line": 607,
+          "symbol": "saveCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-034",
+      "statement": "CoreVisualizationManage.innerSave 固定 version=3；无 ID 时生成 Snowflake ID，补充用户/组织和创建更新时间，并依次保存主记录和快照记录，记录 NEW 操作。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 236,
+          "end_line": 262,
+          "symbol": "innerSave/preInnerSave",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-035",
+      "statement": "updateCanvas 有事务注解，先解码各图表，拒绝空 ID；必要时移动父目录，已发布状态转换为 SAVED_UNPUBLISHED，其余保留，调用 innerEdit 保存并返回状态；图表保存另委托 saveChartViewFromVisualization。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 648,
+          "end_line": 687,
+          "symbol": "updateCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-036",
+      "statement": "innerEdit 对 orgRoot=true 直接返回；普通编辑将完整可视化信息保存到快照，主表只传入 ID、状态、pid、contentId、名称、更新者/时间和版本，记录 UPDATE 操作。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 266,
+          "end_line": 290,
+          "symbol": "innerEdit",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-037",
+      "statement": "画布图表保存遍历 canvasViewInfo，仅当 componentData 字符串包含图表 ID 时设置 sceneId 并保存；未引用 ID 只加入局部 disuse 列表，本方法未执行删除。ChartViewManege.save 拒绝超过 100 字标题和空 ID，写 SnapshotCoreChartView。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 924,
+          "end_line": 940,
+          "symbol": "saveChartViewFromVisualization",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartViewManege.java",
+          "start_line": 93,
+          "end_line": 107,
+          "symbol": "save",
+          "sha256": "82e680456f5490e2ffb6a3cb858fd2debe635f500d61242205443b83d931598c"
+        }
+      ]
+    },
+    {
+      "id": "CHART-038",
+      "statement": "findById 的 main-edit 分支在不存在未发布/已保存未发布快照时执行 dvSnapshotRecover，再按 resourceTable 读取可视化和图表；仅将 componentData 中匹配 ID 的图表加入 canvasViewInfo，资源缺失走异常。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 180,
+          "end_line": 243,
+          "symbol": "findById",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-039",
+      "statement": "findDvInfo 只在 resourceTable 等于 snapshot 时读取快照，否则读主表；发布为 PUBLISHED 时先 innerEdit、removeDvCore、清理持久化上下文、dvRestore，然后处理阈值；恢复发布调用 dvSnapshotRecover 并设回 PUBLISHED。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 690,
+          "end_line": 722,
+          "symbol": "updatePublishStatus/recoverToPublished",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 1034,
+          "end_line": 1052,
+          "symbol": "findDvInfo",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-040",
+      "statement": "dvSnapshotRecover 清理快照并把主可视化及主图表复制至快照；dvRestore 将快照可视化原地保存到主表、批量保存快照图表到主表，并先清理主联动/跳转/外部参数后复制相关快照数据。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 647,
+          "end_line": 682,
+          "symbol": "dvSnapshotRecover",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 785,
+          "end_line": 956,
+          "symbol": "dvRestore",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-041",
+      "statement": "snapshot Store 分别记录 calcData 和 renderChart 的图表 ID；撤销/重做恢复组件、样式、图表、联动、跳转快照，但保留当前 dvInfo 的 id/pid/dataState/contentId，且设置三秒快照禁用期。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+          "start_line": 87,
+          "end_line": 135,
+          "symbol": "recordSnapshotCache/undo/redo/snapshotPublish",
+          "sha256": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157"
+        }
+      ]
+    },
+    {
+      "id": "CHART-042",
+      "statement": "新快照仅在数据就绪、非移动端设计且禁用期已过时记录，撤销后新记录截断未来快照；恢复快照广播 snapshotChangeToView，图表消费者优先 calcData，只有不需要重新取数时才执行 renderChart。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+          "start_line": 159,
+          "end_line": 223,
+          "symbol": "snapshotPublish/recordSnapshot",
+          "sha256": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157"
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+          "start_line": 864,
+          "end_line": 883,
+          "symbol": "snapshotChangeToView监听",
+          "sha256": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-043",
+      "statement": "模板前端声明列表、保存、按 ID 读取、分类、名称校验和批量更新/删除的请求封装；SDK TemplateManageApi 有对应接口声明，接口存在不证明模板市场或权限实现运行可用。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/template.ts",
+          "start_line": 3,
+          "end_line": 90,
+          "symbol": "模板请求封装",
+          "sha256": "f34317088c3073965ce9d75442bdcaf5beef04881b011f66886c12a63d53777f"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/template/TemplateManageApi.java",
+          "start_line": 13,
+          "end_line": 66,
+          "symbol": "TemplateManageApi",
+          "sha256": "78d223428bf62af6e26bdb0a76f2f64ee0fd38c1b1e2fd83ef0cdd44deca6669"
+        }
+      ]
+    },
+    {
+      "id": "CHART-044",
+      "statement": "decompression 按 newFrom 分别从内部模板记录、外部传入内容或模板市场读取样式/组件/动态数据；内部模板记录使用次数和最近操作，市场返回空时抛异常。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 889,
+          "end_line": 940,
+          "symbol": "decompression",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-045",
+      "statement": "模板取数 getChartDataInfo 按 viewId 查询扩展数据并解析首条 viewDetails，将其 data 写入请求图表；未找到记录抛异常，解析异常仅记录日志后返回原 view。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/VisualizationTemplateExtendDataManage.java",
+          "start_line": 26,
+          "end_line": 41,
+          "symbol": "getChartDataInfo",
+          "sha256": "7119a407d85bfb7d8cceaa2a569e55e71db66779505de57cc88ec8e542f0c069"
+        }
+      ]
+    },
+    {
+      "id": "CHART-046",
+      "statement": "地图前端按 geo_ 前缀区分上传地图和内置地图：前者去前缀走 /geo，后者走 /map，并按前三位国家代码构造 JSON 路径；另封装自定义区域保存、删除和地名映射请求。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/map.ts",
+          "start_line": 4,
+          "end_line": 56,
+          "symbol": "getGeoJson/地图请求封装",
+          "sha256": "c477a8d420cfc913482fe8ed28e476bbdf50581226692f15a5c919d8b20b100b"
+        }
+      ]
+    },
+    {
+      "id": "CHART-047",
+      "statement": "AI 组件前端 findBaseParams 请求 /aiBase/findTargetUrl；AiComponentApi 仅声明 GET findTargetUrl 返回字符串映射。本事实只覆盖目标地址获取契约，不证明任何模型推理或外部服务能力。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/aiComponent.ts",
+          "start_line": 1,
+          "end_line": 3,
+          "symbol": "findBaseParams",
+          "sha256": "f3f34be15ef1dac1bbb0c651e5eca1e57c21b65ae317422889502a13692c09c3"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/ai/AiComponentApi.java",
+          "start_line": 11,
+          "end_line": 14,
+          "symbol": "AiComponentApi",
+          "sha256": "70a79a3b0af8346a6e5a0c2ce6a8fd5b53547b615887a8ac1e328f2ee83348ca"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F04",
+      "name": "制作图表并取数",
+      "depth": "core",
+      "summary": "配置字段、过滤与钻取，通过权限约束的数据查询返回图表和表格结构，并交给前端渲染。",
+      "contract": {
+        "trigger": [
+          "CHART-001",
+          "CHART-018"
+        ],
+        "inputs": [
+          "CHART-001",
+          "CHART-002",
+          "CHART-017"
+        ],
+        "outputs": [
+          "CHART-015",
+          "CHART-017",
+          "CHART-018"
+        ],
+        "preconditions": [
+          "CHART-004",
+          "CHART-006",
+          "CHART-011"
+        ],
+        "state_changes": [
+          "CHART-001",
+          "CHART-004",
+          "CHART-018"
+        ],
+        "postconditions": [
+          "CHART-015",
+          "CHART-018"
+        ],
+        "invariants": [
+          "CHART-006",
+          "CHART-007",
+          "CHART-008",
+          "CHART-009",
+          "CHART-012",
+          "CHART-013"
+        ],
+        "failures": [
+          "CHART-003",
+          "CHART-005",
+          "CHART-006",
+          "CHART-010",
+          "CHART-011",
+          "CHART-018",
+          "CHART-045"
+        ],
+        "permissions": [
+          "CHART-002",
+          "CHART-003",
+          "CHART-006"
+        ],
+        "implementation": [
+          "CHART-004",
+          "CHART-005",
+          "CHART-006",
+          "CHART-007",
+          "CHART-008",
+          "CHART-009",
+          "CHART-010",
+          "CHART-011",
+          "CHART-012",
+          "CHART-013",
+          "CHART-014",
+          "CHART-015",
+          "CHART-016",
+          "CHART-019",
+          "CHART-020",
+          "CHART-021",
+          "CHART-022",
+          "CHART-023",
+          "CHART-024"
+        ],
+        "dependencies": [
+          "CHART-002",
+          "CHART-011",
+          "CHART-012",
+          "CHART-014"
+        ],
+        "data": [
+          "CHART-015",
+          "CHART-017",
+          "CHART-045"
+        ],
+        "tests": [
+          "CHART-025"
+        ]
+      },
+      "limits": [
+        "仅核实普通 calcData 主链、默认实现和列出的 Handler 差异，非每种图表每个分支穷举。",
+        "各 Provider 方言/驱动实际执行、权限扩展及前端渲染效果未运行验证。",
+        "取数主链没有在本轮证明缓存命中/失效规则。"
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "组合仪表板",
+      "depth": "core",
+      "summary": "通过组件画布与图表快照编辑仪表板，保存草稿、发布并从主数据预览。",
+      "contract": {
+        "trigger": [
+          "CHART-026",
+          "CHART-030"
+        ],
+        "inputs": [
+          "CHART-029",
+          "CHART-030"
+        ],
+        "outputs": [
+          "CHART-033",
+          "CHART-035",
+          "CHART-038"
+        ],
+        "preconditions": [
+          "CHART-032",
+          "CHART-037"
+        ],
+        "state_changes": [
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041"
+        ],
+        "postconditions": [
+          "CHART-028",
+          "CHART-029",
+          "CHART-038",
+          "CHART-039"
+        ],
+        "invariants": [
+          "CHART-036",
+          "CHART-037",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "failures": [
+          "CHART-031",
+          "CHART-035",
+          "CHART-037",
+          "CHART-038"
+        ],
+        "permissions": [
+          "CHART-032"
+        ],
+        "implementation": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-033",
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-037",
+          "CHART-038",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "dependencies": [
+          "CHART-003",
+          "CHART-012",
+          "CHART-029",
+          "CHART-032"
+        ],
+        "data": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-034",
+          "CHART-036",
+          "CHART-037",
+          "CHART-040"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "未运行保存重开、并发冲突、发布事务回滚、移动与嵌入端验证。",
+        "本轮未找到并读取覆盖完整仪表板保存发布链的测试；tests 维度为空，不能声明无测试或测试通过。"
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "制作大屏",
+      "depth": "core",
+      "summary": "以 dataV 业务类型使用共享画布保存发布与消费链，支持拖入组件和快照撤销通知。",
+      "contract": {
+        "trigger": [
+          "CHART-027",
+          "CHART-030"
+        ],
+        "inputs": [
+          "CHART-029",
+          "CHART-030"
+        ],
+        "outputs": [
+          "CHART-033",
+          "CHART-035",
+          "CHART-038"
+        ],
+        "preconditions": [
+          "CHART-032",
+          "CHART-037"
+        ],
+        "state_changes": [
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041"
+        ],
+        "postconditions": [
+          "CHART-028",
+          "CHART-029",
+          "CHART-038",
+          "CHART-039"
+        ],
+        "invariants": [
+          "CHART-036",
+          "CHART-037",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "failures": [
+          "CHART-031",
+          "CHART-035",
+          "CHART-037",
+          "CHART-038"
+        ],
+        "permissions": [
+          "CHART-032"
+        ],
+        "implementation": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-033",
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-037",
+          "CHART-038",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "dependencies": [
+          "CHART-003",
+          "CHART-012",
+          "CHART-029",
+          "CHART-032"
+        ],
+        "data": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-034",
+          "CHART-036",
+          "CHART-037",
+          "CHART-040"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "与仪表板共享的契约事实仅按明确入口引用；不同布局与交互未被视为完全相同。",
+        "未运行大屏缩放/长文本/销毁事件、保存重开和移动端验证；本轮无已读取端到端测试资产。"
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "使用模板",
+      "depth": "navigation",
+      "summary": "导航模板管理、创建来源及模板内置数据读取边界。",
+      "contract": {
+        "trigger": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "inputs": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "outputs": [
+          "CHART-045"
+        ],
+        "preconditions": [],
+        "state_changes": [
+          "CHART-044"
+        ],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [
+          "CHART-044",
+          "CHART-045"
+        ],
+        "permissions": [],
+        "implementation": [
+          "CHART-003",
+          "CHART-043",
+          "CHART-044",
+          "CHART-045"
+        ],
+        "dependencies": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "仅导航深度，未覆盖模板市场外部访问、导入包格式和完整 ID 重映射。"
+      ]
+    },
+    {
+      "id": "F18",
+      "name": "地图、AI 组件等扩展视图",
+      "depth": "navigation",
+      "summary": "导航地图资源路由与 AI 组件目标地址契约。",
+      "contract": {
+        "trigger": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "inputs": [
+          "CHART-046"
+        ],
+        "outputs": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "dependencies": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "地图资源服务、上传实现与 AI 外部实现未验证；不读取专有 XPack 实现。"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "CHART-R001",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-001",
+      "evidence_fact_ids": [
+        "CHART-001"
+      ]
+    },
+    {
+      "id": "CHART-R002",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-002",
+      "evidence_fact_ids": [
+        "CHART-002"
+      ]
+    },
+    {
+      "id": "CHART-R003",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-003",
+      "evidence_fact_ids": [
+        "CHART-003"
+      ]
+    },
+    {
+      "id": "CHART-R004",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-004",
+      "evidence_fact_ids": [
+        "CHART-004"
+      ]
+    },
+    {
+      "id": "CHART-R005",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-005",
+      "evidence_fact_ids": [
+        "CHART-005"
+      ]
+    },
+    {
+      "id": "CHART-R006",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-006",
+      "evidence_fact_ids": [
+        "CHART-006"
+      ]
+    },
+    {
+      "id": "CHART-R007",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-007",
+      "evidence_fact_ids": [
+        "CHART-007"
+      ]
+    },
+    {
+      "id": "CHART-R008",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-008",
+      "evidence_fact_ids": [
+        "CHART-008"
+      ]
+    },
+    {
+      "id": "CHART-R009",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-009",
+      "evidence_fact_ids": [
+        "CHART-009"
+      ]
+    },
+    {
+      "id": "CHART-R010",
+      "type": "CAPABILITY_REALIZED_BY",

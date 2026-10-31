@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QOBS ElSelectV2 rendering check</title>
+  </head>
+  <body>
+    <main>
+      <h1>QOBS ElSelectV2 rendering check</h1>
+      <p>仅验证真实 element-plus-secondary 组件的选中标签、disabled 呈现和有限键盘行为。</p>
+      <div id="app"></div>
+      <pre id="result" aria-live="polite">RUNNING</pre>
+    </main>
+    <script type="module">
+      import { computed, createApp, h, nextTick, ref } from 'vue'
+      import { ElSelectV2 } from 'element-plus-secondary'
+      import 'element-plus-secondary/dist/index.css'
+
+      const mode = ref('valid')
+      const modelValue = ref('C')
+      const changeEvents = []
+      const optionSets = {
+        valid: [
+          { label: 'A', value: 'A' },
+          { label: 'B', value: 'B' },
+          { label: 'C', value: 'C' }
+        ],
+        invalid: [
+          { label: 'A', value: 'A' },
+          { label: 'B', value: 'B' },
+          { label: 'C — 当前值不在可用选项中', value: 'C', disabled: true }
+        ],
+        unverified: [
+          { label: 'A', value: 'A' },
+          { label: 'B', value: 'B' },
+          { label: 'C — 当前值尚未核实', value: 'C', disabled: true }
+        ]
+      }
+      const options = computed(() => optionSets[mode.value])
+
+      createApp({
+        setup() {
+          return () =>
+            h('section', [
+              h('p', { id: 'mode' }, `状态：${mode.value}`),
+              h(ElSelectV2, {
+                modelValue: modelValue.value,
+                options: options.value,
+                key: mode.value,
+                ariaLabel: '当前过滤值',
+                teleported: false,
+                onUpdateModelValue: value => (modelValue.value = value),
+                'onUpdate:modelValue': value => (modelValue.value = value),
+                onChange: value => changeEvents.push(value)
+              }),
+              h('output', { id: 'model-value' }, String(modelValue.value)),
+              h('button', { id: 'check', type: 'button', onClick: runChecks }, '运行核对')
+            ])
+        }
+      }).mount('#app')
+
+      const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
+      const assert = (condition, message) => {
+        if (!condition) throw new Error(message)
+      }
+      const optionRow = label =>
+        [...document.querySelectorAll('li')].find(row => row.textContent.includes(label))
+
+      async function runChecks() {
+        const result = document.querySelector('#result')
+        const observations = []
+        try {
+          document.querySelector('[class*="select__wrapper"]').click()
+          await pause(120)
+          for (const nextMode of ['invalid', 'unverified']) {
+            if (nextMode === 'unverified') {
+              modelValue.value = undefined
+              mode.value = 'valid'
+              await nextTick()
+              modelValue.value = 'C'
+              await nextTick()
+              document.querySelector('[class*="select__wrapper"]').click()
+              await pause(100)
+            }
+            const inputBeforeUpdate = document.querySelector('[role="combobox"]')
+            const restoreFocus = document.activeElement === inputBeforeUpdate
+            mode.value = nextMode
+            await nextTick()
+            await pause(80)
+            const input = document.querySelector('[role="combobox"]')
+            if (restoreFocus) input.focus()
+            if (restoreFocus) {
+              assert(document.activeElement === input, `${nextMode}: keyboard focus was not restored after option refresh`)
+            }
+            const expectedLabel = optionSets[nextMode][2].label
+            const selectedDisplay = [...document.querySelectorAll('[class*="select__selected-item"]')].find(
+              item => item.textContent.includes(expectedLabel) && !item.className.includes('is-hidden')
+            )
+            assert(selectedDisplay, `${nextMode}: selected C label not visible`)
+            assert(input?.getAttribute('aria-haspopup') === 'listbox', `${nextMode}: combobox/listbox relation missing`)
+            const ariaExpandedAfterUpdate = input.getAttribute('aria-expanded')
+
+            modelValue.value = undefined
+            await nextTick()
+            await pause(80)
+            const row = optionRow(expectedLabel)
+            assert(row, `${nextMode}: disabled C row not rendered`)
+            assert(row.classList.contains('is-disabled'), `${nextMode}: disabled C class missing`)
+            const ariaSelected = row.getAttribute('aria-selected')
+            row.click()
+            await pause(40)
+            assert(modelValue.value !== 'C', `${nextMode}: click selected disabled C`)
+
+            input.focus()
+            for (let index = 0; index < 4; index += 1) {
+              input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', bubbles: true }))
+            }
+            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true }))
+            await nextTick()
+            assert(modelValue.value !== 'C', `${nextMode}: keyboard selected disabled C`)
+            observations.push({
+              mode: nextMode,
+              selectedLabelVisible: true,
+              inputRole: input.getAttribute('role'),
+              ariaHaspopup: input.getAttribute('aria-haspopup'),
+              focusRestored: !restoreFocus || document.activeElement === input,
+              ariaExpandedAfterUpdate,
+              disabledClass: row.classList.contains('is-disabled'),
+              ariaSelected,
+              listboxRolePresent: Boolean(document.querySelector('[role="listbox"]')),
+              optionRolePresent: Boolean(document.querySelector('[role="option"]')),
+              clickAndKeyboardKeepDisabledValueUnselectable: true
+            })
+          }
+          result.textContent = JSON.stringify({ verdict: 'PASS_WITH_BOUNDS', observations }, null, 2)
+        } catch (error) {
+          result.textContent = JSON.stringify({ verdict: 'FAIL', message: String(error), observations }, null, 2)
+        }
+      }
+
+      document.querySelector('#check').click()
+    </script>
+    <style>
+      body { font-family: sans-serif; margin: 2rem; }
+      main { max-width: 42rem; }
+      #result { margin-top: 1.5rem; white-space: pre-wrap; }
+      #app { margin: 1.5rem 0; }
+    </style>
+  </body>
+</html>

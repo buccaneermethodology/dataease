@@ -1,0 +1,2363 @@
+{
+  "doc_id": "data",
+  "title": "数据源、文件/API接入与数据集",
+  "domains": [
+    "K03",
+    "K04",
+    "K05"
+  ],
+  "facts": [
+    {
+      "id": "DATA-001",
+      "statement": "前端数据源模块使用统一 request 封装；保存及更新前执行 nameTrim，分别 POST /datasource/save 与 /datasource/update，读取响应 data。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/datasource.ts",
+          "start_line": 101,
+          "end_line": 119,
+          "symbol": "save/update",
+          "sha256": "648c3481755576dc9ca0a7b16dbaec7e90db810e105e92c672566544161d39f9"
+        },
+        {
+          "path": "core/core-frontend/src/api/datasource.ts",
+          "start_line": 1,
+          "end_line": 2,
+          "symbol": "request import",
+          "sha256": "648c3481755576dc9ca0a7b16dbaec7e90db810e105e92c672566544161d39f9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-002",
+      "statement": "DatasourceApi 声明保存/更新输入为 BusiDsRequest、输出 DatasourceDTO；validate/{id}、删除、详情声明 manage，getSimpleDs/getTableField/getTables 声明 read 权限。这是接口注解声明，不能单独证明运行鉴权。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/ds/DatasourceApi.java",
+          "start_line": 45,
+          "end_line": 142,
+          "symbol": "DatasourceApi",
+          "sha256": "d2599a92b6de382fd0eae8238492fc6f192eb7e169873b68b48b9e1657645908"
+        }
+      ]
+    },
+    {
+      "id": "DATA-003",
+      "statement": "数据源 save 在正 ID 输入时转 update；否则解码 configuration、执行 Excel 文件与前置检查、生成 snowID 和审计时间；连接状态检查异常只置 Error，随后仍调用 innerSave。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 296,
+          "end_line": 324,
+          "symbol": "save",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-004",
+      "statement": "innerSave 经 datasourceResourceTree 的 XpackInteract 后置钩子，检查名称非空及同级重复后 saveAndFlush，并登记最近新增操作；查重排除自身且区分 folder 与非 folder。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DataSourceManage.java",
+          "start_line": 128,
+          "end_line": 171,
+          "symbol": "innerSave/checkName",
+          "sha256": "4a07188f8119148cfaf42abf9ba6b14c03d7198c84b660aff54ed6f8387f74af"
+        }
+      ]
+    },
+    {
+      "id": "DATA-005",
+      "statement": "validate 请求解码 configuration、执行 preCheckDs 与 checkDatasourceStatus，只返回 type 和 status；getSchema 将请求转换为 DatasourceRequest 并委派所选 Provider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 575,
+          "end_line": 601,
+          "symbol": "validate/getSchema",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-006",
+      "statement": "ProviderFactory 对 es 选择 esProvider，对内置枚举类型选择 calciteProvider；其他类型走插件缓存且要求有效 License，缺实例抛插件异常；默认 Provider 为 calciteProvider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-datasource/src/main/java/io/dataease/extensions/datasource/factory/ProviderFactory.java",
+          "start_line": 23,
+          "end_line": 48,
+          "symbol": "getProvider/getDefaultProvider/getInstance",
+          "sha256": "81656a4f5dac79ed0af46a3cc7e44ed443cdbd99a5e0c90abfa673a073f39757"
+        }
+      ]
+    },
+    {
+      "id": "DATA-007",
+      "statement": "CalciteProvider.checkStatus 对 pg、kingbase、gaussdb 先确认 schema 存在，再建立连接执行表列表 SQL；成功返回 Success，异常向上传播。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 223,
+          "end_line": 266,
+          "symbol": "checkStatus",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-008",
+      "statement": "getTables 拒绝不存在的数据源；API 走反射 getApiTables，Excel 类型走 ExcelUtils，其余走 Provider；Oracle 额外过滤回收站名称，返回前缓存表名。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 858,
+          "end_line": 901,
+          "symbol": "getTables/isOracleRecycleBinName",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-009",
+      "statement": "数据源 update 缺 ID 时转 save；存在 ID 时读取旧配置并保留原 pid，解码新配置和执行前置检查，更新审计人/时间；状态校验失败置 Error。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 425,
+          "end_line": 451,
+          "symbol": "update",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-010",
+      "statement": "数据源删除支持虚拟组织根目录只递归子节点；递归删除 Excel/API 时删除引擎表，API 另删同步任务，再删元数据；普通数据库类型调用 calciteProvider.delete；folder 继续递归。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 742,
+          "end_line": 820,
+          "symbol": "delete/recursionDel",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-011",
+      "statement": "CoreDatasource 是 core_datasource 的 JPA 实体，Long ID；name/type/configuration/createTime/updateTime 非空，configuration 指定 EncryptDecryptConverter，另保存状态、任务状态及同步实例。此处只证明转换器绑定。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasource.java",
+          "start_line": 12,
+          "end_line": 91,
+          "symbol": "CoreDatasource",
+          "sha256": "9f676276b057e0282469e0b391697ee5dc14f446b59fd7be0146bfdb2aeb015a"
+        }
+      ]
+    },
+    {
+      "id": "DATA-012",
+      "statement": "CoreDatasourceRepository 继承 JpaRepository 和 JpaSpecificationExecutor；状态及移动辅助方法在事务中查询实体、修改字段并 saveAndFlush；元数据仓储与分析查询 Provider 是不同路径。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/dao/auto/repository/CoreDatasourceRepository.java",
+          "start_line": 11,
+          "end_line": 61,
+          "symbol": "CoreDatasourceRepository",
+          "sha256": "0b097927a389c243745c7b9ef4a142fdf36db9a02e20a09f6d48985b7035bcd4"
+        }
+      ]
+    },
+    {
+      "id": "DATA-013",
+      "statement": "uploadFile 按文件扩展名白名单拒绝不支持格式，解析并保存文件后合并编辑配置，检查每个 sheet 内字段名称大小写不敏感重复并抛错，返回 ExcelFileData。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1014,
+          "end_line": 1037,
+          "symbol": "uploadFile",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-014",
+      "statement": "ExcelUtils 上传解析流程校验文件名、解析并过滤无字段 sheet，持久保存上传文件；为各 sheet 生成物理表名及 UUID，保存路径、文件名、更新时间和大小，映射 TEXT/DATETIME/LONG/DOUBLE 为 DE 类型 0/1/2/3。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 284,
+          "end_line": 350,
+          "symbol": "excelSaveAndParse",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-015",
+      "statement": "loadRemoteFile 解码用户名和密码后调用 parseRemoteExcel，读取已有数据源并合并编辑配置，同样拒绝 sheet 重复字段；本候选不包含任何真实凭据。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1039,
+          "end_line": 1059,
+          "symbol": "loadRemoteFile",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-016",
+      "statement": "追加模式合并 Excel 配置按 sheet 表名匹配；单 CSV 且仅一张目标表时允许按字段匹配而不要求文件名；仅字段兼容的 sheet 保留旧物理表名并进入结果。替换模式按表名合并旧字段配置。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1063,
+          "end_line": 1100,
+          "symbol": "mergeExcelEditConfig",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-017",
+      "statement": "新建本地 Excel 数据源先建立引擎表，再以 all_scope 抽取；API/远程 Excel 建立引擎表并保存同步任务，默认开始时间取当前时间前20秒，RIGHTNOW 清空 cron，非即时任务拒绝结束早于开始。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 324,
+          "end_line": 405,
+          "symbol": "save",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-018",
+      "statement": "DatasourceSyncManage.createEngineTable/dropEngineTable 从当前引擎选择 Provider 与 EngineProvider，后者生成 DDL；needCheckExistTable 为真时先查表存在性，之后通过 Provider.execDDL 执行。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 342,
+          "end_line": 378,
+          "symbol": "createEngineTable/dropEngineTable",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-019",
+      "statement": "同步调度 RIGHTNOW 创建一次性 ExtractDataJob，其他模式创建 cron job；结束时间为空或0表示无结束，已过期结束时间删除调度并返回。Job/Trigger 标识绑定任务 ID 和数据源 ID。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 380,
+          "end_line": 397,
+          "symbol": "addSchedule",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-020",
+      "statement": "本地 Excel all_scope 抽取建立临时表、抽取后替换原表；成功记 Completed，异常尝试删临时表、记 Error 并抛异常，主键重复给专门提示；finally 保存任务日志。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 55,
+          "end_line": 98,
+          "symbol": "extractExcelData",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-021",
+      "statement": "API extractedData 按表抽取；all_scope 使用临时表和替换，成功或失败均记录结束时间；异常记 Error 并尝试清临时表，finally 保存日志，本方法 catch 不重新抛出该异常。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 141,
+          "end_line": 175,
+          "symbol": "extractedData",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-022",
+      "statement": "ApiUtils.getApiTables 从 configuration 的 ApiDefinition 列表生成表名/显示名/数据源ID，跳过空定义及 type=params；字段接口按物理表名查配置，异常被捕获后返回当前字段列表。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 77,
+          "end_line": 96,
+          "symbol": "getApiTables",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 180,
+          "end_line": 196,
+          "symbol": "getTableFields",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-023",
+      "statement": "API 抽取返回 fieldList 与 dataList；pageNumber 根据响应路径读取页数/总条数并按页请求，cursor 模式持续请求直到游标缺失、解析失败或与前一游标相同；无分页直接请求解析。缺少 API 定义抛 未找到。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 113,
+          "end_line": 173,
+          "symbol": "fetchApiResultField",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-024",
+      "statement": "checkAPIStatus 跳过参数定义，对每个 API 单独调用取数；成功/异常分别产出 Success/Error 项并序列化整个列表为字符串，不是统一单值连接状态。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 198,
+          "end_line": 221,
+          "symbol": "checkAPIStatus",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-025",
+      "statement": "前端创建/保存数据集先 nameTrim、cloneDeep 和 originNameHandle；请求 /datasetTree/create 或 /save 后还原返回字段。预览请求也复制、处理字段并还原响应 allFields 和 data.fields。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/dataset.ts",
+          "start_line": 81,
+          "end_line": 104,
+          "symbol": "saveDatasetTree/createDatasetTree",
+          "sha256": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4"
+        },
+        {
+          "path": "core/core-frontend/src/api/dataset.ts",
+          "start_line": 198,
+          "end_line": 211,
+          "symbol": "getPreviewData",
+          "sha256": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4"
+        }
+      ]
+    },
+    {
+      "id": "DATA-026",
+      "statement": "DatasetTreeApi 声明保存/重命名/删除需目标 manage，新建需父节点 manage，移动需目标及父节点 manage，导出需 export；输入主要是 DatasetGroupInfoDTO 或资源删除/导出请求。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/dataset/DatasetTreeApi.java",
+          "start_line": 30,
+          "end_line": 108,
+          "symbol": "DatasetTreeApi",
+          "sha256": "19a1faded6d1b1d4df6f9438ae352f330acc4207f67af19f01752b2bcbc63571"
+        }
+      ]
+    },
+    {
+      "id": "DATA-027",
+      "statement": "DatasetTreeServer 创建与保存均委派 DatasetGroupManage.save(false,true)，重命名一般用(true,false)，组织根重命名调用 innerEdit；读取预览调用 getDatasetGroupInfoDTO(id,preview)。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetTreeServer.java",
+          "start_line": 41,
+          "end_line": 96,
+          "symbol": "save/create/rename/get",
+          "sha256": "3e7d13a6a3ffb19709e75ab81d661ca5ac0019df98449706e156d024712f26b0"
+        }
+      ]
+    },
+    {
+      "id": "DATA-028",
+      "statement": "DatasetGroupManage.save 是事务入口：dataset 非重命名且无 allFields 时拒绝；构建 union SQL/关系JSON；新建生成 ID、审计字段和默认 pid=0，更新拒绝 id=pid；dataset 节点保存表与字段并清理不再引用项，按 encode 参数编解码。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 99,
+          "end_line": 167,
+          "symbol": "save",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-029",
+      "statement": "saveTable 递归遍历 union/childrenDs；新建数据集若表 ID 已存在则拒绝；每表绑定 datasetGroupId。saveField 在 union 非空时先预览1行，已有字段保留内部别名；新计算字段生成短名，新分组字段固定文本维度并选中。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 364,
+          "end_line": 432,
+          "symbol": "saveTable/saveField",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-030",
+      "statement": "DatasetTableManage 保存前限制显示名和物理表名不超过100字符，使用 JPA saveAndFlush；更新清理只有保留 ID 列表非空时执行 deleteByDatasetGroupIdAndNotInIds。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetTableManage.java",
+          "start_line": 25,
+          "end_line": 72,
+          "symbol": "save/deleteByDatasetGroupUpdate/checkNameLength",
+          "sha256": "8f263b9c00d7fc0422878350f891629934b8b6fb9fad3f8fb56eb4498d3069be"
+        }
+      ]
+    },
+    {
+      "id": "DATA-031",
+      "statement": "DatasetDataServer 编辑预览固定 start=0,count=100,checkPermission=false,encode=true；已保存数据集的 getDatasetGroupInfoDTO 预览则传 checkPermission=true,encode=false。两条入口不得合并为同一权限语义。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetDataServer.java",
+          "start_line": 25,
+          "end_line": 28,
+          "symbol": "previewData",
+          "sha256": "48c9b07f3146fe017b29b41dc2b0ae92ae46fccd4b20badc19a82c689315c7a8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 496,
+          "end_line": 540,
+          "symbol": "getDatasetGroupInfoDTO",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-032",
+      "statement": "previewDataWithLimit 解码后拒绝空字段，构建 union SQL；checkPermission=true 时过滤列权限并在无列权限时拒绝，有用户时加载行权限；检查数据源状态，非跨源且不支持 full join 的类型拒绝 full join。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 229,
+          "end_line": 276,
+          "symbol": "previewDataWithLimit",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-033",
+      "statement": "预览跨源选默认 Provider，非跨源按数据源类型选择；构造表、字段、行权限过滤和排序 SQL，再按 start/count 生成分页 SQL、Provider 重建 SQL、传递 prepared 参数并 fetchResultField；返回 data/allFields 和 Base64 SQL。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 268,
+          "end_line": 316,
+          "symbol": "previewDataWithLimit",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-034",
+      "statement": "getTableFields 对 DB 验证表名；DB/SQL 源为 Excel/API 时切换 DE 引擎，Error 状态拒绝；SQL 输入 Base64 解码并处理默认参数为 prepared 值，DB 用零行查询获取字段，Es 使用专属 Provider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 105,
+          "end_line": 210,
+          "symbol": "getTableFields",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-035",
+      "statement": "DatasetDataApi 的 tableField 与 previewSql 声明数据源 read；DatasetDataServer 的枚举值及树值接口在异常时记录日志并返回 null，不能把 null 自动解释为确实无值。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetDataServer.java",
+          "start_line": 44,
+          "end_line": 91,
+          "symbol": "getFieldEnumDs/getFieldEnum/getFieldEnumObj/getFieldValueTree",
+          "sha256": "48c9b07f3146fe017b29b41dc2b0ae92ae46fccd4b20badc19a82c689315c7a8"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/dataset/DatasetDataApi.java",
+          "start_line": 27,
+          "end_line": 35,
+          "symbol": "tableField/previewSql",
+          "sha256": "27ce443ca2013b6c62cb0b260d561c4d6411805cec6f91eaed2af1076d1ad627"
+        }
+      ]
+    },
+    {
+      "id": "DATA-036",
+      "statement": "CalciteProvider.fetchResultField 在 isCross 为空或 false 时委派 JDBC；跨源使用 Calcite PreparedStatement 绑定参数，返回字段元信息及行数据，查询失败转 i18n_fetch_error，finally 尝试关闭结果集与语句。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 287,
+          "end_line": 336,
+          "symbol": "fetchResultField",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-037",
+      "statement": "JDBC 取数使用 dsList 首个源及连接池连接；有 prepared 值时按 JDBC 类型绑定，Oracle 字符串另处理字符集/CLOB；SQL 异常转 SQL ERROR，其他异常转 Datasource connection exception，连接由 try-with-resources 关闭且 finally 关闭结果集。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 680,
+          "end_line": 746,
+          "symbol": "jdbcFetchResultField",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-038",
+      "statement": "CoreDatasetGroup 保存 folder/dataset 类型、父级、关系JSON、unionSql、跨源标记及审计字段；CoreDatasetTable 保存数据源/数据集关联、表名、类型、info及SQL参数；字段实体区分 originName、展示名、内部唯一名、DE类型与原始类型、扩展字段和选中标记。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetGroup.java",
+          "start_line": 14,
+          "end_line": 100,
+          "symbol": "CoreDatasetGroup",
+          "sha256": "ad381bce99f379db6ddbbd4d42f8a909ab3a834c9d9e07b4fe7cb965c660a0fd"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetTable.java",
+          "start_line": 12,
+          "end_line": 53,
+          "symbol": "CoreDatasetTable",
+          "sha256": "a1c4dbe9167c28eafc7896b63150984cad922af69a8b072a27d1d31d6e7e48b3"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetTableField.java",
+          "start_line": 12,
+          "end_line": 134,
+          "symbol": "CoreDatasetTableField",
+          "sha256": "bec521f2aa120f0c9ac9f025b35612d953c91fb1b49f16c1854c47b0358c75c8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-039",
+      "statement": "JpaUpdateNonNullAspect 拦截 JpaRepository 四种 save 方法；集合逐项按ID读旧实体并复制非空可赋值属性，空值不复制；无ID/无旧实体返回原对象。合并异常记录后退回原对象继续 proceed，不能当作完整 PATCH 或并发控制。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/config/JpaUpdateNonNullAspect.java",
+          "start_line": 36,
+          "end_line": 134,
+          "symbol": "around/mergeEntityIfExists/copyNonNullProperties",
+          "sha256": "4d57bec69cb2c5e7c3384011ff44ac63fe6a3191cdbacad787c7ad44885a6b3e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-040",
+      "statement": "InitSqlListener 启动时收集 SqlBlock，按1、2、3版本组及版本排序执行；最后记录 success=false 时允许重试该版本；每块先保存失败状态，执行异常抛运行异常阻断启动，成功后更新耗时和 success=true。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/listener/InitSqlListener.java",
+          "start_line": 21,
+          "end_line": 102,
+          "symbol": "run/executeGroups/executeSql",
+          "sha256": "61d069feecedbe24a02678263be8638c38cd3a2af26de27b47a5db83940d53bc"
+        }
+      ]
+    },
+    {
+      "id": "DATA-041",
+      "statement": "DatasetCacheManage 只缓存表名/字段原始名；表键是数据源ID，字段键为数据源ID_表名。表缓存未命中查询数据源，字段缓存未命中返回null；表列表为空时 validateTable 放行，否则大小写不敏感校验。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetCacheManage.java",
+          "start_line": 24,
+          "end_line": 95,
+          "symbol": "DatasetCacheManage",
+          "sha256": "b95622a701c306ff13ae5d3419c04c77c8bf213843d105c0bb63b2dace9d6148"
+        }
+      ]
+    },
+    {
+      "id": "DATA-042",
+      "statement": "JCache 实现按 spring.cache.type=jcache 启用，在首次创建 cache 时确定 ModifiedExpiryPolicy，expTime<=0 默认一分钟且 storeByValue=false；后续 put 复用已有 cache 配置。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/DefaultCacheImpl.java",
+          "start_line": 19,
+          "end_line": 98,
+          "symbol": "put/configuration/defaultConfiguration",
+          "sha256": "61ea9ad186abb2d858dab4ca30011b3de7f02f1fdaa43697a8f989db8486f1a9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-043",
+      "statement": "Redis 实现按 spring.cache.type=redis 启用，实际键为 cacheName::key；expTime<=0 直接set不设过期，否则按键设置TTL，unit为空用秒；take 通过Lua GET+DEL。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/RedisCacheImpl.java",
+          "start_line": 19,
+          "end_line": 69,
+          "symbol": "put/take",
+          "sha256": "9190fb0c6765e8a938414a4aeaef1a75cef9ef19e82f5b3671807cb71d3e5c1d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-044",
+      "statement": "ExcelFileGuard 上传目录只接受数字用户ID，拒绝符号链接；读取路径必须绝对、规范化、位于上传根目录一至二层，文件名为 UUID.csv/xls/xlsx，逐段拒绝符号链接并验证真实路径及普通文件。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelFileGuard.java",
+          "start_line": 18,
+          "end_line": 64,
+          "symbol": "uploadDirectory/resolve",
+          "sha256": "c85f62b2d80c040adc540231d47702101dce0d0f0c37528237ac07cb408095eb"
+        }
+      ]
+    },
+    {
+      "id": "DATA-045",
+      "statement": "Excel 配置校验要求数组；新引用须属于当前用户目录，已有服务端配置中的合法路径可保留；open 再调用 resolve 并以 NOFOLLOW_LINKS 读取。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelFileGuard.java",
+          "start_line": 66,
+          "end_line": 93,
+          "symbol": "validateConfiguration/open",
+          "sha256": "c85f62b2d80c040adc540231d47702101dce0d0f0c37528237ac07cb408095eb"
+        }
+      ]
+    },
+    {
+      "id": "DATA-046",
+      "statement": "DatasourceServer 对本地 Excel 拒绝无登录用户或分享链接身份；修改时要求旧数据源 manage，再把服务端旧配置交给 ExcelFileGuard，IO失败统一转文件禁止错误。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1194,
+          "end_line": 1211,
+          "symbol": "validateExcelFiles",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-047",
+      "statement": "CSV 编码探测最多64KiB，识别UTF-8/UTF-16 BOM；非合法UTF-8样本回退GB18030。逐物理行读取限制1Mi字符，单元格32767字符、列分隔限制16384；数据行支持逗号引号和双引号转义，预览只收集100条非空行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 541,
+          "end_line": 623,
+          "symbol": "csvReader/readCsvLine/parseCsvLine/csvData",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-048",
+      "statement": "Excel解析用 try-with-resources 关闭输入及Reader，最多100个工作表，空表头拒绝；字段名经 EngineProvider.validateIdentifier。CSV表头采用 split逗号而数据行另用引号解析器，两者规则不同；未推断类型默认TEXT，短行输出缺失字段为空字符串。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 735,
+          "end_line": 861,
+          "symbol": "parseExcel",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-049",
+      "statement": "Excel预览监听器收集100行后抛 StopSheetException 终止当前sheet；全量模式不执行该100行停止分支；只读取表头有效列并按表头长度补null。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 672,
+          "end_line": 721,
+          "symbol": "NoModelDataListener",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-050",
+      "statement": "远程Excel入口先校验传输大小/时限，按HTTP、SMB、FTP分派，不支持协议抛错；下载后仅xlsx执行ZIP预算校验，失败删除下载文件。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 437,
+          "end_line": 468,
+          "symbol": "downLoadRemoteExcel",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-051",
+      "statement": "远程xlsx独立预算为10000条目、单条32MiB、总展开128MiB、超过1MiB条目的压缩比最多100，并设置120秒/线程中断检查；超限抛IOException。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 470,
+          "end_line": 496,
+          "symbol": "validateRemoteWorkbook",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-052",
+      "statement": "ApiUtils.execHttpRequest 复制API定义并替换分页参数；将 socketTimeout秒转毫秒，传入每API响应大小和传输总时限；参数可通过其他API递归取值。GET和POST分别委派HttpClientUtil，POST缺少body.type拒绝。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 232,
+          "end_line": 255,
+          "symbol": "execHttpRequest",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 330,
+          "end_line": 392,
+          "symbol": "execHttpRequest query arguments / method switch",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-053",
+      "statement": "HttpClientUtil 的 executeBounded 在发出请求前创建RemoteTransfer，响应头后检查声明长度并包装实体实际读取；异常中止请求。getResponseStr 对HTTP>=400抛响应内容或状态码异常。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 394,
+          "end_line": 432,
+          "symbol": "executeBounded/getResponseStr",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-054",
+      "statement": "RemoteTransfer 空大小配置使用调用方默认值，1至maximumMb有效；总时限默认120秒且范围1至1800秒。包装流每次read/skip计数，超量/超时/中断调用abort；提前close先abort避免无限drain，并取消timer。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/RemoteTransfer.java",
+          "start_line": 30,
+          "end_line": 105,
+          "symbol": "sizeBytes/timeoutMillis/checkLength/wrap",
+          "sha256": "4b05e61003e5701093284d691269c43d50a84b1822b49fb2338272c456a5e2aa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-055",
+      "statement": "HTTP下载使用UUID临时文件名并解析规范化原文件名，文件实体受下载大小和总时限控制；非成功完成时finally删除部分文件，HTTP>=400拒绝。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 434,
+          "end_line": 482,
+          "symbol": "downloadFile",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-056",
+      "statement": "HttpClientUtil 默认 ignoreSslVerify=false，TLSv1.2/1.3加DefaultHostnameVerifier；显式开关true进入信任所有证书及NoopHostnameVerifier分支。本事实不证明运行环境开关值。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 60,
+          "end_line": 122,
+          "symbol": "buildSslSocketFactory",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-057",
+      "statement": "CacheUtils 的无TTL参数 put 固定传8小时；remove先删键、运行consumer，再经DelayQueueUtils安排一次延迟删键。该通用删除设施本身不证明每个业务缓存均接入。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/CacheUtils.java",
+          "start_line": 28,
+          "end_line": 88,
+          "symbol": "put/remove",
+          "sha256": "207408e7b2885133231465ecb13f47d17007a1dab283caedca18d72749f1b1a5"
+        }
+      ]
+    },
+    {
+      "id": "DATA-058",
+      "statement": "Ehcache配置预定义 de_v3_dataset_table/de_v3_dataset_field，使用 common-cache 的 expiry none；结合 DefaultCacheImpl 复用已存在cache的分支，不能将CacheUtils的8小时参数直接解释为这两个预建缓存的实际TTL。",
+      "kind": "configured",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/resources/ehcache/ehcache.xml",
+          "start_line": 13,
+          "end_line": 21,
+          "symbol": "common-cache",
+          "sha256": "bd079ae36049efa5c48bfed30022e4bbfc21710749098697f8891a037d9c763d"
+        },
+        {
+          "path": "core/core-backend/src/main/resources/ehcache/ehcache.xml",
+          "start_line": 147,
+          "end_line": 156,
+          "symbol": "dataset cache aliases",
+          "sha256": "bd079ae36049efa5c48bfed30022e4bbfc21710749098697f8891a037d9c763d"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/DefaultCacheImpl.java",
+          "start_line": 30,
+          "end_line": 43,
+          "symbol": "put",
+          "sha256": "61ea9ad186abb2d858dab4ca30011b3de7f02f1fdaa43697a8f989db8486f1a9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-059",
+      "statement": "DatasetCacheManage 提供表名/字段名写读和表校验；表列表通过 DatasourceServer.getTables 刷新写入，字段缓存读取未命中返回null；该类源码没有删除/失效方法。限定主仓库源码检索未找到这两个缓存名的显式删除调用，不能据此承诺更新后即时失效。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetCacheManage.java",
+          "start_line": 24,
+          "end_line": 95,
+          "symbol": "DatasetCacheManage",
+          "sha256": "b95622a701c306ff13ae5d3419c04c77c8bf213843d105c0bb63b2dace9d6148"
+        }
+      ]
+    },
+    {
+      "id": "DATA-060",
+      "statement": "内置类型枚举包括folder/API/Excel/ExcelRemote、mysql/impala/mariadb/StarRocks/es/doris/TiDB/oracle/pg/kingbase/gaussdb/redshift/db2/ck/h2/sqlServer/mongo，并声明标识符引号元信息；这是枚举能力而非每种类型在用户入口可创建的保证。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-datasource/src/main/java/io/dataease/extensions/datasource/vo/DatasourceConfiguration.java",
+          "start_line": 13,
+          "end_line": 34,
+          "symbol": "DatasourceType",
+          "sha256": "a54d22e7da18e6baf89e9681460abdd40e8a40503cf8075e8f766431a2400bd8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-061",
+      "statement": "preCheckDs 从内置枚举移除h2，License有效时追加已安装插件类型，其余类型拒绝。因此Factory可路由h2与用户新建入口接受h2并非同一契约。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1213,
+          "end_line": 1224,
+          "symbol": "preCheckDs",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-062",
+      "statement": "Calcite getConnection 将mysql/StarRocks/doris/TiDB/mariadb/mongo配置按Mysql读取并设置MariaDB驱动；impala/sqlServer/oracle/db2/pg/kingbase/gaussdb/redshift/h2/ck各自解析对应配置类，之后进入SSH会话及驱动连接构造。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 593,
+          "end_line": 641,
+          "symbol": "getConnection",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-063",
+      "statement": "EsProvider 的getSchema返回空列表；getTables通过show tables查询并过滤点开头表名；getConnection返回null，区别于Calcite JDBC连接入口。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/EsProvider.java",
+          "start_line": 26,
+          "end_line": 54,
+          "symbol": "getSchema/getTables/getConnection",
+          "sha256": "299d491eb78627d2c162e1d75af881ddd1902763a99837e4e7bba7413adc5944"
+        }
+      ]
+    },
+    {
+      "id": "DATA-064",
+      "statement": "引擎Provider选择器按 datasourceType+Engine 查Bean；类型为空才回退MysqlEngineProvider，不能把全部查询数据源类型等同于已实现的存储引擎类型。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ProviderUtil.java",
+          "start_line": 6,
+          "end_line": 16,
+          "symbol": "getEngineProvider",
+          "sha256": "ac9fc5f9a6a2b19bcc9fbff4b546853f15009c946c095e1eed968d6b27f72c02"
+        }
+      ]
+    },
+    {
+      "id": "DATA-065",
+      "statement": "mysqlEngine；反引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 23,
+          "end_line": 28,
+          "symbol": "MysqlEngineProvider",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 93,
+          "end_line": 95,
+          "symbol": "needCheckExistTable",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+          "start_line": 114,
+          "end_line": 118,
+          "symbol": "createTableSql",
+          "sha256": "cf381a8edcf81dc53cef07b8062f09f4b5d7ddac396116133c4328f0a1c2b318"
+        }
+      ]
+    },
+    {
+      "id": "DATA-066",
+      "statement": "pgEngine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 22,
+          "end_line": 27,
+          "symbol": "PgEngineProvider",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 97,
+          "end_line": 99,
+          "symbol": "needCheckExistTable",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+          "start_line": 118,
+          "end_line": 122,
+          "symbol": "createTableSql",
+          "sha256": "4d57c3b9907c5f357c857cf7e8ea549030c244e7a4b30e86b961b66e722bf6ee"
+        }
+      ]
+    },
+    {
+      "id": "DATA-067",
+      "statement": "h2Engine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 15,
+          "end_line": 20,
+          "symbol": "H2EngineProvider",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 70,
+          "end_line": 72,
+          "symbol": "needCheckExistTable",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+          "start_line": 91,
+          "end_line": 95,
+          "symbol": "createTableSql",
+          "sha256": "de24eb7dd6a060750fd1d78e97499e42be11b2675a2b90fb094f6dab53cad007"
+        }
+      ]
+    },
+    {
+      "id": "DATA-068",
+      "statement": "oracleEngine；双引号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 18,
+          "end_line": 21,
+          "symbol": "OracleEngineProvider",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 30,
+          "end_line": 32,
+          "symbol": "needCheckExistTable",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+          "start_line": 110,
+          "end_line": 114,
+          "symbol": "createTableSql",
+          "sha256": "0ee699987b59bec03ed27ddf3e0aa9e892b41fa7df11929d3142bb4184e3abd9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-069",
+      "statement": "dmEngine；双引号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 18,
+          "end_line": 21,
+          "symbol": "DmEngineProvider",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 30,
+          "end_line": 32,
+          "symbol": "needCheckExistTable",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+          "start_line": 110,
+          "end_line": 114,
+          "symbol": "createTableSql",
+          "sha256": "70ef06d9b77f9fe90f92f31d1a98c70b58fa6f319772959ff069db8e4f68ec49"
+        }
+      ]
+    },
+    {
+      "id": "DATA-070",
+      "statement": "sqlServerEngine；方括号；CREATE TABLE；需先查表，createTableSql从传入表字段构造DDL；此处仅核实入口及建表存在性/引用规则。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 24,
+          "end_line": 29,
+          "symbol": "SqlServerEngineProvider",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 107,
+          "end_line": 109,
+          "symbol": "needCheckExistTable",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+          "start_line": 128,
+          "end_line": 131,
+          "symbol": "createTableSql",
+          "sha256": "d2828aec4b689321006e4e869cfece3fd8d7fe961b6f5c705defd988e81e61cc"
+        }
+      ]
+    },
+    {
+      "id": "DATA-071",
+      "statement": "kingbaseEngine直接继承PgEngineProvider且本类无方法覆盖；StarRocksEngine继承MysqlEngineProvider并覆盖建表，DDL包含HASH分布、10个bucket和replication_num=1。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/KingbaseEngineProvider.java",
+          "start_line": 10,
+          "end_line": 12,
+          "symbol": "KingbaseEngineProvider",
+          "sha256": "6832768676e7f84e0daa1207720dc8f42f5fc727eba49e89ff8c3c9de34cf77f"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/StarRocksEngineProvider.java",
+          "start_line": 19,
+          "end_line": 42,
+          "symbol": "StarRocksEngineProvider/createTableSql",
+          "sha256": "c2684489a5d125ce06aa06aa5d56297b1a8e7032dd415938b6e5609157db4b77"
+        }
+      ]
+    },
+    {
+      "id": "DATA-072",
+      "statement": "Excel文件访问Regression是独立main资产，构造用户101/202临时文件并断言跨用户、新建认领历史文件、越界/相对/穿越/非法文件名/符号链接拒绝，另调用真实ExcelUtils.fetchDataList；本轮只读未执行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "tests/excel-file-access/Regression.java",
+          "start_line": 36,
+          "end_line": 104,
+          "symbol": "Regression.main",
+          "sha256": "25dd12696643c0cd2d91b86f1b00bcaaf0da13ee58d4ddb199384d1f507c047e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-073",
+      "statement": "remote-response Regression搭建本地随机端口HTTP服务，断言声明/分块/gzip超量、错误状态、慢响应与响应头时限、API配置传递、部分文件清理、CSV引号及100行预览、双sheet XLS/XLSX全量与预览、ZIP压缩比拒绝；本轮未执行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "tests/remote-response/Regression.java",
+          "start_line": 21,
+          "end_line": 92,
+          "symbol": "Regression.main",
+          "sha256": "25fdd2474c11bc26aab32de5a5a7f1da147e0f29fa0438cf56f3535adc723758"
+        }
+      ]
+    },
+    {
+      "id": "DATA-074",
+      "statement": "后端SmbFileDownloaderRegression验证domain序列化与旧配置兼容、非法SMB地址/扩展名/空用户名拒绝；真实下载及错误密码/不存在文件测试仅在SMB_TEST_URL存在时执行，否则明确SKIP。本轮没有运行任何分支。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/test/java/io/dataease/datasource/provider/SmbFileDownloaderRegression.java",
+          "start_line": 20,
+          "end_line": 104,
+          "symbol": "SmbFileDownloaderRegression.main",
+          "sha256": "a2b54a371b3659de81600366169d3d06c4ff2eced50c058cf58f027901c9e704"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F01",
+      "name": "创建和管理数据源",
+      "depth": "core",
+      "summary": "创建和管理数据源的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-001",
+          "DATA-002"
+        ],
+        "inputs": [
+          "DATA-002",
+          "DATA-003"
+        ],
+        "outputs": [
+          "DATA-005",
+          "DATA-008"
+        ],
+        "preconditions": [
+          "DATA-004",
+          "DATA-007",
+          "DATA-061"
+        ],
+        "state_changes": [
+          "DATA-003",
+          "DATA-009",
+          "DATA-010",
+          "DATA-012"
+        ],
+        "postconditions": [
+          "DATA-003",
+          "DATA-004",
+          "DATA-005"
+        ],
+        "invariants": [
+          "DATA-004",
+          "DATA-009",
+          "DATA-011",
+          "DATA-059"
+        ],
+        "failures": [
+          "DATA-003",
+          "DATA-006",
+          "DATA-007",
+          "DATA-008"
+        ],
+        "permissions": [
+          "DATA-002"
+        ],
+        "implementation": [
+          "DATA-003",
+          "DATA-004",
+          "DATA-006",
+          "DATA-007",
+          "DATA-008",
+          "DATA-009",
+          "DATA-010",
+          "DATA-062",
+          "DATA-063"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-039",
+          "DATA-040",
+          "DATA-042",
+          "DATA-043",
+          "DATA-057",
+          "DATA-058",
+          "DATA-064"
+        ],
+        "data": [
+          "DATA-011",
+          "DATA-012",
+          "DATA-060"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。"
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "文件/API 数据接入",
+      "depth": "core",
+      "summary": "文件/API 数据接入的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-013",
+          "DATA-015",
+          "DATA-017"
+        ],
+        "inputs": [
+          "DATA-013",
+          "DATA-015",
+          "DATA-016",
+          "DATA-022",
+          "DATA-052"
+        ],
+        "outputs": [
+          "DATA-013",
+          "DATA-014",
+          "DATA-023",
+          "DATA-024",
+          "DATA-049"
+        ],
+        "preconditions": [
+          "DATA-013",
+          "DATA-016",
+          "DATA-017",
+          "DATA-044"
+        ],
+        "state_changes": [
+          "DATA-014",
+          "DATA-017",
+          "DATA-018",
+          "DATA-019",
+          "DATA-020",
+          "DATA-021",
+          "DATA-055"
+        ],
+        "postconditions": [
+          "DATA-020",
+          "DATA-021",
+          "DATA-023",
+          "DATA-024"
+        ],
+        "invariants": [
+          "DATA-016",
+          "DATA-018",
+          "DATA-022",
+          "DATA-045",
+          "DATA-048",
+          "DATA-054"
+        ],
+        "failures": [
+          "DATA-013",
+          "DATA-017",
+          "DATA-020",
+          "DATA-021",
+          "DATA-023",
+          "DATA-024",
+          "DATA-047",
+          "DATA-051",
+          "DATA-053"
+        ],
+        "permissions": [
+          "DATA-002",
+          "DATA-046"
+        ],
+        "implementation": [
+          "DATA-013",
+          "DATA-014",
+          "DATA-015",
+          "DATA-016",
+          "DATA-017",
+          "DATA-018",
+          "DATA-019",
+          "DATA-020",
+          "DATA-021",
+          "DATA-022",
+          "DATA-023",
+          "DATA-024"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-018",
+          "DATA-019",
+          "DATA-040",
+          "DATA-050",
+          "DATA-056",
+          "DATA-064",
+          "DATA-065",
+          "DATA-066",
+          "DATA-067",
+          "DATA-068",
+          "DATA-069",
+          "DATA-070",
+          "DATA-071"
+        ],
+        "data": [
+          "DATA-011",
+          "DATA-014",
+          "DATA-022"
+        ],
+        "tests": [
+          "DATA-072",
+          "DATA-073",
+          "DATA-074"
+        ]
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。",
+        "已补读文件解析、HTTP限额/时限及现有回归；真实FTP/SMB网络、所有API参数组合与方言运行行为仍未验证。"
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "建立和管理数据集",
+      "depth": "core",
+      "summary": "建立和管理数据集的输入输出、状态变化、错误和依赖契约；具体断言见引用事实。",
+      "contract": {
+        "trigger": [
+          "DATA-025",
+          "DATA-026",
+          "DATA-027",
+          "DATA-031"
+        ],
+        "inputs": [
+          "DATA-025",
+          "DATA-026",
+          "DATA-028",
+          "DATA-034"
+        ],
+        "outputs": [
+          "DATA-031",
+          "DATA-033",
+          "DATA-035",
+          "DATA-038"
+        ],
+        "preconditions": [
+          "DATA-028",
+          "DATA-030",
+          "DATA-032",
+          "DATA-034"
+        ],
+        "state_changes": [
+          "DATA-028",
+          "DATA-029",
+          "DATA-030"
+        ],
+        "postconditions": [
+          "DATA-028",
+          "DATA-029",
+          "DATA-033"
+        ],
+        "invariants": [
+          "DATA-029",
+          "DATA-030",
+          "DATA-031",
+          "DATA-038",
+          "DATA-039",
+          "DATA-059"
+        ],
+        "failures": [
+          "DATA-028",
+          "DATA-030",
+          "DATA-032",
+          "DATA-035",
+          "DATA-036",
+          "DATA-037"
+        ],
+        "permissions": [
+          "DATA-026",
+          "DATA-031",
+          "DATA-032",
+          "DATA-035"
+        ],
+        "implementation": [
+          "DATA-027",
+          "DATA-028",
+          "DATA-029",
+          "DATA-031",
+          "DATA-032",
+          "DATA-033",
+          "DATA-034",
+          "DATA-036",
+          "DATA-037"
+        ],
+        "dependencies": [
+          "DATA-006",
+          "DATA-039",
+          "DATA-040",
+          "DATA-041",
+          "DATA-042",
+          "DATA-043",
+          "DATA-057",
+          "DATA-058"
+        ],
+        "data": [
+          "DATA-038"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "仅覆盖已读主仓库 V3 静态实现，未启动服务、连接数据库或访问远端。",
+        "权限仅核实声明与核心调用分支，未读取专有 XPack 实现，也未验证实际不同身份的允许/拒绝。",
+        "测试资产只在F02建立静态关联，均未运行；F01/F03未关联独立测试资产。"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "DATA-R001",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-001",
+      "evidence_fact_ids": [
+        "DATA-001"
+      ]
+    },
+    {
+      "id": "DATA-R002",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-002",
+      "evidence_fact_ids": [
+        "DATA-002"
+      ]
+    },
+    {
+      "id": "DATA-R003",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-003",
+      "evidence_fact_ids": [
+        "DATA-003"
+      ]
+    },
+    {
+      "id": "DATA-R004",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-004",
+      "evidence_fact_ids": [
+        "DATA-004"
+      ]
+    },
+    {
+      "id": "DATA-R005",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-005",
+      "evidence_fact_ids": [
+        "DATA-005"
+      ]
+    },
+    {
+      "id": "DATA-R006",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-006",
+      "evidence_fact_ids": [
+        "DATA-006"
+      ]
+    },
+    {
+      "id": "DATA-R007",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-007",
+      "evidence_fact_ids": [
+        "DATA-007"
+      ]
+    },
+    {
+      "id": "DATA-R008",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-008",
+      "evidence_fact_ids": [
+        "DATA-008"
+      ]
+    },
+    {
+      "id": "DATA-R009",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-009",
+      "evidence_fact_ids": [
+        "DATA-009"
+      ]
+    },
+    {
+      "id": "DATA-R010",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-010",
+      "evidence_fact_ids": [
+        "DATA-010"
+      ]
+    },
+    {
+      "id": "DATA-R011",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-011",
+      "evidence_fact_ids": [
+        "DATA-011"
+      ]
+    },
+    {
+      "id": "DATA-R012",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-012",
+      "evidence_fact_ids": [
+        "DATA-012"
+      ]
+    },
+    {
+      "id": "DATA-R013",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-039",
+      "evidence_fact_ids": [
+        "DATA-039"
+      ]
+    },
+    {
+      "id": "DATA-R014",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-040",
+      "evidence_fact_ids": [
+        "DATA-040"
+      ]
+    },
+    {
+      "id": "DATA-R015",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-042",
+      "evidence_fact_ids": [
+        "DATA-042"
+      ]
+    },
+    {
+      "id": "DATA-R016",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-043",
+      "evidence_fact_ids": [
+        "DATA-043"
+      ]
+    },
+    {
+      "id": "DATA-R017",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-002",
+      "evidence_fact_ids": [
+        "DATA-002"
+      ]
+    },
+    {
+      "id": "DATA-R018",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-006",
+      "evidence_fact_ids": [
+        "DATA-006"
+      ]
+    },
+    {
+      "id": "DATA-R019",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-011",
+      "evidence_fact_ids": [
+        "DATA-011"
+      ]
+    },
+    {
+      "id": "DATA-R020",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-013",
+      "evidence_fact_ids": [
+        "DATA-013"
+      ]
+    },
+    {
+      "id": "DATA-R021",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-014",
+      "evidence_fact_ids": [
+        "DATA-014"
+      ]
+    },
+    {
+      "id": "DATA-R022",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-015",
+      "evidence_fact_ids": [
+        "DATA-015"
+      ]
+    },
+    {
+      "id": "DATA-R023",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-016",
+      "evidence_fact_ids": [
+        "DATA-016"
+      ]
+    },
+    {
+      "id": "DATA-R024",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-017",
+      "evidence_fact_ids": [
+        "DATA-017"
+      ]
+    },
+    {
+      "id": "DATA-R025",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-018",
+      "evidence_fact_ids": [
+        "DATA-018"
+      ]
+    },
+    {
+      "id": "DATA-R026",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-019",
+      "evidence_fact_ids": [
+        "DATA-019"
+      ]
+    },
+    {
+      "id": "DATA-R027",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-020",
+      "evidence_fact_ids": [
+        "DATA-020"
+      ]
+    },
+    {
+      "id": "DATA-R028",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-021",
+      "evidence_fact_ids": [
+        "DATA-021"
+      ]
+    },
+    {
+      "id": "DATA-R029",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-022",
+      "evidence_fact_ids": [
+        "DATA-022"
+      ]
+    },
+    {
+      "id": "DATA-R030",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-023",
+      "evidence_fact_ids": [
+        "DATA-023"
+      ]
+    },
+    {
+      "id": "DATA-R031",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-024",
+      "evidence_fact_ids": [
+        "DATA-024"
+      ]
+    },
+    {
+      "id": "DATA-R032",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-040",
+      "evidence_fact_ids": [
+        "DATA-040"
+      ]
+    },
+    {
+      "id": "DATA-R033",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-006",
+      "evidence_fact_ids": [
+        "DATA-006"
+      ]
+    },
+    {
+      "id": "DATA-R034",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-025",
+      "evidence_fact_ids": [
+        "DATA-025"
+      ]
+    },
+    {
+      "id": "DATA-R035",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-026",
+      "evidence_fact_ids": [
+        "DATA-026"
+      ]
+    },
+    {
+      "id": "DATA-R036",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-027",
+      "evidence_fact_ids": [
+        "DATA-027"
+      ]
+    },
+    {
+      "id": "DATA-R037",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-028",
+      "evidence_fact_ids": [
+        "DATA-028"
+      ]
+    },
+    {
+      "id": "DATA-R038",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-029",
+      "evidence_fact_ids": [
+        "DATA-029"
+      ]
+    },
+    {
+      "id": "DATA-R039",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-030",
+      "evidence_fact_ids": [
+        "DATA-030"
+      ]
+    },
+    {
+      "id": "DATA-R040",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-031",
+      "evidence_fact_ids": [
+        "DATA-031"
+      ]
+    },
+    {
+      "id": "DATA-R041",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-032",
+      "evidence_fact_ids": [
+        "DATA-032"
+      ]
+    },
+    {
+      "id": "DATA-R042",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-033",
+      "evidence_fact_ids": [
+        "DATA-033"
+      ]
+    },
+    {
+      "id": "DATA-R043",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-034",
+      "evidence_fact_ids": [
+        "DATA-034"
+      ]
+    },
+    {
+      "id": "DATA-R044",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-035",
+      "evidence_fact_ids": [
+        "DATA-035"
+      ]
+    },
+    {
+      "id": "DATA-R045",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-036",
+      "evidence_fact_ids": [
+        "DATA-036"
+      ]
+    },
+    {
+      "id": "DATA-R046",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-037",
+      "evidence_fact_ids": [
+        "DATA-037"
+      ]
+    },
+    {
+      "id": "DATA-R047",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-038",
+      "evidence_fact_ids": [
+        "DATA-038"
+      ]
+    },
+    {
+      "id": "DATA-R048",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-039",
+      "evidence_fact_ids": [
+        "DATA-039"
+      ]
+    },
+    {
+      "id": "DATA-R049",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-040",
+      "evidence_fact_ids": [
+        "DATA-040"
+      ]
+    },
+    {
+      "id": "DATA-R050",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-041",
+      "evidence_fact_ids": [
+        "DATA-041"
+      ]
+    },
+    {
+      "id": "DATA-R051",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-042",
+      "evidence_fact_ids": [
+        "DATA-042"
+      ]
+    },
+    {
+      "id": "DATA-R052",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-043",
+      "evidence_fact_ids": [
+        "DATA-043"
+      ]
+    },
+    {
+      "id": "DATA-R053",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-057",
+      "evidence_fact_ids": [
+        "DATA-057"
+      ]
+    },
+    {
+      "id": "DATA-R054",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-058",
+      "evidence_fact_ids": [
+        "DATA-058"
+      ]
+    },
+    {
+      "id": "DATA-R055",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-059",
+      "evidence_fact_ids": [
+        "DATA-059"
+      ]
+    },
+    {
+      "id": "DATA-R056",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-060",
+      "evidence_fact_ids": [
+        "DATA-060"
+      ]
+    },
+    {
+      "id": "DATA-R057",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-061",
+      "evidence_fact_ids": [
+        "DATA-061"
+      ]
+    },
+    {
+      "id": "DATA-R058",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-062",
+      "evidence_fact_ids": [
+        "DATA-062"
+      ]
+    },
+    {
+      "id": "DATA-R059",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-063",
+      "evidence_fact_ids": [
+        "DATA-063"
+      ]
+    },
+    {
+      "id": "DATA-R060",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F01",
+      "to": "DATA-064",
+      "evidence_fact_ids": [
+        "DATA-064"
+      ]
+    },
+    {
+      "id": "DATA-R061",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-044",
+      "evidence_fact_ids": [
+        "DATA-044"
+      ]
+    },
+    {
+      "id": "DATA-R062",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-045",
+      "evidence_fact_ids": [
+        "DATA-045"
+      ]
+    },
+    {
+      "id": "DATA-R063",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-046",
+      "evidence_fact_ids": [
+        "DATA-046"
+      ]
+    },
+    {
+      "id": "DATA-R064",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-047",
+      "evidence_fact_ids": [
+        "DATA-047"
+      ]
+    },
+    {
+      "id": "DATA-R065",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-048",
+      "evidence_fact_ids": [
+        "DATA-048"
+      ]
+    },
+    {
+      "id": "DATA-R066",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-049",
+      "evidence_fact_ids": [
+        "DATA-049"
+      ]
+    },
+    {
+      "id": "DATA-R067",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-050",
+      "evidence_fact_ids": [
+        "DATA-050"
+      ]
+    },
+    {
+      "id": "DATA-R068",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-051",
+      "evidence_fact_ids": [
+        "DATA-051"
+      ]
+    },
+    {
+      "id": "DATA-R069",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-052",
+      "evidence_fact_ids": [
+        "DATA-052"
+      ]
+    },
+    {
+      "id": "DATA-R070",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-053",
+      "evidence_fact_ids": [
+        "DATA-053"
+      ]
+    },
+    {
+      "id": "DATA-R071",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-054",
+      "evidence_fact_ids": [
+        "DATA-054"
+      ]
+    },
+    {
+      "id": "DATA-R072",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-055",
+      "evidence_fact_ids": [
+        "DATA-055"
+      ]
+    },
+    {
+      "id": "DATA-R073",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-056",
+      "evidence_fact_ids": [
+        "DATA-056"
+      ]
+    },
+    {
+      "id": "DATA-R074",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-064",
+      "evidence_fact_ids": [
+        "DATA-064"
+      ]
+    },
+    {
+      "id": "DATA-R075",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-065",
+      "evidence_fact_ids": [
+        "DATA-065"
+      ]
+    },
+    {
+      "id": "DATA-R076",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-066",
+      "evidence_fact_ids": [
+        "DATA-066"
+      ]
+    },
+    {
+      "id": "DATA-R077",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-067",
+      "evidence_fact_ids": [
+        "DATA-067"
+      ]
+    },
+    {
+      "id": "DATA-R078",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-068",
+      "evidence_fact_ids": [
+        "DATA-068"
+      ]
+    },
+    {
+      "id": "DATA-R079",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-069",
+      "evidence_fact_ids": [
+        "DATA-069"
+      ]
+    },
+    {
+      "id": "DATA-R080",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-070",
+      "evidence_fact_ids": [
+        "DATA-070"
+      ]
+    },
+    {
+      "id": "DATA-R081",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-071",
+      "evidence_fact_ids": [
+        "DATA-071"
+      ]
+    },
+    {
+      "id": "DATA-R082",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-072",
+      "evidence_fact_ids": [
+        "DATA-072"
+      ]
+    },
+    {
+      "id": "DATA-R083",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-073",
+      "evidence_fact_ids": [
+        "DATA-073"
+      ]
+    },
+    {
+      "id": "DATA-R084",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F02",
+      "to": "DATA-074",
+      "evidence_fact_ids": [
+        "DATA-074"
+      ]
+    },
+    {
+      "id": "DATA-R085",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-057",
+      "evidence_fact_ids": [
+        "DATA-057"
+      ]
+    },
+    {
+      "id": "DATA-R086",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-058",
+      "evidence_fact_ids": [
+        "DATA-058"
+      ]
+    },
+    {
+      "id": "DATA-R087",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F03",
+      "to": "DATA-059",
+      "evidence_fact_ids": [
+        "DATA-059"
+      ]
+    }
+  ]
+}

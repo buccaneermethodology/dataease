@@ -1,0 +1,293 @@
+                        datasetTableFieldDTO.setDeExtractType(datasetTableFieldDTO.getDeType());
+                    }
+                    if (Objects.equals(datasetTableFieldDTO.getExtField(), ExtFieldConstant.EXT_GROUP)) {
+                        String dataeaseName = TableUtils.fieldNameShort(datasetTableFieldDTO.getId() + "_" + datasetTableFieldDTO.getOriginName());
+                        datasetTableFieldDTO.setDataeaseName(dataeaseName);
+                        datasetTableFieldDTO.setFieldShortName(dataeaseName);
+                        datasetTableFieldDTO.setDeExtractType(0);
+                        datasetTableFieldDTO.setDeType(0);
+                        datasetTableFieldDTO.setGroupType("d");
+                        datasetTableFieldDTO.setChecked(true);
+                    }
+                    datasetTableFieldDTO.setDatasetGroupId(datasetGroupId);
+                } else {
+                    datasetTableFieldDTO.setDataeaseName(dto.getDataeaseName());
+                    datasetTableFieldDTO.setFieldShortName(dto.getFieldShortName());
+                }
+                datasetTableFieldDTO = datasetTableFieldManage.save(datasetTableFieldDTO);
+                fieldIds.add(datasetTableFieldDTO.getId());
+            }
+        }
+    }
+
+    public DatasetGroupInfoDTO getForCount(Long id) throws Exception {
+        CoreDatasetGroup coreDatasetGroup = coreDatasetGroupRepository.findById(id).orElse(null);
+        if (coreDatasetGroup == null) {
+            return null;
+        }
+        DatasetGroupInfoDTO dto = new DatasetGroupInfoDTO();
+        BeanUtils.copyBean(dto, coreDatasetGroup);
+        if (StringUtils.equalsIgnoreCase(dto.getNodeType(), "dataset")) {
+            dto.setUnion(JsonUtil.parseList(coreDatasetGroup.getInfo(), new TypeReference<>() {
+            }));
+            // 获取field
+            List<DatasetTableFieldDTO> dsFields = datasetTableFieldManage.selectByDatasetGroupId(id);
+            List<DatasetTableFieldDTO> allFields = dsFields.stream().map(ele -> {
+                DatasetTableFieldDTO datasetTableFieldDTO = new DatasetTableFieldDTO();
+                BeanUtils.copyBean(datasetTableFieldDTO, ele);
+                datasetTableFieldDTO.setFieldShortName(ele.getDataeaseName());
+                return datasetTableFieldDTO;
+            }).collect(Collectors.toList());
+
+            dto.setAllFields(allFields);
+        }
+        return dto;
+    }
+
+    public DatasetGroupInfoDTO getDetail(Long id) throws Exception {
+        CoreDatasetGroup coreDatasetGroup = coreDatasetGroupRepository.findById(id).orElse(null);
+        if (coreDatasetGroup == null) {
+            return null;
+        }
+        DatasetGroupInfoDTO dto = new DatasetGroupInfoDTO();
+        BeanUtils.copyBean(dto, coreDatasetGroup);
+        // get creator
+        String userName = coreUserManage.getUserName(Long.valueOf(dto.getCreateBy()));
+        if (StringUtils.isNotBlank(userName)) {
+            dto.setCreator(userName);
+        }
+        String updateUserName = coreUserManage.getUserName(Long.valueOf(dto.getUpdateBy()));
+        if (StringUtils.isNotBlank(updateUserName)) {
+            dto.setUpdater(updateUserName);
+        }
+        dto.setUnionSql(null);
+        if (StringUtils.equalsIgnoreCase(dto.getNodeType(), "dataset")) {
+            List<UnionDTO> unionDTOList = JsonUtil.parseList(coreDatasetGroup.getInfo(), new TypeReference<>() {
+            });
+            dto.setUnion(unionDTOList);
+
+            // 获取field
+            List<DatasetTableFieldDTO> dsFields = datasetTableFieldManage.selectByDatasetGroupId(id);
+            List<DatasetTableFieldDTO> allFields = dsFields.stream().map(ele -> {
+                DatasetTableFieldDTO datasetTableFieldDTO = new DatasetTableFieldDTO();
+                BeanUtils.copyBean(datasetTableFieldDTO, ele);
+                datasetTableFieldDTO.setFieldShortName(ele.getDataeaseName());
+                return datasetTableFieldDTO;
+            }).collect(Collectors.toList());
+
+            DatasetUtils.listEncode(allFields);
+
+            dto.setAllFields(allFields);
+        }
+        return dto;
+    }
+
+    public DatasetGroupInfoDTO getDatasetGroupInfoDTO(Long id, String type) throws Exception {
+        CoreDatasetGroup coreDatasetGroup = coreDatasetGroupRepository.findById(id).orElse(null);
+        if (coreDatasetGroup == null) {
+            return null;
+        }
+        DatasetGroupInfoDTO dto = new DatasetGroupInfoDTO();
+        BeanUtils.copyBean(dto, coreDatasetGroup);
+        // get creator
+        String userName = coreUserManage.getUserName(Long.valueOf(dto.getCreateBy()));
+        if (StringUtils.isNotBlank(userName)) {
+            dto.setCreator(userName);
+        }
+        String updateUserName = coreUserManage.getUserName(Long.valueOf(dto.getUpdateBy()));
+        if (StringUtils.isNotBlank(updateUserName)) {
+            dto.setUpdater(updateUserName);
+        }
+        dto.setUnionSql(null);
+        if (StringUtils.equalsIgnoreCase(dto.getNodeType(), "dataset")) {
+            List<UnionDTO> unionDTOList = JsonUtil.parseList(coreDatasetGroup.getInfo(), new TypeReference<>() {
+            });
+            dto.setUnion(unionDTOList);
+
+            // 获取field
+            List<DatasetTableFieldDTO> dsFields = datasetTableFieldManage.selectByDatasetGroupId(id);
+            List<DatasetTableFieldDTO> allFields = dsFields.stream().map(ele -> {
+                DatasetTableFieldDTO datasetTableFieldDTO = new DatasetTableFieldDTO();
+                BeanUtils.copyBean(datasetTableFieldDTO, ele);
+                datasetTableFieldDTO.setFieldShortName(ele.getDataeaseName());
+                return datasetTableFieldDTO;
+            }).collect(Collectors.toList());
+
+            dto.setAllFields(allFields);
+
+            if ("preview".equalsIgnoreCase(type)) {
+                // 请求数据
+                Map<String, Object> map = datasetDataManage.previewDataWithLimit(dto, 0, 100, true, false);
+                // 获取data,sql
+                Map<String, List> data = (Map<String, List>) map.get("data");
+                String sql = (String) map.get("sql");
+                Long total = (Long) map.get("total");
+                dto.setData(data);
+                dto.setSql(Base64.getEncoder().encodeToString(sql.getBytes()));
+                dto.setTotal(total);
+            }
+        }
+        return dto;
+    }
+
+    public List<DatasetTableDTO> getDetail(List<Long> ids) {
+        if (ObjectUtils.isEmpty(ids)) {
+            DEException.throwException(Translator.get("i18n_table_id_can_not_empty"));
+        }
+        List<DatasetTableDTO> list = new ArrayList<>();
+        for (Long id : ids) {
+            CoreDatasetGroup coreDatasetGroup = coreDatasetGroupRepository.findById(id).orElse(null);
+            if (coreDatasetGroup == null) {
+                list.add(null);
+            } else {
+                DatasetTableDTO dto = new DatasetTableDTO();
+                BeanUtils.copyBean(dto, coreDatasetGroup);
+                Map<String, List<DatasetTableFieldDTO>> listByDQ = datasetTableFieldManage.listByDQ(id);
+                dto.setFields(listByDQ);
+                list.add(dto);
+            }
+        }
+        return list;
+    }
+
+    public List<SqlVariableDetails> getSqlParams(List<Long> ids) {
+        List<SqlVariableDetails> list = new ArrayList<>();
+        if (ObjectUtils.isEmpty(ids)) {
+            return list;
+        }
+        TypeReference<List<SqlVariableDetails>> listTypeReference = new TypeReference<List<SqlVariableDetails>>() {
+        };
+        for (Long id : ids) {
+            List<CoreDatasetTable> datasetTables = datasetTableManage.selectByDatasetGroupId(id);
+            for (CoreDatasetTable datasetTable : datasetTables) {
+                if (StringUtils.isNotEmpty(datasetTable.getSqlVariableDetails())) {
+                    List<SqlVariableDetails> defaultsSqlVariableDetails = JsonUtil.parseList(datasetTable.getSqlVariableDetails(), listTypeReference);
+                    if (CollectionUtils.isNotEmpty(defaultsSqlVariableDetails)) {
+                        List<String> fullName = new ArrayList<>();
+                        geFullName(id, fullName);
+                        Collections.reverse(fullName);
+                        List<String> finalFullName = fullName;
+                        defaultsSqlVariableDetails.forEach(sqlVariableDetails -> {
+                            sqlVariableDetails.setDatasetGroupId(id);
+                            sqlVariableDetails.setDatasetTableId(datasetTable.getId());
+                            sqlVariableDetails.setDatasetFullName(String.join("/", finalFullName));
+                        });
+                    }
+
+                    list.addAll(defaultsSqlVariableDetails);
+                }
+            }
+        }
+        list.forEach(sqlVariableDetail -> {
+            sqlVariableDetail.setId(sqlVariableDetail.getDatasetTableId() + "|DE|" + sqlVariableDetail.getVariableName());
+            sqlVariableDetail.setDeType(FieldUtils.transType2DeType(sqlVariableDetail.getType().get(0).contains("DATETIME") ? "DATETIME" : sqlVariableDetail.getType().get(0)));
+        });
+        return list;
+    }
+
+    public void checkMove(DatasetGroupInfoDTO datasetGroupInfoDTO) {
+        if (Objects.equals(datasetGroupInfoDTO.getId(), datasetGroupInfoDTO.getPid())) {
+            DEException.throwException(Translator.get("i18n_pid_not_eq_id"));
+        }
+        List<Long> ids = new ArrayList<>();
+        getParents(datasetGroupInfoDTO.getPid(), ids);
+        if (ids.contains(datasetGroupInfoDTO.getId())) {
+            DEException.throwException(Translator.get("i18n_pid_not_eq_id"));
+        }
+    }
+
+    private void getParents(Long pid, List<Long> ids) {
+        CoreDatasetGroup parent = coreDatasetGroupRepository.findById(pid).orElse(null);// 查找父级folder
+        ids.add(parent.getId());
+        if (parent.getPid() != null && parent.getPid() != 0) {
+            getParents(parent.getPid(), ids);
+        }
+    }
+
+    public void geFullName(Long pid, List<String> fullName) {
+        CoreDatasetGroup parent = coreDatasetGroupRepository.findById(pid).orElse(null);// 查找父级folder
+        if (parent == null) {
+            return;
+        }
+        fullName.add(parent.getName());
+        if (parent.getId().equals(parent.getPid())) {
+            return;
+        }
+        if (parent.getPid() != null && parent.getPid() != 0) {
+            geFullName(parent.getPid(), fullName);
+        }
+    }
+
+    public List<DatasetTableDTO> getDetailWithPerm(List<Long> ids) {
+        var result = new ArrayList<DatasetTableDTO>();
+        if (CollectionUtils.isNotEmpty(ids)) {
+            var dsList = coreDatasetGroupRepository.findAllById(ids);
+            if (CollectionUtils.isNotEmpty(dsList)) {
+                SQLObj tableObj = new SQLObj();
+                tableObj.setTableAlias("");
+                dsList.forEach(ds -> {
+                    DatasetTableDTO dto = new DatasetTableDTO();
+                    BeanUtils.copyBean(dto, ds);
+                    var fields = datasetTableFieldManage.listFieldsWithPermissions(ds.getId());
+                    var p_fields = fields.stream().filter(ele -> {
+                        boolean flag = true;
+                        if (Objects.equals(ele.getExtField(), ExtFieldConstant.EXT_CALC)) {
+                            String originField = Utils.calcFieldRegex(ele, tableObj, fields, true, null, Utils.mergeParam(Utils.getParams(fields), null), pluginManage);
+                            for (String func : FunctionConstant.AGG_FUNC) {
+                                if (Utils.matchFunction(func, originField)) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                        }
+                        return flag;
+                    }).toList();
+                    List<DatasetTableFieldDTO> dimensionList = p_fields.stream().filter(ele -> StringUtils.equalsIgnoreCase(ele.getGroupType(), "d")).toList();
+                    List<DatasetTableFieldDTO> quotaList = p_fields.stream().filter(ele -> StringUtils.equalsIgnoreCase(ele.getGroupType(), "q")).toList();
+                    Map<String, List<DatasetTableFieldDTO>> map = new LinkedHashMap<>();
+                    DatasetUtils.listEncode(dimensionList);
+                    DatasetUtils.listEncode(quotaList);
+                    map.put("dimensionList", dimensionList);
+                    map.put("quotaList", quotaList);
+                    dto.setFields(map);
+                    result.add(dto);
+                });
+            }
+        }
+        return result;
+    }
+
+    public List<DatasetGroupInfoDTO> getAllList() {
+        List<CoreDatasetGroup> coreDatasetGroupList = coreDatasetGroupRepository.findAll();
+        if (CollectionUtils.isEmpty(coreDatasetGroupList)) {
+            return new ArrayList<>();
+        }
+        List<DatasetGroupInfoDTO> list = new ArrayList<>();
+        for (CoreDatasetGroup coreDatasetGroup : coreDatasetGroupList) {
+            DatasetGroupInfoDTO dto = new DatasetGroupInfoDTO();
+            BeanUtils.copyBean(dto, coreDatasetGroup);
+            dto.setUnionSql(null);
+            if (StringUtils.equalsIgnoreCase(dto.getNodeType(), "dataset")) {
+                List<UnionDTO> unionDTOList = JsonUtil.parseList(coreDatasetGroup.getInfo(), new TypeReference<>() {
+                });
+                dto.setUnion(unionDTOList);
+
+                // 获取field
+                List<DatasetTableFieldDTO> dsFields = datasetTableFieldManage.selectByDatasetGroupId(coreDatasetGroup.getId());
+                List<DatasetTableFieldDTO> allFields = dsFields.stream().map(ele -> {
+                    DatasetTableFieldDTO datasetTableFieldDTO = new DatasetTableFieldDTO();
+                    BeanUtils.copyBean(datasetTableFieldDTO, ele);
+                    datasetTableFieldDTO.setFieldShortName(ele.getDataeaseName());
+                    return datasetTableFieldDTO;
+                }).collect(Collectors.toList());
+
+                DatasetUtils.listEncode(allFields);
+
+                dto.setAllFields(allFields);
+
+                list.add(dto);
+            }
+        }
+        return list;
+    }
+}

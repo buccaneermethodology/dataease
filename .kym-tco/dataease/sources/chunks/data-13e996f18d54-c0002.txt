@@ -1,0 +1,504 @@
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-033",
+      "statement": "预览跨源选默认 Provider，非跨源按数据源类型选择；构造表、字段、行权限过滤和排序 SQL，再按 start/count 生成分页 SQL、Provider 重建 SQL、传递 prepared 参数并 fetchResultField；返回 data/allFields 和 Base64 SQL。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 268,
+          "end_line": 316,
+          "symbol": "previewDataWithLimit",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-034",
+      "statement": "getTableFields 对 DB 验证表名；DB/SQL 源为 Excel/API 时切换 DE 引擎，Error 状态拒绝；SQL 输入 Base64 解码并处理默认参数为 prepared 值，DB 用零行查询获取字段，Es 使用专属 Provider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 105,
+          "end_line": 210,
+          "symbol": "getTableFields",
+          "sha256": "5552c9b9f28e531ed2946c2501169decc27a7820b3eb47eb50388adad9f12f7d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-035",
+      "statement": "DatasetDataApi 的 tableField 与 previewSql 声明数据源 read；DatasetDataServer 的枚举值及树值接口在异常时记录日志并返回 null，不能把 null 自动解释为确实无值。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetDataServer.java",
+          "start_line": 44,
+          "end_line": 94,
+          "symbol": "getFieldEnumDs/getFieldEnum/getFieldEnumObj/getFieldValueTree",
+          "sha256": "48c9b07f3146fe017b29b41dc2b0ae92ae46fccd4b20badc19a82c689315c7a8"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/dataset/DatasetDataApi.java",
+          "start_line": 27,
+          "end_line": 35,
+          "symbol": "tableField/previewSql",
+          "sha256": "27ce443ca2013b6c62cb0b260d561c4d6411805cec6f91eaed2af1076d1ad627"
+        }
+      ]
+    },
+    {
+      "id": "DATA-036",
+      "statement": "CalciteProvider.fetchResultField 在 isCross 为空或 false 时委派 JDBC；跨源使用 Calcite PreparedStatement 绑定参数，返回字段元信息及行数据，查询失败转 i18n_fetch_error，finally 尝试关闭结果集与语句。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 287,
+          "end_line": 336,
+          "symbol": "fetchResultField",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-037",
+      "statement": "JDBC 取数使用 dsList 首个源及连接池连接；有 prepared 值时按 JDBC 类型绑定，Oracle 字符串另处理字符集/CLOB；SQL 异常转 SQL ERROR，其他异常转 Datasource connection exception，连接由 try-with-resources 关闭且 finally 关闭结果集。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 680,
+          "end_line": 746,
+          "symbol": "jdbcFetchResultField",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-038",
+      "statement": "CoreDatasetGroup 保存 folder/dataset 类型、父级、关系JSON、unionSql、跨源标记及审计字段；CoreDatasetTable 保存数据源/数据集关联、表名、类型、info及SQL参数；字段实体区分 originName、展示名、内部唯一名、DE类型与原始类型、扩展字段和选中标记。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetGroup.java",
+          "start_line": 14,
+          "end_line": 100,
+          "symbol": "CoreDatasetGroup",
+          "sha256": "ad381bce99f379db6ddbbd4d42f8a909ab3a834c9d9e07b4fe7cb965c660a0fd"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetTable.java",
+          "start_line": 12,
+          "end_line": 53,
+          "symbol": "CoreDatasetTable",
+          "sha256": "a1c4dbe9167c28eafc7896b63150984cad922af69a8b072a27d1d31d6e7e48b3"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetTableField.java",
+          "start_line": 12,
+          "end_line": 134,
+          "symbol": "CoreDatasetTableField",
+          "sha256": "bec521f2aa120f0c9ac9f025b35612d953c91fb1b49f16c1854c47b0358c75c8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-039",
+      "statement": "JpaUpdateNonNullAspect 拦截 JpaRepository 四种 save 方法；集合逐项按ID读旧实体并复制非空可赋值属性，空值不复制；无ID/无旧实体返回原对象。合并异常记录后退回原对象继续 proceed，不能当作完整 PATCH 或并发控制。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/config/JpaUpdateNonNullAspect.java",
+          "start_line": 36,
+          "end_line": 134,
+          "symbol": "around/mergeEntityIfExists/copyNonNullProperties",
+          "sha256": "4d57bec69cb2c5e7c3384011ff44ac63fe6a3191cdbacad787c7ad44885a6b3e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-040",
+      "statement": "InitSqlListener 启动时收集 SqlBlock，按1、2、3版本组及版本排序执行；最后记录 success=false 时允许重试该版本；每块先保存失败状态，执行异常抛运行异常阻断启动，成功后更新耗时和 success=true。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/listener/InitSqlListener.java",
+          "start_line": 21,
+          "end_line": 105,
+          "symbol": "run/executeGroups/executeSql",
+          "sha256": "61d069feecedbe24a02678263be8638c38cd3a2af26de27b47a5db83940d53bc"
+        }
+      ]
+    },
+    {
+      "id": "DATA-041",
+      "statement": "DatasetCacheManage 只缓存表名/字段原始名；表键是数据源ID，字段键为数据源ID_表名。表缓存未命中查询数据源，字段缓存未命中返回null；表列表为空时 validateTable 放行，否则大小写不敏感校验。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetCacheManage.java",
+          "start_line": 24,
+          "end_line": 95,
+          "symbol": "DatasetCacheManage",
+          "sha256": "b95622a701c306ff13ae5d3419c04c77c8bf213843d105c0bb63b2dace9d6148"
+        }
+      ]
+    },
+    {
+      "id": "DATA-042",
+      "statement": "JCache 实现按 spring.cache.type=jcache 启用，在首次创建 cache 时确定 ModifiedExpiryPolicy，expTime<=0 默认一分钟且 storeByValue=false；后续 put 复用已有 cache 配置。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/DefaultCacheImpl.java",
+          "start_line": 19,
+          "end_line": 98,
+          "symbol": "put/configuration/defaultConfiguration",
+          "sha256": "61ea9ad186abb2d858dab4ca30011b3de7f02f1fdaa43697a8f989db8486f1a9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-043",
+      "statement": "Redis 实现按 spring.cache.type=redis 启用，实际键为 cacheName::key；expTime<=0 直接set不设过期，否则按键设置TTL，unit为空用秒；take 通过Lua GET+DEL。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/RedisCacheImpl.java",
+          "start_line": 19,
+          "end_line": 69,
+          "symbol": "put/take",
+          "sha256": "9190fb0c6765e8a938414a4aeaef1a75cef9ef19e82f5b3671807cb71d3e5c1d"
+        }
+      ]
+    },
+    {
+      "id": "DATA-044",
+      "statement": "ExcelFileGuard 上传目录只接受数字用户ID，拒绝符号链接；读取路径必须绝对、规范化、位于上传根目录一至二层，文件名为 UUID.csv/xls/xlsx，逐段拒绝符号链接并验证真实路径及普通文件。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelFileGuard.java",
+          "start_line": 18,
+          "end_line": 64,
+          "symbol": "uploadDirectory/resolve",
+          "sha256": "c85f62b2d80c040adc540231d47702101dce0d0f0c37528237ac07cb408095eb"
+        }
+      ]
+    },
+    {
+      "id": "DATA-045",
+      "statement": "Excel 配置校验要求数组；新引用须属于当前用户目录，已有服务端配置中的合法路径可保留；open 再调用 resolve 并以 NOFOLLOW_LINKS 读取。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelFileGuard.java",
+          "start_line": 66,
+          "end_line": 93,
+          "symbol": "validateConfiguration/open",
+          "sha256": "c85f62b2d80c040adc540231d47702101dce0d0f0c37528237ac07cb408095eb"
+        }
+      ]
+    },
+    {
+      "id": "DATA-046",
+      "statement": "DatasourceServer 对本地 Excel 拒绝无登录用户或分享链接身份；修改时要求旧数据源 manage，再把服务端旧配置交给 ExcelFileGuard，IO失败统一转文件禁止错误。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1194,
+          "end_line": 1211,
+          "symbol": "validateExcelFiles",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-047",
+      "statement": "CSV 编码探测最多64KiB，识别UTF-8/UTF-16 BOM；非合法UTF-8样本回退GB18030。逐物理行读取限制1Mi字符，单元格32767字符、列分隔限制16384；数据行支持逗号引号和双引号转义，预览只收集100条非空行。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 541,
+          "end_line": 623,
+          "symbol": "csvReader/readCsvLine/parseCsvLine/csvData",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-048",
+      "statement": "Excel解析用 try-with-resources 关闭输入及Reader，最多100个工作表，空表头拒绝；字段名经 EngineProvider.validateIdentifier。CSV表头采用 split逗号而数据行另用引号解析器，两者规则不同；未推断类型默认TEXT，短行输出缺失字段为空字符串。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 735,
+          "end_line": 861,
+          "symbol": "parseExcel",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-049",
+      "statement": "Excel预览监听器收集100行后抛 StopSheetException 终止当前sheet；全量模式不执行该100行停止分支；只读取表头有效列并按表头长度补null。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 672,
+          "end_line": 721,
+          "symbol": "NoModelDataListener",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-050",
+      "statement": "远程Excel入口先校验传输大小/时限，按HTTP、SMB、FTP分派，不支持协议抛错；下载后仅xlsx执行ZIP预算校验，失败删除下载文件。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 437,
+          "end_line": 468,
+          "symbol": "downLoadRemoteExcel",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-051",
+      "statement": "远程xlsx独立预算为10000条目、单条32MiB、总展开128MiB、超过1MiB条目的压缩比最多100，并设置120秒/线程中断检查；超限抛IOException。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 470,
+          "end_line": 496,
+          "symbol": "validateRemoteWorkbook",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-052",
+      "statement": "ApiUtils.execHttpRequest 复制API定义并替换分页参数；将 socketTimeout秒转毫秒，传入每API响应大小和传输总时限；参数可通过其他API递归取值。GET和POST分别委派HttpClientUtil，POST缺少body.type拒绝。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 232,
+          "end_line": 255,
+          "symbol": "execHttpRequest",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 330,
+          "end_line": 392,
+          "symbol": "execHttpRequest query arguments / method switch",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-053",
+      "statement": "HttpClientUtil 的 executeBounded 在发出请求前创建RemoteTransfer，响应头后检查声明长度并包装实体实际读取；异常中止请求。getResponseStr 对HTTP>=400抛响应内容或状态码异常。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 394,
+          "end_line": 432,
+          "symbol": "executeBounded/getResponseStr",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-054",
+      "statement": "RemoteTransfer 空大小配置使用调用方默认值，1至maximumMb有效；总时限默认120秒且范围1至1800秒。包装流每次read/skip计数，超量/超时/中断调用abort；提前close先abort避免无限drain，并取消timer。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/RemoteTransfer.java",
+          "start_line": 30,
+          "end_line": 105,
+          "symbol": "sizeBytes/timeoutMillis/checkLength/wrap",
+          "sha256": "4b05e61003e5701093284d691269c43d50a84b1822b49fb2338272c456a5e2aa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-055",
+      "statement": "HTTP下载使用UUID临时文件名并解析规范化原文件名，文件实体受下载大小和总时限控制；非成功完成时finally删除部分文件，HTTP>=400拒绝。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 434,
+          "end_line": 482,
+          "symbol": "downloadFile",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-056",
+      "statement": "HttpClientUtil 默认 ignoreSslVerify=false，TLSv1.2/1.3加DefaultHostnameVerifier；显式开关true进入信任所有证书及NoopHostnameVerifier分支。本事实不证明运行环境开关值。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/HttpClientUtil.java",
+          "start_line": 60,
+          "end_line": 122,
+          "symbol": "buildSslSocketFactory",
+          "sha256": "145e922f12288951f5cf609a0e0e0e83005cc956e8b0fe8254c4589fba6d18fa"
+        }
+      ]
+    },
+    {
+      "id": "DATA-057",
+      "statement": "CacheUtils 的无TTL参数 put 固定传8小时；remove先删键、运行consumer，再经DelayQueueUtils安排一次延迟删键。该通用删除设施本身不证明每个业务缓存均接入。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/utils/CacheUtils.java",
+          "start_line": 28,
+          "end_line": 88,
+          "symbol": "put/remove",
+          "sha256": "207408e7b2885133231465ecb13f47d17007a1dab283caedca18d72749f1b1a5"
+        }
+      ]
+    },
+    {
+      "id": "DATA-058",
+      "statement": "Ehcache配置预定义 de_v3_dataset_table/de_v3_dataset_field，使用 common-cache 的 expiry none；结合 DefaultCacheImpl 复用已存在cache的分支，不能将CacheUtils的8小时参数直接解释为这两个预建缓存的实际TTL。",
+      "kind": "configured",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/resources/ehcache/ehcache.xml",
+          "start_line": 13,
+          "end_line": 21,
+          "symbol": "common-cache",
+          "sha256": "bd079ae36049efa5c48bfed30022e4bbfc21710749098697f8891a037d9c763d"
+        },
+        {
+          "path": "core/core-backend/src/main/resources/ehcache/ehcache.xml",
+          "start_line": 147,
+          "end_line": 156,
+          "symbol": "dataset cache aliases",
+          "sha256": "bd079ae36049efa5c48bfed30022e4bbfc21710749098697f8891a037d9c763d"
+        },
+        {
+          "path": "sdk/common/src/main/java/io/dataease/cache/impl/DefaultCacheImpl.java",
+          "start_line": 30,
+          "end_line": 43,
+          "symbol": "put",
+          "sha256": "61ea9ad186abb2d858dab4ca30011b3de7f02f1fdaa43697a8f989db8486f1a9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-059",
+      "statement": "DatasetCacheManage 提供表名/字段名写读和表校验；表列表通过 DatasourceServer.getTables 刷新写入，字段缓存读取未命中返回null；该类源码没有删除/失效方法。限定主仓库源码检索未找到这两个缓存名的显式删除调用，不能据此承诺更新后即时失效。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetCacheManage.java",
+          "start_line": 24,
+          "end_line": 95,
+          "symbol": "DatasetCacheManage",
+          "sha256": "b95622a701c306ff13ae5d3419c04c77c8bf213843d105c0bb63b2dace9d6148"
+        }
+      ]
+    },
+    {
+      "id": "DATA-060",
+      "statement": "内置类型枚举包括folder/API/Excel/ExcelRemote、mysql/impala/mariadb/StarRocks/es/doris/TiDB/oracle/pg/kingbase/gaussdb/redshift/db2/ck/h2/sqlServer/mongo，并声明标识符引号元信息；这是枚举能力而非每种类型在用户入口可创建的保证。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-datasource/src/main/java/io/dataease/extensions/datasource/vo/DatasourceConfiguration.java",
+          "start_line": 13,
+          "end_line": 34,
+          "symbol": "DatasourceType",
+          "sha256": "a54d22e7da18e6baf89e9681460abdd40e8a40503cf8075e8f766431a2400bd8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-061",
+      "statement": "preCheckDs 从内置枚举移除h2，License有效时追加已安装插件类型，其余类型拒绝。因此Factory可路由h2与用户新建入口接受h2并非同一契约。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1213,
+          "end_line": 1224,
+          "symbol": "preCheckDs",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-062",
+      "statement": "Calcite getConnection 将mysql/StarRocks/doris/TiDB/mariadb/mongo配置按Mysql读取并设置MariaDB驱动；impala/sqlServer/oracle/db2/pg/kingbase/gaussdb/redshift/h2/ck各自解析对应配置类，之后进入SSH会话及驱动连接构造。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 593,
+          "end_line": 641,
+          "symbol": "getConnection",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-063",
+      "statement": "EsProvider 的getSchema返回空列表；getTables通过show tables查询并过滤点开头表名；getConnection返回null，区别于Calcite JDBC连接入口。",
+      "kind": "implemented",
+      "scope": "V3当前工作区静态源码/测试资产；本轮未运行",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/EsProvider.java",

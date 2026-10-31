@@ -1,0 +1,623 @@
+      color: '#000000',
+      fontSize: 12,
+      ...(canvasStyleResult.component.chartColor?.label || {})
+    },
+    tooltip: {
+      color: '#000000',
+      fontSize: 12,
+      backgroundColor: '#FFFFFF',
+      ...(canvasStyleResult.component.chartColor?.tooltip || {})
+    }
+  }
+
+  canvasDataResult.forEach(componentItem => {
+    historyItemAdaptor(componentItem, reportFilterInfo, attachInfo, canvasVersion, canvasInfo)
+  })
+}
+
+// 重置仪表板、大屏中的其他组件
+export function refreshOtherComponent(dvId, busiFlag) {
+  // 富文本 跑马灯组件进行刷新
+  const refreshComponentList = componentData.value.filter(
+    ele => ['ScrollText'].includes(ele.component) || ele.innerType === 'rich-text'
+  )
+  if (refreshComponentList && refreshComponentList.length > 0) {
+    const refreshIdList = refreshComponentList.map(ele => ele.id)
+    findById(dvId, busiFlag, {}).then(rsp => {
+      const canvasInfo = rsp.data
+      const canvasDataResult = JSON.parse(canvasInfo.componentData)
+      const canvasDataResultMap = canvasDataResult.reduce((acc, comp) => {
+        acc[comp.id] = comp
+        return acc
+      }, {})
+      // 遍历数组并替换
+      for (let i = 0; i < componentData.value.length; i++) {
+        const component = componentData.value[i]
+        if (refreshIdList.includes(component.id) && canvasDataResultMap[component.id]) {
+          if (inMobile.value) {
+            componentData.value[i].propValue = canvasDataResultMap[component.id].propValue
+          } else {
+            const { top, left, height, width, fontSize } = componentData.value[i].style
+            const { linkageFilters, outerParamsFilters, webParamsFilters } = componentData.value[i]
+            canvasDataResultMap[component.id].style.top = top
+            canvasDataResultMap[component.id].style.left = left
+            canvasDataResultMap[component.id].style.height = height
+            canvasDataResultMap[component.id].style.width = width
+            canvasDataResultMap[component.id]['linkageFilters'] = linkageFilters
+            canvasDataResultMap[component.id]['outerParamsFilters'] = outerParamsFilters
+            canvasDataResultMap[component.id]['webParamsFilters'] = webParamsFilters
+            if (fontSize) {
+              canvasDataResultMap[component.id].style.fontSize = fontSize
+            }
+            componentData.value[i] = canvasDataResultMap[component.id]
+          }
+        }
+      }
+    })
+  }
+}
+
+export function initCanvasDataPrepare(dvId, params, callBack) {
+  const busiFlag = params.busiFlag
+  const copyFlag = busiFlag != null && busiFlag.includes('-copy')
+  const busiFlagCustom = copyFlag ? busiFlag.split('-')[0] : busiFlag
+  const method = copyFlag ? findCopyResource : findById
+  let attachInfo = { source: params.source ? params.source : 'main' }
+  if (dvMainStore.canvasAttachInfo && !!dvMainStore.canvasAttachInfo.taskId) {
+    attachInfo = { source: 'report', taskId: dvMainStore.canvasAttachInfo.taskId }
+    const showWatermarkExist =
+      dvMainStore.canvasAttachInfo.hasOwnProperty('showWatermark') &&
+      typeof dvMainStore.canvasAttachInfo.showWatermark !== 'undefined' &&
+      dvMainStore.canvasAttachInfo.showWatermark !== null
+    if (showWatermarkExist) {
+      const enable = dvMainStore.canvasAttachInfo.showWatermark === 'true'
+      attachInfo['showWatermark'] = enable
+    }
+  }
+  attachInfo['resourceTable'] = params.resourceTable ? params.resourceTable : 'core'
+  method(dvId, busiFlagCustom, attachInfo).then(res => {
+    const canvasInfo = res.data
+    const watermarkInfo = {
+      ...canvasInfo.watermarkInfo,
+      settingContent: canvasInfo.watermarkInfo?.settingContent
+        ? JSON.parse(canvasInfo.watermarkInfo.settingContent)
+        : {}
+    }
+
+    const dvInfo = {
+      id: canvasInfo.id,
+      name: canvasInfo.name,
+      pid: canvasInfo.pid,
+      status: canvasInfo.status,
+      selfWatermarkStatus: canvasInfo.selfWatermarkStatus,
+      type: canvasInfo.type,
+      creatorName: canvasInfo.creatorName,
+      updateName: canvasInfo.updateName,
+      createTime: canvasInfo.createTime,
+      updateTime: canvasInfo.updateTime,
+      watermarkInfo: watermarkInfo,
+      weight: canvasInfo.weight,
+      ext: canvasInfo.ext,
+      contentId: canvasInfo.contentId,
+      mobileLayout: canvasInfo.mobileLayout || false
+    }
+    attachInfo['dvType'] = canvasInfo.type
+    const canvasVersion = canvasInfo.version
+
+    const canvasDataResult = JSON.parse(canvasInfo.componentData)
+    const canvasStyleResult = JSON.parse(canvasInfo.canvasStyleData)
+    const canvasViewInfoPreview = canvasInfo.canvasViewInfo
+    historyAdaptor(canvasStyleResult, canvasDataResult, canvasInfo, attachInfo, canvasVersion)
+    const curPreviewGap =
+      dvInfo.type === 'dashboard' && canvasStyleResult['dashboard'].gap === 'yes'
+        ? canvasStyleResult['dashboard'].gapSize
+        : 0
+    const appearanceStore = useAppearanceStoreWithOut()
+    appearanceStore.setCurrentFont(canvasStyleResult.fontFamily)
+    document.documentElement.style.setProperty(
+      '--de-canvas_custom_font',
+      `${canvasStyleResult.fontFamily}`
+    )
+    callBack({ canvasDataResult, canvasStyleResult, dvInfo, canvasViewInfoPreview, curPreviewGap })
+  })
+}
+
+export async function initCanvasData(dvId, params, callBack) {
+  initCanvasDataPrepare(
+    dvId,
+    params,
+    function ({ canvasDataResult, canvasStyleResult, dvInfo, canvasViewInfoPreview }) {
+      if (!params.onlyPreview) {
+        dvMainStore.setComponentData(canvasDataResult)
+        dvMainStore.setCanvasStyle(canvasStyleResult)
+        dvMainStore.updateCurDvInfo(dvInfo)
+        dvMainStore.setCanvasViewInfo(canvasViewInfoPreview)
+        // 刷新联动信息
+        getPanelAllLinkageInfo(dvInfo.id, params.resourceTable).then(rsp => {
+          dvMainStore.setNowPanelTrackInfo(rsp.data)
+        })
+        // 刷新跳转信息
+        queryVisualizationJumpInfo(dvInfo.id, params.resourceTable).then(rsp => {
+          dvMainStore.setNowPanelJumpInfo(rsp.data)
+        })
+      }
+      callBack({ canvasDataResult, canvasStyleResult, dvInfo, canvasViewInfoPreview })
+    }
+  )
+}
+
+export async function backCanvasData(dvId, mobileViewInfo, busiFlag, callBack) {
+  initCanvasDataPrepare(
+    dvId,
+    { busiFlag },
+    function ({ canvasDataResult, canvasStyleResult, canvasViewInfoPreview }) {
+      const componentDataCopy = canvasDataResult.filter(ele => !!ele.inMobile)
+      const componentDataId = componentDataCopy.map(ele => ele.id)
+      componentData.value.forEach(ele => {
+        ele.inMobile = componentDataId.includes(ele.id)
+        if (ele.inMobile) {
+          const { mx, my, mSizeX, mSizeY, mEvents, mCommonBackground } = componentDataCopy.find(
+            itx => itx.id === ele.id
+          )
+          ele.mx = mx
+          ele.my = my
+          ele.mSizeX = mSizeX
+          ele.mSizeY = mSizeY
+          ele.mEvents = mEvents
+          ele.mCommonBackground = mCommonBackground
+        }
+      })
+      Object.keys(canvasViewInfoPreview).forEach(key => {
+        if (canvasViewInfo.value[key] && canvasViewInfoPreview[key]) {
+          const { customAttrMobile, customStyleMobile } = canvasViewInfoPreview[key]
+          // 此处作为还原移动设计使用
+          canvasViewInfo.value[key]['customStyleMobile'] = customStyleMobile
+          canvasViewInfo.value[key]['customAttrMobile'] = customAttrMobile
+        }
+      })
+      dvMainStore.setComponentData(componentData.value)
+      const canvasStyleDataCopy = cloneDeep(canvasStyleData.value)
+      if (!canvasStyleDataCopy.mobileSetting) {
+        canvasStyleDataCopy.mobileSetting = {
+          backgroundColorSelect: false,
+          background: '',
+          color: '#ffffff',
+          backgroundImageEnable: false,
+          customSetting: false
+        }
+      } else {
+        canvasStyleDataCopy.mobileSetting = canvasStyleResult.mobileSetting
+      }
+      dvMainStore.setCanvasStyle(canvasStyleDataCopy)
+      callBack()
+    }
+  )
+}
+
+export function initCanvasDataMobile(dvId, params, callBack) {
+  initCanvasDataPrepare(
+    dvId,
+    params,
+    function ({ canvasDataResult, canvasStyleResult, dvInfo, canvasViewInfoPreview }) {
+      const componentData = canvasDataResult.filter(ele => !!ele.inMobile)
+      canvasDataResult.forEach(ele => {
+        const {
+          mx,
+          my,
+          mSizeX,
+          mSizeY,
+          mStyle,
+          mEvents,
+          mCommonBackground,
+          style,
+          propValue,
+          events,
+          commonBackground
+        } = ele
+        ele.x = mx
+        ele.y = my
+        ele.sizeX = mSizeX
+        ele.sizeY = mSizeY
+        ele.style = mStyle || style
+        ele.events = mEvents || events
+        ele.commonBackground = mCommonBackground || commonBackground
+        if (ele.component === 'VQuery') {
+          ele.propValue?.forEach(queryItem => {
+            queryItem.placeholder = queryItem.mPlaceholder || queryItem.placeholder
+            queryItem.queryConditionWidth =
+              queryItem.mQueryConditionWidth || queryItem.queryConditionWidth
+          })
+        }
+        if (ele.component === 'DeTabs') {
+          ele.propValue?.forEach(tabItem => {
+            tabItem.componentData?.forEach(tabComponent => {
+              tabComponent.style = tabComponent.mStyle || tabComponent.style
+              tabComponent.events = tabComponent.mEvents || tabComponent.events
+              tabComponent.commonBackground =
+                tabComponent.mCommonBackground || tabComponent.commonBackground
+            })
+          })
+          // 实际移动预览与移动设计器共用布局恢复规则
+          initTabMobileLayout(ele)
+        }
+      })
+      if (!!canvasViewInfoPreview) {
+        Object.keys(canvasViewInfoPreview).forEach(key => {
+          const viewInfo = canvasViewInfoPreview[key]
+          const { customAttrMobile, customStyleMobile } = viewInfo
+          viewInfo['customAttr'] = customAttrMobile || viewInfo['customAttr']
+          viewInfo['customStyle'] = customStyleMobile || viewInfo['customStyle']
+        })
+      }
+      dvMainStore.setComponentData(componentData)
+      dvMainStore.setCanvasStyle(canvasStyleResult)
+      dvMainStore.updateCurDvInfo(dvInfo)
+      dvMainStore.setCanvasViewInfo(canvasViewInfoPreview)
+      // 刷新联动信息
+      getPanelAllLinkageInfo(dvInfo.id, params.resourceTable).then(rsp => {
+        dvMainStore.setNowPanelTrackInfo(rsp.data)
+      })
+      // 刷新跳转信息
+      queryVisualizationJumpInfo(dvInfo.id).then(rsp => {
+        dvMainStore.setNowPanelJumpInfo(rsp.data)
+      })
+      callBack({
+        canvasDataResult: componentData,
+        canvasStyleResult,
+        dvInfo,
+        canvasViewInfoPreview
+      })
+    }
+  )
+}
+
+export function checkCanvasChangePre(callBack) {
+  // do pre
+  const isUpdate = curDvInfo.value.id && curDvInfo.value.optType !== 'copy'
+  // 桌面版为单人模式不需要检查
+  if (isUpdate && !isDesktop()) {
+    const params = { ...curDvInfo.value, watermarkInfo: null }
+    const tips =
+      (curDvInfo.value.type === 'dashboard'
+        ? t('work_branch.dashboard')
+        : t('work_branch.big_data_screen')) + t('visualization.save_conflict_tips')
+    checkCanvasChange(params).then(rsp => {
+      if (rsp && rsp.data === 'Repeat') {
+        ElMessageBox.confirm(tips, {
+          confirmButtonType: 'danger',
+          type: 'warning',
+          autofocus: false,
+          showClose: false
+        }).then(() => {
+          callBack()
+        })
+      } else {
+        callBack()
+      }
+    })
+  } else {
+    callBack()
+  }
+}
+
+export async function canvasSave(callBack) {
+  await canvasSaveWithParams(null, callBack)
+}
+
+export async function canvasSaveWithParams(params, callBack) {
+  dvMainStore.removeGroupArea()
+  const componentDataToSave = cloneDeep(componentData.value)
+  componentDataToSave.forEach(item => {
+    if (item.component === 'UserView') {
+      item.linkageFilters = []
+    } else if (item.component === 'Group') {
+      item.propValue?.forEach(groupItem => {
+        groupItem.linkageFilters = []
+      })
+    } else if (item.component === 'DeTabs') {
+      item.propValue?.forEach(tabItem => {
+        tabItem.componentData?.forEach(tabComponent => {
+          tabComponent.linkageFilters = []
+        })
+      })
+    }
+  })
+  const newContentId = guid()
+  const canvasInfo = {
+    canvasStyleData: JSON.stringify(canvasStyleData.value),
+    componentData: JSON.stringify(componentDataToSave),
+    canvasViewInfo: canvasViewInfo.value,
+    appData: appData.value,
+    ...curDvInfo.value,
+    checkVersion: wsCache.get('x-de-execute-version'),
+    contentId: newContentId,
+    watermarkInfo: null
+  }
+
+  let dsNameCheck = 'success'
+  if (appData.value) {
+    await appCanvasNameCheck({
+      datasetFolderPid: canvasInfo.datasetFolderPid,
+      datasetFolderName: canvasInfo.datasetFolderName
+    }).then(rsp => {
+      dsNameCheck = rsp.data
+    })
+  }
+  if (dsNameCheck === 'repeat') {
+    ElMessage.error('数据集分组名称已存在')
+    return
+  }
+  nameTrim(curDvInfo.value, t('components.length_1_64_characters'))
+  const method =
+    curDvInfo.value.id && curDvInfo.value.optType !== 'copy' ? updateCanvas : saveCanvas
+  if (method === updateCanvas) {
+    await dvNameCheck({
+      opt: 'edit',
+      nodeType: 'leaf',
+      name: curDvInfo.value.name,
+      type: curDvInfo.value.type,
+      id: curDvInfo.value.id
+    })
+  }
+  method(canvasInfo).then(res => {
+    if (method === updateCanvas) {
+      // saveCanvas 为初次保存 状态为0 updateCanvas为二次保存状态为2 当存在传入状态时，则修改对应的传入状态
+      const status = params?.status ? params?.status : res.data?.status
+      dvMainStore.updateDvInfoCall(status, null, newContentId)
+    } else {
+      dvMainStore.updateDvInfoCall(0, res.data, newContentId)
+    }
+    snapshotStore.resetStyleChangeTimes()
+    callBack(res)
+  })
+}
+
+const httpUrlReg = /^https?:\/\//i
+const fileUrlReg = /^file:\/\//i
+const urlProtocolReg = /^([a-z][a-z0-9+.-]*):/i
+const hostPortWithoutProtocolReg = /^(?:\[[^\]]+\]|[^/?#\s:]+):\d+(?:[/?#]|$)/
+
+export type ExternalLinkUrlStatus = 'valid' | 'empty' | 'unsupportedProtocol' | 'invalid'
+
+export interface ExternalLinkUrlResult {
+  valid: boolean
+  url: string
+  status: ExternalLinkUrlStatus
+  protocol?: string
+}
+
+const isValidHttpUrl = url => {
+  try {
+    const parsedUrl = new URL(url)
+    return /^https?:$/.test(parsedUrl.protocol) && !!parsedUrl.hostname
+  } catch {
+    return false
+  }
+}
+
+const isValidFileUrl = url => {
+  try {
+    const parsedUrl = new URL(url)
+    return parsedUrl.protocol === 'file:'
+  } catch {
+    return false
+  }
+}
+
+const getUrlProtocol = url => {
+  if (hostPortWithoutProtocolReg.test(url)) {
+    return ''
+  }
+  return url.match(urlProtocolReg)?.[1]?.toLowerCase() || ''
+}
+
+export function normalizeExternalLinkUrl(url): ExternalLinkUrlResult {
+  const rawUrl = `${url ?? ''}`.trim()
+  if (!rawUrl) {
+    return {
+      valid: false,
+      url: rawUrl,
+      status: 'empty'
+    }
+  }
+
+  if (httpUrlReg.test(rawUrl)) {
+    const valid = isValidHttpUrl(rawUrl)
+    return {
+      valid,
+      url: rawUrl,
+      status: valid ? 'valid' : 'invalid'
+    }
+  }
+
+  if (fileUrlReg.test(rawUrl)) {
+    const valid = isValidFileUrl(rawUrl)
+    return {
+      valid,
+      url: rawUrl,
+      status: valid ? 'valid' : 'invalid'
+    }
+  }
+
+  const protocol = getUrlProtocol(rawUrl)
+  if (protocol) {
+    return {
+      valid: false,
+      url: rawUrl,
+      status: ['http', 'https', 'file'].includes(protocol) ? 'invalid' : 'unsupportedProtocol',
+      protocol
+    }
+  }
+
+  const normalizedUrl = rawUrl.startsWith('//') ? `http:${rawUrl}` : `http://${rawUrl}`
+  const valid = isValidHttpUrl(normalizedUrl)
+  return {
+    valid,
+    url: valid ? normalizedUrl : rawUrl,
+    status: valid ? 'valid' : 'invalid'
+  }
+}
+
+export function checkAddHttp(url) {
+  const result = normalizeExternalLinkUrl(url)
+  return result.valid ? result.url : url
+}
+
+export function setIdValueTrans(from, to, content, colList) {
+  if (!content) {
+    return content
+  }
+  let name2Id = content
+  const nameIdMap = colList.reduce((pre, next) => {
+    pre[next[from]] = next[to]
+    return pre
+  }, {})
+  const on = content?.match(/\[(.+?)\]/g) || []
+  if (on) {
+    on.forEach(itm => {
+      const ele = itm.slice(1, -1)
+      name2Id = name2Id.replace(itm, nameIdMap[ele])
+    })
+  }
+  return name2Id
+}
+
+export function isMainCanvas(canvasId) {
+  return canvasId === 'canvas-main'
+}
+// 检查是否可以加入到分组
+export function checkJoinGroup(item) {
+  if (item.component === 'DeTabs') {
+    let result = true
+    item.propValue?.forEach(tabItem => {
+      tabItem.componentData?.forEach(tabComponent => {
+        if (tabComponent.component === 'Group') {
+          result = false
+        }
+      })
+    })
+    return result
+  } else {
+    return true
+  }
+}
+// 检查是否可以移入tab
+export function checkJoinTab(item) {
+  if (item.component === 'Group') {
+    let result = true
+    item.propValue?.forEach(groupItem => {
+      if (groupItem.component === 'DeTabs') {
+        result = false
+      }
+    })
+    return result
+  } else {
+    return true
+  }
+}
+
+// 目前仅允许group中还有一层Tab 或者 Tab中含有一层group
+export function itemCanvasPathCheck(item, checkType) {
+  if (checkType === 'canvas-main') {
+    return isMainCanvas(item.canvasId)
+  }
+  const pathMap = {}
+  componentData.value.forEach(componentItem => {
+    canvasIdMapCheck(componentItem, null, pathMap)
+  })
+
+  // 父组件是Tab且在group中
+  if (checkType === 'pTabGroup') {
+    return Boolean(
+      pathMap[item.id] &&
+        pathMap[item.id].component === 'DeTabs' &&
+        pathMap[pathMap[item.id].id] &&
+        pathMap[pathMap[item.id].id].component === 'Group'
+    )
+  }
+  // 当前组件是group且在Tab中
+  if (checkType === 'groupInTab') {
+    return Boolean(
+      item.component === 'Group' &&
+        pathMap[pathMap[item.id].id] &&
+        pathMap[pathMap[item.id].id].component === 'DeTabs'
+    )
+  }
+
+  // 当前组件是Tab且在Group中
+  if (checkType === 'tabInGroup') {
+    return Boolean(
+      item.component === 'DeTabs' && pathMap[item.id] && pathMap[item.id].component === 'Group'
+    )
+  }
+  return false
+}
+
+export function canvasIdMapCheck(item, pItem, pathMap) {
+  pathMap[item.id] = pItem
+  if (item.component === 'DeTabs') {
+    item.propValue?.forEach(tabItem => {
+      tabItem.componentData?.forEach(tabComponent => {
+        canvasIdMapCheck(tabComponent, item, pathMap)
+      })
+    })
+  } else if (item.component === 'Group') {
+    item.propValue?.forEach(groupItem => {
+      canvasIdMapCheck(groupItem, item, pathMap)
+    })
+  }
+}
+
+export function isSameCanvas(item, canvasId) {
+  return item.canvasId === canvasId
+}
+
+export function isGroupOrTabCanvas(canvasId) {
+  return isGroupCanvas(canvasId) || isTabCanvas(canvasId)
+}
+
+export function isGroupCanvas(canvasId) {
+  return canvasId && canvasId.includes('Group')
+}
+
+export function isTabCanvas(canvasId) {
+  return canvasId && !canvasId.includes('Group') && !isMainCanvas(canvasId)
+}
+
+export function findComponentIndexByIdWithFilterHidden(
+  componentId,
+  componentDataMatch = componentData.value
+) {
+  let indexResult = -1
+  componentDataMatch
+    .filter(item => !item.dashboardHidden)
+    .forEach((component, index) => {
+      if (component.id === componentId) {
+        indexResult = index
+      }
+    })
+  return indexResult
+}
+
+export function findComponentIndexById(componentId, componentDataMatch = componentData.value) {
+  let indexResult = -1
+  componentDataMatch.forEach((component, index) => {
+    if (component.id === componentId) {
+      indexResult = index
+    }
+  })
+  return indexResult
+}
+
+export function canvasChangeAdaptor(component, matrixBase, usePointShadow = false) {
+  const targetDomComponent = document.querySelector(
+    usePointShadow ? '#point-shadow-main' : '#shape-id-' + component.id
+  )
+  const componentWidth = targetDomComponent['offsetWidth']
+  const componentHeight = targetDomComponent['offsetHeight']
+  component.sizeX = Math.round(componentWidth / matrixBase.baseWidth)
+  component.sizeY = Math.round(componentHeight / matrixBase.baseHeight)
+  component.style.width = componentWidth
+  component.style.height = componentHeight
+  if (usePointShadow) {
+    const componentLeft = targetDomComponent['offsetLeft']

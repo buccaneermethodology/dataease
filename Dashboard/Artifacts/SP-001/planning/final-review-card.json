@@ -1,0 +1,118 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-FINAL-REVIEW",
+  "session_id": "DE-EXEC-S012",
+  "lane": "final-validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/candidate-manifest.json",
+      "sha256": "33156a8c6f4bc258b50ce3998cb515d9fbad377c91e745e72919f903d84d9847"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/raw-user-intent-v1.txt",
+      "sha256": "696c53f25670797f890764b01dbf4bc953e6b31e7ff0e5ce3d977b9d3079319a"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/raw-user-intent-v2.txt",
+      "sha256": "fc0fba8b84c420fde51ea501419252da2873e84c7088afd5bc727b0af2b7272c"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/decisions.json",
+      "sha256": "598a26fef2408a48159792258b30f132216ed9077e555390948b854ddb15a9e4"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/contract-v1.json",
+      "sha256": "cb3eea857eb3edad0bd2aa0b005d93be2ce86d592b46878fbad4c80bfa87cb69"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/object-contract-v1.md",
+      "sha256": "8b9ee134e1fa5e2ca917fc170534de553efc643f9c7349340276b65778f6ca95"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/goal.md",
+      "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/stage-plan.md",
+      "sha256": "1ae98382157dd789aa93d6697b4914a6885aadbef32111d099fcf1ee774b4508"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/closeout.md",
+      "sha256": "313601dc5cd0d499e7d2797fab940f8131c47f821bd2fcc8047fd926b68e282a"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/reconciliation.json",
+      "sha256": "fd99cd7697a638841aa461bfa2b34140fe8e6f1e0c03c0f9c1ca7bb595ce0141"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/obligation-ledger.json",
+      "sha256": "3dbb06e471c4cb0c89aca77715b567ab3f5fee1ff58e9659ff7d8e50aeaf4acb"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/scope-delta-audit.json",
+      "sha256": "9c1ba6d1a2e5dd5fae5bd09039e72b60206061482ffab68e61f27e28fe7f6416"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/coverage-v2.json",
+      "sha256": "e07ebaaf2671f4b5753f710176c066a4a7e4827281a4084659533efc46583838"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/formal-package-checks.json",
+      "sha256": "c49c9910442990c2f4202e3ad56bd0c19806a382f22d3922c1250f281b9c1483"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/kb-tool-tests-formal.json",
+      "sha256": "2714c4916b721454998c5fb7acdbc9b7bb30981e35c6facbb3645c675b5fc54a"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/reviews/relations-review-v2.md",
+      "sha256": "7d186889d8aea36357e3d7fe103974322ba7ff3d9d57668544f6f6d34c86275d"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-FINAL-CANDIDATE-1",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/reviews/final-review.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/reviews/final-review.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "独立静态语义复核，不等同全KB/运行验收",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-PRE-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "执行唯一最终独立审阅，绑定SP001-FINAL-CANDIDATE-1：先核验manifest全部文件摘要和完整tracked/untracked差异，再阅读原始用户意图、原v0.1草稿/最新Goal、澄清、AC/义务和范围差异，检查K00-K11/23能力/10核心不缩减；实际kb四JSON、schema、工具、四图投影/README，领域报告和抽样源码，最终Dashboard/closeout/手工reconciliation须全部覆盖。复用独立分域与本人的62关系复核但不替代最终包检查。真实13场景测试仅KB工具；未运行产品；判断静态范围完成是否成立。检查原创KB目录不混执行、全景仅参考、用户原草稿/产品不变、没有提交推送。检查下游单向槽位规则，candidate已齐而Goal终态尚未产生是合法时点；Dashboard S013 doing与正文候选说明以最终结果/receipt为终态权威，不能要求回写冻结历史。给逐AC verdict、原计划覆盖、具体样本/未覆盖、阻断及准确最终声明上限；可判候选PASS_WITH_BOUNDS，不能预判Stop Gate。缺陷FAIL并给具体依据，不修复。只写reviews/final-review.md；不要生成其他文件，测试用-B且内存/现有工具只读。报告必须列reviewed_at/snapshot_id/as_of_state/reviewer及manifest摘要。"
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-actual-r380",
+  "recorded_at": "2026-10-26T02:03:43Z",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r379.json",
+  "phase": "chart_filter_copy_product_integration_review_r003_completed_with_findings",
+  "task_id": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003",
+  "execution": [
+    {
+      "lane": "independent_semantic_review",
+      "identity": "/root/qpc_repair_validator",
+      "state": "completed_with_findings",
+      "scope": "独立全量静态审查Design/Cases r003；双verdict NEEDS_REVISION与BLOCKED/NOT_READY；不得第4轮。",
+      "context_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003.json",
+      "context_sha256": "15e512d8d9f114c4d01b7d79bf7f15a7dd83ffcd8231f2e64000a4f9957933b5",
+      "card_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/chart-filter-copy-product-integration-design-review-card-r003.json",
+      "card_sha256": "c47670d883a8d0a75faf22e884d65738086e871ca4ae7ece451b4768b4ba8ff9",
+      "rendered_prompt_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ChartFilterCopyProductIntegrationDesignReviewPrompt-r003.rendered.md",
+      "rendered_prompt_sha256": "3e26264c799d9e8775a3d3d574711b4b3a14bae9d5dda8b511c9bd2b1d5846ef",
+      "artifact_refs": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md"
+      ],
+      "artifact_sha256": [
+        "e79f0896948a7897d4b6fb2e509912c3080825520bea1c561c5200ecd9227618"
+      ]
+    },
+    {
+      "lane": "independent_case_validation",
+      "identity": "/root/qpad_validation",
+      "state": "completed_with_findings",
+      "scope": "全量59案例结构、状态投影、query ledger、tuple digest、payload、身份与权限标记静态核验。",
+      "artifact_refs": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationCasesValidation-r003.md"
+      ],
+      "artifact_sha256": [
+        "9405cf512e47f8a85e3a93597aa8d6ccc09a615f28ecfec2777cc3dd97487197"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r379.json",
+      "sha256": "7f662d4284a7dc9ad6a9344fc9e09e8f6d7e2f2dc52c301a49bbe600c92a5f84"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationDesign-r003.md",
+      "sha256": "6e1f68da44ace340ebdad6b37c85ceee1c5eaf73aa173f9e881c675128628a70"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationCases-r003.json",
+      "sha256": "5ea63ce04b3d099beb902e688abf1db48b1056e1b26df96a5fd8806fd8cfc90d"
+    }
+  ],
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "blockers": [
+    {
+      "id": "AUTH-AM-09",
+      "severity": "P2",
+      "status": "open",
+      "summary": "Authority Materials 主包3/3 NEEDS_REVISION，AM-09来源精确性未关闭。"
+    },
+    {
+      "id": "REAL-PERMISSION-ENV",
+      "severity": "blocking",
+      "status": "blocked_not_run",
+      "summary": "source READ/只读用户/撤权恢复/组织隔离无授权权限来源与隔离多用户实例。"
+    },
+    {
+      "id": "CFPI-R3-DESIGN",
+      "severity": "P1",
+      "status": "needs_revision",
+      "summary": "本产品接线交付物到达3/3并保留CFPI-001..007/009..011 findings，不得r004。"
+    },
+    {
+      "id": "CFPI-R3-CASES",
+      "severity": "P1",
+      "status": "needs_revision",
+      "summary": "Cases r003存在7个terminal ledger异常及结构化状态缺口。"
+    }
+  ],
+  "claim_ceiling": "Static design and case review only; no Builder, runtime, permission or S02 completion claim.",
+  "next_work_unit_id": "S02-F01-G2-STAGE-LIFECYCLE-DESIGN-r001",
+  "next_work_unit_status": "ready_to_design"
+}

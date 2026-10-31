@@ -1,3 +1,4 @@
+import { isFilterPasteInteractionAllowed } from './filter-paste-interaction'
 import { hexColorToRGBA, hexToRgba, measureText, parseJson } from '../../util'
 import {
   DEFAULT_BASIC_STYLE,
@@ -3110,6 +3111,7 @@ export function configAxisLabelLengthLimit(chart, plot, triggerObjName) {
 
   // 鼠标进入事件
   plot.on(triggerName + ':mouseenter', e => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     const field = e.target.cfg.delegateObject.component.cfg.field
     const position = e.target.cfg.delegateObject.component.cfg.position
     const isYaxis = position === 'left' || position === 'right'
@@ -3183,6 +3185,7 @@ export function configAxisLabelLengthLimit(chart, plot, triggerObjName) {
 
   // 鼠标离开事件
   plot.on(triggerName + ':mouseleave', e => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     const field = e.target.cfg.delegateObject.component.cfg.field
     const position = e.target.cfg.delegateObject.component.cfg.position
     const isYaxis = position === 'left' || position === 'right'
@@ -3317,9 +3320,12 @@ export function configAxisTitleOverflowTooltip(chart: Chart, chartObj: any): voi
   }
   const { tooltip = {} } = parseJson(chart.customAttr)
   const tooltipId = `AXIS_TITLE_TIP-${chart.container || chart.id || 'default'}`
-  const hideTooltip = () => hideAxisTooltip(tooltipId)
+  const hideTooltip = () => {
+    if (isFilterPasteInteractionAllowed(chart)) hideAxisTooltip(tooltipId)
+  }
 
   chartObj.on(`axis-title:${ChartEvent.POINTER_MOVE}`, event => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     const target = event.target
     const originalValue = target?.attributes?.dataeaseOriginalText
     if (originalValue === undefined || originalValue === null) {
@@ -3378,9 +3384,12 @@ export function configAxisLengthLimit(
     )
   }
 
-  const hideTooltip = () => hideAxisTooltip(tooltipId)
+  const hideTooltip = () => {
+    if (isFilterPasteInteractionAllowed(chart)) hideAxisTooltip(tooltipId)
+  }
 
   chartObj?.on(`axis-label-item:${ChartEvent.POINTER_MOVE}`, event => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     const showText = event.target?.attributes?.text
     if (!showText?.endsWith('...')) {
       hideTooltip()
@@ -3398,6 +3407,7 @@ export function configAxisLengthLimit(
   })
 
   chartObj?.on(`axis-label-item:${ChartEvent.POINTER_OUT}`, () => {
+    if (!isFilterPasteInteractionAllowed(chart)) return
     hideTimer = setTimeout(hideTooltip, 200)
   })
 }

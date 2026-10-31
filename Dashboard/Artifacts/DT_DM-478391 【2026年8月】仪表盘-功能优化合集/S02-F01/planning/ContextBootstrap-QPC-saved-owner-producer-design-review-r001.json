@@ -1,0 +1,485 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "只读独立语义审查 QueryProductCommitSavedOwnerProducerDesign-r001；判断候选producer能力、加载分支、owner身份与授权边界是否源证据充分，分别给出Design Freeze Validity和Implementation Entry Readiness。不得改Design/源码/Cases。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "审查saved owner Store producer设计完整性、来源证据、分支支持范围、失效语义、permission依赖及最小后续准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitSavedOwnerProducerDesignReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改设计、源码、测试、Cases或Goal",
+      "把静态Trace/注入helper/standalone/mock写成运行时授权或行为证据",
+      "批准UI/Store/source-read/target-commit Builder或真实权限测试",
+      "缩小Goal分母或改变S01/S02边界"
+    ],
+    "maximum_claim": "独立设计语义裁定；不证明产品行为、权限、运行时或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r005.md",
+      "revision": "ddef9ea1e00dcd1cffee040b51e3632cca85d7166fd9782c9ff4246b2ccd3d69",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r005.json",
+      "revision": "388f0719d018b7cd444b6232d8601e0825513f99d0dee98ca68cf89dd3240728",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesignDelta-r006.md",
+      "revision": "026983613a8feec703be574888e48695b344bc9260db08ef42284fcaab0a8cfc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignDeltaReview-r006.md",
+      "revision": "407c08a7d623f68fd7dd8d18a89543618a93e7675318bcccf4804eafbe3e7b79",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerDesign-r001.md",
+      "revision": "5f98c2c913b8a080de7f796b64271963ba216433354e411cefbe29cd8bf4aa5a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitStoreProducerTrace-r001.md",
+      "revision": "c48e9c04dce9e663ea36b1b0f312b45e06ff9927b15f691173704f9a5c37542b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-source-Validation-r002.md",
+      "revision": "83a2c649d3d2281616116da5387fa9e2303418140f67ffa6ccf4dfa7848b2070",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "10f5c9171fe7b0e88c2f4fab110a9bb8ab71f25b29b24e12bd40df709c694955",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r023.md",
+      "revision": "f5d6de8b41803b3c8dccdd823b7352b4e2b4c39063016ba23b32bc93dea93204",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r220.json",
+      "revision": "344e022770baa97d8131514d14867a887fb2630dc6d2ffb3ba20a8c8122abc86",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "75c0550afc403cf06ab0ce62cf459dc22d1676842293f73e575bc351b333dddd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/components/visualization/CanvasCacheDialog.vue",
+      "revision": "6f6d4c1db4448606ca3c8d04470f5d8bb695e1db7a4eca5b826f836e985be7a3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+      "revision": "f475e94fd51c70a6d634ff80caf0cc35d5430556bedf5e5312b8d09f1dd94130",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立复核producer design相对原目标、绑定源码、身份与权限边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen-input-drift",
+      "condition": "Goal、review r006、Trace或设计输入摘要发生变化",
+      "action": "停止并要求新的Context/Card，不对旧snapshot出结论。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic-contract-gap",
+      "condition": "设计未定义成功/拒绝oracle或把owner身份与授权/副作用合并",
+      "action": "报告精确合同缺口和Disposition，不自行改设计。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal 10 AC、26 must-have、16产品义务和Scope Delta none完整；S01独立；权限BLOCKED/NOT_RUN；产品实施未准入。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_source_grounded_semantic_review",
+    "reason": "该设计涉及source/target授权边界和加载状态生命周期，需独立双结论。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "raw Goal and denominators",
+    "QPC r006 permitted scope",
+    "r001 static source trace",
+    "saved owner helper validation and source",
+    "full design candidate and cases r005",
+    "permission environment blocker",
+    "final diff and dashboard/topology state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QPC-SAVED-OWNER-PRODUCER-design-review-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r220.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "maximum_claim": "独立设计语义裁定；不批准产品Builder、来源读取或权限验收。",
+  "design_objective": "分别裁定producer设计冻结有效性与实施入口准备度。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitSavedOwnerProducerDesignReview-r001.md"
+}

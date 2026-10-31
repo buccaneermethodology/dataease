@@ -1,0 +1,171 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPREP-001-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求基于S02草稿定稿并实施Goal；最新指示要求整合设计审核后立即开始实现。真实权限环境不可用，真实权限验收保留未验证，不以standalone/admin/mock替代。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "仅准入typed查询引用闭包纯准备器QPREP-001；实现通过真实8 identity RED/GREEN候选，不代表Goal完成。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-reference-plan.test.ts"
+    ],
+    "forbidden_actions": [
+      "修改纯准备器切片之外文件",
+      "修改冻结设计、fixture、Goal或现有17项子合同",
+      "接入Store/UI/权限/持久化/外部副作用",
+      "使用standalone/admin/mock声称权限验证通过",
+      "安装依赖或启动服务"
+    ],
+    "maximum_claim": "仅QPREP-001的8项typed查询引用闭包准备合同Builder候选；不能声称完整F01、Q066/Q067、产品可用或真实权限通过"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "工程和权限边界",
+      "reason": "遵守项目规范",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "Builder准入和证据规则",
+      "reason": "执行受治理切片",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "原Goal authority及分母",
+      "reason": "不得缩减AC",
+      "domains": [
+        "scope",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidationFixtures-r001.json",
+      "revision": "08ed4a0c6ef376230baf856dd7cb0a9b6254733c318b914dbcea959bdc7dd915",
+      "applicability": "QPREP-001冻结输入/oracle/8个identity",
+      "reason": "执行真实RED/GREEN",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+      "revision": "9278dfa7490a43bdc13f1d1fa7c9165ed578d48ca6c955b74af00f880c72c765",
+      "applicability": "实现边界/claim ceiling",
+      "reason": "实现候选范围",
+      "domains": [
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+      "revision": "c761633b315dde7463c635999dcdf34a14941c1fe56804e1148acdc2aa789c61",
+      "applicability": "独立设计审查双verdict",
+      "reason": "实现准入依据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "当前TS/lint入口",
+      "reason": "选择已有验证运行器",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-pure/check.mjs",
+      "revision": "0dad134261fde122ada800d44df65028d1b8f673ff9fc20d00dd13211ad8aaf8",
+      "applicability": "既有本地Node+esbuild测试模式",
+      "reason": "可复用测试运行技术，不复用旧RED",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "fixture-or-source-drift",
+      "condition": "冻结fixture/typed shape或设计源码摘要变化",
+      "action": "暂停并rebaseline，不静默修订oracle",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "test-entry-unavailable",
+      "condition": "Node/esbuild runner不可用",
+      "action": "不安装依赖；报告并按现有入口处理",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "typed纯准备器实现不排除产品schema、权限、UI、持久化、undo和运行时验证等原Goal义务；这些仍留待后续切片。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_builder",
+    "reason": "新独立Builder按冻结typed纯准备器8-case合同实施，独立语义审查已通过有界入口审查"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "冻结QPREP fixture",
+    "实际RED原始stdout/stderr与源码摘要",
+    "同8 identity GREEN",
+    "定向ESLint",
+    "精确差异与声明上限"
+  ]
+}

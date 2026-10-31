@@ -1,0 +1,51 @@
+{
+  "goal_id": "DE-GOV-002",
+  "acceptance_criteria": {
+    "AC-01": "原文、完整状态清单、未跟踪文件原始字节与 admission 输入版本保全可操作",
+    "AC-02": "review 前完整候选包预检、冻结和缺项处理清晰",
+    "AC-03": "交付状态面→独立 review→wrapper/state→receipt→只读读回，避免自引用且不删除真实交付",
+    "AC-04": "review as-of 时间/状态与最新 receipt 终态区分，合法状态推进不造成重写旧 review",
+    "AC-05": "authority 路径解析预检、拒绝越界和 symlink 逃逸，保留原有 fail-closed，不宣称通用环检测",
+    "AC-06": "只改本地 Skill 与本轮治理记录；全局 Skill 哈希不变，脚本/schema 不变；独立场景审阅及结构检查支持有限结论"
+  },
+  "cases": [
+    {
+      "id": "C1",
+      "scenario": "要编辑一个未跟踪 README；有 hash 和 git status，但没有字节备份。",
+      "expected": "先保存原字节再写；不得把摘要当备份。"
+    },
+    {
+      "id": "C2",
+      "scenario": "admission 已绑定 context v1；发现原文投影不准确。",
+      "expected": "保留 v1、新建 v2、重新审查并绑定准入；不覆盖旧输入。"
+    },
+    {
+      "id": "C3",
+      "scenario": "代码已好，索引/closeout/reconciliation 尚缺；想立即发最终 review。",
+      "expected": "先补齐并冻结全部候选面，再发最终 review。"
+    },
+    {
+      "id": "C4",
+      "scenario": "review as-of CONTINUE 已通过，之后只绑定该报告并得到有效 GOAL_COMPLETE。",
+      "expected": "旧报告保持不变，读取当前 receipt；无需仅为状态推进重审。"
+    },
+    {
+      "id": "C5",
+      "scenario": "receipt 生成后发现实际交付缺漏，要修改受审文件。",
+      "expected": "补全真实交付、更新 snapshot，按影响重新验证并重跑 Gate；不能删交付逃避漂移。"
+    },
+    {
+      "id": "C6",
+      "scenario": "authority 相对路径在 cwd 可找到，按 caller root 解析却越界，或符号链接目标在 root 外。",
+      "expected": "拒绝调用并修正参数；不能扩大 root 或关闭路径校验。"
+    },
+    {
+      "id": "C7",
+      "scenario": "仅有摘要引用关系，想声称工具已自动排除所有语义环并节省 50% 时间。",
+      "expected": "拒绝该声明；依赖由人工/独立审阅，未测量时间收益。"
+    }
+  ],
+  "scope_delta": [],
+  "claim_ceiling": "流程规则优化和本轮限定场景审阅；无产品 runtime、宿主自动强制、通用图运行时、节省时长或外部同步声明。",
+  "erbe": "不改变终态谓词、schema、脚本或 authority 边界；冻结案例作为规则语义验收，不把文档缺句视为可信执行 RED。"
+}

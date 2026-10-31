@@ -1,0 +1,245 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-ST-SRC-006-source-handler-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立验证 ST-SRC-006 Builder candidate；核对完整 Goal scope、冻结身份、AST 真实源码提取、受限依赖、同身份 RED/GREEN、定向 lint/diff、实际 diff 与 claim ceiling。Validator 只读检查并写独立报告，不修复，不声称产品/Goal验收。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读独立 Validation 本地 handler harness candidate；复跑 8 variants 与同身份负控，报告事实/差异/限制。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ST-SRC-006-SourceHandlerHarness-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改 Builder runner、冻结合同/用例、产品源码",
+      "修复任何 Finding",
+      "运行可能修改源文件的修复工具",
+      "外推至 Vue 产品接线、请求/API/Store/权限或 Goal AC",
+      "把 builder self-check 当作本次独立 Validation 结论"
+    ],
+    "maximum_claim": "只给出 ST-SRC-006 local source-handler harness 的独立验证结论；不证明任何产品链路、Goal AC或权限验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "repo rules",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "SP-010 Validation and claim rules",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "full Goal and denominator",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessContract-frozen-r001.json",
+      "revision": "4a1597dbd33ca71791df5584ec4ad1883b8eb956db67f0394763c697803d5329",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ],
+      "reason": "frozen contract",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessCases-frozen-r001.json",
+      "revision": "31fda7840facd8a8db3852ec1810d34f79d8b6b12d94878118fdcc405c6e6685",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "frozen 8 variant oracle",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ST-SRC-006-SourceHandlerHarnessDesignReview-r003.md",
+      "revision": "2cb9d1913a9197e134234b60649bb0e1729260731ef837a4deffd4b7599a01f2",
+      "domains": [
+        "scope",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "independent design review",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/source-handler-harness.mjs",
+      "revision": "81fed6996bda1920b10d5119b2f871714ac06f409a25949816539abf1faa8214",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "actual candidate runner",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/ST-SRC-006-SOURCE-HANDLER-HARNESS-r001.md",
+      "revision": "68b37f39669d2501c59c01ee3ca3f172348d5f5c940a757a8e347c7a97575d74",
+      "domains": [
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "Builder report to audit",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-ST-SRC-006-source-handler-builder-r001.json",
+      "revision": "309c3a7632399f257d317c6156f170f2737cc8a59f29cb4579b537a45bf4cc86",
+      "domains": [
+        "scope",
+        "dependency"
+      ],
+      "reason": "Builder context",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-ST-SRC-006-source-handler-builder-r001.json",
+      "revision": "35f5f2d700f66e0d7df266b8e295b099bb4fc0d29ddae9b8231ddff4b552b185",
+      "domains": [
+        "authority",
+        "scope",
+        "dependency"
+      ],
+      "reason": "Builder admission",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r302.json",
+      "revision": "b8eaac52df1df128cd36567abe8db1e033fc4eea3db36bebc9b40803466f72e5",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "pre-builder actual topology",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r303.json",
+      "revision": "e0172ef4e5f5805b25b09ad499b83b7d5fbb46c811f79f2fe67a44e2364755f7",
+      "domains": [
+        "dependency",
+        "validation"
+      ],
+      "reason": "post-builder candidate topology",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r304.json",
+      "revision": "e31e91a87b3abb9d1d475712d876fed6a79d6fd2568aafe1f2bc6cfcfcc41f43",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "current Validation topology",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "472b259cc027efefbf752a8e803e71c774b2ef0a2f0a2370a101dcaf2c568306",
+      "domains": [
+        "scope",
+        "dependency"
+      ],
+      "reason": "current Session r109 state",
+      "applicability": "ST-SRC-006 independent Validation r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "identity_drift",
+      "mode": "deterministic",
+      "condition": "冻结合同、Case order、source initializer 或 runner identity 与绑定摘要不一致",
+      "action": "报告 identity drift 并停止该身份复跑",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "evidence_conflict",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "Builder报告或声明超过实际测试及源码范围",
+      "action": "记录 finding 与裁定，不自行修改候选",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "完整Goal分母仍10 AC/26 must-have/16义务，Scope Delta none；本次局部 harness 不等于产品验收；真实权限 BLOCKED/NOT_RUN，S01 CONDITIONAL。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_validation",
+    "reason": "Builder candidate 已完成，必须验证完整冻结身份和声明边界，验证报告独立落盘。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "frozen identity and variant order",
+    "真实 AST extraction and injection boundaries",
+    "same identity controlled RED and original GREEN",
+    "lint and diff-check",
+    "Goal denominator and unverified permissions/product claims"
+  ]
+}

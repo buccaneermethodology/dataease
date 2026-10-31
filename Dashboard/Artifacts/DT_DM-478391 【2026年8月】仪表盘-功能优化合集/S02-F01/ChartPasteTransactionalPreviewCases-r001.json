@@ -1,0 +1,88 @@
+{
+  "schema_version": "s02_chart_paste_transactional_preview_cases_v1",
+  "delivery_id": "S02-F01-chart-paste-transactional-preview-contract",
+  "revision": "r001",
+  "design_ref": "ChartPasteTransactionalPreviewDesign-r001.md",
+  "frozen_for_builder": false,
+  "scope_delta": "none",
+  "execution_boundary": "pure transaction decision model only; not product UI, HTTP, permissions, or rendering",
+  "initial_state": {
+    "target_chart_id": "LINE-1",
+    "uid": "user-A",
+    "oid": "org-A",
+    "content_id": "content-v1",
+    "target_revision": 7,
+    "target_tree": {"logic": "and", "items": []},
+    "target_tree_digest": "P0-tree",
+    "preview_revision": "P0-preview",
+    "snapshot_count": 4,
+    "success_notice_count": 0,
+    "save_count": 0,
+    "clipboard_id": "T-valid"
+  },
+  "cases": [
+    {
+      "id": "CTPT-001",
+      "title": "精确授权与兼容 Gate 均通过后仅进入 stage",
+      "events": ["begin(request=1)", "gate(read=Success, manage=Success, datasetSame=true, clipboardValid=true)", "prepare(valid=true)", "queryPending(request=1)"],
+      "expected": {"decision": "stage", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "save_count": 0}
+    },
+    {
+      "id": "CTPT-002",
+      "title": "Gate 的 READ/MANAGE/数据集兼容任一拒绝时保持 P0",
+      "variants": ["read=Denied", "manage=Repeat", "manage=Denied", "datasetSame=false", "identityMissing", "endpointTimeout", "malformedResponse"],
+      "expected": {"decision": "abort", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "save_count": 0, "query_count": 0, "clipboard_id": "T-valid"}
+    },
+    {
+      "id": "CTPT-003",
+      "title": "Prepare 结构校验失败不请求候选 query",
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=false, reason=unsupportedShape)"],
+      "expected": {"decision": "abort", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "query_count": 0, "save_count": 0}
+    },
+    {
+      "id": "CTPT-004",
+      "title": "候选 query 成功且捕获目标仍匹配时恰好提交一次",
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "querySuccess(request=1,target=LINE-1,identity=user-A/org-A/content-v1,revision=7)"],
+      "expected": {"decision": "commit", "target_tree_digest": "T-tree", "snapshot_count": 5, "preview_revision": "T-preview", "success_notice_count": 1, "save_count": 0}
+    },
+    {
+      "id": "CTPT-005",
+      "title": "dataset READ 被实际 query 拒绝时不改配置/快照/预览",
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "queryDenied(request=1, permission=datasetRead)"],
+      "expected": {"decision": "abort", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "save_count": 0, "clipboard_id": "T-valid"}
+    },
+    {
+      "id": "CTPT-006",
+      "title": "网络拒绝/业务错误/timeout 均保持 P0",
+      "variants": ["transportReject", "businessError", "timeout"],
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "queryFailure(request=1,variant)"],
+      "expected": {"decision": "abort", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "save_count": 0}
+    },
+    {
+      "id": "CTPT-007",
+      "title": "新请求先成功后旧响应迟到，旧响应忽略",
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "begin(request=2)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=2)", "querySuccess(request=2)", "querySuccess(request=1)"],
+      "expected": {"latest_decision": "commit", "late_decision": "ignore_late", "committed_tree_digest": "request-2-tree", "snapshot_count": 5, "preview_revision": "request-2-preview", "success_notice_count": 1, "save_count": 0}
+    },
+    {
+      "id": "CTPT-008",
+      "title": "active target 切换时旧响应不污染新目标",
+      "events": ["begin(request=1,target=LINE-1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "activeTargetChanged(LINE-2)", "querySuccess(request=1,target=LINE-1)"],
+      "expected": {"decision": "ignore_late", "line1_tree_digest": "P0-tree", "line2_tree_digest": "LINE-2-P0", "snapshot_count": 4, "preview_revision": "LINE-2-P0-preview", "success_notice_count": 0, "save_count": 0}
+    },
+    {
+      "id": "CTPT-009",
+      "title": "身份/组织/contentId/revision 任一变化时成功响应也忽略",
+      "variants": ["uid=user-B", "oid=org-B", "contentId=content-v2", "targetRevision=8", "priorTreeDigest=changed"],
+      "events": ["begin(request=1)", "gate(allPass)", "prepare(valid=true)", "queryPending(request=1)", "capturedBindingChanged(variant)", "querySuccess(request=1)"],
+      "expected": {"decision": "ignore_late", "target_tree_digest": "P0-tree", "snapshot_count": 4, "preview_revision": "P0-preview", "success_notice_count": 0, "save_count": 0}
+    },
+    {
+      "id": "CTPT-010",
+      "title": "显式保存失败不改写已成功应用的内存状态为耐久成功",
+      "precondition": "CTPT-004 已提交 T",
+      "events": ["saveAttempt", "saveFailure"],
+      "expected": {"target_tree_digest": "T-tree", "snapshot_count": 5, "preview_revision": "T-preview", "success_notice_count": 1, "durable_save_success": false, "save_count": 1}
+    }
+  ]
+}

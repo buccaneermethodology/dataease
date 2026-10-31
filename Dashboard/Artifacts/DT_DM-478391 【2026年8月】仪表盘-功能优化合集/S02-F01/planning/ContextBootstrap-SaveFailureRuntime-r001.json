@@ -1,0 +1,311 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SAVE-FAILURE-RUNTIME-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "原AC09保存失败不伪称持久化成功；U3受控失败短链",
+    "objective": "绑定saved bubble200→paste500→正常按钮发一次save且浏览器abort→无成功提示/当前态保持→离开重开saved200/clip空",
+    "authority_role": "projection",
+    "assumptions": [
+      "仅专用本机admin隔离context；save唯一transport受控故障，不写生产DB/源码/Store"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-state-tools/observe-save-failure-r001.js",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailure*r001*",
+      "专用target正常copy/paste，正常save按钮一次浏览器transport abort，后正常退出重开原saved bubble200"
+    ],
+    "forbidden_actions": [
+      "改请求/响应或mock真实query",
+      "实际后端DB故障注入/源码Store直写/安装部署",
+      "认证录制/把浏览器abort当服务端事务回滚或真权限验收"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MvpAcceptanceReadinessReview-r002.md",
+      "revision": "d3f97246db43f9dc705829d94ede73891694b13f21f7f3a9f4a03d748574fbe7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MapBubbleMissingColumnsValidation-r001.md",
+      "revision": "913b303da557944e6646073788340b63e1c3c18c96835fd8c98c20c451794e56",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/S2CanonicalPagination-events-r002.json",
+      "revision": "7eb64a3349cfeddaa36349079c1ccf676e7a9b5d3171155b40a80a51cce72119",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/TeaMaterialExtended-r001.csv",
+      "revision": "abc8bed0862129d58724bcefff2563862e48d1ea057365ae8d5d2c853e64472b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r581.json",
+      "revision": "228ff62795c40a0b1b926f4026818270baa7877fd80a2b1eea31eeeccf722346",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-state-tools/observe-save-failure-r001.js",
+      "revision": "8acfa223b8c0238febd42f4b9544959545f7be6c028ba4d36e1141b7a192d030",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailureToolFreeze-r001.json",
+      "revision": "585d5376fd6e454bf00340653937ef0d12ab7e69fe5ba0a3b7082151caffd68e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "core/core-frontend/src/components/dashboard/DbToolbar.vue",
+      "revision": "bbe3a90657b648b1c8b66ea12ac2a9f14a565396f2982572b538fe5048277b1d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "revision": "b760fffb47db4a8a187cc3dc996d6ddffb5f2b187038da625c5c8e0839d87e5d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定原U3/正常保存路径/原snapshot/受控故障与工具边界",
+      "applicability": "U3"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "S039准备2/3 U3明确授权的单共享保存失败见证，非新实现",
+    "task_id": "S02-SAVE-FAILURE-RUNTIME-r001",
+    "recorded_at": "2026-10-30T21:09:21.550192+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r581.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-SAVE-FAILURE-RUNTIME-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-09"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "绑定saved bubble200→paste500→正常按钮发一次save且浏览器abort→无成功提示/当前态保持→离开重开saved200/clip空",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailure-events-r001.json"
+}

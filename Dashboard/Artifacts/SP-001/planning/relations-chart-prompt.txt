@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/SP-001/planning/relations-chart-card.json
+Card SHA-256: 722db931e1542b6be6b51faf3de2b443e97a7a6a426dc62eba6dfd301ce4dea7
+Verify: python3 .codex/skills/sge-governed-checkpoints/scripts/lane_task_card.py validate Dashboard/Artifacts/SP-001/planning/relations-chart-card.json --repo . --expected-card-sha256 722db931e1542b6be6b51faf3de2b443e97a7a6a426dc62eba6dfd301ce4dea7
+Lane: builder-relations-chart | Session: DE-EXEC-S012 | Role: builder
+Mode: full_baseline
+Working directory: .
+Execute: 补齐chart现有事实间真实跨层关系。读取integrated-v5/chart.json全部事实和相关源码，输出JSON数组relations，每条id用CHART-X001递增，type/from/to/evidence_fact_ids沿现有schema。覆盖UI_CALLS_API、API_EXPOSES_CAPABILITY、CALLS、CAPABILITY_READS_WRITES_DATA等适用类型；不按命名推测，不改事实。另在对象中给出replace_relations数组（已有CAPABILITY_REALIZED_BY若测试资产改为TEST_ASSET_FOR），以及read_log与limits。约10至20个真正有用关系，端点为已有事实/能力ID，代码阅读验证每一条。只写指定输出，不修改KB或产品。

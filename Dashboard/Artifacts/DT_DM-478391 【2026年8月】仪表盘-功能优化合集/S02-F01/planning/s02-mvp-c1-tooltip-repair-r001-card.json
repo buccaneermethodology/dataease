@@ -1,0 +1,72 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-C1-TOOLTIP-REPAIR-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-C1-TOOLTIP-REPAIR-r001.json",
+      "sha256": "b62fbeb12ab744ec58ca21a17381343e8df0a00b2cde63032443564902cd5c50"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-C1-TOOLTIP-REPAIR-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/barUtil.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/common/common_antv.ts",
+    "core/core-frontend/src/views/chart/components/js/G2TooltipCarousel.ts",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "core/core-frontend/src/views/chart/components/js/panel/common/filter-paste-interaction.ts",
+    "core/core-frontend/tests/filter-copy-mvp-tooltip/check.mjs",
+    "core/core-frontend/tests/filter-copy-mvp-tooltip/README.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/C1TooltipRepair-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/C1TooltipRepair-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "C1V001有限修复候选，需独立第二轮delta Validation；非MVP终态",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC1Validation-r001.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-C1-TOOLTIP-REPAIR-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r447.json",
+  "working_directory": ".",
+  "execution_command": "先复验卡/admission与独立完整报告，不首阻断后漏同类。C1V-002已被真实Store引用语义推翻，不派修。先做新tooltip专用harness可信RED，不缺新helper/编译错误RED；root正常UI导入窗口完成前只新tests不写生产（root会马上ACK）。随后用最小局部opt-in phase/isCurrent贯穿真实shared tooltip create/switch host/listener、G2TooltipCarousel构造/启动及common_antv axis-label/title路径。候选不挂body或影响旧hover/document listeners，discard late无effect；active同instance可恢复hover，legacy无绑定默认原行为。只在G2 prepared临时chart上附局部guard，不污染canonical/请求/持久DTO/clipboard，不建全局注册资源框架。\n可使用新common/filter-paste-interaction.ts作窄类型/guard/helper，注意现deepCopy按for-in复制string键、JSON边界删函数，Symbol/WeakMap只绑原对象可能在内部clone丢guard；必须真实证实实际handlers传递链保留。createTooltipWrapper候选可挂本container局部，active首tooltip event再移动body；guard动态读binding phase及存活，不在注册时永久跳过以至激活永远不可交互。create/mount/show/hide/axispointer/timer均按真实副作用路径查全，保留library默认调用。\n真正执行真实bar/line draw安装链或完整真实公共模块（仅DOM/G2边界double），预置old hover/无关DOM，对candidate tooltip:show和axis-label move主动触发、discard晚到均要求无外部delta；再验active与legacy可用。若需额外handler精确路径先root增域，不私改38files。复用原C1/renderer/A/B+当前C2回归，结合已扩C4当前runner适配时点明确报告，定向lint/style及必要type对照，不跑全量安装。完成冻结并发生产SHA/root真实UI，独立第二轮Review另派，不自报通过。",
+  "delta_read_set": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC1Validation-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC2Maps-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c1-tooltip-before-r001/manifest.json",
+    "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/barUtil.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/common/common_antv.ts",
+    "core/core-frontend/src/views/chart/components/js/G2TooltipCarousel.ts",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue"
+  ]
+}

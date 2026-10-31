@@ -1,0 +1,41 @@
+# S01 技术调查有条件收尾
+
+## 交付与声明边界
+
+原Goal已审查定稿并登记SP-005 / DE-EXEC-S025。本轮交付8功能连接点/影响分析、70条静态claim、171AC映射、19fixture、14项逐项依赖调查及七功能相关局部运行与保存重开证据。固定156题、171AC、19fixture、14issue不变。原Goal、authority root和pin均保持原字节。
+
+[独立修复复核](IndependentReviewFindings-r002.md)认定技术调查VALID_WITH_CONDITIONS（有条件有效），F-01/F-02关闭。后续Slice整体不为READY：S03因App/真设备BLOCKED，其余CONDITIONAL；所有实施仍须各自设计审查及授权。本轮没有实现新功能，不宣称171条产品AC已通过。
+
+## 范围差异与暂停责任
+
+[ScopeDelta-r001](ScopeDelta-r001.md)：真实权限及指定App/真设备延期，不计通过。[ScopeDelta-r002](ScopeDelta-r002.md)：用户要求暂停第二批清理及新增F05归档，先收尾S01。第一批清理完成；第二批1数据源、1数据集、1看板及其快照、1图表快照和5行合成表仍在，导出任务0。具体ID/owner见r002。清理及归档后续由本任务执行者在用户恢复指令后执行；不得写成零残留。服务保留状态见恢复记录，后续需重查。
+
+F05不新增归档；独立审查直接使用已有[B2c规则图](B2c-F05-pivot-rule-render.png)、[重开图](B2c-F05-pivot-reopened-recovery.png)、[冻结case](B2c-F05-repair-case.json)及[恢复记录](EnvironmentRecovery-r001.md)。仅证明最小透视条件命中/不命中及重开，不证明全部字段/属性/历史兼容。
+
+## 十项验收与完整追溯
+
+| S01 AC | 证据与判定边界 |
+|---|---|
+| 01 | InputManifest.md、S01_ContextBootstrap.md、SourceSnapshot.json；来源固定，XPack未初始化 |
+| 02–03 | FunctionConnectionMap_F01-F04.md、FunctionConnectionMap_F05-F08.md、ClaimsLedger-r002.json；8功能静态事实/推断/未知区分 |
+| 04 | B2c-Runtime-Result.md、既有F05截图与EnvironmentRecovery-r001.md；局部运行，外部两项延期 |
+| 05 | TechnicalImpactMatrix.md、DependencyGraph.md；风险与最小改动建议，不重裁需求 |
+| 06 | TestabilityMatrix-r012.json、FixtureTraceLedger.json、TechnicalDependencyLedger-r003.json；171/19/14完整，76部分绑定、95显式gap |
+| 07 | S02-S09_EntryPacket.md；S02等有条件进入设计，S03阻塞，不授权实施 |
+| 08 | B2c-cleanup-result.json仅第一批；ScopeDelta-r002记录第二批暂停；运行构建副作用保留 |
+| 09 | IndependentReviewFindings.md及r002；F-01/F-02关闭，终态面见下游最终复核 |
+| 10 | planning/final-reconciliation-r004.md、最终state/receipt及只读读回；只有有效Gate才允许Goal终态 |
+
+## 实现变更与证据限制
+
+产品Implementation Delta不适用：本轮没有产品源码/API/业务行为修改，未提交、推送、发布或初始化XPack。获批的SDK安装/后端构建、启动既有初始化迁移和测试对象写入确实发生；构建跳过测试。辅助取证脚本不是产品实现。日志缓存和初始化不回滚，暂停对象不隐去。
+
+稳定KB不适用；本轮是调查与执行记录，不提升新的产品规则。Dashboard仅执行状态；无Session registry工具，采用人工对账。部分早期未跟踪台账缺写前原始字节，历史保全缺口保持披露，不重建伪装；后续修复已保存字节快照。
+
+## 来源协议与终态入口
+
+原始自然语言批准由独立审查核实；当前Markdown Goal采用Stop Gate原生scope_deltas/approval_receipts绑定，并由scope-audit-r004.json记录真实来源。goal_patch canonical转换不适用于当前输入，不再把缺其token误报为缺业务授权。未采用的协议例外提案保留历史；不改通用脚本，不伪造平台receipt。Gate主要验证摘要/结构，不能替代独立来源和语义审查。
+
+最终状态面独立复核输出：IndependentFinalReconciliation-r003.md；Closure仅按其实际判定生成planning/final-result.json、stop-gate/loop-state-final.json、stop-gate/receipt-final.json。当前正文是冻结交付，Goal是否终态以这些结果为准，不预填未来通过。下游允许更新的Dashboard状态槽位仅S025的Status/Delivery State和SP-005状态，规则为独立最终复核通过且Gate成功后才能标有条件完成；若失败保持Doing。
+
+Closeout language verdict: PASS（中文收尾，英文状态附中文解释）。

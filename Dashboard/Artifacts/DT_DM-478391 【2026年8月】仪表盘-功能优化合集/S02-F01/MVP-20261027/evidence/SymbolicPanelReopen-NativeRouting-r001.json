@@ -1,0 +1,28 @@
+{
+  "extracted_at": "2026-10-30T16:45:04.298494+00:00",
+  "native_path": "/Users/xiaomei/.codex/sessions/2026/10/15/rollout-2026-10-15T19-02-35-01a14272-6279-7601-bc9b-b7def784b978.jsonl",
+  "extraction": "执行后提取，非预冻结；仅选定含换行原行摘要，不hash持续append整文件",
+  "sources": [
+    {
+      "kind": "route_creation_before_first_goto_only",
+      "native_line": 99767,
+      "native_line_sha256_including_newline": "e08dfa4acb878ad197fc246b9b5aa70210c83a6d9417bfce057196d5e6a4f754",
+      "timestamp": "2026-10-30T16:37:57.659Z",
+      "call_id": "call_d66dc28075f74cd2b94141e57de2cfa9",
+      "code": "globalThis.s02ReopenContext=await browser.newContext({viewport:{width:1280,height:900}});globalThis.s02ReopenPage=await s02ReopenContext.newPage();globalThis.s02ReopenWire=[];globalThis.s02ReopenRecord=false;await s02ReopenContext.route('**/*',async route=>{const u=new URL(route.request().url());if(u.origin!=='http://127.0.0.1:7070'||!u.pathname.startsWith('/api/'))return route.continue();const upstream='http://127.0.0.1:8110'+(u.pathname.startsWith('/api/f/')?u.pathname.slice(6):u.pathname.replace(/^\\/api/,'/de2api'))+u.search;try{const response=await route.fetch({url:upstream,maxRedirects:0});if(response.status()>=300&&response.status()<400)throw Error('REDIRECT_REFUSED');if(s02ReopenRecord&&/\\/(chartData\\/getData|dataVisualization\\/(findById|updateCanvas))$/.test(u.pathname))s02ReopenWire.push({at:new Date().toISOString(),path:u.pathname,upstream,method:route.request().method(),status:response.status(),request:route.request().postData(),body:await response.text()});await route.fulfill({response});}catch{if(s02ReopenRecord)s02ReopenWire.push({at:new Date().toISOString(),path:u.pathname,status:'UPSTREAM_FAILED_NO_FALLBACK'});await route.abort('failed');}});",
+      "code_sha256": "689c69a08890fb14e2daddfef9d2ad74fa2b49425a6c4d4eb5d69527e3662c8a",
+      "note": "native同cell后续firstgoto/login代码排除，不输出登录/密码读取/headers"
+    },
+    {
+      "kind": "formal_driver_invocation_after_login",
+      "native_line": 99785,
+      "native_line_sha256_including_newline": "946a85261b5094927d79adf71fd9972847cb80413dc2ee5ddd8ba1a959ae6563",
+      "timestamp": "2026-10-30T16:39:32.528Z",
+      "call_id": "call_ae0871d32c914afc831b275fcefc5793",
+      "code": "const code=fs.readFileSync(lifeArtifact.replace(/evidence\\/$/,'runtime-state-tools/')+'observe-symbolic-panel-reopen-r001.js','utf8');const crypto=await import('node:crypto');const expected=JSON.parse(fs.readFileSync(lifeArtifact+'SymbolicPanelReopenToolFreeze-r001.json','utf8')).sha256;if(crypto.createHash('sha256').update(code).digest('hex')!==expected)throw Error('digest');const AF=Object.getPrototypeOf(async function(){}).constructor;console.log(JSON.stringify(await new AF('page','browser','fs','runtimeErrors',code)(page,browser,fs,runtimeErrors)));\n",
+      "code_sha256": "81213bf604113adbecec455fd5fe5ad9f704189c4e74fbe1bf87441a1e17ce68",
+      "note": "不含登录；driver启用业务白名单记录"
+    }
+  ],
+  "data_policy": "仅route/context及正式driver调用，不导出登录/认证/headers/许可"
+}

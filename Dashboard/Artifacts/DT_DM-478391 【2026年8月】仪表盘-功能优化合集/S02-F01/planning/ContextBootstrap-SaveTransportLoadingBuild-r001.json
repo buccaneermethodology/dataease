@@ -1,0 +1,284 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SAVE-TRANSPORT-LOADING-BUILD-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "原AC09/U3真实发现loading泄漏的最小修复，设计1/3有界通过",
+    "objective": "冻结8cases/真实AST callback+helper runner，before指定3语义RED后只改noresponse分支，一引用释放且原错误拒绝；同runner GREEN和真实U3复验",
+    "authority_role": "projection",
+    "assumptions": [
+      "只同一路由已取得loading引用；其它error/route owner旧问题不在本单元修复，不重开C2"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/config/axios/service.ts 的noresponse分支最小改动",
+      "core/core-frontend/tests/save-transport-loading/check.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Build*",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Runner*",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/RED*",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/GREEN*",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Lint*",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/SourceDelta*"
+    ],
+    "forbidden_actions": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Cases-r001.json冻结不改",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Design-r001.md冻结不改",
+      "改fulfilled/其它错误/timeout/local/request-handler/权限分支",
+      "globalreset普通network failure/安装依赖/自动save重试/DB直写",
+      "RED后改runner/cases迎合源码或把执行错误当RED"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SaveTransportLoadingDesignReview-r001.md",
+      "revision": "fdc38c3a96e82c6df98051bf5951428696b8c2d37a5652a770a399c3d48dbae7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Cases-r001.json",
+      "revision": "d3112965209eb76c692fdfb8ec419797f00dc285db1bb0a62128969ed2ebc0a7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/Design-r001.md",
+      "revision": "e9047dc2bee80dd14f8d5a18cc1a28fa96600368df366933895763fc4861dc8b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/service.ts.before",
+      "revision": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "core/core-frontend/src/config/axios/service.ts",
+      "revision": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "core/core-frontend/src/utils/loading.ts",
+      "revision": "9997c7f2579794219995b04116205eed3ac52c8d47c57e2d71551298b504ffe8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailure-events-r001.json",
+      "revision": "9c6fa0a5591c6d67a20f657cb7e22aff33607e9da5a9b0f8270cb156c29a36a1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailure-recovery-r001.json",
+      "revision": "142dcf427dd24f692be8c8ae849529a82997dd6369084513b7cb39ad0651c711",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r583.json",
+      "revision": "31fe878f8c744b48d76d4b2ec2806cec5ef41c5460663cc637d81609d31f1fef",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结原要求/独立设计/旧失败与精确实现源和cases",
+      "applicability": "new save-loading build"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "新独立Axios设计审查1/3明确准入，先RED后最小源码修复",
+    "task_id": "S02-SAVE-TRANSPORT-LOADING-BUILD-r001",
+    "recorded_at": "2026-10-30T21:25:10.843728+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r583.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-SAVE-TRANSPORT-LOADING-BUILD-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-09"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "冻结8cases/真实AST callback+helper runner，before指定3语义RED后只改noresponse分支，一引用释放且原错误拒绝；同runner GREEN和真实U3复验",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/save-transport-loading-cleanup-r001/BuildEvidence-r001.json"
+}

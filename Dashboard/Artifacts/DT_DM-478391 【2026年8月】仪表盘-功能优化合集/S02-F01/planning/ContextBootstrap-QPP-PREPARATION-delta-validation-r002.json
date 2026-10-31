@@ -1,0 +1,404 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPP-PREPARATION-delta-validation-r002",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立复核 QPP-PREPARATION-001 r002 修复包；检查 RED replay、同 runner GREEN/lint、完整差异及产品 effects 声明边界。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读验证 r002 RED 可重放修复；保留effects计数未由detached helper运行时观察的限定，并分别判断package与Goal。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPP-PREPARATION-DeltaValidation-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改helper、runner、fixtures、旧报告、Goal或台账",
+      "自行修复Builder候选",
+      "把fixture effects字段一致性当作运行时产品效果验证",
+      "将QPP package verdict扩大为产品/权限/Goal通过"
+    ],
+    "maximum_claim": "仅对QPP修复包作独立Delta Validation；完整Goal仍未完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationContract-r001.json",
+      "revision": "28e7caa0f4e0e4f2ccd54717cfc7b2fd761e252548ec1ddbf03ad2fad01053ea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r006.md",
+      "revision": "e95436c10ce9ad6bf1a3540fdcb908a87e94649a42b86d4407cb12fb75dd23af",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r006.json",
+      "revision": "26e89c627d996fa54597e9b1ef969100adb46868e3221a4dc1648d3effcedd7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r006.md",
+      "revision": "f8b3625a4f601ba7e5e5896ea2732cb48836bf224b609f92c3c63e1ad859ceaa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPP-PREPARATION-001-Validation-r001.md",
+      "revision": "c1be4db106a1ef0ab67ededee1a0f3c612df471a8b18a49778b05d8d97d28f05",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RepairEvidence-r002.md",
+      "revision": "bf52e2de9bff706e0cf3310bf69e06c918821958eee70b42064a224f25c2a408",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RED-replay-r002.mjs",
+      "revision": "5bdda2c392db772992e9056d1fa1672438225e6effeec375098950eb2c78f524",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+      "revision": "5adbb83d363b260a6996709696df322e6a77d851e4bb86a391f22bb32a1093d3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+      "revision": "7a7049eb882d864631dfc2e7b6fa548acd35bf641a8bf4c0ea6d2a7cebc17533",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-red-r002.stdout.txt",
+      "revision": "06b2ac778cf90a8126c99a0117843c0ef9876563a4ff40c7274a6acca87c7f47",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-red-r002.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-red-r002.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-green-r002.stdout.txt",
+      "revision": "03e09ad95d9abc4ba8501044fa58a1defd92c50c69acc534014fc1270b607636",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-green-r002.stderr.txt",
+      "revision": "483212ee9d0b2138ace954d1f454faf8c18fd4f98300f05cebfc32b9dfaddfb8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-green-r002.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-lint-r002.stdout.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-lint-r002.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-lint-r002.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r176.json",
+      "revision": "468f197adfdf2a8d2ab06bb50b501a270592ff9f24d88b60a9efed14aa69ac4c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复核 QPP-PREPARATION-001 修复包与完整Goal边界。",
+      "applicability": "S02-QPP-PREPARATION-delta-validation-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "digest_drift",
+      "mode": "deterministic",
+      "condition": "任一绑定文件摘要变化",
+      "action": "停止并重建Validation基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_oracle_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "RED非预期失败、GREEN不同身份、或effects超出detached范围",
+      "action": "记录finding并保持partial或blocked，不改Builder产物",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "修复包验证需要独立复算执行和原始Goal边界。",
+    "route": "validation"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "same runner RED/GREEN",
+    "mutant derivation and cleanup",
+    "helper/fixture unchanged",
+    "lint results",
+    "expected.effects claim boundary",
+    "Goal denominator/S01/DG-01",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10 Goal AC、26 must-have、16产品义务、Scope Delta none；S01独立；真实权限仍BLOCKED/NOT_RUN。"
+  },
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPP-PREPARATION-DeltaValidation-r002.md"
+  ],
+  "provenance": null
+}

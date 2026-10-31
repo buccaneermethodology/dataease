@@ -1,0 +1,528 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPC-STORE-PRODUCER-TRACE-r002",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "修复独立Review r001的上下文漂移和负向搜索可复现性问题，基于最新当前工作树只读核实Store/Q-VQuery来源链，形成r002 trace；不运行产品或权限路径。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "在r001列出的两项读集变化上重建当前快照，核实Select.vue新增异步枚举观察/lifecycle gate对QPC边界的影响，精确限定全前端helper调用点搜索；保留所有unknown与权限/S01阻塞。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitStoreProducerTrace-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改任何产品源码、测试、设计/cases或权限配置",
+      "启动应用、读取数据库或发起产品网络/权限请求",
+      "将静态来源追踪写成运行时验证或授权证据",
+      "发放UI/Store/来源读取/目标提交Builder准入",
+      "改变Goal分母、Scope Delta、S01状态",
+      "修改 QueryProductCommitStoreProducerTrace-r001.md 或 Review r001",
+      "扩大为产品运行、权限验证或产品Builder准入"
+    ],
+    "maximum_claim": "只读静态源追踪候选；不证明运行时producer、真实身份/权限或产品行为。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r005.md",
+      "revision": "ddef9ea1e00dcd1cffee040b51e3632cca85d7166fd9782c9ff4246b2ccd3d69",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r005.json",
+      "revision": "388f0719d018b7cd444b6232d8601e0825513f99d0dee98ca68cf89dd3240728",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesignDelta-r006.md",
+      "revision": "026983613a8feec703be574888e48695b344bc9260db08ef42284fcaab0a8cfc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignDeltaReview-r006.md",
+      "revision": "407c08a7d623f68fd7dd8d18a89543618a93e7675318bcccf4804eafbe3e7b79",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-source-Validation-r002.md",
+      "revision": "83a2c649d3d2281616116da5387fa9e2303418140f67ffa6ccf4dfa7848b2070",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "e7b5974f89af5258f508fc448255e41ae0ee32ab3be8cf400e340dcb576ceb91",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r213.json",
+      "revision": "3a5462257c702e8500d0b48de50cf6c001e895e7adffa0f2f45a14f5907cb6f7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "75c0550afc403cf06ab0ce62cf459dc22d1676842293f73e575bc351b333dddd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "revision": "6f512a5d714efe5a64746fb8f7d3d78b8e3f7bcc46d74fb362ef5948704db72e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+      "revision": "f475e94fd51c70a6d634ff80caf0cc35d5430556bedf5e5312b8d09f1dd94130",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-created-lifecycle.ts",
+      "revision": "34628b936fccd746e949e29bc28c201e66a86a98ef7ba265cc34428c6cadd990",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "追踪已保存画布Store上下文的真实生产/发布/失效来源及当前实现边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "扩展到真实服务载入与快照恢复生产路径，避免只依据Store setter推断producer。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "扩展到真实服务载入与快照恢复生产路径，避免只依据Store setter推断producer。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "core/core-frontend/src/components/visualization/CanvasCacheDialog.vue",
+      "revision": "6f6d4c1db4448606ca3c8d04470f5d8bb695e1db7a4eca5b826f836e985be7a3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核实缓存恢复对话框是否是状态生产者，以及其事件边界。",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitStoreProducerTraceReview-r001.md",
+      "revision": "4f6e5cad260520d6f47baad2b46ce1fe77628a2c0e83c793adeb21eb64c55288",
+      "domains": [
+        "design",
+        "validation",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整处置本交付物第一轮独立审查findings",
+      "applicability": "S02-QPC-STORE-PRODUCER-TRACE-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "context-producer-source-gap",
+      "condition": "若在指定调用链内未找到完整生产者/发布顺序或身份失效事件",
+      "action": "明确标记unknown并给出精确缺口，不推断不存在或已支持。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "source-drift",
+      "condition": "若读集摘要变化",
+      "action": "停止并重建本次Context与Card。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal仍为10 AC、26 must-have、16产品义务、Scope Delta none；S01独立；真实权限BLOCKED/NOT_RUN；产品入口NOT_READY_FOR_PRODUCT_UI_STORE。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_read_only_source_trace_then_independent_review_if_admission_requested",
+    "reason": "修复trace r001的上下文漂移与搜索复现问题；静态追踪、不运行产品。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "r001独立审查finding与完整处置",
+    "当前24项源读集与两个漂移文件",
+    "正常load/cache/copy/template分支",
+    "Select.vue异步枚举生命周期观察与QSSDH gate边界",
+    "saved-owner helper负向搜索当前checkout范围",
+    "Goal分母、S01/权限状态与claim ceiling"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QPC-STORE-PRODUCER-TRACE-r002",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r326.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "maximum_claim": "仅当前checkout的静态源追踪与证据缺口；不批准Builder。",
+  "design_objective": "追踪 saved canvas context 实际 producer、加载发布、对象身份和失效事件；输出可供后续独立设计审查使用的准确源映射。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitStoreProducerTrace-r002.md"
+}

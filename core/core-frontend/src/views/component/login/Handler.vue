@@ -81,6 +81,13 @@ const state = reactive({
 const emits = defineEmits(['switchTab', 'autoCallback'])
 const init = (cb) => {
   queryCategoryStatus().then(res => {
+    // The shared Axios interceptor resolves some HTTP errors as undefined.
+    // In the community build, the optional X-Pack endpoint is not registered.
+    if (!res) {
+      wsCache.delete('oidc-error')
+      cb && cb()
+      return
+    }
     if (res['data']) {
       const list: any[] = res['data'] as any[]
       list.forEach(item => {
@@ -97,7 +104,14 @@ const init = (cb) => {
       wsCache.set('oidc-error', 1)
       window.location.reload()
     }
-  }).catch(() => {
+  }).catch((error: any) => {
+    // The community backend does not provide the optional X-Pack SSO status API.
+    // Continue with the regular login flow when that endpoint is absent.
+    if (error?.response?.status === 404) {
+      wsCache.delete('oidc-error')
+      cb && cb()
+      return
+    }
     if (!wsCache.get('oidc-error')) {
       wsCache.set('oidc-error', 1)
       window.location.reload()
@@ -220,7 +234,7 @@ const platformLogin = origin => {
 
 const queryCategoryStatus = () => {
   const url = `/setting/authentication/status`
-  return request.get({ url })
+  return request.get({ url, handleErrorLocally: true })
 }
 
 const wecomToken = async () => {

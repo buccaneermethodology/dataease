@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/c1-t-heatmap-primary-data-validation-r003-card.json
+Card SHA-256: ea2196238e68cb2ccb84a824e68fcba3e0d956c1dbff2e52e1bbc52d757d971f
+Verify: python3 .codex/skills/sge-governed-checkpoints/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/c1-t-heatmap-primary-data-validation-r003-card.json --repo . --expected-card-sha256 ea2196238e68cb2ccb84a824e68fcba3e0d956c1dbff2e52e1bbc52d757d971f
+Lane: validation | Session: DE-EXEC-S038 | Role: validation
+Mode: full_baseline
+Working directory: .
+Execute: 执行C1实现累计最后第3/3独立验证，必须一次查全，不第四轮/换名。原设计未改：G2 strict候选实际准备后采用、合法空态/失败保旧。核当前TableHeatmapHandler空辅助data和frontend t-heatmap.drawChart真实消费tableRow，r003有有效rows却采用暂无数据的真实原件；核root两源增量+BDD+冻结Cases，diff按preimage逐字重算，仅非ownedLine G2空态primary选择tableRow，其它类型原data、ownedLine整个block字节一致、G2Plot/C2不改。原Cases/runner在可信RED与最终GREEN摘要相同；复跑31renderer、tooltip10、paste21及G2定向eslint。首候选误改ownedLine仍4RED、随后完整恢复及初lint失败保留，不能写首次修即成功。独立CSV按shop+series核r004 baseline500和candidate/reopen200、rawHTTP request/response/实际data.data空但rows非空、完整descriptor/save/find/panel0/clip空/3PNG及执行hash，确认可见矩阵而非NoData；r003失败PNG/恢复原迹保留。G2库/DOM/Store在组件runner有doubles，真实UI另为root执行原件，不伪称本lane重跑浏览器；可直接view_image全部4图。全量tscheck仍旧TS6504，不称通过。此次不是重开UI设计3/3，也不关闭C2原3/3BLOCKED/历史ubo/percent格式/真实权限/完整C1或38/49。范围/NoData合同有冲突须本轮列全；原C1V001已通过、V002撤销决定保留不机械翻案。仅读源码/测试、唯一报告输出，不UI/DB/源码代修。

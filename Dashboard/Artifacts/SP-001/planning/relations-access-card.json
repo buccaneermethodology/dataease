@@ -1,0 +1,62 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-RELATIONS-access",
+  "session_id": "DE-EXEC-S012",
+  "lane": "builder-relations-access",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/object-contract-v1.md",
+      "sha256": "8b9ee134e1fa5e2ca917fc170534de553efc643f9c7349340276b65778f6ca95"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v5/access.json",
+      "sha256": "7c887ed6ddf7114288cb37d2efc30bd4f380a27c01081fa4bf1430d0f501206b"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-relations-access",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/extraction/relations-access.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/extraction/relations-access.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "独立静态语义复核，不等同全KB/运行验收",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-PRE-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "补齐access现有事实间真实跨层关系。读取integrated-v5/access.json全部事实和相关源码，输出JSON数组relations，每条id用ACCESS-X001递增，type/from/to/evidence_fact_ids沿现有schema。覆盖UI_CALLS_API、API_EXPOSES_CAPABILITY、CALLS、CAPABILITY_READS_WRITES_DATA等适用类型；不按命名推测，不改事实。另在对象中给出replace_relations数组（已有CAPABILITY_REALIZED_BY若测试资产改为TEST_ASSET_FOR），以及read_log与limits。约10至20个真正有用关系，端点为已有事实/能力ID，代码阅读验证每一条。只写指定输出，不修改KB或产品。"
+}

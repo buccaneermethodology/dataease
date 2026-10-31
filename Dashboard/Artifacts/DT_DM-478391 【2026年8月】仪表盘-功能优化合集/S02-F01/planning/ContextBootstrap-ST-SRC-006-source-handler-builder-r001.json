@@ -1,0 +1,237 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-ST-SRC-006-source-handler-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求继续执行 S02 Goal；基于 r003 独立设计复核，仅新增 ST-SRC-006 专用 source-handler-harness.mjs，并执行冻结身份的 RED/GREEN 与定向检查。保留 S02 原始 10 AC、26 must-have、16 产品义务及 Scope Delta none；真实权限环境仍 BLOCKED/NOT_RUN。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "实现一项 local harness only 的有界源码 handler harness，不声称产品接线或 Goal AC 验收。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/tests/filter-copy-query-select-text-source/source-handler-harness.mjs"
+    ],
+    "forbidden_actions": [
+      "修改产品 Vue 源码",
+      "修改既有 runner/harness、依赖、通用构建脚本",
+      "修改已冻结 Contract/Cases",
+      "覆盖已有用户改动",
+      "使用 standalone/mock 替代真实权限验证",
+      "宣称产品接线、Goal AC或权限验收通过"
+    ],
+    "maximum_claim": "local harness only；仅证明冻结合同列出的真实 AST initializer 在注入本地依赖下符合局部快照 oracle，不代表产品接线、完整请求或 Goal AC。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "project instructions",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "SP-010 invariants",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "frozen full Goal denominator",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessContract-frozen-r001.json",
+      "revision": "4a1597dbd33ca71791df5584ec4ad1883b8eb956db67f0394763c697803d5329",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "frozen local-harness contract",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ST-SRC-006-SourceHandlerHarnessCases-frozen-r001.json",
+      "revision": "31fda7840facd8a8db3852ec1810d34f79d8b6b12d94878118fdcc405c6e6685",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "frozen six-case/eight-variant oracle",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ST-SRC-006-SourceHandlerHarnessDesignReview-r003.md",
+      "revision": "2cb9d1913a9197e134234b60649bb0e1729260731ef837a4deffd4b7599a01f2",
+      "domains": [
+        "acceptance",
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "independent r003 design review",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "real permission environment boundary",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r302.json",
+      "revision": "b8eaac52df1df128cd36567abe8db1e033fc4eea3db36bebc9b40803466f72e5",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "current builder topology",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "source initializer and current source boundaries",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "source initializer and current source boundaries",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "source initializer and current source boundaries",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/handler-harness.mjs",
+      "revision": "408466f899c3b9c1f7002dd07296ec8b5d2adf153da7d728190e9db9d5b469c1",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "existing distinct harness; preserve",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "available local scripts and dependencies",
+      "applicability": "ST-SRC-006 source-handler harness builder r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_or_contract_drift",
+      "mode": "deterministic",
+      "condition": "目标源码 initializer、冻结输入或批准写入目标发生摘要漂移",
+      "action": "停止写入并重做设计/准入绑定",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "oracle_or_runner_mismatch",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "实现行为无法满足冻结快照或预期 RED/GREEN身份条件",
+      "action": "保留失败证据并停止，不修改冻结 oracle",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal分母10/26/16不变、Scope Delta none；S01仍CONDITIONAL；真实权限BLOCKED/NOT_RUN；只做ST-SRC-006 local harness。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_builder",
+    "reason": "r003 独立设计复核允许单文件 local harness；不触及产品接线、依赖或外部副作用。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "冻结合同与用例身份",
+    "AST initializer 源码提取边界",
+    "预期单叶同身份 RED",
+    "恢复 fixture 后同身份 GREEN",
+    "定向 ESLint 与 diff-check",
+    "权限及产品验收未覆盖边界"
+  ]
+}

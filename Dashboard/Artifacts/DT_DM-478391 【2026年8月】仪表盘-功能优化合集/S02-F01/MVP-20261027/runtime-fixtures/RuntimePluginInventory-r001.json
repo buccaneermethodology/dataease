@@ -1,0 +1,32 @@
+{
+  "schema_version": "s02_runtime_plugin_inventory_observation_v1",
+  "captured_at": "2026-10-27T05:44:09.766452+00:00",
+  "environment": "local isolated 8100 standalone",
+  "read_only_without_credentials": true,
+  "http_observations": {
+    "xpack_model": {
+      "endpoint": "/de2api/xpackModel",
+      "http_status": 200,
+      "body": {
+        "code": 0,
+        "msg": null,
+        "data": null
+      }
+    },
+    "view_plugin_catalog": {
+      "endpoint": "/de2api/xpackComponent/viewPlugins",
+      "status": "NOT_OBSERVED",
+      "error_type": "HTTPError"
+    },
+    "installed_plugin_list": {
+      "endpoint": "/de2api/plugin/query",
+      "status": "NOT_OBSERVED",
+      "error_type": "HTTPError"
+    }
+  },
+  "installed_count": null,
+  "installed_state": "UNKNOWN;401 cannot mean zero",
+  "runtime_catalog_gate": "xpackModel.data null makes existing app xpackValid false; catalog not loaded by ordinary chart palette",
+  "scope_rule": "not permanently exclude pluginflag; any actually discovered supported plugin must be appended and verified",
+  "remaining_action": "need authenticated product catalog/list metadata through existing app authentication; no token extraction or proprietary source"
+}

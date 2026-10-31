@@ -1,0 +1,1787 @@
+{
+  "doc_id": "chart",
+  "title": "图表取数、仪表板与大屏",
+  "domains": [
+    "K03",
+    "K04",
+    "K05",
+    "K06",
+    "K07",
+    "K09"
+  ],
+  "facts": [
+    {
+      "id": "CHART-001",
+      "statement": "图表前端 getData 删除输入中的旧 data 后深拷贝请求，stock-line 将第一横轴排序设为 desc；字段 originName 编码后 POST /chartData/getData，按响应 code 分支还原字段并返回数据或错误响应。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/chart.ts",
+          "start_line": 79,
+          "end_line": 115,
+          "symbol": "getData",
+          "sha256": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7"
+        }
+      ]
+    },
+    {
+      "id": "CHART-002",
+      "statement": "ChartDataApi 声明 POST getData 的输入和输出均为 ChartViewDTO；导出图表和明细另声明 dvId 的 export_view / export_detail 权限注解，不能把导出授权等同普通取数授权。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/chart/ChartDataApi.java",
+          "start_line": 25,
+          "end_line": 43,
+          "symbol": "ChartDataApi",
+          "sha256": "e422b3c5c89892f37d6a16ed79bda3c01e268e36f2975a4e4460c6d4dadcd4d1"
+        }
+      ]
+    },
+    {
+      "id": "CHART-003",
+      "statement": "ChartDataServer.getData 有 sceneId 的 DeLinkPermit 注解；dataFrom=template 直接走模板扩展数据，其他请求依次执行 viewDecode、calcData、viewEncode、encodeData；捕获异常后以 DATA_IS_WRONG 包含消息与堆栈抛出。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 86,
+          "end_line": 104,
+          "symbol": "getData",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-004",
+      "statement": "普通 calcData 将当前非空用户 ID 写入扩展请求并检查链接图表；Excel 导出强制 custom 结果模式，否则扩展请求的 custom 模式及条数可覆盖图表配置；插件和内置图表使用不同 Handler 工厂。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 157,
+          "end_line": 191,
+          "symbol": "calcData",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-005",
+      "statement": "内置 Handler 按 render-type 注册和查找，未命中返回 DefaultChartHandler；因此 calcData 的 handler==null 错误不能解释为所有未知内置图表类型均被拒绝。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/ChartHandlerManager.java",
+          "start_line": 18,
+          "end_line": 28,
+          "symbol": "registerChartHandler/getChartHandler",
+          "sha256": "358ab8083fb36c713b5004f969b695a2afdabb19e617c5536d3ab7a9d543e201"
+        }
+      ]
+    },
+    {
+      "id": "CHART-006",
+      "statement": "普通 calcData 要求数据集存在并通过 DATASET READ 检查，获取列权限与脱敏列表、行权限树；允许字段名集合额外加入计数字段 *，再从各轴删去无权限字段。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 194,
+          "end_line": 222,
+          "symbol": "calcData",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-007",
+      "statement": "仪表板组件过滤先区分 SQL 参数与普通字段；普通字段支持逗号分隔 fieldId 与树形过滤，只加入属于当前数据集且匹配可选 viewIds 的存在字段，缺失字段跳过。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 224,
+          "end_line": 306,
+          "symbol": "calcData/组件过滤",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-008",
+      "statement": "联动、外部参数和 Web 参数合并处理；filterType=3 的联动条件保存为 customLinkageFilter，其余 DE 参数补充数据集参数信息，普通字段条件改为 filterType=2 并检查数据集及目标图表。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 308,
+          "end_line": 367,
+          "symbol": "calcData/外部过滤",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-009",
+      "statement": "钻取仅在钻取轴长度大于已请求层数时展开；匹配维度的日期值转为 between 起止时间，其他值用 in；条件标记 filterType=1，当前和下一钻取字段加入横轴并避免重复。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 369,
+          "end_line": 429,
+          "symbol": "calcData/钻取",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-010",
+      "statement": "普通 calcData 转义外部过滤值并保存 originValue，委托 Handler.customFilter；横纵轴均为空则返回空图表。图表 customFilter 可被指标表联动 customFilter 替换，再解析字段。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 431,
+          "end_line": 454,
+          "symbol": "calcData/过滤与空轴",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-011",
+      "statement": "calcData 从数据集获取 union SQL 和 dsMap；非跨源替换 schema alias，空 dsMap 或状态 Error 产生业务异常；跨源使用默认 Provider，非跨源取首个数据源类型的 Provider。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 455,
+          "end_line": 479,
+          "symbol": "calcData/Provider选择",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-012",
+      "statement": "calcData 将数据集 SQL 包为表表达式，分别把图表自定义过滤、外部过滤、行权限树写入 SQLMeta；插件额外生成 querySql 放入过滤上下文，最终统一调用 Handler.calcChartResult 和 buildChart。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 481,
+          "end_line": 504,
+          "symbol": "calcData/SQLMeta",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-013",
+      "statement": "DefaultChartHandler 默认复制 xAxis/yAxis/drillFields；其 customFilter 从轴中去掉脱敏列表内字段，该行为不能推及覆盖了 customFilter 的所有 Handler。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 81,
+          "end_line": 100,
+          "symbol": "formatAxis/customFilter",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-014",
+      "statement": "默认 Handler 将维度和指标写入 SQLMeta，生成聚合 SQL，经 Provider.rebuildSQL 与 fetchResultField 获取数据，再做自定义排序、quickCalc 和结果组装；Provider 请求携带跨源标记、dsMap 及复制后的参数值。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 102,
+          "end_line": 160,
+          "symbol": "fillDatasourceRequest/calcChartResult",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-015",
+      "statement": "默认 buildChart 对 Excel 导出返回表格结构和 sourceData；普通消费合并图表与表格结果，加入 sourceFields、动态辅助线，清空 sql 并返回 drill 与恢复原始日期值的 drillFilters。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 164,
+          "end_line": 204,
+          "symbol": "buildChart",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-016",
+      "statement": "指标 SQL 转换区分计算字段、复制字段、分组字段及普通字段；非跨源计算表达式使用方言占位符；指标聚合处理 * 计数、count_distinct、数值转换及 avg/pop 的精度处理。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/engine/trans/Quota2SQLObj.java",
+          "start_line": 44,
+          "end_line": 135,
+          "symbol": "quota2sqlObj/getYFields",
+          "sha256": "253df13277f96d9bdce368edd774a8ca803716b7feb369bf7ac169b777e56ce3"
+        }
+      ]
+    },
+    {
+      "id": "CHART-017",
+      "statement": "ChartViewDTO 承载 data、drillFilters、totalPage/totalItems、chartExtRequest 与导出标记；isExcelExport 和 exportDatasetOriginData 默认 false，pid/sourceTableId 有字段级 Long 字符串序列化声明。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartViewDTO.java",
+          "start_line": 13,
+          "end_line": 41,
+          "symbol": "ChartViewDTO",
+          "sha256": "8fbeb5cbf095d19710f87964b931afc2e4fe67755533847b8dac2eb7eff6f533"
+        }
+      ]
+    },
+    {
+      "id": "CHART-018",
+      "statement": "G2Plot 图表在存在 tableId 或 template 数据来源时取数；非零错误响应设置 isError/errMsg；成功保存明细，非钻取且无联动时更新原始数据并广播 chart-data-change，然后 renderChart。无数据集的指定地图类型仍调用渲染。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+          "start_line": 539,
+          "end_line": 601,
+          "symbol": "calcData",
+          "sha256": "e9429bf59915e5a23d4f9d70987b126ca8b8329863be3208c625367e71f607e5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-019",
+      "statement": "PieHandler 注册四种饼图类型，将扩展标签和提示字段加入指标轴；buildChart 在父类结果后过滤图表 data 的空值及负值，零值保留。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/pie/PieHandler.java",
+          "start_line": 14,
+          "end_line": 64,
+          "symbol": "init/formatAxis/buildChart/filterPositiveData",
+          "sha256": "c052f5f387e70946291164cc12ca148cb899bf299e10f1c11cbd84e3ccd4b520"
+        }
+      ]
+    },
+    {
+      "id": "CHART-020",
+      "statement": "TableInfoHandler 清空指标轴，按 tablePageMode/custom 结果限制设置页码和页大小；生成不聚合 SQL 与 LIMIT/OFFSET，分页模式另外统计总条数且受 resultCount 上限限制，再回填 totalItems/totalPage。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/table/TableInfoHandler.java",
+          "start_line": 37,
+          "end_line": 140,
+          "symbol": "formatAxis/customFilter/calcChartResult",
+          "sha256": "6b2244425a009e02fd7b2fb18e2f48be4d48e3e9ab249b3349bb7606d5663bde"
+        }
+      ]
+    },
+    {
+      "id": "CHART-021",
+      "statement": "MixHandler 分开左指标 yAxis、右指标 yAxisExt 和右分组 extBubble，清除加入主横轴前各轴的排序；右轴结果使用独立 xAxisBase，防止钻取追加维度被用作右侧图例。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/mix/MixHandler.java",
+          "start_line": 25,
+          "end_line": 77,
+          "symbol": "formatAxis/buildNormalResult",
+          "sha256": "99b82adc5b215ed625dec78ce3a1fdf168708821d3989622dd42a37c19d348d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-022",
+      "statement": "TablePivotHandler 在 GroupChartHandler 计算结果上加入 customCalc，并可执行动态阈值辅助查询；辅助计算异常只记录日志，行轴为空时自定义汇总返回空映射。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/table/TablePivotHandler.java",
+          "start_line": 33,
+          "end_line": 97,
+          "symbol": "calcChartResult/calcCustomExpr",
+          "sha256": "09d4a2cd7397cfb9f6ffa1bc19363e431dc11d127d6857d9c66fa945c518f617"
+        }
+      ]
+    },
+    {
+      "id": "CHART-023",
+      "statement": "GroupChartHandler 将 xAxisExt 追加到横轴；ExtQuotaChartHandler 将 extLabel/extTooltip 追加到指标轴，作为不同图表家族的轴格式化复用点。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/GroupChartHandler.java",
+          "start_line": 11,
+          "end_line": 19,
+          "symbol": "formatAxis",
+          "sha256": "b2a74ea42b74da11b5907a7126493a1ec2c017968ab4b92d5ec6ba7e987f19c1"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/ExtQuotaChartHandler.java",
+          "start_line": 10,
+          "end_line": 20,
+          "symbol": "formatAxis",
+          "sha256": "e52a710eaff8614f2cf668eb8f26e9e9e0d7bad1fe5b8e315d9f1baa133b1dfe"
+        }
+      ]
+    },
+    {
+      "id": "CHART-024",
+      "statement": "YoyChartHandler 在父类过滤后检查同环比过滤扩展，保存原过滤与原 customFilter 至上下文并标记 yoyFiltered；有该标记时 buildResult 先返回原始数据供后续重组。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/YoyChartHandler.java",
+          "start_line": 30,
+          "end_line": 74,
+          "symbol": "customFilter/buildResult",
+          "sha256": "71ff74f495c4915c1ef891ea22c28b732946d9d1a0690635ec3b11dad2af2573"
+        }
+      ]
+    },
+    {
+      "id": "CHART-025",
+      "statement": "MixHandlerTest 现有 JUnit 资产断言混合图在单层/多层钻取、回到根、多主字段与无子类别时的名称、图例、数值和维度数，循环覆盖 Mix/GroupMix/StackMix；本次仅阅读，未执行。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/test/java/io/dataease/chart/charts/impl/mix/MixHandlerTest.java",
+          "start_line": 12,
+          "end_line": 77,
+          "symbol": "MixHandlerTest",
+          "sha256": "97c606adfa473b8c34e80abebd04e8ff4a06299c96dc1cc4ebb5aa4947885d79"
+        }
+      ]
+    },
+    {
+      "id": "CHART-026",
+      "statement": "仪表板编辑 initLocalCanvasData 以 dashboard 或 dashboard-copy 及 resourceTable=snapshot/source=main-edit 初始化；复制后设置 prepare、copy 与目标 pid。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/dashboard/index.vue",
+          "start_line": 206,
+          "end_line": 225,
+          "symbol": "initLocalCanvasData",
+          "sha256": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559"
+        }
+      ]
+    },
+    {
+      "id": "CHART-027",
+      "statement": "大屏编辑 initLocalCanvasData 以 dataV 或 dataV-copy 及 snapshot/main-edit 初始化，准备完成后通知 renderChart；拖入组件设置位置与新 ID、按缩放调整尺寸并加入画布。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/data-visualization/index.vue",
+          "start_line": 316,
+          "end_line": 334,
+          "symbol": "initLocalCanvasData",
+          "sha256": "89b48cf0011a681237dcf3bfcdd6027dec607df69fc39ea36d368a6e2a1c59a2"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/index.vue",
+          "start_line": 223,
+          "end_line": 237,
+          "symbol": "handleDrop",
+          "sha256": "89b48cf0011a681237dcf3bfcdd6027dec607df69fc39ea36d368a6e2a1c59a2"
+        }
+      ]
+    },
+    {
+      "id": "CHART-028",
+      "statement": "仪表板与大屏预览分别用 dashboard/dataV，默认从 core 加载；复用场景用 initCanvasDataPrepare，其余用 initCanvasData。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/dashboard/DashboardPreviewShow.vue",
+          "start_line": 100,
+          "end_line": 113,
+          "symbol": "loadCanvasData",
+          "sha256": "5f6d583f2eff404dd04fb0684c9e8d3cb2ea9d25dd9921cb50682923eb07081a"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/PreviewShow.vue",
+          "start_line": 78,
+          "end_line": 94,
+          "symbol": "loadCanvasData",
+          "sha256": "ce6d84f38fa1d658b5d1416050521892c232f59024c6edfdecfa81deca35b245"
+        }
+      ]
+    },
+    {
+      "id": "CHART-029",
+      "statement": "initCanvasDataPrepare 按复制标记选 findCopyResource/findById，指定 resourceTable（默认 core），解析 componentData/canvasStyleData 并执行 historyAdaptor；initCanvasData 在非 onlyPreview 时写入画布 Store，另获取联动和跳转信息。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 596,
+          "end_line": 680,
+          "symbol": "initCanvasDataPrepare/initCanvasData",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-030",
+      "statement": "canvasSaveWithParams 深拷贝组件，清除图表/组合/标签内联动过滤，生成新 contentId 并序列化画布样式和组件；已存在且非 copy 走 updateCanvas，否则 saveCanvas；成功更新本地 ID/状态/contentId 并重置样式修改计数。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 843,
+          "end_line": 908,
+          "symbol": "canvasSaveWithParams",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-031",
+      "statement": "保存前的冲突提示仅对非桌面已存在非复制资源调用 checkCanvasChange；返回 Repeat 时确认后才执行回调。后端该检查只按 id/contentId 查主表，返回 Repeat 或 Success，不构成 updateCanvas 内的原子并发写入条件。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 811,
+          "end_line": 837,
+          "symbol": "保存前检查",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 629,
+          "end_line": 687,
+          "symbol": "checkCanvasChange/updateCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-032",
+      "statement": "DataVisualizationApi 的接口声明对 findById 要求资源 read；saveCanvas 要求父目录 manage；updateCanvas、更新发布状态和恢复发布要求资源 manage，并按业务类型选择 busiFlag。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/visualization/DataVisualizationApi.java",
+          "start_line": 40,
+          "end_line": 88,
+          "symbol": "DataVisualizationApi",
+          "sha256": "2bc56f5d731e2827f4221831f4e0ce00c0000a040c98b70ae9c21b6d743e822f"
+        }
+      ]
+    },
+    {
+      "id": "CHART-033",
+      "statement": "saveCanvas 将文件夹初始状态置为 PUBLISHED、其他节点置为 UNPUBLISHED，调用 innerSave 后保存组件引用的图表并返回字符串 ID。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 497,
+          "end_line": 516,
+          "symbol": "saveCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 605,
+          "end_line": 607,
+          "symbol": "saveCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-034",
+      "statement": "CoreVisualizationManage.innerSave 固定 version=3；无 ID 时生成 Snowflake ID，补充用户/组织和创建更新时间，并依次保存主记录和快照记录，记录 NEW 操作。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 236,
+          "end_line": 262,
+          "symbol": "innerSave/preInnerSave",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-035",
+      "statement": "updateCanvas 有事务注解，先解码各图表，拒绝空 ID；必要时移动父目录，已发布状态转换为 SAVED_UNPUBLISHED，其余保留，调用 innerEdit 保存并返回状态；图表保存另委托 saveChartViewFromVisualization。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 648,
+          "end_line": 687,
+          "symbol": "updateCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-036",
+      "statement": "innerEdit 对 orgRoot=true 直接返回；普通编辑将完整可视化信息保存到快照，主表只传入 ID、状态、pid、contentId、名称、更新者/时间和版本，记录 UPDATE 操作。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 266,
+          "end_line": 290,
+          "symbol": "innerEdit",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-037",
+      "statement": "画布图表保存遍历 canvasViewInfo，仅当 componentData 字符串包含图表 ID 时设置 sceneId 并保存；未引用 ID 只加入局部 disuse 列表，本方法未执行删除。ChartViewManege.save 拒绝超过 100 字标题和空 ID，写 SnapshotCoreChartView。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 924,
+          "end_line": 940,
+          "symbol": "saveChartViewFromVisualization",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartViewManege.java",
+          "start_line": 93,
+          "end_line": 107,
+          "symbol": "save",
+          "sha256": "82e680456f5490e2ffb6a3cb858fd2debe635f500d61242205443b83d931598c"
+        }
+      ]
+    },
+    {
+      "id": "CHART-038",
+      "statement": "findById 的 main-edit 分支在不存在未发布/已保存未发布快照时执行 dvSnapshotRecover，再按 resourceTable 读取可视化和图表；仅将 componentData 中匹配 ID 的图表加入 canvasViewInfo，资源缺失走异常。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 180,
+          "end_line": 243,
+          "symbol": "findById",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-039",
+      "statement": "findDvInfo 只在 resourceTable 等于 snapshot 时读取快照，否则读主表；发布为 PUBLISHED 时先 innerEdit、removeDvCore、清理持久化上下文、dvRestore，然后处理阈值；恢复发布调用 dvSnapshotRecover 并设回 PUBLISHED。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 690,
+          "end_line": 722,
+          "symbol": "updatePublishStatus/recoverToPublished",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 1034,
+          "end_line": 1052,
+          "symbol": "findDvInfo",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-040",
+      "statement": "dvSnapshotRecover 清理快照并把主可视化及主图表复制至快照；dvRestore 将快照可视化原地保存到主表、批量保存快照图表到主表，并先清理主联动/跳转/外部参数后复制相关快照数据。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 647,
+          "end_line": 682,
+          "symbol": "dvSnapshotRecover",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/CoreVisualizationManage.java",
+          "start_line": 785,
+          "end_line": 822,
+          "symbol": "dvRestore",
+          "sha256": "476dcb598d295838287c40ef9e3df33f303f1fd6add924d323bfb22d7a3586d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-041",
+      "statement": "snapshot Store 分别记录 calcData 和 renderChart 的图表 ID；撤销/重做恢复组件、样式、图表、联动、跳转快照，但保留当前 dvInfo 的 id/pid/dataState/contentId，且设置三秒快照禁用期。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+          "start_line": 87,
+          "end_line": 135,
+          "symbol": "recordSnapshotCache/undo/redo/snapshotPublish",
+          "sha256": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157"
+        }
+      ]
+    },
+    {
+      "id": "CHART-042",
+      "statement": "新快照仅在数据就绪、非移动端设计且禁用期已过时记录，撤销后新记录截断未来快照；恢复快照广播 snapshotChangeToView，图表消费者优先 calcData，只有不需要重新取数时才执行 renderChart。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+          "start_line": 159,
+          "end_line": 223,
+          "symbol": "snapshotPublish/recordSnapshot",
+          "sha256": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157"
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+          "start_line": 864,
+          "end_line": 883,
+          "symbol": "snapshotChangeToView监听",
+          "sha256": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-043",
+      "statement": "模板前端声明列表、保存、按 ID 读取、分类、名称校验和批量更新/删除的请求封装；SDK TemplateManageApi 有对应接口声明，接口存在不证明模板市场或权限实现运行可用。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/template.ts",
+          "start_line": 3,
+          "end_line": 90,
+          "symbol": "模板请求封装",
+          "sha256": "f34317088c3073965ce9d75442bdcaf5beef04881b011f66886c12a63d53777f"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/template/TemplateManageApi.java",
+          "start_line": 13,
+          "end_line": 66,
+          "symbol": "TemplateManageApi",
+          "sha256": "78d223428bf62af6e26bdb0a76f2f64ee0fd38c1b1e2fd83ef0cdd44deca6669"
+        }
+      ]
+    },
+    {
+      "id": "CHART-044",
+      "statement": "decompression 按 newFrom 分别从内部模板记录、外部传入内容或模板市场读取样式/组件/动态数据；内部模板记录使用次数和最近操作，市场返回空时抛异常。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 889,
+          "end_line": 940,
+          "symbol": "decompression",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-045",
+      "statement": "模板取数 getChartDataInfo 按 viewId 查询扩展数据并解析首条 viewDetails，将其 data 写入请求图表；未找到记录抛异常，解析异常仅记录日志后返回原 view。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/manage/VisualizationTemplateExtendDataManage.java",
+          "start_line": 26,
+          "end_line": 41,
+          "symbol": "getChartDataInfo",
+          "sha256": "7119a407d85bfb7d8cceaa2a569e55e71db66779505de57cc88ec8e542f0c069"
+        }
+      ]
+    },
+    {
+      "id": "CHART-046",
+      "statement": "地图前端按 geo_ 前缀区分上传地图和内置地图：前者去前缀走 /geo，后者走 /map，并按前三位国家代码构造 JSON 路径；另封装自定义区域保存、删除和地名映射请求。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/map.ts",
+          "start_line": 4,
+          "end_line": 56,
+          "symbol": "getGeoJson/地图请求封装",
+          "sha256": "c477a8d420cfc913482fe8ed28e476bbdf50581226692f15a5c919d8b20b100b"
+        }
+      ]
+    },
+    {
+      "id": "CHART-047",
+      "statement": "AI 组件前端 findBaseParams 请求 /aiBase/findTargetUrl；AiComponentApi 仅声明 GET findTargetUrl 返回字符串映射。本事实只覆盖目标地址获取契约，不证明任何模型推理或外部服务能力。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/aiComponent.ts",
+          "start_line": 1,
+          "end_line": 3,
+          "symbol": "findBaseParams",
+          "sha256": "f3f34be15ef1dac1bbb0c651e5eca1e57c21b65ae317422889502a13692c09c3"
+        },
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/ai/AiComponentApi.java",
+          "start_line": 11,
+          "end_line": 14,
+          "symbol": "AiComponentApi",
+          "sha256": "70a79a3b0af8346a6e5a0c2ce6a8fd5b53547b615887a8ac1e328f2ee83348ca"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F04",
+      "name": "制作图表并取数",
+      "depth": "core",
+      "summary": "配置字段、过滤与钻取，通过权限约束的数据查询返回图表和表格结构，并交给前端渲染。",
+      "contract": {
+        "trigger": [
+          "CHART-001",
+          "CHART-018"
+        ],
+        "inputs": [
+          "CHART-001",
+          "CHART-002",
+          "CHART-017"
+        ],
+        "outputs": [
+          "CHART-015",
+          "CHART-017",
+          "CHART-018"
+        ],
+        "preconditions": [
+          "CHART-004",
+          "CHART-006",
+          "CHART-011"
+        ],
+        "state_changes": [
+          "CHART-001",
+          "CHART-004",
+          "CHART-018"
+        ],
+        "postconditions": [
+          "CHART-015",
+          "CHART-018"
+        ],
+        "invariants": [
+          "CHART-006",
+          "CHART-007",
+          "CHART-008",
+          "CHART-009",
+          "CHART-012",
+          "CHART-013"
+        ],
+        "failures": [
+          "CHART-003",
+          "CHART-005",
+          "CHART-006",
+          "CHART-010",
+          "CHART-011",
+          "CHART-018",
+          "CHART-045"
+        ],
+        "permissions": [
+          "CHART-002",
+          "CHART-003",
+          "CHART-006"
+        ],
+        "implementation": [
+          "CHART-004",
+          "CHART-005",
+          "CHART-006",
+          "CHART-007",
+          "CHART-008",
+          "CHART-009",
+          "CHART-010",
+          "CHART-011",
+          "CHART-012",
+          "CHART-013",
+          "CHART-014",
+          "CHART-015",
+          "CHART-016",
+          "CHART-019",
+          "CHART-020",
+          "CHART-021",
+          "CHART-022",
+          "CHART-023",
+          "CHART-024"
+        ],
+        "dependencies": [
+          "CHART-002",
+          "CHART-011",
+          "CHART-012",
+          "CHART-014"
+        ],
+        "data": [
+          "CHART-015",
+          "CHART-017",
+          "CHART-045"
+        ],
+        "tests": [
+          "CHART-025"
+        ]
+      },
+      "limits": [
+        "仅核实普通 calcData 主链、默认实现和列出的 Handler 差异，非每种图表每个分支穷举。",
+        "各 Provider 方言/驱动实际执行、权限扩展及前端渲染效果未运行验证。",
+        "取数主链没有在本轮证明缓存命中/失效规则。"
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "组合仪表板",
+      "depth": "core",
+      "summary": "通过组件画布与图表快照编辑仪表板，保存草稿、发布并从主数据预览。",
+      "contract": {
+        "trigger": [
+          "CHART-026",
+          "CHART-027",
+          "CHART-030"
+        ],
+        "inputs": [
+          "CHART-029",
+          "CHART-030"
+        ],
+        "outputs": [
+          "CHART-033",
+          "CHART-035",
+          "CHART-038"
+        ],
+        "preconditions": [
+          "CHART-032",
+          "CHART-037"
+        ],
+        "state_changes": [
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041"
+        ],
+        "postconditions": [
+          "CHART-028",
+          "CHART-029",
+          "CHART-038",
+          "CHART-039"
+        ],
+        "invariants": [
+          "CHART-036",
+          "CHART-037",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "failures": [
+          "CHART-031",
+          "CHART-035",
+          "CHART-037",
+          "CHART-038"
+        ],
+        "permissions": [
+          "CHART-032"
+        ],
+        "implementation": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-033",
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-037",
+          "CHART-038",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "dependencies": [
+          "CHART-003",
+          "CHART-012",
+          "CHART-029",
+          "CHART-032"
+        ],
+        "data": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-034",
+          "CHART-036",
+          "CHART-037",
+          "CHART-040"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "未运行保存重开、并发冲突、发布事务回滚、移动与嵌入端验证。",
+        "本轮未找到并读取覆盖完整仪表板保存发布链的测试；tests 维度为空，不能声明无测试或测试通过。"
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "制作大屏",
+      "depth": "core",
+      "summary": "以 dataV 业务类型使用共享画布保存发布与消费链，支持拖入组件和快照撤销通知。",
+      "contract": {
+        "trigger": [
+          "CHART-026",
+          "CHART-027",
+          "CHART-030"
+        ],
+        "inputs": [
+          "CHART-029",
+          "CHART-030"
+        ],
+        "outputs": [
+          "CHART-033",
+          "CHART-035",
+          "CHART-038"
+        ],
+        "preconditions": [
+          "CHART-032",
+          "CHART-037"
+        ],
+        "state_changes": [
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041"
+        ],
+        "postconditions": [
+          "CHART-028",
+          "CHART-029",
+          "CHART-038",
+          "CHART-039"
+        ],
+        "invariants": [
+          "CHART-036",
+          "CHART-037",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "failures": [
+          "CHART-031",
+          "CHART-035",
+          "CHART-037",
+          "CHART-038"
+        ],
+        "permissions": [
+          "CHART-032"
+        ],
+        "implementation": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-033",
+          "CHART-034",
+          "CHART-035",
+          "CHART-036",
+          "CHART-037",
+          "CHART-038",
+          "CHART-039",
+          "CHART-040",
+          "CHART-041",
+          "CHART-042"
+        ],
+        "dependencies": [
+          "CHART-003",
+          "CHART-012",
+          "CHART-029",
+          "CHART-032"
+        ],
+        "data": [
+          "CHART-029",
+          "CHART-030",
+          "CHART-034",
+          "CHART-036",
+          "CHART-037",
+          "CHART-040"
+        ],
+        "tests": []
+      },
+      "limits": [
+        "与仪表板共享的契约事实仅按明确入口引用；不同布局与交互未被视为完全相同。",
+        "未运行大屏缩放/长文本/销毁事件、保存重开和移动端验证；本轮无已读取端到端测试资产。"
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "使用模板",
+      "depth": "navigation",
+      "summary": "导航模板管理、创建来源及模板内置数据读取边界。",
+      "contract": {
+        "trigger": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "inputs": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "outputs": [
+          "CHART-045"
+        ],
+        "preconditions": [],
+        "state_changes": [
+          "CHART-044"
+        ],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [
+          "CHART-044",
+          "CHART-045"
+        ],
+        "permissions": [],
+        "implementation": [
+          "CHART-003",
+          "CHART-043",
+          "CHART-044",
+          "CHART-045"
+        ],
+        "dependencies": [
+          "CHART-043",
+          "CHART-044"
+        ],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "仅导航深度，未覆盖模板市场外部访问、导入包格式和完整 ID 重映射。"
+      ]
+    },
+    {
+      "id": "F18",
+      "name": "地图、AI 组件等扩展视图",
+      "depth": "navigation",
+      "summary": "导航地图资源路由与 AI 组件目标地址契约。",
+      "contract": {
+        "trigger": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "inputs": [
+          "CHART-046"
+        ],
+        "outputs": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "dependencies": [
+          "CHART-046",
+          "CHART-047"
+        ],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "地图资源服务、上传实现与 AI 外部实现未验证；不读取专有 XPack 实现。"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "CHART-R001",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-001",
+      "evidence_fact_ids": [
+        "CHART-001"
+      ]
+    },
+    {
+      "id": "CHART-R002",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-002",
+      "evidence_fact_ids": [
+        "CHART-002"
+      ]
+    },
+    {
+      "id": "CHART-R003",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-003",
+      "evidence_fact_ids": [
+        "CHART-003"
+      ]
+    },
+    {
+      "id": "CHART-R004",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-004",
+      "evidence_fact_ids": [
+        "CHART-004"
+      ]
+    },
+    {
+      "id": "CHART-R005",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-005",
+      "evidence_fact_ids": [
+        "CHART-005"
+      ]
+    },
+    {
+      "id": "CHART-R006",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-006",
+      "evidence_fact_ids": [
+        "CHART-006"
+      ]
+    },
+    {
+      "id": "CHART-R007",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-007",
+      "evidence_fact_ids": [
+        "CHART-007"
+      ]
+    },
+    {
+      "id": "CHART-R008",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-008",
+      "evidence_fact_ids": [
+        "CHART-008"
+      ]
+    },
+    {
+      "id": "CHART-R009",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-009",
+      "evidence_fact_ids": [
+        "CHART-009"
+      ]
+    },
+    {
+      "id": "CHART-R010",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-010",
+      "evidence_fact_ids": [
+        "CHART-010"
+      ]
+    },
+    {
+      "id": "CHART-R011",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-011",
+      "evidence_fact_ids": [
+        "CHART-011"
+      ]
+    },
+    {
+      "id": "CHART-R012",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-012",
+      "evidence_fact_ids": [
+        "CHART-012"
+      ]
+    },
+    {
+      "id": "CHART-R013",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-013",
+      "evidence_fact_ids": [
+        "CHART-013"
+      ]
+    },
+    {
+      "id": "CHART-R014",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-014",
+      "evidence_fact_ids": [
+        "CHART-014"
+      ]
+    },
+    {
+      "id": "CHART-R015",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-015",
+      "evidence_fact_ids": [
+        "CHART-015"
+      ]
+    },
+    {
+      "id": "CHART-R016",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-016",
+      "evidence_fact_ids": [
+        "CHART-016"
+      ]
+    },
+    {
+      "id": "CHART-R017",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-017",
+      "evidence_fact_ids": [
+        "CHART-017"
+      ]
+    },
+    {
+      "id": "CHART-R018",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-018",
+      "evidence_fact_ids": [
+        "CHART-018"
+      ]
+    },
+    {
+      "id": "CHART-R019",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-019",
+      "evidence_fact_ids": [
+        "CHART-019"
+      ]
+    },
+    {
+      "id": "CHART-R020",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-020",
+      "evidence_fact_ids": [
+        "CHART-020"
+      ]
+    },
+    {
+      "id": "CHART-R021",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-021",
+      "evidence_fact_ids": [
+        "CHART-021"
+      ]
+    },
+    {
+      "id": "CHART-R022",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-022",
+      "evidence_fact_ids": [
+        "CHART-022"
+      ]
+    },
+    {
+      "id": "CHART-R023",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-023",
+      "evidence_fact_ids": [
+        "CHART-023"
+      ]
+    },
+    {
+      "id": "CHART-R024",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-024",
+      "evidence_fact_ids": [
+        "CHART-024"
+      ]
+    },
+    {
+      "id": "CHART-R025",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-025",
+      "evidence_fact_ids": [
+        "CHART-025"
+      ]
+    },
+    {
+      "id": "CHART-R026",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F04",
+      "to": "CHART-045",
+      "evidence_fact_ids": [
+        "CHART-045"
+      ]
+    },
+    {
+      "id": "CHART-R027",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-003",
+      "evidence_fact_ids": [
+        "CHART-003"
+      ]
+    },
+    {
+      "id": "CHART-R028",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-012",
+      "evidence_fact_ids": [
+        "CHART-012"
+      ]
+    },
+    {
+      "id": "CHART-R029",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-026",
+      "evidence_fact_ids": [
+        "CHART-026"
+      ]
+    },
+    {
+      "id": "CHART-R030",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-027",
+      "evidence_fact_ids": [
+        "CHART-027"
+      ]
+    },
+    {
+      "id": "CHART-R031",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-028",
+      "evidence_fact_ids": [
+        "CHART-028"
+      ]
+    },
+    {
+      "id": "CHART-R032",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-029",
+      "evidence_fact_ids": [
+        "CHART-029"
+      ]
+    },
+    {
+      "id": "CHART-R033",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-030",
+      "evidence_fact_ids": [
+        "CHART-030"
+      ]
+    },
+    {
+      "id": "CHART-R034",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-031",
+      "evidence_fact_ids": [
+        "CHART-031"
+      ]
+    },
+    {
+      "id": "CHART-R035",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-032",
+      "evidence_fact_ids": [
+        "CHART-032"
+      ]
+    },
+    {
+      "id": "CHART-R036",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-033",
+      "evidence_fact_ids": [
+        "CHART-033"
+      ]
+    },
+    {
+      "id": "CHART-R037",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-034",
+      "evidence_fact_ids": [
+        "CHART-034"
+      ]
+    },
+    {
+      "id": "CHART-R038",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-035",
+      "evidence_fact_ids": [
+        "CHART-035"
+      ]
+    },
+    {
+      "id": "CHART-R039",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-036",
+      "evidence_fact_ids": [
+        "CHART-036"
+      ]
+    },
+    {
+      "id": "CHART-R040",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-037",
+      "evidence_fact_ids": [
+        "CHART-037"
+      ]
+    },
+    {
+      "id": "CHART-R041",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-038",
+      "evidence_fact_ids": [
+        "CHART-038"
+      ]
+    },
+    {
+      "id": "CHART-R042",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-039",
+      "evidence_fact_ids": [
+        "CHART-039"
+      ]
+    },
+    {
+      "id": "CHART-R043",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-040",
+      "evidence_fact_ids": [
+        "CHART-040"
+      ]
+    },
+    {
+      "id": "CHART-R044",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-041",
+      "evidence_fact_ids": [
+        "CHART-041"
+      ]
+    },
+    {
+      "id": "CHART-R045",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F05",
+      "to": "CHART-042",
+      "evidence_fact_ids": [
+        "CHART-042"
+      ]
+    },
+    {
+      "id": "CHART-R046",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-003",
+      "evidence_fact_ids": [
+        "CHART-003"
+      ]
+    },
+    {
+      "id": "CHART-R047",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-012",
+      "evidence_fact_ids": [
+        "CHART-012"
+      ]
+    },
+    {
+      "id": "CHART-R048",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-026",
+      "evidence_fact_ids": [
+        "CHART-026"
+      ]
+    },
+    {
+      "id": "CHART-R049",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-027",
+      "evidence_fact_ids": [
+        "CHART-027"
+      ]
+    },
+    {
+      "id": "CHART-R050",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-028",
+      "evidence_fact_ids": [
+        "CHART-028"
+      ]
+    },
+    {
+      "id": "CHART-R051",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-029",
+      "evidence_fact_ids": [
+        "CHART-029"
+      ]
+    },
+    {
+      "id": "CHART-R052",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-030",
+      "evidence_fact_ids": [
+        "CHART-030"
+      ]
+    },
+    {
+      "id": "CHART-R053",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-031",
+      "evidence_fact_ids": [
+        "CHART-031"
+      ]
+    },
+    {
+      "id": "CHART-R054",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-032",
+      "evidence_fact_ids": [
+        "CHART-032"
+      ]
+    },
+    {
+      "id": "CHART-R055",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-033",
+      "evidence_fact_ids": [
+        "CHART-033"
+      ]
+    },
+    {
+      "id": "CHART-R056",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-034",
+      "evidence_fact_ids": [
+        "CHART-034"
+      ]
+    },
+    {
+      "id": "CHART-R057",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-035",
+      "evidence_fact_ids": [
+        "CHART-035"
+      ]
+    },
+    {
+      "id": "CHART-R058",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-036",
+      "evidence_fact_ids": [
+        "CHART-036"
+      ]
+    },
+    {
+      "id": "CHART-R059",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-037",
+      "evidence_fact_ids": [
+        "CHART-037"
+      ]
+    },
+    {
+      "id": "CHART-R060",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-038",
+      "evidence_fact_ids": [
+        "CHART-038"
+      ]
+    },
+    {
+      "id": "CHART-R061",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-039",
+      "evidence_fact_ids": [
+        "CHART-039"
+      ]
+    },
+    {
+      "id": "CHART-R062",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-040",
+      "evidence_fact_ids": [
+        "CHART-040"
+      ]
+    },
+    {
+      "id": "CHART-R063",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-041",
+      "evidence_fact_ids": [
+        "CHART-041"
+      ]
+    },
+    {
+      "id": "CHART-R064",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F06",
+      "to": "CHART-042",
+      "evidence_fact_ids": [
+        "CHART-042"
+      ]
+    },
+    {
+      "id": "CHART-R065",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F07",
+      "to": "CHART-003",
+      "evidence_fact_ids": [
+        "CHART-003"
+      ]
+    },
+    {
+      "id": "CHART-R066",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F07",
+      "to": "CHART-043",
+      "evidence_fact_ids": [
+        "CHART-043"
+      ]
+    },
+    {
+      "id": "CHART-R067",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F07",
+      "to": "CHART-044",
+      "evidence_fact_ids": [
+        "CHART-044"
+      ]
+    },
+    {
+      "id": "CHART-R068",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F07",
+      "to": "CHART-045",
+      "evidence_fact_ids": [
+        "CHART-045"
+      ]
+    },
+    {
+      "id": "CHART-R069",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F18",
+      "to": "CHART-046",
+      "evidence_fact_ids": [
+        "CHART-046"
+      ]
+    },
+    {
+      "id": "CHART-R070",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F18",
+      "to": "CHART-047",
+      "evidence_fact_ids": [
+        "CHART-047"
+      ]
+    }
+  ]
+}

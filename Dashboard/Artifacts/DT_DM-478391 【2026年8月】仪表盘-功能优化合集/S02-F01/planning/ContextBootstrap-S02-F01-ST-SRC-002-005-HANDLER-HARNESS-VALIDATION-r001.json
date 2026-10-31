@@ -1,0 +1,189 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "对已运行的ST-SRC-002..005隔离handler harness作独立只读Validation：从原始Goal、冻结合同/cases、设计Review、真实handler源码、当前工作树差异与Builder输出重算身份、覆盖、状态、预期值、执行日志和权限/S01边界；只写指定Validation报告，不修复、不改产品/合同/fixture。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "对002..005 handler harness Builder候选做独立只读Validation；结论限制于局部handler和冻结oracle。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceHandlerHarness-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、冻结合同、原始Cases或Builder输出",
+      "运行真实API/网络/权限/Store/保存/历史路径",
+      "将局部handler结果宣称为产品行为或Goal AC通过",
+      "替Builder修复发现"
+    ],
+    "maximum_claim": "只验证ST-SRC-002..005局部handler harness的合同符合性与执行证据；不证明SFC集成、产品UI/API/权限、持久化或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "确认原始目标、AC分母与声明边界",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceHandlerHarnessContract-r001.json",
+      "revision": "9923207ef6fc48f4f41a557c07aa73b1c77390f9796f84742a8f210ec2d5d6e5",
+      "domains": [
+        "acceptance",
+        "design"
+      ],
+      "reason": "核对冻结case、快照及oracle",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r002.json",
+      "revision": "9661f5a4689c150ee6bf07c1856bede06a80acc55ea966f6001ac326f8ae2cd0",
+      "domains": [
+        "acceptance",
+        "design"
+      ],
+      "reason": "核对原始case identity及期望",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r002.md",
+      "revision": "2224d174b2751e2de6154393f14842336945aedd0e4349eef74af18f1d5dee26",
+      "domains": [
+        "design",
+        "validation"
+      ],
+      "reason": "确认准入范围与001排除 finding",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/handler-harness.mjs",
+      "revision": "408466f899c3b9c1f7002dd07296ec8b5d2adf153da7d728190e9db9d5b469c1",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "复核实际Builder产物与用例执行器",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "确认harness提取的handler实际源码来源与当前差异",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r286.json",
+      "revision": "6b16fded4b1d73e7080e56d2808510cb0446c1030afa74bc4e5c5cdb397ee745",
+      "domains": [
+        "topology",
+        "validation"
+      ],
+      "reason": "复核实际执行、适配器修复和边界声明",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "保留真实权限环境阻塞，不以standalone替代",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "dependency"
+      ],
+      "reason": "保留S01 S02入口依赖状态",
+      "applicability": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-VALIDATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_extract_ambiguous",
+      "condition": "无法无歧义提取实际handler源码",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "停止Builder并报告缺口，不替换为复制算法",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "goal_or_permission_scope_drift",
+      "condition": "分母、S01或权限状态变化",
+      "mode": "deterministic",
+      "action": "停止并按原始Goal保留完整范围",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations；Scope Delta none；仅002..005纳入harness；001/006/007排除；S01 CONDITIONAL；real permission BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_validation",
+    "reason": "只读核验已有Builder候选，验证能力不需要修改产品/合同；完整产品验收仍受S01与权限前置限制。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "S01 and permission dependencies",
+    "acceptance criteria",
+    "actual diff",
+    "case identity and oracle",
+    "claim ceiling",
+    "final state",
+    "finding F-ST-SRC-ORACLE-001",
+    "original objective",
+    "promise rejection observation boundary"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03"
+  ]
+}

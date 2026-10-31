@@ -1,0 +1,227 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "只读有界 Delta Validation：复核 ST-SRC-001 Date oracle r002→r003 的 AST 提取、调用前计数器归零/启用、同步返回后停止与恰好两次 Date 构造；核对其余案例及10/26/16、006/007、S01/权限状态不变。只写指定报告，不运行候选测试，不修改设计/Cases/源码/治理状态。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "仅判断 F-ST-SRC-ORACLE-002 是否在候选设计/Cases 中唯一化；不证明候选测试执行或产品验收。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesign-DeltaValidation-r002.md"
+    ],
+    "forbidden_actions": [
+      "运行ST-SRC-001候选测试或产品行为",
+      "修改设计/Cases/源码/Goal/Session/Stop Gate状态",
+      "将静态AST计数写成测试执行或产品验收",
+      "解除S01/真实权限阻塞"
+    ],
+    "maximum_claim": "仅判断ST-SRC-001 Date观察窗口的候选文档修复及范围稳定性；不证明用例执行或产品验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "original Goal and frozen denominator",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r002.md",
+      "revision": "ac43c98289649407b53eb082a3d302f64aa39254494bbf0d4e299a9ae8fd5865",
+      "domains": [
+        "design",
+        "claim_ceiling"
+      ],
+      "reason": "pre-repair design baseline",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r002.json",
+      "revision": "9661f5a4689c150ee6bf07c1856bede06a80acc55ea966f6001ac326f8ae2cd0",
+      "domains": [
+        "acceptance",
+        "design"
+      ],
+      "reason": "pre-repair Cases baseline",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesign-DeltaValidation-r001.md",
+      "revision": "3c656c91d9e5e0eb39f204e488b0108371d3404de5902aef6418fc639599a4cc",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "previous Delta Validation and prior oracle repair baseline",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r002.md",
+      "revision": "2224d174b2751e2de6154393f14842336945aedd0e4349eef74af18f1d5dee26",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "F-ST-SRC-ORACLE-002 and Date-window ambiguity",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r003.md",
+      "revision": "67251797198a725662920aed1fe29a4767c94a492e76b8d32452cc547a815f9f",
+      "domains": [
+        "design",
+        "claim_ceiling"
+      ],
+      "reason": "candidate revision under review",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r003.json",
+      "revision": "64c2b0b03ef720de5c62353d183edf262a2db68f096d6ee1f1c0338c07eee960",
+      "domains": [
+        "acceptance",
+        "design",
+        "validation"
+      ],
+      "reason": "candidate cases and Date oracle",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r003.md",
+      "revision": "32432d6647dde7728eb9bd655f9c5caca752d0e828bcf5c22210843152d8a379",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "bounded review boundary and proposed delta check",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "current infoFormat AST source",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "real permission boundary",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "dependency"
+      ],
+      "reason": "S01 F01 entry state",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r289.json",
+      "revision": "cbb4eba1207784707f4d4bbcaf77011627e27030b66489ba8199d5b8b744e511",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "latest recorded candidate review dispatch",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/schemas/execution_admission_v1.schema.json",
+      "revision": "c407825121d2a29df93dee804f21ef524155846edf354a7bdf2b50b2be7704df",
+      "domains": [
+        "governance",
+        "capability"
+      ],
+      "reason": "verify validation action capability boundary",
+      "applicability": "S02-F01-ST-SRC-001-DATE-ORACLE-DELTA-VALIDATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "date_window_or_source_disagreement",
+      "condition": "r003计数窗口描述与Cases或当前AST源码不一致",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "报告准确差异并限制/拒绝局部关闭结论",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "scope_dependency_drift",
+      "condition": "分母、006/007、S01或权限状态与绑定输入不一致",
+      "mode": "deterministic",
+      "action": "报告漂移并限制局部结论",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations；Scope Delta none；只修订ST-SRC-001 Date窗口；006/007 NOT_READY/NOT_RUN；S01 CONDITIONAL；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_validation",
+    "reason": "复核 r003 对既有 P2 的局部文档修订；只读，不执行候选或产品行为。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "r002 to r003 design/cases diff",
+    "actual AST source",
+    "Date observation window",
+    "final scope/dependencies",
+    "claim ceiling",
+    "validation admission schema capability"
+  ]
+}

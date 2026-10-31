@@ -1,4 +1,5 @@
 import { useI18n } from '@/hooks/web/useI18n'
+import type { FilterPasteMapReady } from '../charts/map/filter-paste-ready'
 
 const { t } = useI18n()
 
@@ -64,6 +65,7 @@ export abstract class AbstractChartView {
 }
 
 export interface AntVDrawOptions<O> {
+  filterPaste?: FilterPasteMapReady
   /**
    * 生成的图表对象
    */

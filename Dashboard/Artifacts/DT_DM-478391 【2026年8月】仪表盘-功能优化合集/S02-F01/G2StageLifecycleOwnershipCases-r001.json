@@ -1,0 +1,114 @@
+{
+  "schema_version": "s02_g2_ownership_cases_v1",
+  "delivery_id": "S02-F01-G2-STAGE-LIFECYCLE-OWNERSHIP",
+  "revision": "r001",
+  "frozen_for_builder": false,
+  "scope_delta": "none",
+  "oracle": "事件记录、调用次数、instance identity和原异常引用均由runner逐项断言；不以结构检查替代执行。",
+  "cases": [
+    {
+      "id": "G2OWN-001",
+      "title": "成功路径顺序",
+      "expected": "create→setup→render→afterRender→ready；ready之前无publish"
+    },
+    {
+      "id": "G2OWN-002",
+      "title": "开始前失效",
+      "expected": "create/setup/render不调用；status stale"
+    },
+    {
+      "id": "G2OWN-003",
+      "title": "create迟到失效",
+      "expected": "返回实例destroy一次；setup/render不调用"
+    },
+    {
+      "id": "G2OWN-004",
+      "title": "setup后失效",
+      "expected": "cleanup及destroy一次；render不调用"
+    },
+    {
+      "id": "G2OWN-005",
+      "title": "render等待中失效",
+      "expected": "resolve后status stale；不afterRender；destroy一次"
+    },
+    {
+      "id": "G2OWN-006",
+      "title": "afterRender等待中失效",
+      "expected": "resolve后status stale；destroy一次"
+    },
+    {
+      "id": "G2OWN-007",
+      "title": "空数据undefined",
+      "expected": "status empty；仅initialCleanups执行；无setup/render/afterRender/destroy"
+    },
+    {
+      "id": "G2OWN-008",
+      "title": "create reject",
+      "expected": "initialCleanups全部执行；原异常reject；无实例destroy"
+    },
+    {
+      "id": "G2OWN-009",
+      "title": "setup throw",
+      "expected": "全部cleanup及destroy一次；原异常reject"
+    },
+    {
+      "id": "G2OWN-010",
+      "title": "render reject",
+      "expected": "全部cleanup及destroy一次；不afterRender；原异常reject"
+    },
+    {
+      "id": "G2OWN-011",
+      "title": "afterRender reject",
+      "expected": "全部cleanup及destroy一次；原异常reject"
+    },
+    {
+      "id": "G2OWN-012",
+      "title": "重复dispose",
+      "expected": "全部cleanup逆登记顺序一次；destroy一次；第二次返回空错误数组"
+    },
+    {
+      "id": "G2OWN-013",
+      "title": "cleanup异常",
+      "expected": "继续后续cleanup和destroy；返回全部错误"
+    },
+    {
+      "id": "G2OWN-014",
+      "title": "同key替换",
+      "expected": "旧cleanup先执行一次；最终dispose只调用新cleanup一次"
+    },
+    {
+      "id": "G2OWN-015",
+      "title": "remove重入",
+      "expected": "先移除登记；同key重入remove不再次执行"
+    },
+    {
+      "id": "G2OWN-016",
+      "title": "关闭后登记",
+      "expected": "登记即执行一次；dispose不再次调用"
+    },
+    {
+      "id": "G2OWN-017",
+      "title": "独立尝试隔离",
+      "expected": "A迟到失效只清理A；B的cleanup和instance不被操作"
+    },
+    {
+      "id": "G2OWN-018",
+      "title": "destroy异常",
+      "expected": "全部cleanup先执行；destroy异常收集；重复dispose不重试destroy"
+    }
+  ],
+  "integration_obligations": [
+    "真实ChartComponentG2Plot活动G2 full render调用helper",
+    "autoRefresh只替换当前scope assist cleanup",
+    "unmount取消调度并dispose active及迟到pending实例",
+    "空数据不误报ready且保留既有空数据UI",
+    "非G2分支行为不改动"
+  ],
+  "not_proven": [
+    "Copy/Paste产品入口",
+    "隐藏stage host",
+    "query或Store事务",
+    "真实权限",
+    "浏览器G2渲染/tooltip/legend/resize直到实际运行"
+  ]
+}

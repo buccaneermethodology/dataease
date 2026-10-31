@@ -1,0 +1,319 @@
+{
+  "schema_version": "s02_shared_guard_witness_cases_v1",
+  "created_at": "2026-10-30T21:53:09.048902+00:00",
+  "kind": "verification-only，补原UI05/06见证；不改产品实现/原Cases/Goal",
+  "original_acs": [
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-04"
+  ],
+  "native_golden": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/StaticDateNativeGolden-r001.json",
+    "sha256": "79d0a89e754452fe760632548dadb05b641d9536d63903ef268dfab7e577e3ee"
+  },
+  "count": 20,
+  "cases": [
+    {
+      "id": "GW01",
+      "original_case": "MVP-UI-06",
+      "method": "native_positive",
+      "expect": "accept_exact_native_descriptor"
+    },
+    {
+      "id": "GW-D-source-absent",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "delete",
+        "path": [
+          "tableId"
+        ],
+        "value": null
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-D-source-null",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tableId"
+        ],
+        "value": null
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-D-source-empty",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tableId"
+        ],
+        "value": ""
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-D-target-absent",
+      "original_case": "MVP-UI-05",
+      "method": "target",
+      "mutation": {
+        "op": "delete",
+        "path": [
+          "tableId"
+        ],
+        "value": null
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-D-target-null",
+      "original_case": "MVP-UI-05",
+      "method": "target",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tableId"
+        ],
+        "value": null
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-D-target-empty",
+      "original_case": "MVP-UI-05",
+      "method": "target",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tableId"
+        ],
+        "value": ""
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-F-count",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "fieldId"
+        ],
+        "value": "count"
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-F-minus-string",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "fieldId"
+        ],
+        "value": "-1"
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-F-minus-number",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "fieldId"
+        ],
+        "value": -1
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-F-computed-missing",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "fieldId"
+        ],
+        "value": "computed-not-in-directory"
+      },
+      "expect": "reject_whole_keep_clip_session",
+      "boundary": "只不可用目录引用，不新增所有计算字段禁止规则"
+    },
+    {
+      "id": "GW-F-expression",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "field"
+        ],
+        "value": "sum(amount)"
+      },
+      "expect": "reject_whole_keep_clip_session",
+      "boundary": "原基本树不承载非null expression字段"
+    },
+    {
+      "id": "GW-O-date-like",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "term"
+        ],
+        "value": "like"
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-O-number-like",
+      "original_case": "MVP-UI-05",
+      "method": "source",
+      "mutations": [
+        {
+          "op": "set",
+          "path": [
+            "tree",
+            "items",
+            0,
+            "fieldId"
+          ],
+          "value": "1793083721146"
+        },
+        {
+          "op": "set",
+          "path": [
+            "tree",
+            "items",
+            0,
+            "value"
+          ],
+          "value": "500"
+        },
+        {
+          "op": "set",
+          "path": [
+            "tree",
+            "items",
+            0,
+            "term"
+          ],
+          "value": "like"
+        }
+      ],
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-S-leaf-object",
+      "original_case": "MVP-UI-06",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          0,
+          "subTree"
+        ],
+        "value": {}
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-S-group-null",
+      "original_case": "MVP-UI-06",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          1,
+          "subTree"
+        ],
+        "value": null
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-S-group-array",
+      "original_case": "MVP-UI-06",
+      "method": "source",
+      "mutation": {
+        "op": "set",
+        "path": [
+          "tree",
+          "items",
+          1,
+          "subTree"
+        ],
+        "value": []
+      },
+      "expect": "reject_whole_keep_clip_session"
+    },
+    {
+      "id": "GW-C-control",
+      "original_case": "MVP-UI-05",
+      "method": "component_category",
+      "type": "bar",
+      "expected_receiver_calls": 1,
+      "expect": "accept_control_dispatch",
+      "layer": "真实Vue/composable/service/emitter，字段/Store/身份/registry provider替身；非真实query组件UI或HTTP"
+    },
+    {
+      "id": "GW-C-query-upper",
+      "original_case": "MVP-UI-05",
+      "method": "component_category",
+      "type": "VQuery",
+      "expected_receiver_calls": 0,
+      "expect": "reject_copy_and_paste_keep_clip_target",
+      "layer": "真实Vue/composable/service/emitter，字段/Store/身份/registry provider替身；非真实query组件UI或HTTP"
+    },
+    {
+      "id": "GW-C-query-lower",
+      "original_case": "MVP-UI-05",
+      "method": "component_category",
+      "type": "v-query",
+      "expected_receiver_calls": 0,
+      "expect": "reject_copy_and_paste_keep_clip_target",
+      "layer": "真实Vue/composable/service/emitter，字段/Store/身份/registry provider替身；非真实query组件UI或HTTP"
+    }
+  ],
+  "forbidden": [
+    "将合成counterexample标成真实RowAuthgolden",
+    "以没有receiver/字段未ready导致拒绝冒充类别guard；需正常bar control可dispatch1",
+    "把纯函数/组件receiver计数当真实HTTP0",
+    "把目录缺失computed例推广所有合法computed字段禁止",
+    "修改源或改期望迎合失败；无新行为实现，不宣称可信RED→修复"
+  ],
+  "claim_ceiling": "20个有界pure/component输入与真实date正例层联合见证；非全部结构/操作符/类型组合、真实鉴权或完整AC通过"
+}

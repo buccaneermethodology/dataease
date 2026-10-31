@@ -1,0 +1,98 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-RELATIONS-REVIEW",
+  "session_id": "DE-EXEC-S012",
+  "lane": "semantic-relations",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/object-contract-v1.md",
+      "sha256": "8b9ee134e1fa5e2ca917fc170534de553efc643f9c7349340276b65778f6ca95"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/contract-v1.json",
+      "sha256": "cb3eea857eb3edad0bd2aa0b005d93be2ce86d592b46878fbad4c80bfa87cb69"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v6/architecture-extensions.json",
+      "sha256": "0b32346b1508b7e8449cfd5d6b265055049074c9b50ec5aaa66fb7f22e7246e4"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v6/chart.json",
+      "sha256": "34585f2a5e013b7c5a1fe69ee41a5990343cf41291f61bb5b441b9685747c8fb"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v6/data.json",
+      "sha256": "13e996f18d549661dbf8768632483d5ac57e2dd068f82d1601ad3801d669ad83"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/integrated-v6/access.json",
+      "sha256": "5e19c12dbe74ca5264de3727eec45fceeddfd242c966faeb03510b536d3148ff"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/relations-access.json",
+      "sha256": "6e49632dd5b04a387e883786445293d40bef57c4d03a47552c2417977a57a0ac"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/relations-data.json",
+      "sha256": "fada26e6c525716f332108b1d1cfbd747b4bc04337e8c0f5e264f8fce50e1bdd"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/relations-chart.json",
+      "sha256": "d9dd6a7860ff5aac798ecf7db539aee0cc7d23e9ac8582429e57c44d34ccdb71"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/tools/kb-v3.py",
+      "sha256": "850029c398afba0bc3fa322fc6d1871ac55615a40357c404068771df63d436f7"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/evidence/kb-tool-tests-v3.json",
+      "sha256": "2714c4916b721454998c5fb7acdbc9b7bb30981e35c6facbb3645c675b5fc54a"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-relations-v6",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/reviews/relations-review-v1.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/reviews/relations-review-v1.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "独立静态语义复核，不等同全KB/运行验收",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-PRE-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "独立复核integrated-v6相对v5的55条新增跨层关系与7条测试关系替换，以及kb-v3.py显式关系Mermaid投影。读取原Goal/合同；逐条核实新关系的端点语义和源码，不以schema/digest代替语义。事实文本未变，分域既有独立语义报告可作为基线但需核查差异。检查图谱条件分支不被误读成必经流程、API声明不外推企业实现、测试资产非运行通过。可在SP/evidence下用临时目录运行工具（不改产品）；报告记录样本、具体问题及PASS/FAIL范围，仅写指定review。不得修复builder内容。不是最终Goal验收。"
+}

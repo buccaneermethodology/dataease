@@ -1,0 +1,1950 @@
+<script lang="ts" setup>
+import icon_info_outlined from '@/assets/svg/icon_info_outlined.svg'
+import icon_linkRecord_outlined from '@/assets/svg/icon_link-record_outlined.svg'
+import icon_viewinchat_outlined from '@/assets/svg/icon_viewinchat_outlined.svg'
+import { cancelRequestBatch } from '@/config/axios/service'
+import icon_drilling_outlined from '@/assets/svg/icon_drilling_outlined.svg'
+import { useI18n } from '@/hooks/web/useI18n'
+import { isChartRefreshPreview, useChartRefreshTimer } from '@/hooks/web/useChartRefreshTimer'
+import ChartComponentG2Plot from './components/ChartComponentG2Plot.vue'
+import DeIndicator from '@/custom-component/indicator/DeIndicator.vue'
+import { useAppearanceStoreWithOut } from '@/store/modules/appearance'
+import { useAppStoreWithOut } from '@/store/modules/app'
+import { useEmbedded } from '@/store/modules/embedded'
+import { PluginComponent } from '@/components/plugin'
+import {
+  computed,
+  CSSProperties,
+  defineAsyncComponent,
+  nextTick,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  provide,
+  reactive,
+  ref,
+  shallowRef,
+  toRefs,
+  watch
+} from 'vue'
+import { useEmitt } from '@/hooks/web/useEmitt'
+import { hexColorToRGBA, parseJson } from '@/views/chart/components/js/util.js'
+import {
+  CHART_FONT_FAMILY_MAP,
+  DEFAULT_TITLE_STYLE
+} from '@/views/chart/components/editor/util/chart'
+import DrillPath from '@/views/chart/components/views/components/DrillPath.vue'
+import { ElIcon, ElInput, ElMessage } from 'element-plus-secondary'
+import { useFilter } from '@/hooks/web/useFilter'
+import { useCache } from '@/hooks/web/useCache'
+
+import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
+import { cloneDeep, debounce } from 'lodash-es'
+import ChartComponentS2 from '@/views/chart/components/views/components/ChartComponentS2.vue'
+import { ChartLibraryType } from '@/views/chart/components/js/panel/types'
+import chartViewManager from '@/views/chart/components/js/panel'
+import { storeToRefs } from 'pinia'
+import { normalizeExternalLinkUrl, setIdValueTrans } from '@/utils/canvasUtils'
+import { sanitizeHtml } from '@/utils/utils'
+import { Base64 } from 'js-base64'
+import DeRichTextView from '@/custom-component/rich-text/DeRichTextView.vue'
+import DePictureGroup from '@/custom-component/picture-group/Component.vue'
+import eventBus from '@/utils/eventBus'
+import FilterPasteRenderer from './components/FilterPasteRenderer.vue'
+import { getData } from '@/api/chart'
+import {
+  registerMvpPasteReceiver,
+  sameMvpPasteInput,
+  prepareMvpCommitDto,
+  type PasteBinding,
+  type PreparedQuery,
+  type PreparedFilterPaste,
+  type FilterPasteRequest
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
+import {
+  getMvpFilterClipboard,
+  getMvpFilterSessionToken
+} from '@/custom-component/filter-copy/mvp-chart-filter-copy'
+import ChartEmptyInfo from '@/views/chart/components/views/components/ChartEmptyInfo.vue'
+import { snapshotStoreWithOut } from '@/store/modules/data-visualization/snapshot'
+import { viewFieldTimeTrans } from '@/utils/viewUtils'
+import { CHART_TYPE_CONFIGS } from '@/views/chart/components/editor/util/chart'
+import request from '@/config/axios'
+import { store } from '@/store'
+// import { clearExtremum } from '@/views/chart/components/js/extremumUitl'
+import DePreviewPopDialog from '@/components/visualization/DePreviewPopDialog.vue'
+import { useRoute } from 'vue-router_2'
+import {
+  isRenderChartAllPayload,
+  RENDER_CHART_ALL,
+  RENDER_CHART_ALL_ITEM_FINISH,
+  RENDER_CHART_ALL_ITEM_START,
+  type RenderChartAllPayload
+} from './renderChartAll'
+const OpenHandler = defineAsyncComponent(
+  () => import('@/views/component/embedded-iframe/OpenHandler.vue')
+)
+const ViewCategoryHandler = defineAsyncComponent(
+  () => import('@/views/component/plugins-handler/ViewCategoryHandler.vue')
+)
+const route = useRoute()
+const { wsCache } = useCache()
+const chartComponent = ref<any>()
+const { t } = useI18n()
+const dvMainStore = dvMainStoreWithOut()
+const { emitter } = useEmitt()
+const dePreviewPopDialogRef = ref(null)
+let innerSearchCount = 0
+const appStore = useAppStoreWithOut()
+const appearanceStore = useAppearanceStoreWithOut()
+const isDataEaseBi = computed(() => appStore.getIsDataEaseBi)
+const isIframe = computed(() => appStore.getIsIframe)
+
+const emit = defineEmits(['onPointClick', 'onComponentEvent'])
+
+const {
+  nowPanelJumpInfo,
+  publicLinkStatus,
+  dvInfo,
+  curComponent,
+  canvasStyleData,
+  mobileInPc,
+  inMobile,
+  editMode
+} = storeToRefs(dvMainStore)
+
+const props = defineProps({
+  // 公共参数集
+  commonParams: {
+    type: Object,
+    required: false
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  element: {
+    type: Object,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  view: {
+    type: Object as PropType<ChartObj>,
+    default() {
+      return {
+        propValue: null
+      }
+    }
+  },
+  themes: {
+    type: String,
+    required: false,
+    default: 'dark'
+  },
+  showPosition: {
+    type: String,
+    required: false,
+    default: 'preview'
+  },
+  // 仪表板刷新计时器
+  searchCount: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  scale: {
+    type: Number,
+    required: false,
+    default: 1
+  },
+  suffixId: {
+    type: String,
+    required: false,
+    default: 'common'
+  },
+  fontFamily: {
+    type: String,
+    required: false,
+    default: 'inherit'
+  },
+  optType: {
+    type: String,
+    required: false
+  }
+})
+const dynamicAreaId = ref('')
+const { view, showPosition, element, active, searchCount, scale, suffixId } = toRefs(props)
+const richTextTitleEnabled = computed(() => {
+  if (element.value.innerType !== 'rich-text' && view.value.type !== 'rich-text') {
+    return true
+  }
+  return view.value.customStyle?.text?.richTextTitleEnabled === true
+})
+const titleShow = computed(() => {
+  return (
+    element.value.innerType !== 'picture-group' &&
+    richTextTitleEnabled.value &&
+    state.title_show &&
+    (element.value.dashboardHidden ? true : showPosition.value !== 'viewDialog')
+  )
+})
+const snapshotStore = snapshotStoreWithOut()
+
+const state = reactive({
+  initReady: true, //curComponent 切换期间 不接收外部的calcData 和 renderChart 事件
+  title_show: true,
+  title_remark: {
+    show: false,
+    remark: ''
+  },
+  title_class: {
+    fontSize: '18px',
+    color: '#303133',
+    textAlign: 'left',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    background: '',
+    fontFamily: '',
+    textShadow: 'none',
+    letterSpacing: '0px',
+    fontSynthesis: 'style weight',
+    width: 'fit-content',
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    paddingRight: '0px',
+    overflow: 'hidden'
+  } as CSSProperties,
+  chart_hide_title_class: {
+    fontSize: '10px',
+    color: '#303133',
+    textAlign: 'left',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    background: '',
+    fontFamily: '',
+    textShadow: 'none',
+    letterSpacing: '0px',
+    fontSynthesis: 'style weight',
+    width: 'fit-content',
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    paddingRight: '0px',
+    overflow: 'hidden'
+  } as CSSProperties,
+  drillFilters: [],
+  viewInfoData: null,
+  drillClickDimensionList: []
+})
+
+const drillClickLength = computed(() => state.drillClickDimensionList.length)
+
+const titleAlign = computed<string>(() => {
+  if (!titleShow.value) {
+    return 'flex-start'
+  }
+
+  if (state.title_class.textAlign === 'center') {
+    return 'center'
+  } else if (state.title_class.textAlign === 'right') {
+    return 'flex-end'
+  }
+
+  return 'flex-start'
+})
+
+const titleBaseStyle = computed<CSSProperties>(() =>
+  element.value.dashboardHidden ? state.chart_hide_title_class : state.title_class
+)
+
+// 标题宽度交给 flex 计算，图标显示时优先占位
+const titleTextStyle = computed<CSSProperties>(() => ({
+  ...titleBaseStyle.value,
+  flex: '1 1 auto',
+  minWidth: 0,
+  width: 'auto',
+  maxWidth: '100%',
+  wordBreak: 'normal',
+  whiteSpace: 'nowrap'
+}))
+
+// 固定标题行高度，避免图标显示时触发图表区域 resize
+const titleContentHeight = computed<string>(() => {
+  const iconFontSize = Number.parseFloat(iconSize.value) || 0
+  const titleFontSize = Number.parseFloat(`${titleBaseStyle.value.fontSize}`) || iconFontSize
+  return Math.max(iconFontSize, titleFontSize * 1.2) + 'px'
+})
+
+const titleContentStyle = computed<CSSProperties>(() => ({
+  height: titleContentHeight.value,
+  minHeight: titleContentHeight.value,
+  lineHeight: titleContentHeight.value
+}))
+
+const safeTitleRemark = computed(() => sanitizeHtml(state.title_remark.remark || ''))
+
+const trackMenu = computed<Array<string>>(() => {
+  return chartComponent?.value?.trackMenu ?? []
+})
+
+const hasLinkIcon = computed(() => {
+  return trackMenu.value.indexOf('linkage') > -1 || trackMenu.value.indexOf('linkageAndDrill') > -1
+})
+const hasJumpIcon = computed(() => {
+  return trackMenu.value.indexOf('jump') > -1 && !mobileInPc.value
+})
+const hasDrillIcon = computed(() => {
+  return trackMenu.value.indexOf('drill') > -1 || trackMenu.value.indexOf('linkageAndDrill') > -1
+})
+
+const loading = ref(false)
+const isAutoRefreshing = ref(false)
+
+const resultMode = computed(() => {
+  return canvasStyleData.value.dashboard?.resultMode || null
+})
+
+const resultCount = computed(() => {
+  return canvasStyleData.value.dashboard?.resultCount || null
+})
+
+const embeddedStore = useEmbedded()
+const innerRefreshRunning = useChartRefreshTimer(
+  () => ({
+    enabled:
+      isChartRefreshPreview(showPosition.value, editMode.value, dvInfo.value.type) &&
+      !!view.value.refreshViewEnable,
+    interval: view.value.refreshTime ?? 5,
+    unit: view.value.refreshUnit ?? 'minute'
+  }),
+  () => {
+    clearViewLinkage()
+    queryData(false, true)
+    innerSearchCount++
+  }
+)
+
+// 清除相同sourceViewId 的 联动条件
+const clearViewLinkage = () => {
+  dvMainStore.clearViewLinkage(element.value.id)
+  useEmitt().emitter.emit('clearPanelLinkage', { viewId: element.value.id })
+}
+
+watch([() => scale.value], () => {
+  initTitle()
+})
+
+watch([() => searchCount.value], () => {
+  // 内部计时器启动 忽略外部计时器
+  if (!innerRefreshRunning.value) {
+    queryData(false, true)
+  }
+})
+// 仪表板的查询结果设置变化 图表数据需要刷新
+watch([() => resultCount.value], () => {
+  queryData()
+})
+
+watch([() => resultMode.value], () => {
+  queryData()
+})
+
+watch([() => scale.value], () => {
+  nextTick(() => {
+    chartComponent?.value?.renderChart?.(view.value)
+  })
+})
+
+watch([() => curComponent.value], () => {
+  if (curComponent.value && curComponent.value.id === view.value.id) {
+    state.initReady = false
+    nextTick(() => {
+      state.initReady = true
+    })
+  }
+})
+
+const chartExtRequest = shallowRef(null)
+provide('chartExtRequest', chartExtRequest)
+
+const initTitle = () => {
+  if (view.value.customStyle) {
+    const customStyle = view.value.customStyle
+    if (customStyle.text) {
+      state.title_show = customStyle.text.show
+      state.title_class.fontSize = customStyle.text.fontSize * scale.value + 'px'
+      state.title_class.color = customStyle.text.color
+      state.title_class.textAlign = customStyle.text.hPosition as CSSProperties['textAlign']
+      state.title_class.fontStyle = customStyle.text.isItalic ? 'italic' : 'normal'
+      state.title_class.fontWeight = customStyle.text.isBolder ? 'bold' : 'normal'
+      if (!!appearanceStore.fontList.length) {
+        appearanceStore.fontList.forEach(ele => {
+          CHART_FONT_FAMILY_MAP[ele.name] = ele.name
+        })
+      }
+      if (customStyle.text.isItalic) {
+        if (customStyle.text.hPosition === 'right') {
+          state.title_class.paddingRight = Math.floor(customStyle.text.fontSize / 7) + 'px'
+        } else {
+          state.title_class.paddingRight = '0px'
+          state.title_class.overflow = 'visible'
+        }
+      }
+      state.title_class.fontFamily = customStyle.text.fontFamily
+        ? CHART_FONT_FAMILY_MAP[customStyle.text.fontFamily]
+        : DEFAULT_TITLE_STYLE.fontFamily
+      if (!CHART_FONT_FAMILY_MAP[customStyle.text.fontFamily]) {
+        state.title_class.fontFamily = appearanceStore.fontList.find(ele => ele.isDefault)?.name
+        customStyle.text.fontFamily = state.title_class.fontFamily
+      }
+      appearanceStore.setCurrentFont(state.title_class.fontFamily)
+      state.title_class.letterSpacing =
+        (customStyle.text.letterSpace
+          ? customStyle.text.letterSpace
+          : DEFAULT_TITLE_STYLE.letterSpace) + 'px'
+      state.title_class.textShadow = customStyle.text.fontShadow ? '2px 2px 4px' : 'none'
+    }
+    if (customStyle.background) {
+      state.title_class.background = hexColorToRGBA(
+        customStyle.background.color,
+        customStyle.background.alpha
+      )
+    }
+
+    state.title_remark.show = customStyle.text.show && customStyle.text.remarkShow
+    state.title_remark.remark = sanitizeHtml(customStyle.text.remark || '')
+  }
+}
+
+const drillJump = (index: number) => {
+  state.drillClickDimensionList.splice(index)
+  view.value.chartExtRequest = filter()
+  calcData(view.value)
+}
+
+const onPointClick = param => {
+  try {
+    const msg = {
+      sourceDvId: dvInfo.value.id,
+      sourceViewId: view.value.id,
+      message: Base64.encode(JSON.stringify(param))
+    }
+    emit('onPointClick', msg)
+  } catch (e) {
+    console.warn('de_inner_params send error')
+  }
+}
+
+const chartClick = param => {
+  // 下钻字段第一个没有在维度中不允许下钻
+  const xIds = view.value.xAxis.map(ele => ele.id)
+  if (xIds.indexOf(props.view.drillFields[0].id) == -1) {
+    ElMessage.error(t('chart.drill_field_error'))
+    return
+  }
+  if (view.value.type === 'circle-packing' && param.data.name === t('commons.all')) {
+    ElMessage.error(t('chart.last_layer'))
+    return
+  }
+  if (state.drillClickDimensionList.length < props.view.drillFields.length - 1) {
+    state.drillClickDimensionList.push({
+      dimensionList: param.data.dimensionList,
+      extra: param.extra
+    })
+    view.value.chartExtRequest = filter()
+    calcData(view.value)
+  } else if (props.view.drillFields.length > 0) {
+    ElMessage.error(t('chart.last_layer'))
+  }
+}
+
+// 仪表板和大屏所有额外过滤参数都在此处
+const filter = (firstLoad?: boolean, report = true) => {
+  const { filter } = useFilter(view.value.id, firstLoad, showPosition.value)
+  const result = {
+    user: wsCache.get('user.uid'),
+    filter,
+    linkageFilters: element.value.linkageFilters,
+    outerParamsFilters: element.value.outerParamsFilters,
+    webParamsFilters: element.value.webParamsFilters,
+    drill: state.drillClickDimensionList,
+    resultCount: resultCount.value,
+    resultMode: resultMode.value
+  }
+  // 定时报告相关勿动
+  if (report && route.path === '/preview' && route.query.taskId) {
+    const sceneId = view.value['sceneId']
+    const filterJson = window[`de-report-filter-${sceneId}`]
+    let filterObj = {}
+    if (filterJson) {
+      filterObj = JSON.parse(filterJson)
+    }
+    filterObj[view.value.id] = result
+    window[`de-report-filter-${sceneId}`] = JSON.stringify(filterObj)
+  }
+  return result
+}
+
+type PasteNode = {
+  key: string
+  binding: PasteBinding
+  renderer?: InstanceType<typeof FilterPasteRenderer>
+  handle?: PreparedFilterPaste
+}
+const pasteNodes = shallowRef<PasteNode[]>([])
+const pasteActiveKey = ref('')
+let pasteSequence = 0
+let pasteGeneration = 0
+let pasteContextGeneration = 0
+let publishingOperationId: number | null = null
+let pasteUnmounted = false
+let pasteOperation: { id: number; request: FilterPasteRequest; node?: PasteNode } | null = null
+const setLegacyChartComponent = instance => {
+  if (!pasteActiveKey.value) chartComponent.value = instance
+}
+watch(
+  () => pasteNodes.value.find(node => node.key === pasteActiveKey.value)?.renderer?.component,
+  proxy => {
+    if (pasteActiveKey.value) chartComponent.value = proxy
+  },
+  { flush: 'sync' }
+)
+const invalidatePaste = () => {
+  const current = pasteOperation
+  if (!current) return
+  pasteOperation = null
+  if (current.node) {
+    current.node.handle?.dispose()
+    pasteNodes.value = pasteNodes.value.filter(node => node !== current.node)
+  }
+  current.request.resolve({ ok: false, reason: 'paste_stale' })
+}
+watch(
+  [view, element, scale, () => props.fontFamily, () => props.commonParams, () => props.disabled],
+  () => {
+    if (publishingOperationId !== null && publishingOperationId === pasteOperation?.id) return
+    pasteGeneration++
+    invalidatePaste()
+    const adopted = pasteNodes.value.find(node => node.key === pasteActiveKey.value)
+    if (
+      adopted &&
+      (adopted.binding.current.value.view !== view.value ||
+        adopted.binding.current.value.element !== element.value)
+    ) {
+      adopted.binding.current.value = { phase: 'active', view: view.value, element: element.value }
+    }
+  },
+  { deep: true, flush: 'sync' }
+)
+watch(
+  () => filter(false, false),
+  () => {
+    if (publishingOperationId !== null && publishingOperationId === pasteOperation?.id) return
+    pasteContextGeneration++
+    invalidatePaste()
+  },
+  { deep: true, flush: 'sync' }
+)
+
+const receiveFilterPaste = async (request: FilterPasteRequest) => {
+  if (pasteOperation || loading.value) {
+    request.resolve({ ok: false, reason: 'paste_busy' })
+    return
+  }
+  if (
+    pasteUnmounted ||
+    request.targetId !== view.value.id ||
+    curComponent.value?.id !== view.value.id ||
+    editMode.value !== 'edit' ||
+    !['canvas', 'canvasDataV', 'edit'].includes(showPosition.value)
+  ) {
+    request.resolve({ ok: false, reason: 'paste_stale' })
+    return
+  }
+  const library = chartViewManager.getChartView(view.value.render, view.value.type)?.library
+  if (
+    !['g2', 's2', 'indicator', 'l7', 'l7plot', 'rich-text', 'picture-group'].includes(library) ||
+    view.value.isPlugin ||
+    view.value.plugin?.isPlugin ||
+    typeof chartComponent.value?.prepareFilterPaste !== 'function'
+  ) {
+    request.resolve({ ok: false, reason: 'preparation_unavailable' })
+    return
+  }
+  if (
+    ['l7', 'l7plot'].includes(library) &&
+    chartComponent.value?.canPrepareFilterPaste?.() !== true
+  ) {
+    request.resolve({ ok: false, reason: 'map_infrastructure_unavailable' })
+    return
+  }
+  const canonicalView = view.value
+  const canonicalElement = element.value
+  const viewSnapshot = cloneDeep(canonicalView)
+  const elementSnapshot = cloneDeep(canonicalElement)
+  const context = cloneDeep(filter(false, false))
+  const generation = pasteGeneration
+  const contextGeneration = pasteContextGeneration
+  const session = getMvpFilterSessionToken()
+  const clip = getMvpFilterClipboard()
+  const op = { id: ++pasteSequence, request, node: undefined as PasteNode | undefined }
+  pasteOperation = op
+  const isCurrent = () =>
+    !pasteUnmounted &&
+    pasteOperation === op &&
+    request.isCurrent() &&
+    request.editSessionId === session.editSessionId &&
+    sameMvpPasteInput(session, getMvpFilterSessionToken()) &&
+    !!getMvpFilterClipboard() &&
+    getMvpFilterClipboard().revision === clip?.revision &&
+    canonicalView === view.value &&
+    canonicalElement === element.value &&
+    curComponent.value?.id === request.targetId &&
+    editMode.value === 'edit' &&
+    pasteGeneration === generation &&
+    pasteContextGeneration === contextGeneration &&
+    sameMvpPasteInput(canonicalView, viewSnapshot) &&
+    sameMvpPasteInput(canonicalElement, elementSnapshot) &&
+    sameMvpPasteInput(context, filter(false, false))
+  try {
+    if (!clip || !isCurrent()) {
+      request.resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const candidate = cloneDeep(canonicalView)
+    candidate.customFilter = cloneDeep(request.candidateTree)
+    candidate.chartExtRequest = cloneDeep(context)
+    if (library === 's2') {
+      if (candidate.customAttr?.basicStyle?.tablePageStyle === 'general') {
+        candidate.chartExtRequest.pageSize =
+          dvMainStore.getViewPageInfo(candidate.id)?.pageSize ?? 20
+      } else delete candidate.chartExtRequest.pageSize
+    }
+    let prepared: PreparedQuery
+    const staticPicture =
+      library === 'picture-group' && !parseJson(candidate.senior)?.threshold?.enable
+    if (staticPicture) {
+      prepared = { kind: 'static-picture', local: cloneDeep(candidate) }
+    } else {
+      const wireRequest = cloneDeep(candidate)
+      if (library === 'picture-group') {
+        wireRequest.type = 'table-info'
+        wireRequest.render = 'antv'
+        wireRequest.resultCount = 1
+      } else if (
+        library === 'rich-text' &&
+        !wireRequest.yAxis?.some(axis => axis?.compareCalc?.type !== 'none')
+      ) {
+        wireRequest.resultCount = 1
+        wireRequest.resultMode = 'custom'
+      }
+      const outcome = await getData<ChartObj>(wireRequest, { reportOutcome: true })
+      if (!isCurrent()) {
+        request.resolve({ ok: false, reason: 'paste_stale' })
+        return
+      }
+      if (outcome.ok !== true) {
+        request.resolve({ ok: false, reason: 'paste_query_failed' })
+        return
+      }
+      const response = cloneDeep(outcome.value)
+      if (
+        !response ||
+        response.id !== wireRequest.id ||
+        response.type !== wireRequest.type ||
+        response.render !== wireRequest.render
+      ) {
+        request.resolve({ ok: false, reason: 'paste_response_invalid' })
+        return
+      }
+      if (library === 'picture-group') {
+        response.type = 'picture-group'
+        response.render = 'custom'
+      }
+      prepared = {
+        kind: 'queried',
+        request: cloneDeep(wireRequest),
+        response: prepareMvpCommitDto(response, canonicalView)
+      }
+    }
+    const node: PasteNode = {
+      key: `filter-paste-${candidate.id}-${op.id}`,
+      binding: {
+        current: shallowRef({
+          phase: 'candidate',
+          view: cloneDeep(candidate),
+          element: cloneDeep(canonicalElement)
+        })
+      }
+    }
+    op.node = node
+    pasteNodes.value = [...pasteNodes.value, node]
+    await nextTick()
+    if (!isCurrent() || !node.renderer) {
+      request.resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const ready = await node.renderer.prepareFilterPaste(prepared, node.binding, () =>
+      node.binding.current.value.phase === 'active'
+        ? !pasteUnmounted && pasteActiveKey.value === node.key
+        : isCurrent()
+    )
+    if (ready.ok !== true) {
+      request.resolve({ ok: false, reason: ready.reason })
+      return
+    }
+    node.handle = ready.handle
+    if (
+      !isCurrent() ||
+      ready.handle.key !== node.key ||
+      ready.handle.binding !== node.binding ||
+      !node.renderer.component
+    ) {
+      request.resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const metadata = ready.handle.metadata
+    if (
+      (['g2', 'l7', 'l7plot'].includes(library) && metadata.kind !== 'g2') ||
+      (library === 's2' && metadata.kind !== 's2') ||
+      (library === 'indicator' && metadata.kind !== 'indicator') ||
+      (library === 'rich-text' && metadata.kind !== 'rich-text') ||
+      (library === 'picture-group' &&
+        (metadata.kind !== 'picture-group' || metadata.queried !== (prepared.kind === 'queried')))
+    ) {
+      request.resolve({ ok: false, reason: 'paste_response_invalid' })
+      return
+    }
+    const oldNodes = pasteNodes.value.filter(item => item !== node)
+    // 唯一同步发布段。只有本次内部写入获豁免，不跨 await/timer。
+    publishingOperationId = op.id
+    try {
+      canonicalView.customFilter = cloneDeep(request.candidateTree)
+      node.binding.current.value = {
+        phase: 'active',
+        view: canonicalView,
+        element: canonicalElement
+      }
+      if (prepared.kind === 'queried') {
+        chartExtRequest.value = cloneDeep(prepared.request.chartExtRequest)
+        dvMainStore.setLastViewRequestInfo(
+          canonicalView.id,
+          cloneDeep(prepared.request.chartExtRequest)
+        )
+        dvMainStore.setViewDataDetails(canonicalView.id, cloneDeep(prepared.response))
+        state.drillFilters = cloneDeep(metadata.drillFilters)
+      }
+      if (metadata.kind === 'rich-text') {
+        canonicalView.curFields = cloneDeep(metadata.fields)
+        canonicalElement.propValue.innerType = metadata.innerType
+        canonicalElement.propValue.render = metadata.render
+      }
+      if (metadata.kind === 'picture-group' && metadata.queried)
+        canonicalView.curFields = cloneDeep(metadata.fields || [])
+      if (metadata.kind === 'g2' && metadata.publishOrigin)
+        dvMainStore.setViewOriginData(canonicalView.id, cloneDeep(metadata.originData))
+      if (metadata.kind === 's2' && prepared.kind === 'queried') {
+        if (metadata.publishPure)
+          dvMainStore.setPureCanvasViewDataInfo(canonicalView.id, cloneDeep(prepared.response))
+        dvMainStore.setViewPageInfo(canonicalView.id, cloneDeep(metadata.pageInfo))
+        dvMainStore.setViewInstanceInfo(canonicalView.id, ready.handle.instance)
+      }
+      pasteActiveKey.value = node.key
+      chartComponent.value = node.renderer.component
+      snapshotStore.recordSnapshotCache('calcData', canonicalView.id)
+      pasteOperation = null
+      pasteNodes.value = [node]
+    } finally {
+      publishingOperationId = null
+    }
+    request.resolve({ ok: true })
+    oldNodes.forEach(old => old.handle?.dispose())
+    if (metadata.kind === 'g2' && metadata.publishOrigin) emitter.emit('chart-data-change')
+    if (metadata.kind === 'rich-text') eventBus.emit('initCurFields-' + canonicalElement.id)
+  } catch {
+    request.resolve({ ok: false, reason: 'paste_failed' })
+  } finally {
+    if (pasteOperation === op) pasteOperation = null
+    if (op.node && pasteActiveKey.value !== op.node.key) {
+      op.node.handle?.dispose()
+      pasteNodes.value = pasteNodes.value.filter(node => node !== op.node)
+    }
+  }
+}
+let unregisterPaste: (() => void) | null = null
+watch(
+  () => [
+    view.value.id,
+    view.value.type,
+    view.value.render,
+    view.value.isPlugin,
+    view.value.plugin?.isPlugin,
+    editMode.value,
+    showPosition.value,
+    curComponent.value?.id
+  ],
+  () => {
+    unregisterPaste?.()
+    unregisterPaste = null
+    invalidatePaste()
+    const library = chartViewManager.getChartView(view.value.render, view.value.type)?.library
+    const supported =
+      ['g2', 's2', 'indicator', 'l7', 'l7plot', 'rich-text', 'picture-group'].includes(library) &&
+      !view.value.isPlugin &&
+      !view.value.plugin?.isPlugin
+    if (pasteActiveKey.value && !supported) {
+      // 后续普通换类型继续走既有原生分派，不让尚未接入的 C2–C4 成为空白图。
+      const old = pasteNodes.value
+      pasteActiveKey.value = ''
+      pasteNodes.value = []
+      chartComponent.value = undefined
+      old.forEach(node => node.handle?.dispose())
+    }
+    if (
+      import.meta.env.DEV &&
+      editMode.value === 'edit' &&
+      curComponent.value?.id === view.value.id &&
+      supported &&
+      ['canvas', 'canvasDataV', 'edit'].includes(showPosition.value)
+    ) {
+      unregisterPaste = registerMvpPasteReceiver(view.value.id, request => {
+        void receiveFilterPaste(request)
+      })
+    }
+  },
+  { immediate: true, flush: 'sync' }
+)
+onBeforeUnmount(() => {
+  pasteUnmounted = true
+  unregisterPaste?.()
+  invalidatePaste()
+  pasteNodes.value.forEach(node => node.handle?.dispose())
+})
+
+const onDrillFilters = param => {
+  state.drillFilters = param ? param : []
+}
+const openHandler = ref(null)
+const initOpenHandler = newWindow => {
+  if (openHandler?.value) {
+    openHandler.value.initOpenHandler(newWindow)
+  }
+}
+
+const divEmbedded = type => {
+  useEmitt().emitter.emit('changeCurrentComponent', type)
+}
+
+const windowsJump = (url, jumpType, size = 'middle') => {
+  try {
+    let newWindow
+    if ('newPop' === jumpType) {
+      dePreviewPopDialogRef.value.previewInit({ url, size })
+    } else if ('_self' === jumpType) {
+      newWindow = window.open(url, jumpType)
+    } else {
+      newWindow = window.open(url, jumpType)
+    }
+    initOpenHandler(newWindow)
+  } catch (e) {
+    console.warn(t('visualization.url_check_error') + ':' + url)
+  }
+}
+
+const jumpClick = param => {
+  let dimension, jumpInfo, sourceInfo, targetDvType
+  // 如果有名称name 获取和name匹配的dimension 否则倒序取最后一个能匹配的
+  if (param.name) {
+    const colList = [...param.dimensionList, ...param.quotaList]
+    colList.forEach(dimensionItem => {
+      if (
+        dimensionItem.id === param.name ||
+        dimensionItem.value === param.name ||
+        dimensionItem.name === param.name
+      ) {
+        dimension = dimensionItem
+        sourceInfo = param.viewId + '#' + dimension.id
+        jumpInfo = nowPanelJumpInfo.value[sourceInfo]
+      }
+    })
+  } else {
+    for (let i = param.dimensionList.length - 1; i >= 0; i--) {
+      dimension = param.dimensionList[i]
+      sourceInfo = param.viewId + '#' + dimension.id
+      jumpInfo = nowPanelJumpInfo.value[sourceInfo]
+      if (jumpInfo) {
+        break
+      }
+    }
+  }
+  if (jumpInfo) {
+    // 维度日期类型转换
+    viewFieldTimeTrans(dvMainStore.getViewDataDetails(param.viewId), param)
+    param.sourceDvId = dvInfo.value.id
+    param.sourceViewId = param.viewId
+    param.sourceFieldId = dimension.id
+    let embeddedBaseUrl = ''
+    const divSelf = isDataEaseBi.value && jumpInfo.jumpType === '_self'
+    const iframeSelf = isIframe.value && jumpInfo.jumpType === '_self'
+    if (isDataEaseBi.value) {
+      embeddedBaseUrl = embeddedStore.baseUrl
+    }
+    const jumpInfoParam = `&jumpInfoParam=${encodeURIComponent(
+      Base64.encode(JSON.stringify(param))
+    )}`
+
+    // 内部仪表板跳转
+    if (jumpInfo.linkType === 'inner') {
+      if (jumpInfo.targetDvId) {
+        const editPreviewParams = ['canvas', 'edit-preview'].includes(showPosition.value)
+          ? '&editPreview=true'
+          : ''
+        const filterOuterParams = {}
+        const curFilter = dvMainStore.getLastViewRequestInfo(param.viewId)
+        const targetViewInfoList = jumpInfo.targetViewInfoList
+        if (
+          curFilter &&
+          curFilter.filter &&
+          curFilter.filter.length > 0 &&
+          targetViewInfoList &&
+          targetViewInfoList.length > 0
+        ) {
+          // do filter
+          curFilter.filter.forEach(filterItem => {
+            targetViewInfoList.forEach(targetViewInfo => {
+              if (targetViewInfo.sourceFieldActiveId === filterItem.filterId) {
+                filterOuterParams[targetViewInfo.outerParamsName] = {
+                  operator: filterItem.operator,
+                  value: filterItem.value
+                }
+              }
+            })
+          })
+        }
+        let attachParamsInfo
+        if (Object.keys(filterOuterParams).length > 0) {
+          filterOuterParams['outerParamsVersion'] = 'v2'
+          attachParamsInfo =
+            '&attachParams=' + encodeURIComponent(Base64.encode(JSON.stringify(filterOuterParams)))
+        }
+        // 携带外部参数
+        if (publicLinkStatus.value) {
+          // 判断是否有公共链接ID
+          if (jumpInfo.publicJumpId) {
+            let url = `${embeddedBaseUrl}#/de-link/${jumpInfo.publicJumpId}?fromLink=true&dvType=${jumpInfo.targetDvType}`
+            if (attachParamsInfo) {
+              url = url + attachParamsInfo + jumpInfoParam + editPreviewParams
+            } else {
+              url = url + '&ignoreParams=true' + jumpInfoParam + editPreviewParams
+            }
+            const currentUrl = window.location.href
+            localStorage.setItem('beforeJumpUrl', currentUrl)
+            windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+          } else {
+            ElMessage.warning(t('visualization.public_link_tips'))
+          }
+        } else {
+          let url = `${embeddedBaseUrl}#/preview?dvId=${jumpInfo.targetDvId}&fromLink=true&dvType=${jumpInfo.targetDvType}`
+          if (attachParamsInfo) {
+            url = url + attachParamsInfo + jumpInfoParam + editPreviewParams
+          } else {
+            url = url + '&ignoreParams=true' + jumpInfoParam + editPreviewParams
+          }
+          const currentUrl = window.location.href
+          localStorage.setItem('beforeJumpUrl', currentUrl)
+          if (divSelf || iframeSelf) {
+            embeddedStore.setDvId(jumpInfo.targetDvId)
+            embeddedStore.setJumpInfoParam(encodeURIComponent(Base64.encode(JSON.stringify(param))))
+            divEmbedded('Preview')
+            return
+          }
+          windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+        }
+      } else {
+        ElMessage.warning('未指定跳转仪表板')
+      }
+    } else {
+      const colList = [...param.dimensionList, ...param.quotaList]
+      let url = setIdValueTrans('id', 'value', jumpInfo.content, colList)
+      const urlCheckResult = normalizeExternalLinkUrl(url)
+      if (!urlCheckResult.valid) {
+        if (urlCheckResult.status === 'unsupportedProtocol') {
+          ElMessage.warning(
+            t('visualization.url_protocol_not_supported', [`${urlCheckResult.protocol}:`])
+          )
+        } else {
+          ElMessage.warning(t('visualization.url_check_error'))
+        }
+        return
+      }
+      url = urlCheckResult.url
+
+      if (isIframe.value || isDataEaseBi.value) {
+        embeddedStore.clearState()
+      }
+      if (divSelf) {
+        embeddedStore.setOuterUrl(url)
+        divEmbedded('Iframe')
+        return
+      }
+
+      windowsJump(url, jumpInfo.jumpType, jumpInfo.windowSize)
+    }
+  } else {
+  }
+}
+
+const queryDataFromSelect = (firstLoad = false) => {
+  cancelRequestBatch(`chartData/getData/${view.value.id}`)
+  loading.value = false
+  queryData(firstLoad)
+}
+
+/**
+ * 合并连续查询触发，阻止重复请求及非预览编辑画布的定时查询
+ * 定时刷新复用上一次筛选参数，并将刷新来源传入取数与绘制链路
+ */
+const queryDataDebounced = debounce((firstLoad = false, autoRefresh = false) => {
+  invalidatePaste()
+  if (
+    loading.value ||
+    (autoRefresh &&
+      ['canvas', 'edit', 'canvasDataV'].includes(showPosition.value) &&
+      !isChartRefreshPreview(showPosition.value, editMode.value, dvInfo.value.type))
+  ) {
+    return
+  }
+  const searched = dvMainStore.firstLoadMap.includes(element.value.id)
+  let queryFilter = filter(searched ? false : firstLoad)
+  if (showPosition.value.includes('viewDialog') || autoRefresh) {
+    queryFilter = dvMainStore.getLastViewRequestInfo(view.value.id)
+  }
+  let params = cloneDeep(view.value)
+  params['chartExtRequest'] = queryFilter
+  chartExtRequest.value = queryFilter
+  calcData(params, autoRefresh)
+}, 300)
+const queryData = (firstLoad = false, autoRefresh = false) => {
+  invalidatePaste()
+  queryDataDebounced(firstLoad, autoRefresh)
+}
+
+/**
+ * 记录本轮请求并调用图表组件，定时刷新仅隐藏加载动画而不取消请求锁
+ * 插件沿用原调用参数，原生图表额外接收刷新来源
+ */
+const calcData = (params, autoRefresh = false) => {
+  invalidatePaste()
+  dvMainStore.setLastViewRequestInfo(params.id, params.chartExtRequest)
+  if (chartComponent?.value) {
+    isAutoRefreshing.value = autoRefresh
+    loading.value = true
+    if (view.value.isPlugin) {
+      chartComponent?.value?.invokeMethod({
+        methodName: 'calcData',
+        args: [
+          params,
+          res => {
+            loading.value = false
+          }
+        ]
+      })
+    } else {
+      chartComponent?.value?.calcData?.(
+        params,
+        () => {
+          loading.value = false
+        },
+        autoRefresh
+      )
+    }
+  }
+}
+
+const showChartView = (...libs: ChartLibraryType[]) => {
+  if (view.value?.render && view.value?.type) {
+    const chartView = chartViewManager.getChartView(view.value.render, view.value.type)
+    return chartView && libs?.includes(chartView.library)
+  } else {
+    return false
+  }
+}
+
+let registeredQueryEvent = ''
+onBeforeMount(() => {
+  if (!showPosition.value.includes('viewDialog')) {
+    nextTick(() => {
+      if (pasteUnmounted) return
+      registeredQueryEvent = `query-data-${view.value.id}`
+      emitter.on(registeredQueryEvent, queryDataFromSelect)
+    })
+  }
+})
+// 部分场景不需要更新图表，例如放大页面
+const listenerEnable = computed(() => {
+  return !showPosition.value.includes('viewDialog')
+})
+// 存储所有数据集字段，用于判断图表拖入的字段是否存在
+const viewAllDatasetFields = new Map()
+const showEmpty = ref(false)
+const checkFieldIsAllowEmpty = (allField?) => {
+  showEmpty.value = false
+  if (view.value?.render && view.value?.type) {
+    const chartView = chartViewManager.getChartView(view.value.render, view.value.type)
+    // 插件
+    if (!chartView) {
+      return
+    }
+    const map = parseJson(view.value.customAttr).map
+    if (['bubble-map', 'map'].includes(view.value?.type) && !map?.id) {
+      showEmpty.value = true
+      return
+    }
+    const axisConfigMap = new Map(Object.entries(chartView.axisConfig))
+    // 验证拖入的字段是否包含在当前数据集字段中，如果有一个不在数据集字段中，则显示空图表
+    let includeDatasetField = false
+    if (allField && allField.length > 0) {
+      viewAllDatasetFields.set(view.value.id, allField)
+      outerLoop: for (const [key, value] of axisConfigMap) {
+        // 只判断必须的
+        if (value['allowEmpty']) continue
+        if (!view.value?.[key]?.length) continue
+        for (const item of view.value[key]) {
+          if (!allField.find(field => field.id === item.id)) {
+            includeDatasetField = true
+            break outerLoop
+          }
+        }
+      }
+    }
+    if (includeDatasetField) {
+      showEmpty.value = true
+      return
+    }
+    for (const [key, value] of axisConfigMap) {
+      // 跳过允许为空的配置项
+      if (value['allowEmpty']) continue
+
+      // 如果有数据集字段并且字段值存在且不为空
+      if (viewAllDatasetFields.get(view.value?.id)) {
+        if (view.value?.[key]?.length) {
+          // 检查图表字段是否有不在数据集中
+          for (const item of view.value[key]) {
+            if (!viewAllDatasetFields.get(view.value?.id).find(field => field.id === item.id)) {
+              includeDatasetField = true
+              break
+            }
+          }
+        }
+        // 如果有不在数据集中
+        if (includeDatasetField) {
+          showEmpty.value = true
+          break
+        }
+      }
+
+      // 如果没有限制长度，且值为空，标记为空并跳出
+      if (!value['limit'] && view.value?.[key]?.length === 0) {
+        showEmpty.value = true
+        break
+      }
+
+      // 如果有限制长度，且字段长度不足，标记为空并跳出
+      if (
+        value['limit'] &&
+        (!view.value?.[key] || view.value?.[key]?.length < parseInt(value['limit']))
+      ) {
+        showEmpty.value = true
+        break
+      }
+
+      // 如果是table-info类型且字段为空，标记为空并跳出
+      if (view.value?.type === 'table-info' && view.value?.[key]?.length === 0) {
+        showEmpty.value = true
+        break
+      }
+    }
+  }
+}
+const changeChartType = () => {
+  checkFieldIsAllowEmpty()
+}
+const changeDataset = () => {
+  checkFieldIsAllowEmpty()
+}
+
+onBeforeUnmount(() => {
+  queryDataDebounced.cancel()
+  if (registeredQueryEvent) emitter.off(registeredQueryEvent, queryDataFromSelect)
+})
+
+const loadPlugin = ref(false)
+
+onMounted(() => {
+  if (!view.value.isPlugin) {
+    state.drillClickDimensionList = view.value?.chartExtRequest?.drill ?? []
+    queryData(!showPosition.value.includes('viewDialog'))
+  } else {
+    const searched = dvMainStore.firstLoadMap.includes(element.value.id)
+    const queryFilter = filter(!searched)
+    view.value['chartExtRequest'] = queryFilter
+    chartExtRequest.value = queryFilter
+    loadPlugin.value = true
+  }
+  if (!listenerEnable.value) {
+    return
+  }
+  useEmitt({
+    name: 'checkShowEmpty',
+    callback: param => {
+      if (param.view?.id === view.value.id) {
+        checkFieldIsAllowEmpty(param.allFields)
+      }
+    }
+  })
+  useEmitt({ name: 'chart-type-change', callback: changeChartType })
+  useEmitt({ name: 'dataset-change', callback: changeDataset })
+  useEmitt({
+    name: 'clearPanelLinkage',
+    callback: function (param) {
+      if (param.viewId === 'all' || param.viewId === element.value.id) {
+        chartComponent?.value?.clearLinkage?.()
+      }
+    }
+  })
+  useEmitt({
+    name: 'snapshotChangeToView',
+    callback: function (cacheViewInfo) {
+      initTitle()
+      nextTick(() => {
+        if (
+          cacheViewInfo.snapshotCacheViewCalc.includes(view.value.id) ||
+          cacheViewInfo.snapshotCacheViewCalc.includes('all')
+        ) {
+          view.value.chartExtRequest = filter(false)
+          calcData(view.value)
+        } else if (
+          cacheViewInfo.snapshotCacheViewRender.includes(view.value.id) ||
+          cacheViewInfo.snapshotCacheViewRender.includes('all')
+        ) {
+          chartComponent?.value?.renderChart?.(view.value)
+        }
+      })
+    }
+  })
+
+  useEmitt({
+    name: 'calcData-' + view.value.id,
+    callback: function (val) {
+      if (!state.initReady) {
+        return
+      }
+      initTitle()
+      nextTick(() => {
+        view.value.chartExtRequest = filter(false)
+        const targetVal = val || view.value
+        calcData(targetVal)
+      })
+    }
+  })
+
+  useEmitt({
+    name: 'calcData-all',
+    callback: function () {
+      if (!state.initReady) {
+        return
+      }
+      initTitle()
+      nextTick(() => {
+        view.value.chartExtRequest = filter(false)
+        calcData(view.value)
+      })
+    }
+  })
+  const waitNextFrame = () =>
+    new Promise<void>(resolve => {
+      if (!window.requestAnimationFrame) {
+        resolve()
+        return
+      }
+      window.requestAnimationFrame(() => resolve())
+    })
+
+  const waitRenderPaint = async () => {
+    await nextTick()
+    await waitNextFrame()
+  }
+
+  const notifyRenderChartAllItem = (eventName: string, payload: RenderChartAllPayload) => {
+    emitter.emit(eventName, {
+      ...payload,
+      viewId: `${showPosition.value}-${view.value.id}-${suffixId.value}`
+    })
+  }
+
+  const renderChartByViewInfo = async viewInfo => {
+    invalidatePaste()
+    if (view.value?.plugin?.isPlugin) {
+      const renderResult = chartComponent?.value?.invokeMethod({
+        methodName: 'renderChart',
+        args: [viewInfo]
+      })
+      await Promise.resolve(renderResult)
+      return
+    }
+    const renderResult = chartComponent?.value?.renderChart?.(viewInfo)
+    await Promise.resolve(renderResult)
+  }
+
+  const handleRenderChart = function (val) {
+    invalidatePaste()
+    if (!state.initReady) {
+      return
+    }
+    initTitle()
+    const renderAllPayload = isRenderChartAllPayload(val) ? val : null
+    const viewInfo = renderAllPayload ? view.value : val ? val : view.value
+    if (renderAllPayload) {
+      notifyRenderChartAllItem(RENDER_CHART_ALL_ITEM_START, renderAllPayload)
+    }
+    nextTick(async () => {
+      try {
+        await renderChartByViewInfo(viewInfo)
+      } catch (e) {
+        console.warn('renderChart error', e)
+      } finally {
+        if (renderAllPayload) {
+          await waitRenderPaint()
+          notifyRenderChartAllItem(RENDER_CHART_ALL_ITEM_FINISH, renderAllPayload)
+        }
+      }
+    })
+  }
+  useEmitt({
+    name: 'renderChart-' + view.value.id,
+    callback: handleRenderChart
+  })
+  useEmitt({
+    name: RENDER_CHART_ALL,
+    callback: handleRenderChart
+  })
+  useEmitt({
+    name: 'resetDrill-' + view.value.id,
+    callback: function (val) {
+      nextTick(() => {
+        drillJump(val)
+      })
+    }
+  })
+  useEmitt({
+    name: 'tabCanvasChange-' + element.value.canvasId,
+    callback: function () {
+      if (!state.initReady && !view.value.type.includes('table')) {
+        return
+      }
+      setTimeout(function () {
+        chartComponent?.value?.renderChart?.(view.value)
+      }, 200)
+    }
+  })
+  useEmitt({
+    name: 'updateTitle-' + view.value.id,
+    callback: () => {
+      initTitle()
+    }
+  })
+  useEmitt({
+    name: 'chart-type-change-' + view.value.id,
+    callback: () => {
+      const chart = cloneDeep(view.value)
+      chart.container =
+        'container-' + showPosition.value + '-' + view.value.id + '-' + suffixId.value
+    }
+  })
+
+  initTitle()
+})
+
+// 定时刷新只隐藏加载动画，loading 仍用于阻止重复请求，其他查询保留原有显示规则
+const loadingFlag = computed(() => {
+  return (
+    !isAutoRefreshing.value &&
+    (canvasStyleData.value.refreshViewLoading ||
+      (searchCount.value === 0 && innerSearchCount === 0)) &&
+    loading.value
+  )
+})
+
+const chartAreaShow = computed(() => {
+  if (view.value.tableId) {
+    if (element.value['state'] === undefined || element.value['state'] === 'ready') {
+      return true
+    }
+  }
+  if (['rich-text', 'picture-group'].includes(view.value.type)) {
+    return true
+  }
+  if (view.value?.isPlugin) {
+    return true
+  }
+  if (view.value['dataFrom'] === 'template') {
+    return true
+  }
+  if (view.value.customAttr?.map?.id) {
+    const MAP_CHARTS = ['map', 'bubble-map', 'flow-map']
+    if (MAP_CHARTS.includes(view.value.type)) {
+      return true
+    }
+  }
+  return false
+})
+
+const titleInputRef = ref()
+const titleEditStatus = ref(false)
+const titleEditable = computed(() => {
+  return ['canvas', 'canvasDataV'].includes(showPosition.value) && !props.disabled
+})
+function changeEditTitle() {
+  if (!titleEditable.value || !props.active || mobileInPc.value) {
+    return
+  }
+  if (!titleEditStatus.value) {
+    titleEditStatus.value = true
+    nextTick(() => {
+      titleInputRef.value?.focus()
+      element.value['editing'] = true
+    })
+  }
+}
+
+function onLeaveTitleInput() {
+  element.value['editing'] = false
+  titleEditStatus.value = false
+}
+
+//v-click-outside 指令
+const vClickOutside = {
+  beforeMount(el, binding) {
+    // 在元素上绑定一个事件监听器
+    el.clickOutsideEvent = function (event) {
+      // 判断点击事件是否发生在元素外部
+      if (!(el === event.target || el.contains(event.target))) {
+        // 如果是外部点击，则执行绑定的函数
+        binding.value(event)
+      }
+    }
+    // 在全局添加点击事件监听器
+    document.addEventListener('click', el.clickOutsideEvent)
+  },
+  unmounted(el) {
+    // 在组件销毁前，移除事件监听器以避免内存泄漏
+    document.removeEventListener('click', el.clickOutsideEvent)
+  }
+}
+
+function onTitleChange() {
+  element.value.name = view.value.title
+  element.value.label = view.value.title
+  snapshotStore.recordSnapshotCache('onTitleChange')
+}
+
+const toolTip = computed(() => {
+  return props.themes || 'dark'
+})
+
+const marginBottom = computed<string | 0>(() => {
+  if (!titleShow.value) {
+    return 0
+  }
+  if (titleShow.value || trackMenu.value.length > 0 || state.title_remark.show) {
+    return 12 * scale.value + 'px'
+  }
+  return 0
+})
+
+const iconSize = computed<string>(() => {
+  return 16 * scale.value + 'px'
+})
+
+/**
+ * 修改透明度
+ * 边框透明度为0时会是存色，顾配置低透明度
+ * @param {boolean} isBorder 是否为边框
+ */
+const modifyAlpha = isBorder => {
+  const { backgroundColor, backgroundType, backgroundImageEnable, backgroundColorSelect } =
+    element.value.commonBackground
+  // 透明
+  const transparent = 'rgba(0,0,0,0.01)'
+  // 背景图时，设置透明度为0.01
+  if (backgroundType === 'outerImage' && backgroundImageEnable) return transparent
+  // hex转rgba
+  if (backgroundColor.includes('#'))
+    return isBorder || !backgroundColorSelect ? transparent : backgroundColor
+  const match = backgroundColor.match(/rgba\((\d+), (\d+), (\d+), (\d+|0.\d+)\)/)
+  if (!match) return backgroundColor
+  const [r, g, b, a] = match.slice(1).map(Number)
+  // 边框或者不设置背景色时，设置透明度为0.01，否则原透明度
+  return `rgba(${r}, ${g}, ${b}, ${!backgroundColorSelect || isBorder ? 0.01 : a})`
+}
+
+const titleIconStyle = computed(() => {
+  const bgColor = modifyAlpha(false)
+  const borderColor = modifyAlpha(true)
+  // 不显示标题时，图标的样式
+  const style = {
+    position: 'absolute',
+    border: `1px solid ${borderColor}`,
+    'background-color': bgColor,
+    'border-radius': '2px',
+    padding: '0 2px 0 2px',
+    'z-index': 1,
+    top: '2px',
+    left: '2px',
+    ...(trackMenu.value.length ? {} : { display: 'none' })
+  }
+  return {
+    color: canvasStyleData.value.component.seniorStyleSetting.linkageIconColor,
+    height: iconSize.value,
+    lineHeight: iconSize.value,
+    ...(titleShow.value ? {} : style)
+  }
+})
+// 只稳定标题行高度，图标隐藏时不占用标题横向空间
+const hasActionIcons = computed(
+  () => state.title_remark.show || hasLinkIcon.value || hasJumpIcon.value || hasDrillIcon.value
+)
+// 编辑标题时隐藏操作图标，避免遮挡输入框
+const showTitleActionIcons = computed(() => hasActionIcons.value && !titleEditStatus.value)
+const chartConfigs = ref(CHART_TYPE_CONFIGS)
+const pluginLoaded = computed(() => {
+  let result = false
+  chartConfigs.value.forEach(cat => {
+    result = cat.details.find(chart => view.value?.type === chart.value) !== undefined
+  })
+  return result
+})
+// TODO 统一加载
+const loadPluginCategory = data => {
+  data.forEach(item => {
+    const { category, title, render, chartValue, chartTitle, icon, staticMap } = item
+    const node = {
+      render,
+      category,
+      icon,
+      value: chartValue,
+      title: chartTitle,
+      isPlugin: true,
+      staticMap
+    }
+    if (view.value?.type === node.value) {
+      view.value.plugin = {
+        isPlugin: true,
+        staticMap
+      }
+    }
+    const stack = [...chartConfigs.value]
+    let findParent = false
+    while (stack?.length) {
+      const parent = stack.pop()
+      if (parent.category === category) {
+        const chart = parent.details.find(chart => chart.value === node.value)
+        if (!chart) {
+          parent.details.push(node)
+        }
+        findParent = true
+      }
+    }
+    if (!findParent) {
+      stack.push({
+        category,
+        title,
+        display: 'show',
+        details: [node]
+      })
+    }
+  })
+}
+
+const allEmptyCheck = computed(() => {
+  return ['rich-text', 'picture-group'].includes(element.value.innerType)
+})
+/**
+ * 标题提示的最大宽度
+ */
+const titleTooltipWidth = computed(() => {
+  if (inMobile.value) {
+    return `${screen.width - 10}px`
+  }
+  if (mobileInPc.value) {
+    return '270px'
+  }
+  return '500px'
+})
+const clearG2Tooltip = () => {
+  const g2TooltipWrapper = document.getElementById('g2-tooltip-wrapper')
+  if (g2TooltipWrapper) {
+    for (const ele of g2TooltipWrapper.children) {
+      ele.style.display = 'none'
+    }
+  }
+}
+</script>
+
+<template>
+  <div
+    class="chart-area report-load"
+    :class="{ 'report-load-finish': !loadingFlag }"
+    v-loading="loadingFlag"
+    element-loading-background="rgba(0,0,0,0)"
+  >
+    <div
+      class="title-container"
+      :style="{ 'justify-content': titleAlign, 'margin-bottom': marginBottom }"
+    >
+      <div
+        class="title-content"
+        :class="{ 'is-editing': titleEditStatus }"
+        :style="titleShow && !titleEditStatus ? titleContentStyle : undefined"
+      >
+        <template v-if="!titleEditStatus">
+          <p
+            class="ellipsis"
+            v-if="titleShow"
+            :style="titleTextStyle"
+            :title="view.title || ''"
+            @dblclick="changeEditTitle"
+          >
+            {{ view.title }}
+          </p>
+        </template>
+        <template v-else>
+          <el-input
+            style="flex: 1; min-width: 0"
+            :effect="canvasStyleData.dashboard.themeColor"
+            ref="titleInputRef"
+            v-model="view.title"
+            @keydown.stop
+            @keydown.enter="onLeaveTitleInput"
+            v-click-outside="onLeaveTitleInput"
+            @change="onTitleChange"
+          />
+        </template>
+        <div v-if="showTitleActionIcons" class="icons-container-out">
+          <div
+            class="icons-container"
+            :class="{ 'is-editing': titleEditStatus }"
+            :style="titleIconStyle"
+          >
+            <el-tooltip :effect="toolTip" placement="top" v-if="state.title_remark.show">
+              <template #content>
+                <div
+                  :style="{
+                    maxWidth: titleTooltipWidth,
+                    wordBreak: 'break-all',
+                    wordWrap: 'break-word',
+                    whiteSpace: 'pre-wrap'
+                  }"
+                  v-html="safeTitleRemark"
+                ></div>
+              </template>
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_info_outlined"><icon_info_outlined class="svg-icon" /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip :effect="toolTip" placement="top" content="已设置联动" v-if="hasLinkIcon">
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_link-record_outlined"
+                  ><icon_linkRecord_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip
+              :effect="toolTip"
+              placement="top"
+              :content="t('visualization.jump_set_tips')"
+              v-if="hasJumpIcon"
+            >
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_viewinchat_outlined"
+                  ><icon_viewinchat_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+            <el-tooltip
+              :effect="toolTip"
+              placement="top"
+              :content="t('visualization.drill_set_tips')"
+              v-if="hasDrillIcon"
+            >
+              <el-icon :size="iconSize" class="inner-icon">
+                <Icon name="icon_drilling_outlined"
+                  ><icon_drilling_outlined class="svg-icon"
+                /></Icon>
+              </el-icon>
+            </el-tooltip>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--这里去渲染不同图库的图表-->
+    <div
+      v-if="allEmptyCheck || (chartAreaShow && !showEmpty)"
+      style="flex: 1; position: relative; min-height: 0; overflow: hidden"
+    >
+      <template v-if="!pasteActiveKey">
+        <plugin-component
+          v-if="view.plugin?.isPlugin && loadPlugin"
+          :jsname="view.plugin.staticMap['index']"
+          :scale="scale"
+          :dynamic-area-id="dynamicAreaId"
+          :view="view"
+          :show-position="showPosition"
+          :element="element"
+          :request="request"
+          :emitter="emitter"
+          :store="store"
+          :suffixId="suffixId"
+          :ref="setLegacyChartComponent"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @resetLoading="() => (loading = false)"
+        />
+        <de-picture-group
+          v-else-if="showChartView(ChartLibraryType.PICTURE_GROUP)"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :element="element"
+          :active="active"
+          :view="view"
+          :show-position="showPosition"
+          :suffixId="suffixId"
+        >
+        </de-picture-group>
+        <de-rich-text-view
+          v-else-if="showChartView(ChartLibraryType.RICH_TEXT)"
+          :scale="scale"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :element="element"
+          :disabled="!['canvas', 'canvasDataV'].includes(showPosition) || disabled"
+          :active="active"
+          :show-position="showPosition"
+          :edit-mode="editMode"
+          :suffixId="suffixId"
+        />
+        <de-indicator
+          :scale="scale"
+          v-else-if="showChartView(ChartLibraryType.INDICATOR)"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :view="view"
+          :element="element"
+          :show-position="showPosition"
+          :suffixId="suffixId"
+          :font-family="fontFamily"
+          :common-params="commonParams"
+          @touchstart="clearG2Tooltip"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @onComponentEvent="() => emit('onComponentEvent')"
+        />
+        <chart-component-g2-plot
+          :scale="scale"
+          :dynamic-area-id="dynamicAreaId"
+          :view="view"
+          :show-position="showPosition"
+          :element="element"
+          :suffixId="suffixId"
+          :font-family="fontFamily"
+          :active="active"
+          v-else-if="
+            showChartView(ChartLibraryType.G2, ChartLibraryType.L7_PLOT, ChartLibraryType.L7)
+          "
+          :ref="setLegacyChartComponent"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @resetLoading="() => (loading = false)"
+        />
+        <chart-component-s2
+          :view="view"
+          :scale="scale"
+          :show-position="showPosition"
+          :element="element"
+          :drill-length="drillClickLength"
+          :font-family="fontFamily"
+          v-else-if="showChartView(ChartLibraryType.S2)"
+          :ref="setLegacyChartComponent"
+          @onPointClick="onPointClick"
+          @onChartClick="chartClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          :suffixId="suffixId"
+        />
+      </template>
+      <filter-paste-renderer
+        v-for="node in pasteNodes"
+        :key="node.key"
+        :ref="
+          instance => {
+            node.renderer = instance
+          }
+        "
+        :binding="node.binding"
+        :suffix-id="node.key"
+        :scale="scale"
+        :show-position="showPosition"
+        :font-family="fontFamily"
+        :themes="canvasStyleData.dashboard.themeColor"
+        :common-params="commonParams"
+        :edit-mode="editMode"
+        :disabled="disabled"
+        :dynamic-area-id="dynamicAreaId"
+        :active="active && node.binding.current.value.phase === 'active'"
+        :drill-length="drillClickLength"
+        :aria-hidden="node.binding.current.value.phase === 'candidate' ? 'true' : null"
+        :inert="node.binding.current.value.phase === 'candidate' ? '' : null"
+        :style="{
+          position: 'absolute',
+          inset: '0',
+          width: '100%',
+          height: '100%',
+          visibility: node.binding.current.value.phase === 'candidate' ? 'hidden' : 'visible',
+          pointerEvents: node.binding.current.value.phase === 'candidate' ? 'none' : undefined
+        }"
+        :data-filter-paste-key="node.key"
+        @onChartClick="chartClick"
+        @onPointClick="onPointClick"
+        @onDrillFilters="onDrillFilters"
+        @onJumpClick="jumpClick"
+        @onComponentEvent="() => emit('onComponentEvent')"
+        @resetLoading="() => (loading = false)"
+      />
+    </div>
+    <chart-empty-info
+      v-if="(!chartAreaShow || showEmpty) && !allEmptyCheck"
+      :themes="canvasStyleData.dashboard.themeColor"
+      :view-icon="view.type"
+      @touchstart="clearG2Tooltip"
+    ></chart-empty-info>
+    <drill-path
+      :disabled="optType === 'enlarge'"
+      :drill-filters="state.drillFilters"
+      @onDrillJump="drillJump"
+    />
+    <OpenHandler v-if="appStore.getXpackValid" ref="openHandler" />
+    <ViewCategoryHandler
+      v-if="appStore.getXpackValid && !pluginLoaded && view.isPlugin"
+      @load-plugin-category="loadPluginCategory"
+    >
+    </ViewCategoryHandler>
+    <DePreviewPopDialog ref="dePreviewPopDialogRef"></DePreviewPopDialog>
+  </div>
+</template>
+
+<style lang="less" scoped>
+.chart-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // hover 后图标参与 flex 宽度计算，隐藏时不占标题空间
+  &:hover {
+    .icons-container-out {
+      display: flex;
+    }
+  }
+}
+.title-container {
+  position: relative;
+  margin: 0;
+  width: 100%;
+
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+
+  gap: 8px;
+
+  .title-content {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+
+    &.is-editing {
+      width: 100%;
+    }
+  }
+
+  .icons-container-out {
+    position: relative;
+    display: none;
+    align-items: center;
+    flex: 0 0 auto;
+    max-width: 100%;
+    height: 100%;
+    margin-right: 16px;
+
+    .icons-container {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      gap: 8px;
+      height: 100%;
+      white-space: nowrap;
+
+      color: #646a73;
+
+      &.icons-container__dark {
+        color: #a6a6a6;
+      }
+
+      &.is-editing {
+        gap: 6px;
+      }
+
+      .inner-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.ellipsis {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  line-height: inherit;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

@@ -1,0 +1,97 @@
+{
+  "scenario": "indicator source to detail-table target, same dataset, full filter-tree replacement, query, visible table result, and explicit save",
+  "environment": {
+    "url": "http://127.0.0.1:7070",
+    "mode": "local standalone session",
+    "permission": "explicit DEV test stub allow during copy/paste; not real authorization"
+  },
+  "dashboardId": "1312476889213964288",
+  "sourceId": "7520752064427724800",
+  "sourceType": "indicator",
+  "targetId": "7520741153101058048",
+  "targetType": "table-info",
+  "targetDisplayTitle": "基础柱状图 (existing component title remained visible)",
+  "selectedChartType": "明细表",
+  "datasetId": "1312472054565572608",
+  "tree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "result": {
+    "outcome": "success",
+    "reason": null,
+    "operationId": 1,
+    "logicalGetDataCalls": 1,
+    "counterScope": "logical getData calls, not physical HTTP",
+    "queryType": "table-info",
+    "queryDatasetId": "1312472054565572608",
+    "rowCount": 14,
+    "visibleColumn": "shop",
+    "visibleRows": [
+      "乐园店",
+      "南都店",
+      "南都店",
+      "果元店",
+      "果元店",
+      "果元店",
+      "果元店",
+      "果元店",
+      "果元店",
+      "水围店",
+      "水围店",
+      "水围店",
+      "香橙店",
+      "香橙店"
+    ],
+    "visibleRenderedChart": "detail table with shop column and returned rows",
+    "amountSum": null,
+    "amountSumStatus": "not observed; target contained only shop column"
+  },
+  "assertions": {
+    "sourceTreeCopiedToClipboard": true,
+    "targetTreeEqualsCopiedTree": true,
+    "undefinedPaths": [],
+    "datasetIdentityMatches": true,
+    "logicalQueryCompleted": true,
+    "visibleTableRowsObserved": true,
+    "saveMessage": "保存成功",
+    "explicitSaveCompleted": true
+  },
+  "limitations": [
+    "This is one indicator→detail-table pair only; it does not establish all eligible chart types or P1 acceptance.",
+    "The table contains only shop, so no amount aggregate or sum oracle is claimed.",
+    "Local standalone plus DEV permission test stub is not real multi-user authorization.",
+    "Dashboard list item is disabled; reopening used the previously observed editor URL, so list-based reopen is not established.",
+    "The component's visible display title remained 基础柱状图 while selected type and query request were 明细表/table-info; the visible result was a shop table."
+  ],
+  "evidenceRecordedAt": "2026-10-28T15:38:08Z"
+}

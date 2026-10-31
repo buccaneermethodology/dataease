@@ -1,0 +1,524 @@
+{
+  "doc_id": "chart",
+  "title": "图表取数、仪表板与大屏",
+  "domains": [
+    "K03",
+    "K04",
+    "K05",
+    "K06",
+    "K07",
+    "K09"
+  ],
+  "facts": [
+    {
+      "id": "CHART-001",
+      "statement": "图表前端 getData 删除输入中的旧 data 后深拷贝请求，stock-line 将第一横轴排序设为 desc；字段 originName 编码后 POST /chartData/getData，按响应 code 分支还原字段并返回数据或错误响应。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/chart.ts",
+          "start_line": 79,
+          "end_line": 115,
+          "symbol": "getData",
+          "sha256": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7"
+        }
+      ]
+    },
+    {
+      "id": "CHART-002",
+      "statement": "ChartDataApi 声明 POST getData 的输入和输出均为 ChartViewDTO；导出图表和明细另声明 dvId 的 export_view / export_detail 权限注解，不能把导出授权等同普通取数授权。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/chart/ChartDataApi.java",
+          "start_line": 25,
+          "end_line": 43,
+          "symbol": "ChartDataApi",
+          "sha256": "e422b3c5c89892f37d6a16ed79bda3c01e268e36f2975a4e4460c6d4dadcd4d1"
+        }
+      ]
+    },
+    {
+      "id": "CHART-003",
+      "statement": "ChartDataServer.getData 有 sceneId 的 DeLinkPermit 注解；dataFrom=template 直接走模板扩展数据，其他请求依次执行 viewDecode、calcData、viewEncode、encodeData；捕获异常后以 DATA_IS_WRONG 包含消息与堆栈抛出。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+          "start_line": 86,
+          "end_line": 104,
+          "symbol": "getData",
+          "sha256": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-004",
+      "statement": "普通 calcData 将当前非空用户 ID 写入扩展请求并检查链接图表；Excel 导出强制 custom 结果模式，否则扩展请求的 custom 模式及条数可覆盖图表配置；插件和内置图表使用不同 Handler 工厂。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 157,
+          "end_line": 191,
+          "symbol": "calcData",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-005",
+      "statement": "内置 Handler 按 render-type 注册和查找，未命中返回 DefaultChartHandler；因此 calcData 的 handler==null 错误不能解释为所有未知内置图表类型均被拒绝。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/ChartHandlerManager.java",
+          "start_line": 18,
+          "end_line": 28,
+          "symbol": "registerChartHandler/getChartHandler",
+          "sha256": "358ab8083fb36c713b5004f969b695a2afdabb19e617c5536d3ab7a9d543e201"
+        }
+      ]
+    },
+    {
+      "id": "CHART-006",
+      "statement": "普通 calcData 要求数据集存在并通过 DATASET READ 检查，获取列权限与脱敏列表、行权限树；允许字段名集合额外加入计数字段 *，再从各轴删去无权限字段。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 194,
+          "end_line": 222,
+          "symbol": "calcData",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-007",
+      "statement": "仪表板组件过滤先区分 SQL 参数与普通字段；普通字段支持逗号分隔 fieldId 与树形过滤，只加入属于当前数据集且匹配可选 viewIds 的存在字段，缺失字段跳过。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 224,
+          "end_line": 306,
+          "symbol": "calcData/组件过滤",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-008",
+      "statement": "联动、外部参数和 Web 参数合并处理；filterType=3 的联动条件保存为 customLinkageFilter，其余 DE 参数补充数据集参数信息，普通字段条件改为 filterType=2 并检查数据集及目标图表。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 308,
+          "end_line": 367,
+          "symbol": "calcData/外部过滤",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-009",
+      "statement": "钻取仅在钻取轴长度大于已请求层数时展开；匹配维度的日期值转为 between 起止时间，其他值用 in；条件标记 filterType=1，当前和下一钻取字段加入横轴并避免重复。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 369,
+          "end_line": 429,
+          "symbol": "calcData/钻取",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-010",
+      "statement": "普通 calcData 转义外部过滤值并保存 originValue，委托 Handler.customFilter；横纵轴均为空则返回空图表。图表 customFilter 可被指标表联动 customFilter 替换，再解析字段。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 431,
+          "end_line": 454,
+          "symbol": "calcData/过滤与空轴",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-011",
+      "statement": "calcData 从数据集获取 union SQL 和 dsMap；非跨源替换 schema alias，空 dsMap 或状态 Error 产生业务异常；跨源使用默认 Provider，非跨源取首个数据源类型的 Provider。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 455,
+          "end_line": 479,
+          "symbol": "calcData/Provider选择",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-012",
+      "statement": "calcData 将数据集 SQL 包为表表达式，分别把图表自定义过滤、外部过滤、行权限树写入 SQLMeta；插件额外生成 querySql 放入过滤上下文，最终统一调用 Handler.calcChartResult 和 buildChart。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+          "start_line": 481,
+          "end_line": 504,
+          "symbol": "calcData/SQLMeta",
+          "sha256": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6"
+        }
+      ]
+    },
+    {
+      "id": "CHART-013",
+      "statement": "DefaultChartHandler 默认复制 xAxis/yAxis/drillFields；其 customFilter 从轴中去掉脱敏列表内字段，该行为不能推及覆盖了 customFilter 的所有 Handler。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 81,
+          "end_line": 100,
+          "symbol": "formatAxis/customFilter",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-014",
+      "statement": "默认 Handler 将维度和指标写入 SQLMeta，生成聚合 SQL，经 Provider.rebuildSQL 与 fetchResultField 获取数据，再做自定义排序、quickCalc 和结果组装；Provider 请求携带跨源标记、dsMap 及复制后的参数值。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 102,
+          "end_line": 160,
+          "symbol": "fillDatasourceRequest/calcChartResult",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-015",
+      "statement": "默认 buildChart 对 Excel 导出返回表格结构和 sourceData；普通消费合并图表与表格结果，加入 sourceFields、动态辅助线，清空 sql 并返回 drill 与恢复原始日期值的 drillFilters。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/DefaultChartHandler.java",
+          "start_line": 164,
+          "end_line": 204,
+          "symbol": "buildChart",
+          "sha256": "17f1afdf01433003416790fc2e19bb3bb88dc23ee164782e04147fdb19b919a5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-016",
+      "statement": "指标 SQL 转换区分计算字段、复制字段、分组字段及普通字段；非跨源计算表达式使用方言占位符；指标聚合处理 * 计数、count_distinct、数值转换及 avg/pop 的精度处理。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/engine/trans/Quota2SQLObj.java",
+          "start_line": 44,
+          "end_line": 135,
+          "symbol": "quota2sqlObj/getYFields",
+          "sha256": "253df13277f96d9bdce368edd774a8ca803716b7feb369bf7ac169b777e56ce3"
+        }
+      ]
+    },
+    {
+      "id": "CHART-017",
+      "statement": "ChartViewDTO 承载 data、drillFilters、totalPage/totalItems、chartExtRequest 与导出标记；isExcelExport 和 exportDatasetOriginData 默认 false，pid/sourceTableId 有字段级 Long 字符串序列化声明。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartViewDTO.java",
+          "start_line": 13,
+          "end_line": 41,
+          "symbol": "ChartViewDTO",
+          "sha256": "8fbeb5cbf095d19710f87964b931afc2e4fe67755533847b8dac2eb7eff6f533"
+        }
+      ]
+    },
+    {
+      "id": "CHART-018",
+      "statement": "G2Plot 图表在存在 tableId 或 template 数据来源时取数；非零错误响应设置 isError/errMsg；成功保存明细，非钻取且无联动时更新原始数据并广播 chart-data-change，然后 renderChart。无数据集的指定地图类型仍调用渲染。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+          "start_line": 539,
+          "end_line": 601,
+          "symbol": "calcData",
+          "sha256": "e9429bf59915e5a23d4f9d70987b126ca8b8329863be3208c625367e71f607e5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-019",
+      "statement": "PieHandler 注册四种饼图类型，将扩展标签和提示字段加入指标轴；buildChart 在父类结果后过滤图表 data 的空值及负值，零值保留。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/pie/PieHandler.java",
+          "start_line": 14,
+          "end_line": 64,
+          "symbol": "init/formatAxis/buildChart/filterPositiveData",
+          "sha256": "c052f5f387e70946291164cc12ca148cb899bf299e10f1c11cbd84e3ccd4b520"
+        }
+      ]
+    },
+    {
+      "id": "CHART-020",
+      "statement": "TableInfoHandler 清空指标轴，按 tablePageMode/custom 结果限制设置页码和页大小；生成不聚合 SQL 与 LIMIT/OFFSET，分页模式另外统计总条数且受 resultCount 上限限制，再回填 totalItems/totalPage。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/table/TableInfoHandler.java",
+          "start_line": 37,
+          "end_line": 140,
+          "symbol": "formatAxis/customFilter/calcChartResult",
+          "sha256": "6b2244425a009e02fd7b2fb18e2f48be4d48e3e9ab249b3349bb7606d5663bde"
+        }
+      ]
+    },
+    {
+      "id": "CHART-021",
+      "statement": "MixHandler 分开左指标 yAxis、右指标 yAxisExt 和右分组 extBubble，清除加入主横轴前各轴的排序；右轴结果使用独立 xAxisBase，防止钻取追加维度被用作右侧图例。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/mix/MixHandler.java",
+          "start_line": 25,
+          "end_line": 77,
+          "symbol": "formatAxis/buildNormalResult",
+          "sha256": "99b82adc5b215ed625dec78ce3a1fdf168708821d3989622dd42a37c19d348d5"
+        }
+      ]
+    },
+    {
+      "id": "CHART-022",
+      "statement": "TablePivotHandler 在 GroupChartHandler 计算结果上加入 customCalc，并可执行动态阈值辅助查询；辅助计算异常只记录日志，行轴为空时自定义汇总返回空映射。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/table/TablePivotHandler.java",
+          "start_line": 33,
+          "end_line": 97,
+          "symbol": "calcChartResult/calcCustomExpr",
+          "sha256": "09d4a2cd7397cfb9f6ffa1bc19363e431dc11d127d6857d9c66fa945c518f617"
+        }
+      ]
+    },
+    {
+      "id": "CHART-023",
+      "statement": "GroupChartHandler 将 xAxisExt 追加到横轴；ExtQuotaChartHandler 将 extLabel/extTooltip 追加到指标轴，作为不同图表家族的轴格式化复用点。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/GroupChartHandler.java",
+          "start_line": 11,
+          "end_line": 19,
+          "symbol": "formatAxis",
+          "sha256": "b2a74ea42b74da11b5907a7126493a1ec2c017968ab4b92d5ec6ba7e987f19c1"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/ExtQuotaChartHandler.java",
+          "start_line": 10,
+          "end_line": 20,
+          "symbol": "formatAxis",
+          "sha256": "e52a710eaff8614f2cf668eb8f26e9e9e0d7bad1fe5b8e315d9f1baa133b1dfe"
+        }
+      ]
+    },
+    {
+      "id": "CHART-024",
+      "statement": "YoyChartHandler 在父类过滤后检查同环比过滤扩展，保存原过滤与原 customFilter 至上下文并标记 yoyFiltered；有该标记时 buildResult 先返回原始数据供后续重组。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/chart/charts/impl/YoyChartHandler.java",
+          "start_line": 30,
+          "end_line": 74,
+          "symbol": "customFilter/buildResult",
+          "sha256": "71ff74f495c4915c1ef891ea22c28b732946d9d1a0690635ec3b11dad2af2573"
+        }
+      ]
+    },
+    {
+      "id": "CHART-025",
+      "statement": "MixHandlerTest 现有 JUnit 资产断言混合图在单层/多层钻取、回到根、多主字段与无子类别时的名称、图例、数值和维度数，循环覆盖 Mix/GroupMix/StackMix；本次仅阅读，未执行。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/test/java/io/dataease/chart/charts/impl/mix/MixHandlerTest.java",
+          "start_line": 12,
+          "end_line": 77,
+          "symbol": "MixHandlerTest",
+          "sha256": "97c606adfa473b8c34e80abebd04e8ff4a06299c96dc1cc4ebb5aa4947885d79"
+        }
+      ]
+    },
+    {
+      "id": "CHART-026",
+      "statement": "仪表板编辑 initLocalCanvasData 以 dashboard 或 dashboard-copy 及 resourceTable=snapshot/source=main-edit 初始化；复制后设置 prepare、copy 与目标 pid。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/dashboard/index.vue",
+          "start_line": 206,
+          "end_line": 225,
+          "symbol": "initLocalCanvasData",
+          "sha256": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559"
+        }
+      ]
+    },
+    {
+      "id": "CHART-027",
+      "statement": "大屏编辑 initLocalCanvasData 以 dataV 或 dataV-copy 及 snapshot/main-edit 初始化，准备完成后通知 renderChart；拖入组件设置位置与新 ID、按缩放调整尺寸并加入画布。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/data-visualization/index.vue",
+          "start_line": 316,
+          "end_line": 334,
+          "symbol": "initLocalCanvasData",
+          "sha256": "89b48cf0011a681237dcf3bfcdd6027dec607df69fc39ea36d368a6e2a1c59a2"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/index.vue",
+          "start_line": 223,
+          "end_line": 237,
+          "symbol": "handleDrop",
+          "sha256": "89b48cf0011a681237dcf3bfcdd6027dec607df69fc39ea36d368a6e2a1c59a2"
+        }
+      ]
+    },
+    {
+      "id": "CHART-028",
+      "statement": "仪表板与大屏预览分别用 dashboard/dataV，默认从 core 加载；复用场景用 initCanvasDataPrepare，其余用 initCanvasData。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/views/dashboard/DashboardPreviewShow.vue",
+          "start_line": 100,
+          "end_line": 113,
+          "symbol": "loadCanvasData",
+          "sha256": "5f6d583f2eff404dd04fb0684c9e8d3cb2ea9d25dd9921cb50682923eb07081a"
+        },
+        {
+          "path": "core/core-frontend/src/views/data-visualization/PreviewShow.vue",
+          "start_line": 78,
+          "end_line": 94,
+          "symbol": "loadCanvasData",
+          "sha256": "ce6d84f38fa1d658b5d1416050521892c232f59024c6edfdecfa81deca35b245"
+        }
+      ]
+    },
+    {
+      "id": "CHART-029",
+      "statement": "initCanvasDataPrepare 按复制标记选 findCopyResource/findById，指定 resourceTable（默认 core），解析 componentData/canvasStyleData 并执行 historyAdaptor；initCanvasData 在非 onlyPreview 时写入画布 Store，另获取联动和跳转信息。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 596,
+          "end_line": 680,
+          "symbol": "initCanvasDataPrepare/initCanvasData",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-030",
+      "statement": "canvasSaveWithParams 深拷贝组件，清除图表/组合/标签内联动过滤，生成新 contentId 并序列化画布样式和组件；已存在且非 copy 走 updateCanvas，否则 saveCanvas；成功更新本地 ID/状态/contentId 并重置样式修改计数。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 843,
+          "end_line": 908,
+          "symbol": "canvasSaveWithParams",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        }
+      ]
+    },
+    {
+      "id": "CHART-031",
+      "statement": "保存前的冲突提示仅对非桌面已存在非复制资源调用 checkCanvasChange；返回 Repeat 时确认后才执行回调。后端该检查只按 id/contentId 查主表，返回 Repeat 或 Success，不构成 updateCanvas 内的原子并发写入条件。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/utils/canvasUtils.ts",
+          "start_line": 811,
+          "end_line": 837,
+          "symbol": "保存前检查",
+          "sha256": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/DataVisualizationServer.java",
+          "start_line": 629,
+          "end_line": 687,
+          "symbol": "checkCanvasChange/updateCanvas",
+          "sha256": "767cce2d1f5fb5666f2f0aa2848da5d59f7695dfe60cb86bee6bfa2e75450a16"
+        }
+      ]
+    },
+    {
+      "id": "CHART-032",
+      "statement": "DataVisualizationApi 的接口声明对 findById 要求资源 read；saveCanvas 要求父目录 manage；updateCanvas、更新发布状态和恢复发布要求资源 manage，并按业务类型选择 busiFlag。",
+      "kind": "implemented",
+      "scope": "当前工作区 V3 静态源码；不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/visualization/DataVisualizationApi.java",
+          "start_line": 40,
+          "end_line": 88,
+          "symbol": "DataVisualizationApi",
+          "sha256": "2bc56f5d731e2827f4221831f4e0ce00c0000a040c98b70ae9c21b6d743e822f"
+        }
+      ]
+    },
+    {
+      "id": "CHART-033",
+      "statement": "saveCanvas 将文件夹初始状态置为 PUBLISHED、其他节点置为 UNPUBLISHED，调用 innerSave 后保存组件引用的图表并返回字符串 ID。",
+      "kind": "implemented",

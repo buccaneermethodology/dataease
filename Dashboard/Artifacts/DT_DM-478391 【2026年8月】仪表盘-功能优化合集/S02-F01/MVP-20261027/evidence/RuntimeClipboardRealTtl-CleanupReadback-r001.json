@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T14:26:22.941Z",
+  "pageClosed": true,
+  "contextPresentInBrowser": false,
+  "contextPages": 0,
+  "browserContextCount": 1,
+  "ownedContextMatches": true,
+  "browserNewPageSource": "async newPage(options = {}) {\n        return await this._wrapApiCall(async () => {\n          const context2 = await this.newContext(options);\n          const page = await context2.newPage();\n          page._ownedContext = context2;\n          context2._ownerPage = page;\n          return page;\n        }, { title: \"Create page\" });\n      }",
+  "pageCloseSource": "async close(options = {}) {\n        this._closeReason = options.reason;\n        if (!options.runBeforeUnload)\n          this._closeWasCalled = true;\n        try {\n          if (this._ownedContext)\n            await this._ownedContext.close();\n          else if (options.runBeforeUnload)\n            await this._channel.runBeforeUnload({}, kNoTimeout);\n          else\n            await this._channel.close({ reason: options.reason }, kNoTimeout);\n        } catch (e) {\n          if (isTargetClosedError2(e) && !options.runBeforeUnload)\n            return;\n          throw e;\n        }\n      }"
+}

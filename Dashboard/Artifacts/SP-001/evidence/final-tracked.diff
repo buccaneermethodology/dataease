@@ -1,0 +1,65 @@
+diff --git a/Dashboard/Artifacts/README.md b/Dashboard/Artifacts/README.md
+index 1081d398dc..b73a0d584f 100644
+--- a/Dashboard/Artifacts/README.md
++++ b/Dashboard/Artifacts/README.md
+@@ -10,3 +10,5 @@
+ 此索引不授予权限、不替代 Goal authority，也不证明独立验证或任务完成。
+ 
+ | Goal `DE-GOV-002` | 仅优化本地 SGE 写前保全与收尾流程 | [Goal-DE-GOV-002](Goal-DE-GOV-002/README.md) |
++
++| Stage Plan `SP-001` | DataEase V3 初始KB，全仓盘点＋核心深挖 | [SP-001](SP-001/README.md) |
+diff --git a/Dashboard/Big_Ideas.md b/Dashboard/Big_Ideas.md
+index 0d4fdbeeaf..f01743f952 100644
+--- a/Dashboard/Big_Ideas.md
++++ b/Dashboard/Big_Ideas.md
+@@ -2,9 +2,11 @@
+ 
+ | ID | Topic | Scope | Purpose | Status | Delivery State | Claim Ceiling | Authority / Blocker | Evidence | Next |
+ |---|---|---|---|---|---|---|---|---|---|
+-| DE-KNOW-BI01 | DataEase Repo 产品知识基线 | Repo 产品/功能、使用流程、特点、架构、开发方式，以及由此整理的未知与未解决问题；不承担任务状态跟踪 | 建立并持续维护可追溯的产品知识全景和问题清单 | doing | 已整理全景初稿及未知/未解决问题清单 | 当前是静态材料，不代表运行验收或完整知识覆盖 | 依据可访问的 Repo 源码、文档和明确提供的产品资料；未知内容保留为未知 | [产品知识全景](../Docs/Dashboard/README.md)、[问题清单](../Docs/Dashboard/unknowns-and-open-questions.md) | 后续有明确知识整理任务时扩充，并维护证据来源 |
++| DE-KNOW-BI01 | DataEase Repo 产品知识基线 | Repo 产品/功能、使用流程、特点、架构、开发方式，以及由此整理的未知与未解决问题；不承担任务状态跟踪 | 建立并持续维护可追溯的产品知识全景和问题清单 | doing | 已整理全景初稿、未知清单及[初始KB交付](../kb/README.md) | 当前是静态材料，不代表运行验收或完整知识覆盖 | 依据可访问的 Repo 源码、文档和明确提供的产品资料；未知内容保留为未知 | [产品知识全景](../Docs/Dashboard/README.md)、[问题清单](../Docs/Dashboard/unknowns-and-open-questions.md) | 后续有明确知识整理任务时扩充，并维护证据来源 |
+ | DE-EXEC-BI01 | DataEase Repo 项目执行跟踪 | 本 Repo 的任务级 Session 台账、Big Idea/Stage Plan 归属和执行状态维护；不汇总产品知识全景 | 让每项明确任务有独立记录、证据和下一步 | doing | 已建立执行台账、目录区分和两类 Big Idea 归属 | 仅对本 Dashboard 登记的任务和可见证据负责，不宣称历史任务穷尽 | 后续任务由用户提出或明确授权 | [Sessions](Sessions.md)、[Decisions](Decisions.md) | 持续按任务维护 Session，并保持产品知识与执行状态分层 |
+ 
+ ## Stage Plan 执行批次
+ 
+-当前未设 Stage Plan。已登记 Session 分属上述 Big Ideas；当多个任务形成共同范围和完成边界时，再建立对应 Stage Plan。
++| ID | 归属 | Topic | Scope | Purpose | Status | Evidence | Next |
++|---|---|---|---|---|---|---|---|
++| SP-001 | DE-KNOW-BI01 | DataEase 初始 KB | 全仓盘点＋核心深挖；静态证实；XPack公共契约 | 支撑后续开发理解与影响分析 | doing | [Goal](Artifacts/SP-001/goal.md)、[Stage Plan](Artifacts/SP-001/stage-plan.md) | 本地交付候选已齐；验收和Goal终态读取[结果入口](Artifacts/SP-001/README.md) |
+diff --git a/Dashboard/Decisions.md b/Dashboard/Decisions.md
+index be0ff3c58c..9cd500b50c 100644
+--- a/Dashboard/Decisions.md
++++ b/Dashboard/Decisions.md
+@@ -9,3 +9,5 @@
+ | DE-EXEC-D005 | 在没有项目级 registry 工具时，手工维护 Big Ideas、Sessions、Decisions 页面，不声明 reconcile/validate 已通过 | done | Dashboard Governance 允许 minimal profile；项目当前没有注册表工具，避免把人工维护说成程序化校验 |
+ | DE-EXEC-D006 | 本地 SGE 增强写前字节保全、候选包冻结与单向收尾；review 保留 as-of 状态，当前 Goal 终态读取有效 receipt | done | 依据本轮用户授权及分析报告；不放宽 Gate、不推广 reviewer 豁免、不更新全局或其他仓库副本；见 DE-EXEC-S007 |
+ | DE-EXEC-D007 | SGE 收益评估每5个任务一轮，统计原分母、质量与采集成本；不把诊断案例当可比基线 | done | 用户明确指定报告节奏；长期观察状态不因 setup 完成而关闭；修改 Skill 需单独任务 |
++
++| DE-EXEC-D008 | 初始KB位于根目录kb/；全部SP-001执行中间件留Artifacts/SP-001；产品全景Dashboard仅References | done | 用户明确目录更正；不得把执行状态、审查、临时推断放入正式知识；不改变既有全景文档 |
+diff --git a/Dashboard/README.md b/Dashboard/README.md
+index 0ad2494641..612d756272 100644
+--- a/Dashboard/README.md
++++ b/Dashboard/README.md
+@@ -4,7 +4,8 @@
+ 
+ ## 当前快照
+ 
+-- **当前活动：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
++- **KB 建设：**`SP-001` 本地交付候选已落地，[知识库](../kb/README.md)与Dashboard平行；[最终验收与终态入口](Artifacts/SP-001/README.md)。
++- **持续观察：**`DE-EXEC-S008` — 本地 SGE 优化持续收益观察，每5个已结束任务一轮评估。
+ - **观察状态：**[当前计数与结论](Artifacts/Goal-DE-GOV-003/data/state.json)；样本不足时明确保持证据不足。
+ - **入口：**[观察 Goal 与采集协议](Artifacts/Goal-DE-GOV-003/README.md)。建立机制不代表已经证明效率收益。
+ - **历史：**SGE 安装见 DE-EXEC-S006，本地优化见 DE-EXEC-S007；各自历史快照保留。
+diff --git a/Dashboard/Sessions.md b/Dashboard/Sessions.md
+index 8124b381f9..c198b6eaab 100644
+--- a/Dashboard/Sessions.md
++++ b/Dashboard/Sessions.md
+@@ -10,3 +10,8 @@
+ | DE-EXEC-S006 | 安装 SGE 项目级 Skill 并完善 Dashboard 维护入口 | 将 `sge-governed-checkpoints` 完整安装到 `.codex/skills/`；在项目协作规范中接入；拆分执行 Dashboard 记录并保留现有五条 Session；补充本任务 Goal、验收、验证和收尾证据。不修改 DataEase 运行代码、依赖、数据库、发布或远端 | 让后续非平凡任务按项目内 SGE 要求执行，并让 Dashboard 状态和证据更易维护 | Big Idea `DE-EXEC-BI01` | done | Skill 已安装，Dashboard 已拆页，AC-01..AC-06 首轮独立验证通过；最终 Goal claim 仍受 Stop Gate receipt 约束 | 仅针对本次安装目标和可见文件；不声明字节级基线、registry reconcile 或 DataEase runtime | 用户本轮明确授权本地项目 Skill 和 Dashboard 编辑 | [Goal-DE-GOV-001](Artifacts/Goal-DE-GOV-001/goal.md)、[任务材料](Artifacts/Goal-DE-GOV-001/README.md)、[收尾候选](Artifacts/Goal-DE-GOV-001/closeout.md) | 无立即后续 Session；若日后需要 Dashboard 自动 registry 能力，先独立定义契约、恢复语义和校验边界 |
+ | DE-EXEC-S007 | 优化本地 SGE 写前保全与收尾顺序 | 落实分析报告五项建议；仅修改项目 Skill 指引及本轮治理记录 | 减少原文/基线丢失和收尾反复，保留独立验收与 fail-closed | Big Idea `DE-EXEC-BI01` | done | 规则文件已交付；本行为最终审阅候选状态，验收见结果入口 | 仅规则与限定场景；Goal 终态由有效 receipt 决定，不声称性能收益 | 用户本轮授权仅本地优化；无外部 Skill 写入 | [Goal 与结果入口](Artifacts/Goal-DE-GOV-002/README.md) | 无强制后续；按该入口读取独立审阅与终态 |
+ | DE-EXEC-S008 | 持续评估本地 SGE 优化收益 | 后续符合条件的 DataEase 任务，每5个已结束任务一轮；含失败、中止与缺失 | 用效率、返工、质量和采集成本判断优化适用性 | Big Idea `DE-EXEC-BI01` | doing | 观察机制 setup 与后续采集分开验收；当前样本数见状态入口 | 观察性证据；无可比基线不宣称因果或节省比例 | 用户要求每观察5任务出一轮评估 | [Goal/协议](Artifacts/Goal-DE-GOV-003/README.md)、[计数](Artifacts/Goal-DE-GOV-003/data/state.json) | 每新增5个终态观察出报告，长期 Goal 保持观察中 |
++| DE-EXEC-S009 | 基线与全仓盘点 | Goal、原始意图、基线、来源和能力分母 | 固定来源与验收范围 | Stage Plan `SP-001` | done | 基线、全仓盘点与能力分母已齐；阶段交付候选状态 | 全仓盘点不等于语义全读 | 用户明确授权本地KB建设；无Git发布授权 | [SP-001](Artifacts/SP-001/README.md) | 读取[最终验收与终态](Artifacts/SP-001/README.md)；不改写历史候选时点 |
++| DE-EXEC-S010 | 最小知识生产链 | JSON合同、固定反例、生成检查工具与图表样例 | 验证真源到投影闭环 | Stage Plan `SP-001` | done | JSON合同与工具已落地；阶段交付候选状态 | 工具检查不替代语义验收 | 用户明确授权本地KB建设；无Git发布授权 | [SP-001](Artifacts/SP-001/README.md) | 读取[最终验收与终态](Artifacts/SP-001/README.md)；不改写历史候选时点 |
++| DE-EXEC-S011 | 全域与核心提取 | K00–K11、核心契约、F01–F18及新发现能力 | 建立开发可用知识 | Stage Plan `SP-001` | done | 4领域JSON与投影已落地；阶段交付候选状态 | 仅指定基线静态知识 | 用户明确授权本地KB建设；无Git发布授权 | [SP-001](Artifacts/SP-001/README.md) | 读取[最终验收与终态](Artifacts/SP-001/README.md)；不改写历史候选时点 |
++| DE-EXEC-S012 | 独立验证与修正 | 结构检查、核心逐项及其他领域抽样 | 验证知识准确与边界 | Stage Plan `SP-001` | done | 分域修正及独立复核证据已齐；阶段交付候选状态 | 最终包结论见固定结果入口 | 用户明确授权本地KB建设；无Git发布授权 | [SP-001](Artifacts/SP-001/README.md) | 读取[最终验收与终态](Artifacts/SP-001/README.md)；不改写历史候选时点 |
++| DE-EXEC-S013 | 冻结交付与收尾 | 最终KB、状态面、diff和Gate | 验证完整目标完成 | Stage Plan `SP-001` | doing | 收尾候选及对账已齐；阶段交付候选状态 | Goal终态仅以有效回执为准 | 用户明确授权本地KB建设；无Git发布授权 | [SP-001](Artifacts/SP-001/README.md) | 读取[最终验收与终态](Artifacts/SP-001/README.md)；不改写历史候选时点 |

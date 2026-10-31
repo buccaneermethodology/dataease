@@ -1,0 +1,48 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-actual-r486",
+  "recorded_at": "2026-10-29T02:21:49.737868+00:00",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r485.json",
+  "phase": "pre_special_axes_runtime_batch",
+  "task_id": "S02-MVP-CARTESIAN-RUNTIME-BATCH-r001",
+  "execution": {
+    "identity": "/root IAB tab1",
+    "state": "active",
+    "result": "继续表格、关系图及专属多轴配置，独立新日志，禁止覆盖前批证据。"
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r479.json",
+      "sha256": "bef1d9b22ba9ae9a88a62e83abbb45f7ce0c2c2666bdb735c3fb072254d66534"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeOracle-r001.json",
+      "sha256": "4caa318b01266011c27eedefdf6df7c597fde6f5ad7879668fdbbc00016c9fb8"
+    }
+  ],
+  "outputs": [],
+  "goal_denominator": {
+    "p1_mvp_obligations": 12,
+    "p2_original_obligations": 26,
+    "total": 38,
+    "landed": 0,
+    "scope_delta": "none",
+    "status": "all pending"
+  },
+  "claim_ceiling": "每种类型的完整P1验收还要求真实两条件独立oracle、专用按钮/权限状态、拒绝/取消/失败/局部失效/TTL、结果保存重开与独立验证；本快照只有零散真实UI配对，不能记类型通过。",
+  "blockers": [
+    "Builder运行观察和独立数据计算，不是独立Validation。",
+    "progress-bar轴配置尚未正常应用时两次preparation_unavailable、0查询；通过正常更新图表数据后粘贴成功；未修改源码，不宣称缺陷修复。",
+    "gauge在常规渲染尚未就绪时过早尝试失败；等待画面就绪后成功。",
+    "仪表盘/水波图使用amount求和，默认百分比范围发生饱和；只证明配置/查询/渲染链，未验数值显示与范围配置。",
+    "保存后重开有数次本地草稿恢复提示，选择否后读取服务器已保存类型；原因未确认为产品缺陷。",
+    "圆形填充图点击存在trackClick读取undefined.type的console异常；未修复，不宣称交互全通过。",
+    "真实权限BLOCKED / NOT_RUN；插件installed数量unknown；38项未收口。",
+    "记录器闭包路径事件与截图覆盖已另存审计记录，不能把被覆盖图片当原批证据。"
+  ],
+  "single_agent_exception": "Mechanical evidence projection; no independent validation claim."
+}

@@ -1,0 +1,237 @@
+{
+  "schema_version": "query_cascade_identity_rebinding_fixtures_v1",
+  "revision": "r001",
+  "status": "design_candidate_not_frozen_for_builder",
+  "evidence_refs": [
+    "core/core-frontend/src/custom-component/v-query/QueryCascade.vue:38-55,68-78,142-165",
+    "core/core-frontend/src/custom-component/v-query/Select.vue:158-176"
+  ],
+  "cases": [
+    {
+      "id": "TC-QCR-001",
+      "topic": "same_dataset_successor_keeps_composite_field_and_clears_runtime",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-1",
+              "datasetId": "ds-1--q-old-1--field-a",
+              "fieldId": "",
+              "placeholder": ""
+            },
+            {
+              "id": "n-old-2",
+              "datasetId": "ds-1--q-old-2--field-b",
+              "fieldId": "",
+              "placeholder": "configure",
+              "selectValue": [],
+              "currentSelectValue": [
+                "runtime"
+              ]
+            }
+          ]
+        ],
+        "queryIdMap": {
+          "q-old-1": "q-new-1",
+          "q-old-2": "q-new-2"
+        },
+        "nodeIdMap": {
+          "n-old-1": "n-new-1",
+          "n-old-2": "n-new-2"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          [
+            {
+              "id": "n-new-1",
+              "datasetId": "ds-1--q-new-1--field-a",
+              "fieldId": "",
+              "placeholder": "",
+              "selectValue": []
+            },
+            {
+              "id": "n-new-2",
+              "datasetId": "ds-1--q-new-2--field-b",
+              "fieldId": "",
+              "placeholder": "configure",
+              "selectValue": []
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "TC-QCR-002",
+      "topic": "different_dataset_successor_preserves_independent_field",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-1",
+              "datasetId": "ds-1--q-old-1--field-a",
+              "fieldId": "",
+              "placeholder": ""
+            },
+            {
+              "id": "n-old-2",
+              "datasetId": "ds-2--q-old-2--field-c",
+              "fieldId": "field-x",
+              "placeholder": ""
+            }
+          ]
+        ],
+        "queryIdMap": {
+          "q-old-1": "q-new-1",
+          "q-old-2": "q-new-2"
+        },
+        "nodeIdMap": {
+          "n-old-1": "n-new-1",
+          "n-old-2": "n-new-2"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": [
+          [
+            {
+              "id": "n-new-1",
+              "datasetId": "ds-1--q-new-1--field-a",
+              "fieldId": "",
+              "placeholder": "",
+              "selectValue": []
+            },
+            {
+              "id": "n-new-2",
+              "datasetId": "ds-2--q-new-2--field-c",
+              "fieldId": "field-x",
+              "placeholder": "",
+              "selectValue": []
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "TC-QCR-003",
+      "topic": "missing_query_map",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-1",
+              "datasetId": "ds-1--q-old-1--field-a",
+              "fieldId": "",
+              "placeholder": ""
+            }
+          ]
+        ],
+        "queryIdMap": {},
+        "nodeIdMap": {
+          "n-old-1": "n-new-1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "MISSING_QUERY_ID"
+      }
+    },
+    {
+      "id": "TC-QCR-004",
+      "topic": "duplicate_node_target_ids",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-1",
+              "datasetId": "ds-1--q-old-1--field-a",
+              "fieldId": "",
+              "placeholder": ""
+            }
+          ],
+          [
+            {
+              "id": "n-old-2",
+              "datasetId": "ds-1--q-old-2--field-b",
+              "fieldId": "",
+              "placeholder": ""
+            }
+          ]
+        ],
+        "queryIdMap": {
+          "q-old-1": "q-new-1",
+          "q-old-2": "q-new-2"
+        },
+        "nodeIdMap": {
+          "n-old-1": "n-new",
+          "n-old-2": "n-new"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "DUPLICATE_TARGET_ID"
+      }
+    },
+    {
+      "id": "TC-QCR-005",
+      "topic": "empty_composite_field_is_invalid",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-2",
+              "datasetId": "ds-1--q-old-2--",
+              "fieldId": "",
+              "placeholder": ""
+            }
+          ]
+        ],
+        "queryIdMap": {
+          "q-old-2": "q-new-2"
+        },
+        "nodeIdMap": {
+          "n-old-2": "n-new-2"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ID"
+      }
+    },
+    {
+      "id": "TC-QCR-006",
+      "topic": "unclassified_extra_property_is_rejected",
+      "input": {
+        "cascade": [
+          [
+            {
+              "id": "n-old-1",
+              "datasetId": "ds-1--q-old-1--field-a",
+              "fieldId": "",
+              "placeholder": "",
+              "label": "unclassified"
+            }
+          ]
+        ],
+        "queryIdMap": {
+          "q-old-1": "q-new-1"
+        },
+        "nodeIdMap": {
+          "n-old-1": "n-new-1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_INPUT"
+      }
+    }
+  ],
+  "non_goals": [
+    "no complete product adapter claim",
+    "no directory/authorization claim",
+    "no UI/Store/network/time/ID generation",
+    "no product query/save/undo validation"
+  ],
+  "execution_status": "NOT_RUN"
+}

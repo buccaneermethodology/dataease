@@ -1,0 +1,480 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPC-PROD-007-Runner-delta-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立验证 QPC-PROD-007 runner 的候选修正：只针对当前 saved-owner-producer.test.mjs 与冻结 Contract r002/Cases r004，重跑当前 GREEN 并核对运行器是否逐变体使用独立 producer，保留历史 source-absent RED 的身份和时态，不把当前 GREEN 宣称为 RED、producer 行为或产品验收。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "对已准入的单一 runner target 作独立增量验证；确认 QPC-PROD-007 对冻结三种原因分别隔离状态，且全部14个 case 当前 GREEN。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PROD-007-Runner-DeltaValidation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改 runner/source/frozen Contract/Cases",
+      "以当前 GREEN 回填历史 source-absent RED",
+      "宣称 producer、产品 UI/Store、权限或 Goal AC 完成"
+    ],
+    "maximum_claim": "只验证当前 runner 与冻结 QPC-PROD-007 oracle 的一致性及 14-case GREEN；不证明 producer 或产品验收。"
+  },
+  "required_read_set": [
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerCases-r004.json",
+      "revision": "f6f97ff89bf7a9e4a6dcc3389960ce3e8f22530dcb30042dfdcdf2018bc84f05",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerContract-r002.json",
+      "revision": "005317149a1ba37ec47e4996c536efef60f51f46bea6b9151630a7f810ef35cc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerDesign-r001.md",
+      "revision": "5f98c2c913b8a080de7f796b64271963ba216433354e411cefbe29cd8bf4aa5a",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Check the producer-local contract interpretation and non-product claim boundary.",
+      "applicability": "S02-QPC-PROD-007-Runner-delta-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QPC-producer-runner-builder-r001.json",
+      "revision": "34ff8122d5b85c1149493c17a44ea74c3fc51c4f32d59d6bf1f2fa72fd678f2f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r226.json",
+      "revision": "cb41d03e33698a8548a6e95ca4dbaef552d3a5f5c07aae778c8fa3d8a4b8fabc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r347.json",
+      "revision": "9326e57a0c19624f0e5f642e7008b30b712155e7b3ea2400354962754ab0914d",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Bind the latest pre-validation actual topology snapshot.",
+      "applicability": "S02-QPC-PROD-007-Runner-delta-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPC-PRODUCER-RED-r001.case-classification.json",
+      "revision": "d11fac4e47e55b3fecc077902fa189db3cae98556b9a16a4c004a66a3a10ffca",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPC-PRODUCER-RED-r001.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPC-PRODUCER-RED-r001.identity.json",
+      "revision": "2b91cbc154eb9dbd8efad5b71f375a36cad8454be6922afc2e00f6129bd14679",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPC-PRODUCER-RED-r001.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPC-PRODUCER-RED-r001.stdout.txt",
+      "revision": "38edbc8a9a26845ca63523bf7584c909b53a8d7b5157abbc5b70dd469d3590d2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-qpc-producer-runner-builder-r001.json",
+      "revision": "e8bf39cbfef78d25b240d8764ed975d63ae225afd07b2f5c0d8ba2ddc491e4bc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/qpc-producer-runner-builder-card-r001.json",
+      "revision": "77a39ad2e66fa6dd8523776014b43648ac701453d213dbcf4963853a2439e5c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-REPAIR-Validation-r001.md",
+      "revision": "f0618bf7dde887cf660933c6de76731eeed7d587e03bd78c6bfe9b518e622fb3",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Prior validation identified the current repair-runner RED limitation and source scope.",
+      "applicability": "S02-QPC-PROD-007-Runner-delta-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-runner-Validation-r001.md",
+      "revision": "b53184f9d4086a7b1a58650bea2c5f11a18700ab1f8add27395e05c82c351d23",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Retain source-absent RED as historical evidence only.",
+      "applicability": "S02-QPC-PROD-007-Runner-delta-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-source-DeltaValidation-r001.md",
+      "revision": "1423dfbb406fa358aec8f9be0bb7c8b0a166902c2c315542545ba5889f5b3628",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Bind repair implementation result without conflating it with runner validation.",
+      "applicability": "S02-QPC-PROD-007-Runner-delta-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitSavedOwnerProducerCasesReview-r004.md",
+      "revision": "404764b9e0e9628e81002aa62cdf0cfe334dfe6681f4ab43d4123d4cc188f4ba",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitSavedOwnerProducerContractReview-r002.md",
+      "revision": "48d647b467c6326b7953dc2ffa623f50600f949ac2986de2a54841ec35b60f2e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner-producer/saved-owner-producer.test.mjs",
+      "revision": "fdbae7a394db36128f7fc60ee5a8f1a37d31ce9e6fab69e903cb313320596370",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立确认producer runner的source-absent RED归因及完整14项身份。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-runner-validation-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "RUNNER_HASH_DRIFT",
+      "condition": "若runner/fixture/contract与记录摘要不符",
+      "mode": "deterministic",
+      "action": "判RED证据无效，记录漂移并拒绝修复",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "RUNTIME_DIFFERS",
+      "condition": "若本地Node/esbuild版本与绑定证据不同",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "按当前合同复跑或报告环境偏差；不安装依赖",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "本验证只针对producer-local runner；Goal 10/26/16完整，真实权限BLOCKED/NOT_RUN，产品接线未准入。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_read_only_runner_red_validation",
+    "reason": "该RED将作为source builder门槛，必须由独立验证者复跑并判定断言级归因。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "当前 runner 与精确 diff",
+    "冻结 Contract r002/Cases r004",
+    "本次 Node GREEN stdout/exit",
+    "历史 source-absent RED 的固定身份",
+    "原始 Goal 与权限声明边界"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "design_objective": "复验QPC producer runner RED的case identity与断言/静态边界分类。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-runner-Validation-r001.md",
+  "maximum_claim": "RED runner候选的独立验证；无source行为、产品或权限claim。"
+}

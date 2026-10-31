@@ -1,0 +1,2901 @@
+{
+  "schema_version": "qcreate_pure_model_contract_v1",
+  "contract_id": "S02-QSSDH-CREATE-003-PUREMODEL",
+  "revision": "r001",
+  "status": "CANDIDATE_FOR_INDEPENDENT_REVIEW_NOT_ADMISSION",
+  "authority_boundary": "父流程明确要求冻结15项既定模型结果；原Review仅接受模型分析，未授权独立API实现。本文件是新增待审合同，不能回写或冒称原Review已准入。",
+  "api": {
+    "module": "core/core-frontend/src/custom-component/filter-copy/query-single-select-created-lifecycle.ts",
+    "export": "transitionCreatedQueryLifecycle",
+    "signature": "(input: unknown) => CreatedQueryLifecycleModelResult",
+    "input": "精确JSON对象{state: ModelState|null, events: ModelEvent[]}；至少1事件；每事件精确键见event_contracts；不接收$object引用。",
+    "output": "{ok:true,state:ModelState} 或 {ok:false,error:{code:ModelErrorCode}}；无其他键，无partial state/value，无NOT_READY类型。",
+    "ModelErrorCode": [
+      "INVALID_JSON_INPUT",
+      "MODEL_INPUT_INVALID",
+      "UNSUPPORTED_EVENT",
+      "REVISION_MISMATCH",
+      "INVALID_TRANSITION"
+    ],
+    "sync": true,
+    "io": "纯同步、无Vue/Pinia/Store/WeakMap产品注册/时间/random/网络/权限/保存/文件读取；禁止导入fixture或按caseId查表。"
+  },
+  "state_contract": {
+    "exact_keys": [
+      "documentEpoch",
+      "phase",
+      "revision",
+      "root",
+      "carrier",
+      "snapshotIndex",
+      "snapshots",
+      "pendingSnapshotMarks",
+      "effects",
+      "newCapabilityEligible"
+    ],
+    "phase": [
+      "empty",
+      "pending",
+      "managed"
+    ],
+    "integers": "revision/pendingSnapshotMarks/effects每项均非负安全整数；snapshotIndex=-1或有效索引；递增溢出拒绝INVALID_TRANSITION。",
+    "effects_exact_keys": [
+      "confirmPreviewEmits",
+      "snapshotAppend",
+      "historyPublish",
+      "network"
+    ],
+    "effect_meaning": "隔离模型计数器，network永远0；confirmPreviewEmits指一次确认事件对，historyPublish指一次原历史发布计划，不代表真实SQL/网络/预览次数。",
+    "root": "empty恰[]；pending恰一个空组件；managed恰一个QCARRIER普通单条件空cascade runtime组件。外层空组件投影精确键/值形状见case002 component；id允许非空字符串，其他外层字段KEEP且必须与该投影键/类型一致；x/sizeX/sizeY为有限数字；style精确width/height有限数。",
+    "carrier": "managed精确{componentId,documentEpoch,revision,commitId,design}且身份/epoch/revision与state一致，commitId=epoch+冒号+revision；design必须符合QCARRIER设计输出域且无selectValue/mapValue。empty/pending必须null。",
+    "runtime_design": "运行默认/当前值可以不同于carrier设计；condition身份/字段/数据集/引用与carrier一致；只允许QCARRIER支持域及显式runtime值差异，不按值猜来源。",
+    "snapshot": "精确{componentData,carrier,phase,documentEpoch}，同epoch，按对应phase的root/carrier规则校验；managed记录carrier保存捕获时revision，不要求等于当前revision但不得大于当前；历史数组与当前根不共享对象。",
+    "eligibility": "newCapabilityEligible=== (phase===managed)；只有state=null加fresh事件允许无状态输入；非法状态不修补。"
+  },
+  "event_contracts": {
+    "fresh_non_template_dashboard_createInit": {
+      "keys": [
+        "type"
+      ],
+      "precondition": "state=null且为序列首个事件",
+      "transition": "生成TC-QCREATE-001完整初态；documentEpoch=new-doc-1是纯模型固定哨兵，非产品会话ID/来源认证。"
+    },
+    "handleNewFromCanvasMain": {
+      "keys": [
+        "type",
+        "component"
+      ],
+      "precondition": "phase=empty/root=[]；component是完整空VQuery投影",
+      "transition": "root=[deepClone(component)]，phase=pending，pendingSnapshotMarks+=1，其余不变；不调用QCARRIER。"
+    },
+    "cancel_or_fail_before_addComponent": {
+      "keys": [
+        "type"
+      ],
+      "precondition": "非null合法state",
+      "transition": "完整状态不变。"
+    },
+    "confirm": {
+      "variants": [
+        {
+          "keys": [
+            "type",
+            "validation",
+            "candidate"
+          ],
+          "validation": "failed",
+          "transition": "候选仅须JSON安全；完整state不变，不调用QCARRIER。"
+        },
+        {
+          "keys": [
+            "type",
+            "candidate",
+            "expectedRevision"
+          ],
+          "transition": "phase=pending/managed且expectedRevision===state.revision；调用真实QCARRIER处理完整candidate一次；返回失败则整序列拒绝MODEL_INPUT_INVALID。单一完整runtime覆盖当前root[0]的propValue/cascade；KEEP外层所有字段。revision+=1，phase=managed，newCapabilityEligible=true，carrier={componentId:root[0].id,documentEpoch,revision,commitId:documentEpoch+冒号+revision,design:QCARRIER.design}；pendingSnapshotMarks+=1，effects.confirmPreviewEmits+=1；无snapshot追加。"
+        }
+      ]
+    },
+    "draft": {
+      "keys": [
+        "type",
+        "candidate"
+      ],
+      "precondition": "phase=pending/managed；candidate仅JSON安全",
+      "transition": "模型不保存草稿，完整state不变；不是产品草稿会话实现。"
+    },
+    "cancel": {
+      "keys": [
+        "type"
+      ],
+      "precondition": "非null合法state",
+      "transition": "完整state不变；不删除空控件。"
+    },
+    "cancel_or_validation_failed": {
+      "keys": [
+        "type"
+      ],
+      "precondition": "非null合法state",
+      "transition": "完整state不变。"
+    },
+    "open_managed_draft": {
+      "keys": [
+        "type",
+        "source"
+      ],
+      "precondition": "phase=managed且source=carrier",
+      "transition": "仅检查设计读取前提，完整state不变；不返回或持有草稿。"
+    },
+    "recordSnapshot": {
+      "keys": [
+        "type",
+        "eligible"
+      ],
+      "precondition": "非null合法state，eligible为boolean",
+      "transition": "eligible=false完整不变；true时append {componentData:deepClone(root),carrier:deepClone(carrier),phase,documentEpoch}，索引原index+1，截断原redo尾；pendingSnapshotMarks=0，effects.snapshotAppend+=1；revision不变。eligible是隔离模型已判定门槛输入，不执行时间/Store门槛。"
+    },
+    "accepted_outer_runtime_write": {
+      "keys": [
+        "type",
+        "value",
+        "matchingMode"
+      ],
+      "precondition": "phase=managed，matchingMode=value，value为非空字符串，普通单选同字段显示域",
+      "transition": "只将root[0].propValue[0]的defaultValue/selectValue设value，defaultMapValue/mapValue各为[value]；其他默认check=true、firstItem=false、timeType=fixed已由支持域保证，不新建optionFilter；carrier/revision/effects不变。accepted只是模型事件名称，不验证产品调用来源。"
+    },
+    "accepted_runtime_select": {
+      "keys": [
+        "type",
+        "value",
+        "mapValue"
+      ],
+      "precondition": "phase=managed；value非空字符串；mapValue恰一个非空字符串",
+      "transition": "仅运行condition.selectValue/mapValue更新并深拷贝；默认和carrier/revision/effects不变。"
+    },
+    "undo": {
+      "keys": [
+        "type",
+        "selectedIndex"
+      ],
+      "precondition": "snapshotIndex>0且selectedIndex===snapshotIndex-1，选中记录含有效本模型元信息",
+      "transition": "恢复所选componentData全根/phase/设计内容，snapshotIndex=selectedIndex；revision=当前revision+1；managed记录carrier重新赋当前revision/commitId，empty/pending carrier=null；newCapabilityEligible仅managed为true；effects.historyPublish+=1，其余effects/pendingSnapshotMarks/snapshots不变。"
+    },
+    "redo": {
+      "keys": [
+        "type",
+        "selectedIndex"
+      ],
+      "precondition": "snapshotIndex<快照末索引且selectedIndex===snapshotIndex+1",
+      "transition": "与undo相同完整恢复规则；不追加、不截断快照。"
+    },
+    "undo_at_first_snapshot": {
+      "keys": [
+        "type"
+      ],
+      "precondition": "snapshotIndex=0",
+      "transition": "完整state不变。"
+    }
+  },
+  "error_order": [
+    "先descriptor-first深遍历JSON安全：非JSON对象/访问器/循环/非有限值/undefined等INVALID_JSON_INPUT，getter不得执行；普通共享引用允许但输出断开。",
+    "其次input/state/event容器与基础键/值形状MODEL_INPUT_INVALID；识别事件type字符串后未知名称UNSUPPORTED_EVENT；已知事件额外/缺键MODEL_INPUT_INVALID。",
+    "全部静态结构通过后按序执行：confirm revision不匹配优先REVISION_MISMATCH；其余phase/index/身份前置或溢出INVALID_TRANSITION；QCARRIER拒绝完整candidate为MODEL_INPUT_INVALID。首个动态错误终止整序列，不返回已经处理的局部状态。"
+  ],
+  "immutability": "先验证输入无副作用，再在独立工作副本顺序计算；成功结果任何嵌套对象不得与输入共享，root/carrier/历史记录彼此深隔离；即使no-op也返回独立副本；失败不修改输入。不能将objects表共享对象直接当运行对象。",
+  "excluded_cases": {
+    "ids": [
+      "TC-QCREATE-016",
+      "TC-QCREATE-017"
+    ],
+    "meaning": "仅保留在原设计中作为产品OPEN证据；不构造运行输入，不定义事件，不赋予state=null或NOT_READY返回语义，不统计为本API测试覆盖。"
+  },
+  "fixtures": {
+    "source": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCreateLifecycleFixtures-r001.json",
+      "sha256": "63b3627583489d5b0553a906f29e92c4f95f122e8b9a8f69c659541835c1ac4d"
+    },
+    "objects": {
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945": [],
+      "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72": [
+        {
+          "id": "query-new",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "canvasId": "canvas-main",
+          "propValue": "",
+          "style": {
+            "width": 400,
+            "height": 100
+          },
+          "x": 1,
+          "sizeX": 72,
+          "sizeY": 4
+        }
+      ],
+      "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": []
+      },
+      "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc": [
+        {
+          "id": "query-new",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "canvasId": "canvas-main",
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A"
+              ],
+              "mapValue": [
+                "A"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "selectValue": "A",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "style": {
+            "width": 400,
+            "height": 100
+          },
+          "x": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "cascade": []
+        }
+      ],
+      "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": []
+      },
+      "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c": [
+        {
+          "id": "query-new",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "canvasId": "canvas-main",
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "X"
+              ],
+              "mapValue": [
+                "X"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "X",
+              "selectValue": "X",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "style": {
+            "width": 400,
+            "height": 100
+          },
+          "x": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "cascade": []
+        }
+      ],
+      "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d": [
+        {
+          "id": "query-new",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "canvasId": "canvas-main",
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "X"
+              ],
+              "mapValue": [
+                "C"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "X",
+              "selectValue": "C",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "style": {
+            "width": 400,
+            "height": 100
+          },
+          "x": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "cascade": []
+        }
+      ],
+      "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": []
+      },
+      "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd": [
+        {
+          "id": "query-new",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "canvasId": "canvas-main",
+          "propValue": [
+            {
+              "id": "q1",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "D"
+              ],
+              "mapValue": [
+                "D"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "D",
+              "selectValue": "D",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-A"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-A": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {}
+            }
+          ],
+          "style": {
+            "width": 400,
+            "height": 100
+          },
+          "x": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "cascade": []
+        }
+      ],
+      "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": []
+      }
+    },
+    "resolution": "仅{$object:sha256}对象替换为本文件objects对应完整JSON，递归解引用；sha是完整解引用值的UTF-8 canonical JSON SHA256（sort_keys=true, ensure_ascii=false,separators=逗号/冒号）。无外部补值、无patch合成；为消除各快照/状态重复而去重。",
+    "cases": [
+      {
+        "id": "TC-QCREATE-001",
+        "input": {
+          "state": null,
+          "events": [
+            {
+              "type": "fresh_non_template_dashboard_createInit"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "empty",
+            "revision": 0,
+            "root": {
+              "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-002",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "empty",
+            "revision": 0,
+            "root": {
+              "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "handleNewFromCanvasMain",
+              "component": {
+                "id": "query-new",
+                "component": "VQuery",
+                "innerType": "VQuery",
+                "canvasId": "canvas-main",
+                "propValue": "",
+                "style": {
+                  "width": 400,
+                  "height": 100
+                },
+                "x": 1,
+                "sizeX": 72,
+                "sizeY": 4
+              }
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-003",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "empty",
+            "revision": 0,
+            "root": {
+              "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "cancel_or_fail_before_addComponent"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "empty",
+            "revision": 0,
+            "root": {
+              "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-004",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "confirm",
+              "validation": "failed",
+              "candidate": {
+                "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+              }
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-005",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "draft",
+              "candidate": {
+                "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+              }
+            },
+            {
+              "type": "cancel"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-006",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 0,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": -1,
+            "snapshots": [],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 0,
+              "snapshotAppend": 0,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "recordSnapshot",
+              "eligible": true
+            },
+            {
+              "type": "confirm",
+              "candidate": {
+                "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+              },
+              "expectedRevision": 0
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 0,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 1,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-007",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 0,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 1,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "recordSnapshot",
+              "eligible": true
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-008",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "accepted_outer_runtime_write",
+              "value": "X",
+              "matchingMode": "value"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-009",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "accepted_runtime_select",
+              "value": "C",
+              "mapValue": [
+                "C"
+              ]
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-010",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "open_managed_draft",
+              "source": "carrier"
+            },
+            {
+              "type": "confirm",
+              "candidate": {
+                "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+              },
+              "expectedRevision": 1
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 2,
+            "root": {
+              "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 2,
+              "commitId": "new-doc-1:2",
+              "design": {
+                "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 1,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-011",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "draft",
+              "candidate": {
+                "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+              }
+            },
+            {
+              "type": "cancel_or_validation_failed"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 1,
+            "root": {
+              "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 1,
+              "commitId": "new-doc-1:1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 1,
+              "snapshotAppend": 2,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-012",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 2,
+            "root": {
+              "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 2,
+              "commitId": "new-doc-1:2",
+              "design": {
+                "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+              }
+            },
+            "snapshotIndex": 2,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 0,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "undo",
+              "selectedIndex": 1
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 3,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 3,
+              "commitId": "new-doc-1:3",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 1,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-013",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 3,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 3,
+              "commitId": "new-doc-1:3",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 1,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "redo",
+              "selectedIndex": 2
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 4,
+            "root": {
+              "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 4,
+              "commitId": "new-doc-1:4",
+              "design": {
+                "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+              }
+            },
+            "snapshotIndex": 2,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 2,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-014",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "managed",
+            "revision": 3,
+            "root": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "carrier": {
+              "componentId": "query-new",
+              "documentEpoch": "new-doc-1",
+              "revision": 3,
+              "commitId": "new-doc-1:3",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            },
+            "snapshotIndex": 1,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 1,
+              "network": 0
+            },
+            "newCapabilityEligible": true
+          },
+          "events": [
+            {
+              "type": "undo",
+              "selectedIndex": 0
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 4,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": 0,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 2,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      },
+      {
+        "id": "TC-QCREATE-015",
+        "input": {
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 4,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": 0,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 2,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          },
+          "events": [
+            {
+              "type": "undo_at_first_snapshot"
+            }
+          ]
+        },
+        "expected": {
+          "ok": true,
+          "state": {
+            "documentEpoch": "new-doc-1",
+            "phase": "pending",
+            "revision": 4,
+            "root": {
+              "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+            },
+            "carrier": null,
+            "snapshotIndex": 0,
+            "snapshots": [
+              {
+                "componentData": {
+                  "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+                },
+                "carrier": null,
+                "phase": "pending",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 1,
+                  "commitId": "new-doc-1:1",
+                  "design": {
+                    "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              },
+              {
+                "componentData": {
+                  "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+                },
+                "carrier": {
+                  "componentId": "query-new",
+                  "documentEpoch": "new-doc-1",
+                  "revision": 2,
+                  "commitId": "new-doc-1:2",
+                  "design": {
+                    "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                  }
+                },
+                "phase": "managed",
+                "documentEpoch": "new-doc-1"
+              }
+            ],
+            "pendingSnapshotMarks": 0,
+            "effects": {
+              "confirmPreviewEmits": 2,
+              "snapshotAppend": 3,
+              "historyPublish": 2,
+              "network": 0
+            },
+            "newCapabilityEligible": false
+          }
+        }
+      }
+    ],
+    "semantics": "原001–015输入和state expected逐项不变；本新增合同仅给统一ok包装；先解引用输入交函数，输出对完整解引用expected严格深相等。"
+  },
+  "negative_oracles": [
+    {
+      "id": "NEG-01",
+      "input": {
+        "state": null,
+        "events": [
+          {
+            "type": "unknown_model_event"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "UNSUPPORTED_EVENT"
+        }
+      }
+    },
+    {
+      "id": "NEG-02",
+      "input": {
+        "state": null,
+        "events": []
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "MODEL_INPUT_INVALID"
+        }
+      }
+    },
+    {
+      "id": "NEG-03",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "REVISION_MISMATCH"
+        }
+      },
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "open_managed_draft",
+            "source": "carrier"
+          },
+          {
+            "type": "confirm",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            },
+            "expectedRevision": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEG-04",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "INVALID_TRANSITION"
+        }
+      },
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 2,
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 2,
+            "commitId": "new-doc-1:2",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 2,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEG-05",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "UNSUPPORTED_EVENT"
+        }
+      },
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "empty",
+          "revision": 0,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "handleNewFromCanvasMain",
+            "component": {
+              "id": "query-new",
+              "component": "VQuery",
+              "innerType": "VQuery",
+              "canvasId": "canvas-main",
+              "propValue": "",
+              "style": {
+                "width": 400,
+                "height": 100
+              },
+              "x": 1,
+              "sizeX": 72,
+              "sizeY": 4
+            }
+          },
+          {
+            "type": "unknown_model_event"
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEG-06",
+      "construction": "非JSON运行时输入：events属性getter增加计数并返回数组；不得调用getter",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "INVALID_JSON_INPUT"
+        }
+      },
+      "getter_calls": 0
+    }
+  ],
+  "consumer_boundary": "原2条filter=[]是静态消费者证据，不新增searchQuery执行或消费者API；可独立保留fixture结构/空filter断言，不计入15项状态转移GREEN。",
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-created-lifecycle.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-created-lifecycle.test.ts"
+  ],
+  "validation": "真实QCARRIER处理成功confirm；测试按本合同展开15例逐例严格完整输出，负例/输入不变/深隔离；同identity RED/GREEN，若RED非可信预期失败必须如实记录；定向lint。不改旧Fixtures/Review/合同/父模块。原26项Goal义务及产品OBS-01/02保持；本合同接受不等于产品准入。"
+}

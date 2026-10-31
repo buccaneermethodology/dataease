@@ -1,0 +1,223 @@
+{
+  "status": "BOUNDED_DESIGN_CANDIDATE",
+  "card_sha256": "5764839b0c2387f4d65f57c49c777dd9daa15a51b4f7f1e6497cbec04b148d89",
+  "provenance": "合成纯函数向量，未执行产品或QMAP实现",
+  "interface": "resolveTargetComponentMap({references:QueryReferenceTarget[],sourceComponents:ComponentDirectoryEntry[],targetComponents:ComponentDirectoryEntry[]}): {ok:true,componentMap:Record<string,string[]>}|{ok:false,reason}",
+  "directory_entry": "{componentId:string,datasetId:string,fieldIds:string[]}",
+  "validation_order": [
+    "结构/非空字符串ID，不含--；不转换数字、名称或trim",
+    "各目录内部componentId唯一；同ID跨源/目标目录允许",
+    "引用源component存在且datasetId严格一致、fieldId在源fieldIds中",
+    "按首次引用顺序分组source，重复相同三元组去重",
+    "每组按相同datasetId且覆盖该source全部引用fieldId筛目标；0拒绝，>1拒绝，1生成单元素数组",
+    "全部成功才返回新componentMap"
+  ],
+  "reasons": [
+    "INVALID_INPUT",
+    "DUPLICATE_COMPONENT_ID",
+    "SOURCE_REFERENCE_UNRESOLVED",
+    "MISSING_COMPONENT",
+    "AMBIGUOUS_COMPONENT"
+  ],
+  "semantics": {
+    "many_to_one": "允许不同source映射同一唯一target；QPREP未要求componentMap全局单射；仅引用映射，不宣称过滤组合产品语义",
+    "empty_references": "先验证目录结构和ID唯一，再成功返回{}；空引用不掩盖非法目录",
+    "repeated_references": "同一source/dataset/field去重，无额外歧义；同source不同dataset拒绝SOURCE_REFERENCE_UNRESOLVED",
+    "duplicate_field_ids": "目录fieldIds视集合，重复合法ID不增加候选数；空fieldIds合法但不满足非空引用",
+    "duplicate_directory_ids": "同目录重复componentId一律拒绝，即使内容一致；源目标之间相同ID非重复错误",
+    "failure_atomicity": "任何失败不返回partial map，不改输入，不调用Store/权限/网络/随机数"
+  },
+  "cases": [
+    {
+      "id": "TC-QMAP-001",
+      "input": {
+        "references": [
+          {
+            "componentId": "s1",
+            "datasetId": "D1",
+            "fieldId": "f1"
+          },
+          {
+            "componentId": "s1",
+            "datasetId": "D1",
+            "fieldId": "f2"
+          },
+          {
+            "componentId": "s1",
+            "datasetId": "D1",
+            "fieldId": "f1"
+          },
+          {
+            "componentId": "s2",
+            "datasetId": "D1",
+            "fieldId": "f1"
+          }
+        ],
+        "sourceComponents": [
+          {
+            "componentId": "s1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          },
+          {
+            "componentId": "s2",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "t1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "componentMap": {
+          "s1": [
+            "t1"
+          ],
+          "s2": [
+            "t1"
+          ]
+        }
+      }
+    },
+    {
+      "id": "TC-QMAP-002",
+      "base": "TC-QMAP-001",
+      "replace": {
+        "targetComponents": [
+          {
+            "componentId": "t1",
+            "datasetId": "D2",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "MISSING_COMPONENT"
+      }
+    },
+    {
+      "id": "TC-QMAP-003",
+      "base": "TC-QMAP-001",
+      "replace": {
+        "targetComponents": [
+          {
+            "componentId": "t1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          },
+          {
+            "componentId": "t2",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "AMBIGUOUS_COMPONENT"
+      }
+    },
+    {
+      "id": "TC-QMAP-004",
+      "base": "TC-QMAP-001",
+      "replace": {
+        "targetComponents": [
+          {
+            "componentId": "t1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          },
+          {
+            "componentId": "t1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1",
+              "f2"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "DUPLICATE_COMPONENT_ID"
+      }
+    },
+    {
+      "id": "TC-QMAP-005",
+      "input": {
+        "references": [],
+        "sourceComponents": [],
+        "targetComponents": []
+      },
+      "expected": {
+        "ok": true,
+        "componentMap": {}
+      }
+    },
+    {
+      "id": "TC-QMAP-006",
+      "base": "TC-QMAP-001",
+      "replace": {
+        "sourceComponents": [
+          {
+            "componentId": "s1",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1"
+            ]
+          },
+          {
+            "componentId": "s2",
+            "datasetId": "D1",
+            "fieldIds": [
+              "f1"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "SOURCE_REFERENCE_UNRESOLVED"
+      }
+    }
+  ],
+  "scope": "QPROJ投影成功后flatten conditions[].targetRefs，QMAP填componentMap，再QPREP；不改两个既有模块",
+  "gaps": [
+    {
+      "id": "QMAP-CONTEXT-01",
+      "detail": "绑定ContextBootstrap仍保留QPROJ实现write_scope/task_profile/claim；本lane不消费其实现权限，严格只写Design卡两文件；后续准入前控制面修正新版本Context。"
+    },
+    {
+      "id": "QMAP-PRODUCT-01",
+      "detail": "Q006规定相同数据集，不独立授权跨仪表盘自动选择产品入口；唯一目标推导仅显式目录纯候选，不证明目标真实支持/权限。"
+    }
+  ],
+  "checks": "card摘要已复验；JSON和6个case身份及手算向量自检；未运行QMAP产品实现"
+}

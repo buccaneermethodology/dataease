@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/line-sibling-host-render-design-review-r002-card.json
+Card SHA-256: a8311e0bfe55499ea9149b81e370a1979273c14b893b097b4baf5d6928478af6
+Verify: python3 .codex/skills/sge-governed-checkpoints-sp010/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/line-sibling-host-render-design-review-r002-card.json --repo . --expected-card-sha256 a8311e0bfe55499ea9149b81e370a1979273c14b893b097b4baf5d6928478af6
+Lane: semantic | Session: DE-S02-F01 | Role: semantic
+Mode: full_baseline
+Working directory: .
+Execute: 复验Card/Context。同交付物第2/3轮独立复核，完整检查首轮LSHR001..005 dispositions并尽可能一次挖出全部新问题/同类残余。重点typed第四参stage mode是否在curView等活动写之前分流且prepare真实委派，默认G2OWN-C01不变；RED单host可执行投影vsGREEN真实两slot完整template与全部32字段，首失败不能被无关hostcount/缺导出抢占。实际dimensionSliderFilter valuechange/apply/RAF/setState/target.update前后guard、document pointerup真正active惰性绑定与dispose；tiled filter/selection/click/sync完整闭包gate及stage/active/retired计数不去重，pagination originalGoTo前alive检查，LSH018同步双sync8次DOM等精确计数是否符合真实源码健康行为。六轴外部变化全步骤/观测点/资源账/计数，LSH014真实publicP1替换O/N完整draw/destroy而非标签消失，无可写ASTseam，module readCapture断言不冒充实际SFC。hover预采用0/采用后X.hide1/retire0，全程othermutations与多组件/legacy host统计定义无矛盾。对29每案逐字段语义/时序/trace精确检查，不仅比较字段集/结构（此前其他LSC在3轮后实际runner发现046 W/Wold字面矛盾，需避免类似遗漏；不受其裁定约束且不重审LSC）。必要可做内存真实函数/DOM具名诊断，不算正式RED。分别给Freeze/runner-only/sourceBuilder仍待可信RED和Line前置串行rebind结论。全部发现/通过域/未检原因/同类残余/修后准入预测，一次交精简报告；不以未来复杂场景无限增blocker，不修改被审文档或任何源码/runner。

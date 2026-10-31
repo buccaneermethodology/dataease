@@ -1,0 +1,334 @@
+    public static void setExcelData(Sheet detailsSheet, CellStyle cellStyle, Object[] header, List<Object[]> details, ViewDetailField[] detailFields, Integer[] excelTypes, Comment comment, ChartViewDTO viewInfo, Workbook wb, boolean hasSummaryRow) {
+        List<CellStyle> styles = new ArrayList<>();
+        Map<String, CellStyle> autoFormatterStyles = new HashMap<>();
+        Map<String, CellStyle> numericStyles = new HashMap<>();
+        List<ChartViewFieldDTO> exportFields = resolveExportFields(viewInfo, header);
+        Workbook styleWorkbook = wb != null ? wb : detailsSheet.getWorkbook();
+        TableHeader tableHeader = null;
+        Integer totalDepth = 0;
+        List<CellRangeAddress> mergeConfig = new ArrayList<>();
+        if (StringUtils.equalsAnyIgnoreCase(viewInfo.getType(), "table-normal", "table-info")) {
+            exportFields = exportFields.stream().filter(tmpAxis -> !tmpAxis.isHide()).toList();
+            for (ChartViewFieldDTO tmpAxis : exportFields) {
+                if (tmpAxis.getDeType().equals(DeTypeConstants.DE_INT) || tmpAxis.getDeType().equals(DeTypeConstants.DE_FLOAT)) {
+                    FormatterCfgDTO formatterCfg = tmpAxis.getFormatterCfg();
+                    CellStyle formatterCellStyle = formatterCfg != null && "auto".equalsIgnoreCase(formatterCfg.getType()) ? null : createCellStyle(styleWorkbook, formatterCfg, null);
+                    styles.add(formatterCellStyle);
+                } else {
+                    styles.add(null);
+                }
+            }
+
+            Map<String, Object> customAttr = viewInfo.getCustomAttr();
+            Map<String, Object> tableHeaderMap = (Map<String, Object>) customAttr.get("tableHeader");
+            if (tableHeaderMap.get("headerGroup") != null && Boolean.parseBoolean(tableHeaderMap.get("headerGroup").toString())) {
+                var tmpHeader = JsonUtil.parseObject((String) JsonUtil.toJSONString(customAttr.get("tableHeader")), TableHeader.class);
+                // 校验字段数量和顺序
+                var allAxis = new ArrayList<>(exportFields);
+                if (validateHeaderGroup(tmpHeader, allAxis)) {
+                    tableHeader = tmpHeader;
+                    for (TableHeader.ColumnInfo column : tableHeader.getHeaderGroupConfig().getColumns()) {
+                        totalDepth = Math.max(totalDepth, getDepth(column, 1));
+                    }
+                    for (TableHeader.ColumnInfo column : tableHeader.getHeaderGroupConfig().getColumns()) {
+                        setWidth(column, 1);
+                    }
+                }
+            }
+            if (!"dataset".equalsIgnoreCase(viewInfo.getDownloadType())) {
+                Map<String, Object> tableCell = (Map<String, Object>) viewInfo.getCustomAttr().get("tableCell");
+                Boolean mergeCells = tableCell == null ? false : (Boolean) tableCell.get("mergeCells");
+                if (mergeCells != null && mergeCells) {
+                    // 使用实际导出列顺序，兼容隐藏字段和汇总表的指标列。
+                    var tmpAxis = exportFields;
+                    var mergeIndex = tmpAxis.size();
+                    for (int i = 0; i < tmpAxis.size(); i++) {
+                        if ("q".equalsIgnoreCase(tmpAxis.get(i).getGroupType())) {
+                            mergeIndex = i;
+                            break;
+                        }
+                    }
+                    // 仅最后一张工作表包含总计，不能仅凭开关扣除最后一行。
+                    int dataEnd = details.size() - (hasSummaryRow ? 1 : 0);
+                    if (mergeIndex >= 1 && dataEnd > 1) {
+                        mergeConfig = getMergeConfig(details.subList(1, dataEnd), mergeIndex - 1, totalDepth == 0 ? 1 : totalDepth);
+                    }
+                }
+            }
+        }
+
+        boolean mergeHead = false;
+        if (ArrayUtils.isNotEmpty(detailFields)) {
+            cellStyle.setBorderTop(BorderStyle.THIN);
+            cellStyle.setBorderRight(BorderStyle.THIN);
+            cellStyle.setBorderBottom(BorderStyle.THIN);
+            cellStyle.setBorderLeft(BorderStyle.THIN);
+            String[] detailField = Arrays.stream(detailFields).map(ViewDetailField::getName).toList().toArray(new String[detailFields.length]);
+
+            Row row = detailsSheet.createRow(0);
+            int headLen = header.length;
+            int detailFieldLen = detailField.length;
+            for (int i = 0; i < headLen; i++) {
+                Cell cell = row.createCell(i);
+                cell.setCellValue(header[i].toString());
+                if (i < headLen - 1) {
+                    CellRangeAddress cellRangeAddress = new CellRangeAddress(0, 1, i, i);
+                    detailsSheet.addMergedRegion(cellRangeAddress);
+                } else {
+                    for (int j = i + 1; j < detailFieldLen + i; j++) {
+                        row.createCell(j).setCellStyle(cellStyle);
+                    }
+                    CellRangeAddress cellRangeAddress = new CellRangeAddress(0, 0, i, i + detailFieldLen - 1);
+                    detailsSheet.addMergedRegion(cellRangeAddress);
+                }
+                cell.setCellStyle(cellStyle);
+                detailsSheet.setColumnWidth(i, 255 * 20);
+            }
+
+            Row detailRow = detailsSheet.createRow(1);
+            for (int i = 0; i < headLen - 1; i++) {
+                Cell cell = detailRow.createCell(i);
+                cell.setCellStyle(cellStyle);
+            }
+            for (int i = 0; i < detailFieldLen; i++) {
+                int colIndex = headLen - 1 + i;
+                Cell cell = detailRow.createCell(colIndex);
+                cell.setCellValue(detailField[i]);
+                cell.setCellStyle(cellStyle);
+                detailsSheet.setColumnWidth(colIndex, 255 * 20);
+            }
+            details.add(1, detailField);
+            mergeHead = true;
+        }
+        if (CollectionUtils.isNotEmpty(details) && (!mergeHead || details.size() > 2)) {
+            int realDetailRowIndex = tableHeader == null ? 2 : totalDepth;
+            if (tableHeader != null) {
+                cellStyle.setBorderTop(BorderStyle.THIN);
+                cellStyle.setBorderRight(BorderStyle.THIN);
+                cellStyle.setBorderBottom(BorderStyle.THIN);
+                cellStyle.setBorderLeft(BorderStyle.THIN);
+                Map<String, Row> rowMap = new HashMap<>();
+                for (Integer i = 0; i < totalDepth; i++) {
+                    rowMap.put("row" + i, detailsSheet.createRow(i));
+                }
+                int width = 0;
+                Integer depth = 0;
+                for (TableHeader.ColumnInfo column : tableHeader.getHeaderGroupConfig().getColumns()) {
+                    createCell(tableHeader, column, width, depth, detailsSheet, cellStyle, totalDepth, rowMap, exportFields);
+                    width = width + column.getWidth();
+                }
+            }
+            for (int i = (mergeHead ? 2 : 0); i < details.size(); i++) {
+                int rowIndex = i;
+                if (tableHeader != null) {
+                    rowIndex = realDetailRowIndex - 1 + i;
+                } else {
+                    rowIndex = realDetailRowIndex > 2 ? realDetailRowIndex : i;
+                }
+                Row row = detailsSheet.createRow(rowIndex);
+                Object[] rowData = details.get(i);
+                if (rowData != null) {
+                    for (int j = 0; j < rowData.length; j++) {
+                        Object cellValObj = rowData[j];
+                        if (mergeHead && j == rowData.length - 1 && (cellValObj.getClass().isArray() || cellValObj instanceof ArrayList)) {
+                            Object[] detailRowArray = ((List<Object>) cellValObj).toArray(new Object[((List<?>) cellValObj).size()]);
+                            int detailRowArrayLen = detailRowArray.length;
+                            int temlJ = j;
+                            while (detailRowArrayLen > 1 && temlJ-- > 0) {
+                                CellRangeAddress cellRangeAddress = new CellRangeAddress(realDetailRowIndex, realDetailRowIndex + detailRowArrayLen - 1, temlJ, temlJ);
+                                detailsSheet.addMergedRegion(cellRangeAddress);
+                            }
+
+                            for (int k = 0; k < detailRowArrayLen; k++) {
+                                List<Object> detailRows = (List<Object>) detailRowArray[k];
+                                Row curRow = row;
+                                if (k > 0) {
+                                    curRow = detailsSheet.createRow(realDetailRowIndex + k);
+                                }
+
+                                for (int l = 0; l < detailRows.size(); l++) {
+                                    Object col = detailRows.get(l);
+                                    Cell cell = curRow.createCell(j + l);
+                                    cell.setCellValue(col.toString());
+                                }
+                            }
+                            realDetailRowIndex += detailRowArrayLen;
+                            break;
+                        }
+
+                        Cell cell = row.createCell(j);
+                        if (i == 0) {// 头部
+                            cell.setCellValue(cellValObj.toString());
+                            cell.setCellStyle(cellStyle);
+                            //设置列的宽度
+                            detailsSheet.setColumnWidth(j, 255 * 20);
+                        } else if (cellValObj != null) {
+                            try {
+                                if (StringUtils.equalsAnyIgnoreCase(viewInfo.getType(), "table-info", "table-normal")
+                                        && j < exportFields.size()
+                                        && Arrays.asList(DeTypeConstants.DE_INT, DeTypeConstants.DE_FLOAT).contains(exportFields.get(j).getDeType())) {
+                                    try {
+                                        FormatterCfgDTO formatterCfgDTO = exportFields.get(j).getFormatterCfg() == null ? new FormatterCfgDTO().setUnitLanguage(Lang.isChinese() ? "ch" : "en") : exportFields.get(j).getFormatterCfg();
+                                        String exportNumericValue = cellValue(formatterCfgDTO, new BigDecimal(cellValObj.toString()));
+                                        BigDecimal numericValue = new BigDecimal(exportNumericValue);
+                                        CellStyle currentStyle = styles.get(j);
+                                        if (formatterCfgDTO != null && "auto".equalsIgnoreCase(formatterCfgDTO.getType())) {
+                                            currentStyle = autoFormatterStyles.computeIfAbsent(
+                                                    buildFormatterStyleCacheKey(formatterCfgDTO, exportNumericValue),
+                                                    key -> createCellStyle(styleWorkbook, formatterCfgDTO, exportNumericValue)
+                                            );
+                                        }
+                                        if (currentStyle != null) {
+                                            row.getCell(j).setCellStyle(currentStyle);
+                                        } else {
+                                            row.getCell(j).setCellStyle(getNumericCellStyle(styleWorkbook, numericValue, numericStyles));
+                                        }
+                                        setNumericCellValue(row.getCell(j), numericValue);
+                                    } catch (Exception e) {
+                                        cell.setCellValue(cellValObj.toString());
+                                    }
+                                } else {
+                                    Integer excelType = getExcelType(j, excelTypes, exportFields, viewInfo);
+                                    if ((Objects.equals(excelType, DeTypeConstants.DE_INT) || Objects.equals(excelType, DeTypeConstants.DE_FLOAT)) && StringUtils.isNotEmpty(cellValObj.toString())) {
+                                        BigDecimal numericValue = new BigDecimal(cellValObj.toString());
+                                        cell.setCellStyle(getNumericCellStyle(styleWorkbook, numericValue, numericStyles));
+                                        setNumericCellValue(cell, numericValue);
+                                    } else if (cellValObj != null) {
+                                        cell.setCellValue(cellValObj.toString());
+                                    }
+                                }
+                            } catch (Exception e) {
+                                LogUtil.warn("export excel data transform error");
+                            }
+                        } else {
+                            if (!viewInfo.getType().equalsIgnoreCase("circle-packing")) {
+                                Map<String, Object> senior = viewInfo.getSenior();
+                                viewInfo.getCustomAttr().get("");
+                                ChartSeniorFunctionCfgDTO functionCfgDTO = JsonUtil.parseObject((String) JsonUtil.toJSONString(senior.get("functionCfg")), ChartSeniorFunctionCfgDTO.class);
+                                if (functionCfgDTO != null && StringUtils.isNotEmpty(functionCfgDTO.getEmptyDataStrategy()) && functionCfgDTO.getEmptyDataStrategy().equalsIgnoreCase("setZero")) {
+                                    if ((viewInfo.getType().equalsIgnoreCase("table-normal") || viewInfo.getType().equalsIgnoreCase("table-info"))) {
+                                        if (j < exportFields.size() && functionCfgDTO.getEmptyDataFieldCtrl().contains(exportFields.get(j).getDataeaseName())) {
+                                            cell.setCellValue(0);
+                                        }
+                                    } else {
+                                        cell.setCellValue(0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (CollectionUtils.isNotEmpty(mergeConfig)) {
+                mergeConfig.forEach(detailsSheet::addMergedRegionUnsafe);
+            }
+        }
+    }
+
+    private static Integer getExcelType(int columnIndex, Integer[] excelTypes, List<ChartViewFieldDTO> exportFields, ChartViewDTO viewInfo) {
+        if (viewInfo != null
+                && StringUtils.equalsAnyIgnoreCase(viewInfo.getType(), "table-info", "table-normal")
+                && columnIndex < exportFields.size()) {
+            return exportFields.get(columnIndex).getDeType();
+        }
+        return ArrayUtils.isNotEmpty(excelTypes) && columnIndex < excelTypes.length ? excelTypes[columnIndex] : null;
+    }
+
+    public static List<ChartViewFieldDTO> resolveExportFields(ChartViewDTO viewInfo, Object[] header) {
+        List<ChartViewFieldDTO> fields = new ArrayList<>();
+        if (viewInfo != null && viewInfo.getData() != null && viewInfo.getData().get("fields") != null) {
+            Object fieldsObj = viewInfo.getData().get("fields");
+            if (fieldsObj instanceof List<?> fieldList && !fieldList.isEmpty() && fieldList.getFirst() instanceof ChartViewFieldDTO) {
+                fields.addAll(fieldList.stream().map(ChartViewFieldDTO.class::cast).toList());
+            } else {
+                fields.addAll(JsonUtil.parseList(JsonUtil.toJSONString(fieldsObj).toString(), new TypeReference<List<ChartViewFieldDTO>>() {
+                }));
+            }
+        }
+        if (CollectionUtils.isEmpty(fields)) {
+            appendFields(fields, viewInfo == null ? null : viewInfo.getXAxis());
+            appendFields(fields, viewInfo == null ? null : viewInfo.getYAxis());
+            appendFields(fields, viewInfo == null ? null : viewInfo.getXAxisExt());
+            appendFields(fields, viewInfo == null ? null : viewInfo.getYAxisExt());
+            appendFields(fields, viewInfo == null ? null : viewInfo.getExtStack());
+            appendFields(fields, viewInfo == null ? null : viewInfo.getDrillFields());
+        }
+        if (ArrayUtils.isEmpty(header) || CollectionUtils.isEmpty(fields)) {
+            return fields;
+        }
+        Map<String, Deque<ChartViewFieldDTO>> fieldMap = new HashMap<>();
+        fields.forEach(field -> fieldMap.computeIfAbsent(getExportFieldName(field), key -> new ArrayDeque<>()).add(field));
+        List<ChartViewFieldDTO> orderedFields = new ArrayList<>();
+        for (Object headerItem : header) {
+            if (headerItem == null) {
+                continue;
+            }
+            Deque<ChartViewFieldDTO> matchedFields = fieldMap.get(headerItem.toString());
+            if (matchedFields != null && !matchedFields.isEmpty()) {
+                orderedFields.add(matchedFields.removeFirst());
+            }
+        }
+        return CollectionUtils.isNotEmpty(orderedFields) ? orderedFields : fields;
+    }
+
+    public static Object[] filterExportHeader(Object[] header, ChartViewDTO viewInfo) {
+        if (ArrayUtils.isEmpty(header)) {
+            return ArrayUtils.EMPTY_OBJECT_ARRAY;
+        }
+        List<ChartViewFieldDTO> exportFields = resolveExportFields(viewInfo, header);
+        if (CollectionUtils.isEmpty(exportFields)) {
+            return header;
+        }
+        Set<String> exportFieldNames = exportFields.stream().map(ChartDataServer::getExportFieldName).collect(Collectors.toSet());
+        return Arrays.stream(header).filter(Objects::nonNull).filter(item -> exportFieldNames.contains(item.toString())).toArray();
+    }
+
+    public static List<Integer> getHiddenExportColumnIndexes(Object[] header, ChartViewDTO viewInfo) {
+        List<ChartViewFieldDTO> exportFields = resolveExportFields(viewInfo, header);
+        List<Integer> columnIndexs = new ArrayList<>();
+        for (int i = 0; i < exportFields.size(); i++) {
+            if (exportFields.get(i).isHide()) {
+                columnIndexs.add(i);
+            }
+        }
+        return columnIndexs;
+    }
+
+    private static void appendFields(List<ChartViewFieldDTO> target, List<ChartViewFieldDTO> source) {
+        if (CollectionUtils.isNotEmpty(source)) {
+            target.addAll(source);
+        }
+    }
+
+    private static String getExportFieldName(ChartViewFieldDTO field) {
+        return StringUtils.isNotBlank(field.getChartShowName()) ? field.getChartShowName() : field.getName();
+    }
+
+    private static List<CellRangeAddress> getMergeConfig(List<Object[]> data, int colIndex, int offsetHeight) {
+        var result = new ArrayList<CellRangeAddress>();
+        var preRange = new ArrayList<Integer[]>();
+        var initRange = new Integer[]{0, data.size() - 1};
+        preRange.add(initRange);
+        for (int curColIndex = 0; curColIndex <= colIndex; curColIndex++) {
+            var curRange = new ArrayList<Integer[]>();
+            for (int preRangeIndex = 0; preRangeIndex < preRange.size(); preRangeIndex++) {
+                var preRowRange = preRange.get(preRangeIndex);
+                var start = preRowRange[0];
+                var end = preRowRange[1];
+                var lastColValue = data.get(start)[curColIndex];
+                if (lastColValue != null) {
+                    lastColValue = lastColValue.toString();
+                } else {
+                    lastColValue = "";
+                }
+                var lastRowIndex = start;
+                for (Integer curRowIndex = start + 1; curRowIndex <= end; curRowIndex++) {
+                    var curRow = data.get(curRowIndex);
+                    var curColValue = curRow[curColIndex];
+                    if (curColValue != null) {
+                        curColValue = curColValue.toString();
+                    } else {
+                        curColValue = "";
+                    }
+                    if (!StringUtils.equals(lastColValue.toString(), curColValue.toString()) && (curRowIndex - lastRowIndex > 1)) {
+                        curRange.add(new Integer[]{lastRowIndex, curRowIndex - 1});

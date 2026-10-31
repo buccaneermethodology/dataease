@@ -15,6 +15,11 @@ import {
   toRefs
 } from 'vue'
 import { getData } from '@/api/chart'
+import type {
+  PasteBinding,
+  PasteReady,
+  PreparedQuery
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
 import {
   tableImageUrl,
   TABLE_IMAGE_PLACEHOLDER
@@ -51,6 +56,7 @@ const useSvgCrispBackground = computed(
 )
 
 const props = defineProps({
+  pasteBinding: { type: Object as PropType<PasteBinding>, required: false },
   element: {
     type: Object,
     default() {
@@ -102,7 +108,12 @@ const props = defineProps({
 const emit = defineEmits(['onPointClick', 'onChartClick', 'onDrillFilters', 'onJumpClick'])
 const dataVMobile = !isDashboard() && isMobile()
 
-const { view, showPosition, scale, terminal, drillLength, suffixId } = toRefs(props)
+const { showPosition, scale, terminal, drillLength, suffixId } = toRefs(props)
+const filterPasteBinding = shallowRef<PasteBinding | undefined>(props.pasteBinding)
+const view = computed(() => filterPasteBinding.value?.current.value.view ?? props.view)
+const element = computed(() => filterPasteBinding.value?.current.value.element ?? props.element)
+const isPasteActive = () =>
+  !filterPasteBinding.value || filterPasteBinding.value.current.value.phase === 'active'
 
 const isError = ref(false)
 const errMsg = ref('')
@@ -147,6 +158,10 @@ const containerId = 'container-' + showPosition.value + '-' + view.value.id + '-
 const viewTrack = ref(null)
 
 const calcData = (viewInfo: Chart, callback, resetPageInfo = true) => {
+  if (!isPasteActive()) {
+    callback?.()
+    return
+  }
   if (viewInfo.customAttr.basicStyle.tablePageStyle === 'general') {
     if (state.currentPageSize !== 0) {
       viewInfo.chartExtRequest.pageSize = state.currentPageSize
@@ -273,7 +288,10 @@ const restoreDrillState = (chart: ChartObj) => {
   chart.drill = true
   chart.drillFilters = restoredFilters
 }
-const renderChart = (viewInfo: Chart, resetPageInfo?: boolean) => {
+let cancelS2Wait: (() => void) | undefined
+let strictS2Render: { isCurrent(): boolean; resolve(): void; reject(error: unknown): void } | null =
+  null
+const renderChart = (viewInfo: Chart, resetPageInfo?: boolean, strictCurrent?: () => boolean) => {
   if (!viewInfo) {
     return Promise.resolve()
   }
@@ -291,8 +309,9 @@ const renderChart = (viewInfo: Chart, resetPageInfo?: boolean) => {
   recursionTransObj(customStyleTrans, actualChart.customStyle, scale.value, terminal.value)
 
   setupPage(actualChart, resetPageInfo)
-  return new Promise<void>(resolve => {
-    renderChartResolvers.push(resolve)
+  return new Promise<void>((resolve, reject) => {
+    if (strictCurrent) strictS2Render = { isCurrent: strictCurrent, resolve, reject }
+    else renderChartResolvers.push(resolve)
     nextTick(() => debounceRender())
   })
 }
@@ -307,8 +326,11 @@ const markSvgCellBackground = (cell: S2CellType) => {
   background.className = [...background.classList, backgroundClass].join(' ')
 }
 
-const debounceRender = debounce(() => {
+const debounceRender = debounce(async () => {
+  const strict = strictS2Render
+  strictS2Render = null
   try {
+    if (strict && !strict.isCurrent()) throw new Error('paste_cancelled')
     if (chartComponentUnmounted) {
       return
     }
@@ -349,9 +371,41 @@ const debounceRender = debounce(() => {
       sheet.on(S2Event.LAYOUT_CELL_RENDER, markSvgCellBackground)
       sheet.on(S2Event.LAYOUT_AFTER_REAL_DATA_CELL_RENDER, markDataCellBackgrounds)
     }
-    myChart?.render()
-    dvMainStore.setViewInstanceInfo(actualChart.id, myChart)
-    initScroll()
+    if (strict) {
+      if (!myChart) throw new Error('paste_instance_missing')
+      const sheet = myChart
+      let afterLayout: () => void
+      const layout = new Promise<void>((resolve, reject) => {
+        afterLayout = resolve
+        cancelS2Wait = () => reject(new Error('paste_cancelled'))
+      })
+      sheet.on(S2Event.LAYOUT_AFTER_RENDER, afterLayout)
+      try {
+        const rendering = sheet.render()
+        if (!rendering || typeof rendering.then !== 'function')
+          throw new Error('paste_render_not_promise')
+        await Promise.all([rendering, layout])
+        const node = document.getElementById(containerId)
+        if (
+          !strict.isCurrent() ||
+          !node?.isConnected ||
+          node.getBoundingClientRect().width <= 1 ||
+          node.getBoundingClientRect().height <= 1
+        )
+          throw new Error('paste_layout_missing')
+        strict.resolve()
+      } finally {
+        cancelS2Wait = undefined
+        sheet.off(S2Event.LAYOUT_AFTER_RENDER, afterLayout)
+      }
+    } else {
+      myChart?.render()
+      if (isPasteActive()) dvMainStore.setViewInstanceInfo(actualChart.id, myChart)
+      initScroll()
+    }
+  } catch (error) {
+    if (strict) strict.reject(error)
+    else console.warn('S2 render failed', error)
   } finally {
     resolveRenderChart()
   }
@@ -377,7 +431,7 @@ const setupPage = (chart: ChartObj, resetPageInfo?: boolean) => {
   if (resetPageInfo) {
     state.pageInfo.currentPage = 1
   }
-  dvMainStore.setViewPageInfo(chart.id, state.pageInfo)
+  if (isPasteActive()) dvMainStore.setViewPageInfo(chart.id, state.pageInfo)
 }
 
 const mouseMove = () => {
@@ -408,16 +462,18 @@ const mouseLeave = (event: MouseEvent) => {
 
 let scrollTimer: ReturnType<typeof setTimeout> | null = null
 const initScroll = () => {
+  if (!isPasteActive()) return
   if (scrollTimer) {
     clearTimeout(scrollTimer)
   }
   scrollTimer = setTimeout(() => {
-    const senior = actualChart?.senior
+    if (!isPasteActive() || chartComponentUnmounted) return
+    const senior = filterPasteBinding.value ? view.value.senior : actualChart?.senior
     if (
       myChart &&
       senior?.scrollCfg?.open &&
       chartData.value.tableRow?.length &&
-      PAGE_CHARTS.includes(props.view.type) &&
+      PAGE_CHARTS.includes(view.value.type) &&
       !state.showPage
     ) {
       // 停止可能正在执行的滚动动画
@@ -480,6 +536,7 @@ const showPage = computed(() => {
 })
 
 const handleCurrentChange = pageNum => {
+  if (!isPasteActive()) return
   let extReq = { goPage: pageNum }
   if (chartExtRequest.value) {
     extReq = { ...extReq, ...chartExtRequest.value }
@@ -489,6 +546,7 @@ const handleCurrentChange = pageNum => {
 }
 
 const handlePageSizeChange = pageSize => {
+  if (!isPasteActive()) return
   if (state.pageStyle === 'general') {
     state.currentPageSize = pageSize
     emitter.emit('set-page-size', pageSize)
@@ -514,6 +572,7 @@ const touchAction = callback => {
 }
 
 const action = param => {
+  if (!isPasteActive()) return
   state.pointParam = param
   state.curActionId = param.data.name
   state.curTrackMenu = trackMenuCalc(state.curActionId)
@@ -544,7 +603,7 @@ const action = param => {
       left: pointX - 50,
       top: pointY + 10
     }
-    trackBarStyleCheck(props.element, barStyleTemp, props.scale, trackMenu.value.length)
+    trackBarStyleCheck(element.value, barStyleTemp, props.scale, trackMenu.value.length)
     if (dataVMobile) {
       state.trackBarStyle.left = barStyleTemp.left + 40 + 'px'
       state.trackBarStyle.top = barStyleTemp.top + 70 + 'px'
@@ -559,6 +618,7 @@ const action = param => {
 const appStore = useAppStoreWithOut()
 
 const trackClick = trackAction => {
+  if (!isPasteActive()) return
   const param = state.pointParam
   if (!param?.data?.dimensionList) {
     return
@@ -681,11 +741,11 @@ const trackMenuCmp = computed(() => {
   linkageCount && view.value?.linkageActive && trackMenuInfo.push('linkage')
   view.value.drillFields.length && trackMenuInfo.push('drill')
   // 如果同时配置jump linkage drill 切配置联动时同时下钻 在实际只显示两个 '跳转' '联动和下钻'
-  if (trackMenuInfo.length === 3 && props.element.actionSelection.linkageActive === 'auto') {
+  if (trackMenuInfo.length === 3 && element.value.actionSelection.linkageActive === 'auto') {
     trackMenuInfo = ['jump', 'linkageAndDrill']
   } else if (
     trackMenuInfo.length === 2 &&
-    props.element.actionSelection.linkageActive === 'auto' &&
+    element.value.actionSelection.linkageActive === 'auto' &&
     !trackMenuInfo.includes('jump')
   ) {
     trackMenuInfo = ['linkageAndDrill']
@@ -719,11 +779,11 @@ const trackMenuCalc = itemId => {
   }
   drillCount && trackMenuInfo.push('drill')
   // 如果同时配置jump linkage drill 切配置联动时同时下钻 在实际只显示两个 '跳转' '联动和下钻'
-  if (trackMenuInfo.length === 3 && props.element.actionSelection.linkageActive === 'auto') {
+  if (trackMenuInfo.length === 3 && element.value.actionSelection.linkageActive === 'auto') {
     trackMenuInfo = ['jump', 'linkageAndDrill']
   } else if (
     trackMenuInfo.length === 2 &&
-    props.element.actionSelection.linkageActive === 'auto' &&
+    element.value.actionSelection.linkageActive === 'auto' &&
     !trackMenuInfo.includes('jump')
   ) {
     trackMenuInfo = ['linkageAndDrill']
@@ -740,6 +800,7 @@ const trackMenuCalc = itemId => {
 }
 
 const resizeAction = resizeColumn => {
+  if (!isPasteActive()) return
   // 从头开始滚动
   if (myChart?.facet.timer) {
     myChart?.facet.timer.stop()
@@ -763,7 +824,69 @@ const resizeAction = resizeColumn => {
   }
   emitter.emit('set-table-column-width', tableWidth)
 }
+const prepareFilterPaste = async (
+  input: PreparedQuery,
+  binding: PasteBinding,
+  isCurrent: () => boolean
+): Promise<PasteReady> => {
+  if (input.kind !== 'queried') return { ok: false, reason: 'preparation_unavailable' }
+  filterPasteBinding.value = binding
+  let alive = true
+  const current = () => alive && !chartComponentUnmounted && isCurrent()
+  const dispose = () => {
+    if (!alive) return
+    alive = false
+    cancelS2Wait?.()
+    strictS2Render?.reject(new Error('paste_cancelled'))
+    strictS2Render = null
+    debounceRender.cancel()
+    clearTimeout(timer)
+    clearTimeout(scrollTimer)
+    mouseMove()
+    myChart?.facet?.cancelScrollFrame()
+    myChart?.destroy()
+    myChart = null
+  }
+  let timeout: ReturnType<typeof setTimeout>
+  try {
+    if (!current()) throw new Error('paste_cancelled')
+    const response = cloneDeep(input.response)
+    chartData.value = normalizeChartData(response.data as Partial<Chart['data']> | null)
+    state.totalItems = response.totalItems ?? 0
+    state.currentPageSize = Number(input.request.chartExtRequest?.pageSize) || 0
+    if (state.currentPageSize) state.pageInfo.pageSize = state.currentPageSize
+    isError.value = false
+    await Promise.race([
+      renderChart(response as unknown as Chart, true, current),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error('paste_render_timeout')), 10000)
+      })
+    ])
+    if (!current()) throw new Error('paste_cancelled')
+    return {
+      ok: true,
+      handle: {
+        key: props.suffixId,
+        binding,
+        instance: myChart,
+        metadata: {
+          kind: 's2',
+          drillFilters: cloneDeep(response.drillFilters || []),
+          pageInfo: cloneDeep(state.pageInfo),
+          publishPure: !response.drill
+        },
+        dispose
+      }
+    }
+  } catch {
+    dispose()
+    return { ok: false, reason: 'paste_render_failed' }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
 defineExpose({
+  prepareFilterPaste,
   calcData,
   renderChart,
   renderChartFromDialog,
@@ -772,6 +895,7 @@ defineExpose({
 
 let timer
 const resize = (width, height) => {
+  if (!isPasteActive()) return
   if (timer) {
     clearTimeout(timer)
     timer = null
@@ -801,6 +925,7 @@ const TOLERANCE = 1
 let resizeObserver: ResizeObserver
 onMounted(() => {
   resizeObserver = new ResizeObserver(([entry] = []) => {
+    if (!isPasteActive()) return
     const [size] = entry.borderBoxSize || []
     // 拖动的时候宽高重新计算，误差范围内不重绘，误差先设置为1
     if (!(preSize[0] || preSize[1])) {
@@ -825,6 +950,9 @@ onBeforeUnmount(() => {
     timer && clearTimeout(timer)
     scrollTimer && clearTimeout(scrollTimer)
     debounceRender.cancel()
+    cancelS2Wait?.()
+    strictS2Render?.reject(new Error('paste_cancelled'))
+    strictS2Render = null
     resolveRenderChart()
     myChart?.facet?.timer?.stop()
     myChart?.facet?.cancelScrollFrame()

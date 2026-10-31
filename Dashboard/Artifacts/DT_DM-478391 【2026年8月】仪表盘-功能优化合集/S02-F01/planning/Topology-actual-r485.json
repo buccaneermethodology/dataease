@@ -1,0 +1,77 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-actual-r485",
+  "recorded_at": "2026-10-29T02:20:57.442824+00:00",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r484.json",
+  "phase": "post_grouped_runtime_batch",
+  "task_id": "S02-MVP-CARTESIAN-RUNTIME-BATCH-r001",
+  "execution": {
+    "identity": "/root IAB tab1",
+    "state": "bounded_batch_complete",
+    "result": "24 successful paste observations; 26/49 types role-touched; full-pass0/49; failures and incidents preserved."
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r479.json",
+      "sha256": "bef1d9b22ba9ae9a88a62e83abbb45f7ce0c2c2666bdb735c3fb072254d66534"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeOracle-r001.json",
+      "sha256": "4caa318b01266011c27eedefdf6df7c597fde6f5ad7879668fdbbc00016c9fb8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeGroupedBatch-events-r001.jsonl",
+      "sha256": "312c0ce1f5545a976b1ff62accb3c2a2bd070bd7f761429e9385042d66e3c935"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeGroupedBatch-r001.json",
+      "sha256": "1febfb2e31de74c0421a778593fdb04bef910221d3a89a4be7400230598b96d5"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeGroupedIndependentOracle-r001.json",
+      "sha256": "8bccbb79ea2e85be42587825aff9df386354f5e131b5fc6e9c02622cd6a66421"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeUiProgress-r004.json",
+      "sha256": "4528b82134f724258442d52b1fe8e493b04f55c808c84e7a7d422a5c209ebf32"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBatchRecorderPathIncident-r001.json",
+      "sha256": "9671698954a5566124fd584f838e1a4a3f83d34c30851f6c3dabbb0974c0dd29"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeGrouped-console-errors-r001.json",
+      "sha256": "931ea0f72e3e10bceb1c9a23c21d5e8e808a87564b5ea5e51587805dc8a22d52"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "sha256": "657fce822fe66d6813c16d37239e0b81c30236d11f6b89810f0b73f4092c0396"
+    }
+  ],
+  "goal_denominator": {
+    "p1_mvp_obligations": 12,
+    "p2_original_obligations": 26,
+    "total": 38,
+    "landed": 0,
+    "scope_delta": "none",
+    "status": "all pending"
+  },
+  "claim_ceiling": "每种类型的完整P1验收还要求真实两条件独立oracle、专用按钮/权限状态、拒绝/取消/失败/局部失效/TTL、结果保存重开与独立验证；本快照只有零散真实UI配对，不能记类型通过。",
+  "blockers": [
+    "Builder运行观察和独立数据计算，不是独立Validation。",
+    "progress-bar轴配置尚未正常应用时两次preparation_unavailable、0查询；通过正常更新图表数据后粘贴成功；未修改源码，不宣称缺陷修复。",
+    "gauge在常规渲染尚未就绪时过早尝试失败；等待画面就绪后成功。",
+    "仪表盘/水波图使用amount求和，默认百分比范围发生饱和；只证明配置/查询/渲染链，未验数值显示与范围配置。",
+    "保存后重开有数次本地草稿恢复提示，选择否后读取服务器已保存类型；原因未确认为产品缺陷。",
+    "圆形填充图点击存在trackClick读取undefined.type的console异常；未修复，不宣称交互全通过。",
+    "真实权限BLOCKED / NOT_RUN；插件installed数量unknown；38项未收口。",
+    "记录器闭包路径事件与截图覆盖已另存审计记录，不能把被覆盖图片当原批证据。"
+  ],
+  "single_agent_exception": "Mechanical evidence projection; no independent validation claim."
+}

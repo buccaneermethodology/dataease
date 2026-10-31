@@ -1,0 +1,1991 @@
+{
+  "schema_version": "s02_saved_canvas_owner_cases_r004",
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "design_ref": "QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+  "scope": {
+    "goal_id": "DE-S02-F01",
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "仅定义 detached owner helper 的引用身份与状态机；无产品 producer、授权、读取、复制粘贴、提交或权限验收声明。",
+  "runner_contract": {
+    "object_graph": "objects.root is the exact top-level raw componentData array; its entries are component objects and their object identity is the raw target identity. clone_of creates a distinct JS array/object graph.",
+    "ref_resolution": "A {\"ref\":\"objects.path\"} descriptor is resolved to the referenced JS object before invoking helper or a mutation step; it is never identity evidence.",
+    "current_context": "getCurrentContext returns scalar loader facts plus canvasInstance and root references. The root reference is the exact raw top-level componentData array; no separately inferred topLevelComponents projection exists.",
+    "setCurrentContext": "Shallow merge only named top-level properties, preserving all other current context properties; a supplied {ref} value is resolved to an actual reference.",
+    "mutation_steps": "mutateArrayItem replaces one array entry with the referenced object; removeArrayItem removes the indexed entry.",
+    "factory_epochs": "One lifecycle factory counts each successful begin as one epoch. begin while open rejects without replacement; after invalidation a new successful begin creates the next owner epoch; old handles remain terminal.",
+    "assertions": "Assert owner/result shape, exact error, generation, current registration ids and token validity. The latest successful registration token is addressable as lastRegistrationToken in token validation steps. Ordinary reject preserves prior registration; lifecycle invalidation clears them. All cases assert source_read=false and paste_commit=false.",
+    "component_query_rule": "A VQuery is matched only when component==='VQuery' and innerType==='VQuery'; the legacy/general `type` property is ignored.",
+    "token_idempotence": "A second registerTarget with the same active targetId and the exact same raw object returns the exact same opaque token object; no additional registration or generation is created. A different object is not substituted.",
+    "owner_validity_oracle": "For validate(owner), compare API OwnerValidity.reason to expected.reason. RegistrationResult and validateRegistration use expected.error. This fixture naming normalization does not require aliased runtime properties.",
+    "foreign_owner": "objects.foreignOwner is a distinct object never issued by this factory; owner APIs return the exact unknown/OWNER_HANDLE_INVALID result shape."
+  },
+  "cases": [
+    {
+      "id": "SCPO2-001",
+      "title": "ready edit with identical live references begins",
+      "objects": {
+        "canvas": {
+          "id": "canvas-1"
+        },
+        "root": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "dash-9",
+        "routeResourceId": "dash-9",
+        "dvInfoId": "dash-9",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.canvas"
+        },
+        "root": {
+          "ref": "objects.root"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "epoch": "new_ephemeral",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "authorization_claim": "none"
+      }
+    },
+    {
+      "id": "SCPO2-002",
+      "title": "no context wins before loader facts",
+      "objects": {},
+      "currentContext": null,
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "CANVAS_NOT_READY",
+        "generation": 0,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-003",
+      "title": "loading is not ready",
+      "objects": {
+        "c": {
+          "id": "c"
+        },
+        "r": []
+      },
+      "context": {
+        "loadState": "loading",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "CANVAS_NOT_READY",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-004",
+      "title": "copy flag wins over resource mismatch",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "copy",
+        "resourceId": "d1",
+        "routeResourceId": "d2",
+        "dvInfoId": "d3",
+        "isTemplate": false,
+        "copyMode": true,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "COPY_IS_NEW_RESOURCE",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-005",
+      "title": "template rejected before operation mismatch",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "template",
+        "resourceId": "t",
+        "routeResourceId": "t",
+        "dvInfoId": "t",
+        "isTemplate": true,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "TEMPLATE_NOT_SUPPORTED",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-006",
+      "title": "create is not persisted-resource mode",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "create",
+        "resourceId": null,
+        "routeResourceId": null,
+        "dvInfoId": null,
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "OPERATION_NOT_SUPPORTED",
+        "create_owner_called": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-007",
+      "title": "invalid numeric resource id is rejected without coercion",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": 9,
+        "routeResourceId": "9",
+        "dvInfoId": "9",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "INVALID_RESOURCE_ID",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-008",
+      "title": "route and loaded ids must match exactly",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "dash-9",
+        "routeResourceId": "dash-10",
+        "dvInfoId": "dash-9",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "RESOURCE_ID_MISMATCH",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-009",
+      "title": "missing canvas object anchor rejected",
+      "objects": {
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": null,
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "LIVE_CANVAS_IDENTITY_REQUIRED",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-010",
+      "title": "root clone cannot stand in for current root reference",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ],
+        "clone": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "setCurrentContext": {
+            "root": {
+              "ref": "objects.clone"
+            }
+          }
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.clone[0]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "error": "ROOT_REPLACED",
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-011",
+      "title": "selected raw target registers among multiple VQuery nodes",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q1",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          },
+          {
+            "id": "q2",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q2",
+          "targetRaw": {
+            "ref": "objects.r[1]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "accepted_for_identity_only",
+        "generation": 0,
+        "registrations": [
+          "q2"
+        ],
+        "source_read": false,
+        "paste_commit": false,
+        "authorization_claim": "none"
+      }
+    },
+    {
+      "id": "SCPO2-012",
+      "title": "no matching target has exact empty state",
+      "objects": {
+        "c": {},
+        "r": [],
+        "foreign": {
+          "id": "q"
+        }
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.foreign"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "NO_QUERY_TARGET",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-013",
+      "title": "duplicate ids fail before type and raw identity checks",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "Chart",
+            "innerType": "Chart"
+          },
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[1]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "DUPLICATE_OR_INVALID_TARGET_ID",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-014",
+      "title": "unique non VQuery target is rejected",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "Chart",
+            "innerType": "Chart"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "TARGET_NOT_VQUERY",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-015",
+      "title": "foreign object with same id is rejected",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ],
+        "foreign": {
+          "id": "q"
+        }
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.foreign"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "STALE_COMPONENT_IDENTITY",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-016",
+      "title": "distinct valid targets can both register",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q1",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          },
+          {
+            "id": "q2",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q1",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "call": "register",
+          "targetId": "q2",
+          "targetRaw": {
+            "ref": "objects.r[1]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registrations": [
+          "q1",
+          "q2"
+        ],
+        "generation": 0,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-017",
+      "title": "duplicate begin does not replace active owner",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "second_error": "SESSION_ALREADY_ACTIVE",
+        "epoch_count": 1,
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-018",
+      "title": "canvas instance replacement invalidates and clears registrations",
+      "objects": {
+        "c1": {},
+        "c2": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c1"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "setCurrentContext": {
+            "canvasInstance": {
+              "ref": "objects.c2"
+            }
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "CANVAS_INSTANCE_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO2-019",
+      "title": "root replacement invalidates and clears all registrations",
+      "objects": {
+        "c": {},
+        "r1": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ],
+        "r2": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r1"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r1[0]"
+          }
+        },
+        {
+          "setCurrentContext": {
+            "root": {
+              "ref": "objects.r2"
+            }
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "ROOT_REPLACED"
+      }
+    },
+    {
+      "id": "SCPO2-020",
+      "title": "resource change invalidates before next registration",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d1",
+        "routeResourceId": "d1",
+        "dvInfoId": "d1",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "setCurrentContext": {
+            "resourceId": "d2",
+            "routeResourceId": "d2",
+            "dvInfoId": "d2"
+          }
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "error": "RESOURCE_IDENTITY_CHANGED",
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-021",
+      "title": "ordinary rejection preserves active registrations",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q1",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          },
+          {
+            "id": "q2",
+            "component": "Chart",
+            "innerType": "Chart"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q1",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "call": "register",
+          "targetId": "q2",
+          "targetRaw": {
+            "ref": "objects.r[1]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "second_error": "TARGET_NOT_VQUERY",
+        "generation": 0,
+        "registrations": [
+          "q1"
+        ],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-022",
+      "title": "explicit invalidate is terminal and increments generation once",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "invalidate",
+          "reason": "resource_changed"
+        },
+        {
+          "call": "invalidate",
+          "reason": "duplicate_event"
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "reopen_allowed": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-023",
+      "title": "auth change invalidation contract exists but runtime source remains unavailable",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "invalidate",
+          "reason": "auth_context_changed"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "authorization_claim": "none",
+        "real_auth_event": "BLOCKED_NOT_RUN",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-024",
+      "title": "cache restore path cannot be represented as a supported live load producer",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "restore-cache",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "OPERATION_NOT_SUPPORTED",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-025",
+      "title": "reload creates new epoch and old handle never revives",
+      "objects": {
+        "c1": {},
+        "c2": {},
+        "r1": [],
+        "r2": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c1"
+        },
+        "root": {
+          "ref": "objects.r1"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "invalidate",
+          "reason": "unmount"
+        },
+        {
+          "setCurrentContext": {
+            "loadState": "ready",
+            "operation": "edit",
+            "resourceId": "d",
+            "routeResourceId": "d",
+            "dvInfoId": "d",
+            "isTemplate": false,
+            "copyMode": false,
+            "canvasInstance": {
+              "ref": "objects.c2"
+            },
+            "root": {
+              "ref": "objects.r2"
+            }
+          }
+        },
+        {
+          "call": "begin"
+        },
+        {
+          "call": "validate",
+          "handle": "old"
+        }
+      ],
+      "expected": {
+        "epoch_count": 2,
+        "old_owner": "invalidated",
+        "old_valid": false,
+        "new_owner": "open",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-026",
+      "title": "existing create owner route remains independent",
+      "objects": {
+        "c": {},
+        "r": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "create",
+        "resourceId": null,
+        "routeResourceId": null,
+        "dvInfoId": null,
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "saved_owner": "none",
+        "existing_create_owner_behavior": "separately_regression_tested",
+        "byte_for_byte_claim": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO2-027",
+      "title": "load leaving ready invalidates an open owner",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "setCurrentContext": {
+            "loadState": "loading"
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "CANVAS_NOT_READY"
+      }
+    },
+    {
+      "id": "SCPO3-028",
+      "title": "mode changes invalidate before a new registration",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "setCurrentContext": {
+            "copyMode": true,
+            "operation": "copy"
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "COPY_IS_NEW_RESOURCE"
+      }
+    },
+    {
+      "id": "SCPO3-029",
+      "title": "route or dvInfo mismatch invalidates even when resource id stays the same",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "setCurrentContext": {
+            "routeResourceId": "other"
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "RESOURCE_IDENTITY_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO3-030",
+      "title": "registered target replaced inside the same root invalidates token",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ],
+        "replacement": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "mutateArrayItem": {
+            "array": {
+              "ref": "objects.r"
+            },
+            "index": 0,
+            "replacement": {
+              "ref": "objects.replacement[0]"
+            }
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "REGISTERED_TARGET_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO3-031",
+      "title": "registered target removed from the same root invalidates token",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "removeArrayItem": {
+            "array": {
+              "ref": "objects.r"
+            },
+            "index": 0
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "REGISTERED_TARGET_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO3-032",
+      "title": "fresh begin after terminal invalidation mints next factory epoch while old handle stays invalid",
+      "objects": {
+        "c1": {},
+        "c2": {},
+        "r1": [],
+        "r2": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c1"
+        },
+        "root": {
+          "ref": "objects.r1"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "invalidate",
+          "reason": "unmount"
+        },
+        {
+          "setCurrentContext": {
+            "canvasInstance": {
+              "ref": "objects.c2"
+            },
+            "root": {
+              "ref": "objects.r2"
+            }
+          }
+        },
+        {
+          "call": "begin"
+        },
+        {
+          "call": "validate",
+          "handle": "old"
+        }
+      ],
+      "expected": {
+        "factory_epoch_count": 2,
+        "old_owner": "invalidated",
+        "old_valid": false,
+        "new_owner": "open",
+        "new_generation": 0,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO3-033",
+      "title": "setCurrentContext shallow merges top level and preserves unrelated anchors",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "setCurrentContext": {
+            "routeResourceId": "other"
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "generation": 1,
+        "registrations": [],
+        "source_context_preserved": true,
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "RESOURCE_IDENTITY_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO3-034",
+      "title": "blank or whitespace resource id is rejected without normalization",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "  ",
+        "routeResourceId": "  ",
+        "dvInfoId": "  ",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        }
+      ],
+      "expected": {
+        "owner": "none",
+        "error": "INVALID_RESOURCE_ID",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO3-035",
+      "title": "blank or whitespace-only target id is rejected before lookup",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": " ",
+          "targetRaw": {
+            "ref": "objects.r"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "DUPLICATE_OR_INVALID_TARGET_ID",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO3-036",
+      "title": "dvInfo identity mismatch invalidates even if route and resource match",
+      "objects": {
+        "c": {},
+        "r": []
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "setCurrentContext": {
+            "dvInfoId": "other"
+          }
+        },
+        {
+          "call": "validate"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "valid": false,
+        "generation": 1,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false,
+        "reason": "RESOURCE_IDENTITY_CHANGED"
+      }
+    },
+    {
+      "id": "SCPO3-037",
+      "title": "registration token is owner and generation bound and dies on invalidate",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "call": "validateRegistration",
+          "token": "lastRegistrationToken"
+        },
+        {
+          "call": "invalidate",
+          "reason": "resource_changed"
+        },
+        {
+          "call": "validateRegistration",
+          "token": "lastRegistrationToken"
+        }
+      ],
+      "expected": {
+        "owner": "invalidated",
+        "before_invalidate": {
+          "valid": true,
+          "state": "open",
+          "targetId": "q",
+          "generation": 0
+        },
+        "after_invalidate": {
+          "valid": false,
+          "state": "invalidated",
+          "error": "OWNER_INVALIDATED",
+          "generation": 1
+        },
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO4-038",
+      "title": "legacy type label cannot substitute actual component and innerType pair",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "type": "VQuery",
+            "component": "Chart",
+            "innerType": "Chart"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "error": "TARGET_NOT_VQUERY",
+        "generation": 0,
+        "registrations": [],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO4-039",
+      "title": "same target same raw registration is idempotent and reuses token",
+      "objects": {
+        "c": {},
+        "r": [
+          {
+            "id": "q",
+            "component": "VQuery",
+            "innerType": "VQuery"
+          }
+        ]
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "call": "register",
+          "targetId": "q",
+          "targetRaw": {
+            "ref": "objects.r[0]"
+          }
+        },
+        {
+          "call": "validateRegistration",
+          "token": "firstRegistrationToken"
+        },
+        {
+          "call": "validateRegistration",
+          "token": "secondRegistrationToken"
+        }
+      ],
+      "expected": {
+        "owner": "open",
+        "registration_count": 1,
+        "same_token": true,
+        "both_valid": true,
+        "generation": 0,
+        "registrations": [
+          "q"
+        ],
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO4-040",
+      "title": "foreign owner registration token validation has exact unknown result",
+      "objects": {
+        "c": {},
+        "r": [],
+        "foreignOwner": {}
+      },
+      "context": {
+        "loadState": "ready",
+        "operation": "edit",
+        "resourceId": "d",
+        "routeResourceId": "d",
+        "dvInfoId": "d",
+        "isTemplate": false,
+        "copyMode": false,
+        "canvasInstance": {
+          "ref": "objects.c"
+        },
+        "root": {
+          "ref": "objects.r"
+        }
+      },
+      "steps": [
+        {
+          "call": "begin"
+        },
+        {
+          "call": "validateRegistration",
+          "owner": {
+            "ref": "objects.foreignOwner"
+          },
+          "token": {
+            "ref": "objects.foreignOwner"
+          }
+        }
+      ],
+      "expected": {
+        "valid": false,
+        "state": "unknown",
+        "error": "OWNER_HANDLE_INVALID",
+        "generation": null,
+        "source_read": false,
+        "paste_commit": false
+      }
+    }
+  ]
+}

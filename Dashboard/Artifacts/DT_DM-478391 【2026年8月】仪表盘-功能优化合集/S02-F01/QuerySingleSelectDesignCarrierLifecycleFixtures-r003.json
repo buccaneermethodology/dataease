@@ -1,0 +1,5563 @@
+{
+  "schema_version": "qssdh_lifecycle_contract_r003",
+  "status": "CANDIDATE_PENDING_INDEPENDENT_REVIEW_NO_ADMISSION",
+  "cases": [
+    {
+      "id": "TC-QSOURCE-R2-001",
+      "title": "非模板空文档→新建空VQuery无carrier",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "empty",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "trusted_new_top_level_vquery"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-002",
+      "title": "首次完整确认A同commit建立design/runtime",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "confirmed_complete_candidate",
+            "candidate": {
+              "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 1,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-003",
+      "title": "确认失败/取消保留完整pending",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "validation_failure_or_cancel"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-004",
+      "title": "运行外参X不改变独立设计A",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "runtime_outer_value",
+            "value": "X"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-005",
+      "title": "明确受管编辑A→D发布第二commit",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "open_draft_from_design_carrier"
+          },
+          {
+            "type": "confirm_complete_design",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 1,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-006",
+      "title": "有效历史sidecar恢复全根A并分配新revision3，不追加",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0,
+            "selectedRoot": {
+              "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+            },
+            "sidecar": {
+              "revision": 1,
+              "commitId": "commit-1",
+              "design": {
+                "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 3,
+          "commitId": "commit-3",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 3,
+            "commitId": "commit-3",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 0,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 1,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-007",
+      "title": "缺sidecar先失活新增能力，再保留原全根恢复",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0,
+            "selectedRoot": {
+              "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+            },
+            "sidecar": null
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "unmanaged",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": null,
+          "snapshotIndex": 0,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 1,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "readerTrace": [
+          "unavailable_before_pointer_change",
+          "unavailable_after_root",
+          "unavailable_before_native_events"
+        ],
+        "ordinarySave": "original_path_not_blocked",
+        "managedSaveCapture": "unavailable"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-008",
+      "title": "同commit capture最新550宽度，以设计槽覆盖运行C",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "synchronous_save_capture",
+            "expectedRevision": 1,
+            "expectedCommitId": "commit-1"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "capturedComponentData": {
+          "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+        },
+        "captureRevision": 1,
+        "captureCommitId": "commit-1",
+        "carrierMetadataSerialized": false
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-009",
+      "title": "capture后异步等待期间确认D/改宽580，不拼入旧payload",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "capture",
+            "revision": 1,
+            "commitId": "commit-1"
+          },
+          {
+            "type": "later_confirm_and_style_edit",
+            "design": "D",
+            "width": 580
+          },
+          {
+            "type": "send_captured_payload"
+          },
+          {
+            "type": "save_success_callback"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 2,
+          "commitId": "commit-2",
+          "root": {
+            "$object": "074565f04b72c1c0e79a5a0224dfb54cde57c85350d6c87e9f8f96607296d185"
+          },
+          "carrier": {
+            "revision": 2,
+            "commitId": "commit-2",
+            "componentId": "query-new",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 1,
+            "historyPublish": 0,
+            "saveRequests": 1
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "sentComponentData": {
+          "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+        },
+        "dirtyMustRemain": true,
+        "currentSourceBehavior": "canvasSave当前回包无条件resetStyleChangeTimes；这里dirty=true是未实现候选要求，不是现有结果"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-010",
+      "title": "carrier/root commit不一致不得执行新增capture",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "revision": 0,
+            "commitId": "commit-0",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "managed_save_capture"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "revision": 0,
+            "commitId": "commit-0",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "capturedComponentData": null,
+        "reason": "REVISION_OR_COMMIT_MISMATCH",
+        "ordinarySave": "not_decided_or_changed_by_this_case"
+      },
+      "case_kind": "candidate_state_oracle"
+    },
+    {
+      "id": "TC-QSOURCE-R2-011",
+      "title": "保存JSON重开不重建私有来源证明",
+      "input": {
+        "state": null,
+        "events": [
+          {
+            "type": "load_persisted_component_json",
+            "componentData": {
+              "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+            },
+            "inMemorySidecar": null
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": null,
+          "phase": "unmanaged",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": false,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "candidate_contract_not_current_product_execution",
+        "promotion": "NOT_READY",
+        "reason": "已保存设计字段可显示，不等于有证新建/受管session来源；不得伪造carrier"
+      },
+      "case_kind": "analysis_only"
+    },
+    {
+      "id": "TC-QSOURCE-R2-012",
+      "title": "当前源码保存仍复制运行X及已有可枚举附加字段",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "static_clone_and_json_observation"
+          }
+        ]
+      },
+      "expected": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "kind": "current_source_static_observation_not_network_execution",
+        "currentComponentDataJsonRoundTrip": {
+          "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+        }
+      },
+      "case_kind": "static_observation"
+    },
+    {
+      "id": "TC-QSOURCE-R2-013",
+      "title": "向root直接挂carrier会被现有保存复制，是禁止方案反例",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "managed",
+          "revision": 1,
+          "commitId": "commit-1",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "revision": 1,
+            "commitId": "commit-1",
+            "componentId": "query-new",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "hypothetical_enumerable_root_metadata",
+            "metadata": {
+              "carrier": {
+                "origin": "untrusted-string"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "state": null,
+        "kind": "NOT_READY_REJECTED_PLACEMENT",
+        "currentCloneJsonWouldContainMetadata": true,
+        "reason": "无序列化排除规则；不实施该placement"
+      },
+      "case_kind": "analysis_only"
+    },
+    {
+      "id": "TC-QSOURCE-R2-014",
+      "title": "同commit可观察发布尚无产品门控证据",
+      "input": {
+        "state": {
+          "epoch": "new-document-session-1",
+          "phase": "pending",
+          "revision": 0,
+          "commitId": null,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "dirty": true,
+          "effects": {
+            "snapshotAppend": 0,
+            "confirmEventPairs": 0,
+            "historyPublish": 0,
+            "saveRequests": 0
+          }
+        },
+        "events": [
+          {
+            "type": "current_confirmClick",
+            "visibleIntermediatePropValue": [],
+            "nextTickWrites": [
+              "cascade",
+              "propValue"
+            ],
+            "nextNextTickEmits": [
+              "reRenderAll",
+              "queryData"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "state": null,
+        "kind": "NOT_READY_PRODUCT_ATOMICITY",
+        "reason": "候选single-slot/Capsule publication未接入；原有消费者不能由纯模型证明"
+      },
+      "case_kind": "analysis_only"
+    }
+  ],
+  "save_cases": [
+    {
+      "id": "LC3-SAVE-01",
+      "title": "同步深捕获完整payload/方法/目标/check参数",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {
+          "1": {
+            "token": {
+              "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+              "epoch": "e1",
+              "seq": 1,
+              "revision": 1,
+              "commitId": "c1",
+              "editGeneration": 1,
+              "targetId": "doc-1",
+              "method": "updateCanvas",
+              "contentId": "content-1"
+            },
+            "payload": {
+              "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+            },
+            "checks": {
+              "appCanvasNameCheck": {
+                "datasetFolderPid": "df-1",
+                "datasetFolderName": "示例数据集"
+              },
+              "dvNameCheck": {
+                "opt": "edit",
+                "nodeType": "leaf",
+                "name": "仪表板",
+                "type": "dashboard",
+                "id": "doc-1"
+              }
+            },
+            "status": "checking",
+            "overlap": false
+          }
+        },
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-02",
+      "title": "名称检查await中仅样式和其他字段编辑不改捕获payload",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "edit",
+          "generation": 2,
+          "width": 580,
+          "name": "后改名称",
+          "viewTitle": "后改标题",
+          "appEnabled": false
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "后改标题"
+          }
+        },
+        "appData": {
+          "enabled": false
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "后改名称",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {
+          "1": {
+            "token": {
+              "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+              "epoch": "e1",
+              "seq": 1,
+              "revision": 1,
+              "commitId": "c1",
+              "editGeneration": 1,
+              "targetId": "doc-1",
+              "method": "updateCanvas",
+              "contentId": "content-1"
+            },
+            "payload": {
+              "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+            },
+            "checks": {
+              "appCanvasNameCheck": {
+                "datasetFolderPid": "df-1",
+                "datasetFolderName": "示例数据集"
+              },
+              "dvNameCheck": {
+                "opt": "edit",
+                "nodeType": "leaf",
+                "name": "仪表板",
+                "type": "dashboard",
+                "id": "doc-1"
+              }
+            },
+            "status": "checking",
+            "overlap": false
+          }
+        },
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-03",
+      "title": "确认D后旧capture成功：计确认1、发送A550、dirty保持",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "confirm_D_and_style_edit",
+          "editGeneration": 2
+        },
+        {
+          "type": "checks_pass_send",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 2,
+        "commitId": "c2",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "074565f04b72c1c0e79a5a0224dfb54cde57c85350d6c87e9f8f96607296d185"
+        },
+        "design": {
+          "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 1,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 1,
+          "confirmEventPairs": 1,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-04",
+      "title": "无后续编辑且非重叠请求成功才清dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "checks_pass_send",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 1,
+        "dirty": false,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "content-1",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 1,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 1,
+          "confirmEventPairs": 0,
+          "dirtyClears": 1
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-05",
+      "title": "名称检查重复/失败终止，不发保存不清dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "name_check_rejected",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-06",
+      "title": "网络失败不更新ack/contentId/dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "checks_pass_send",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "request_failed",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 1,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-07",
+      "title": "两更新并发，回包2后1：不推断后端顺序、不清dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture_and_send",
+          "seq": 1
+        },
+        {
+          "type": "style_edit",
+          "editGeneration": 2,
+          "width": 580
+        },
+        {
+          "type": "capture_and_send",
+          "seq": 2
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 2,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-2"
+          }
+        },
+        {
+          "type": "late_success",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 2,
+        "saveOrderUncertain": true,
+        "effects": {
+          "requests": 2,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": true
+        },
+        {
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 2,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-2"
+          },
+          "payload": {
+            "$object": "bd96e043b7e7e8824b5262de6a2ed5e68f30397a03a04fa4659cc2ba47738c2f"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": true
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-08",
+      "title": "两更新并发，回包1后2仍不能仅凭回包顺序认定服务端版本",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture_and_send",
+          "seq": 1
+        },
+        {
+          "type": "style_edit",
+          "editGeneration": 2,
+          "width": 580
+        },
+        {
+          "type": "capture_and_send",
+          "seq": 2
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 2,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-2"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 2,
+        "saveOrderUncertain": true,
+        "effects": {
+          "requests": 2,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": true
+        },
+        {
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 2,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-2"
+          },
+          "payload": {
+            "$object": "bd96e043b7e7e8824b5262de6a2ed5e68f30397a03a04fa4659cc2ba47738c2f"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": true
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-09",
+      "title": "先前重叠均settled后用户再次正常保存成功才能解除顺序不确定",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 2,
+        "saveOrderUncertain": true,
+        "effects": {
+          "requests": 2,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "user_save_after_all_settled",
+          "seq": 3
+        },
+        {
+          "type": "checks_pass_send",
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 3,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-3"
+          }
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 3,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-3"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 2,
+        "dirty": false,
+        "root": {
+          "$object": "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "content-3",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 3,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 3,
+          "confirmEventPairs": 0,
+          "dirtyClears": 1
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "aa8a4a5c6401e6a7a89014a9dfc0baa2543bd1c8ccf907fd16b0eaa50e562426",
+            "epoch": "e1",
+            "seq": 3,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 2,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-3"
+          },
+          "payload": {
+            "$object": "5205fda25dd380ffa38b2903d2bc44e52d10563d3dfb88ee98deb8df6e40f371"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-10",
+      "title": "切换文档后旧名称检查/回包不可发给新目标或改新dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "navigate_epoch",
+          "epoch": "e2",
+          "id": "doc-2"
+        },
+        {
+          "type": "old_check_complete",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "stale_callback",
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          }
+        }
+      ],
+      "expected": {
+        "epoch": "e2",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-2",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-11",
+      "title": "create尚未settled时第二次保存拒绝BUSY_CREATE，不重复创建、不丢现场",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": null,
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture_create",
+          "seq": 1
+        },
+        {
+          "type": "second_save",
+          "result": "BUSY_CREATE"
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": null,
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {
+          "1": {
+            "token": {
+              "intentDigest": "e167308d401bfc37dfe3871ed806b1b46dda956965f113cab91114a0f5c7269b",
+              "epoch": "e1",
+              "seq": 1,
+              "revision": 1,
+              "commitId": "c1",
+              "editGeneration": 1,
+              "targetId": null,
+              "method": "saveCanvas",
+              "contentId": "content-1"
+            },
+            "payload": {
+              "$object": "587def73ec885b4e208b9639ed905007a42f589f58f9fe61a0561e3997000280"
+            },
+            "checks": {
+              "appCanvasNameCheck": {
+                "datasetFolderPid": "df-1",
+                "datasetFolderName": "示例数据集"
+              },
+              "dvNameCheck": null
+            },
+            "status": "checking",
+            "overlap": false
+          }
+        },
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "e167308d401bfc37dfe3871ed806b1b46dda956965f113cab91114a0f5c7269b",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": null,
+            "method": "saveCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "587def73ec885b4e208b9639ed905007a42f589f58f9fe61a0561e3997000280"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": null
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-12",
+      "title": "捕获后同epoch目标身份/保存模式变化：发请求前拒绝STALE_TARGET",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture",
+          "seq": 1
+        },
+        {
+          "type": "change_target_mode",
+          "optType": "copy"
+        },
+        {
+          "type": "checks_finished",
+          "result": "STALE_TARGET"
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 2,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "doc-1",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": "copy",
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "4cabfe7b8eb5c2334afe90c29c9ae3bf01dc37332de64b90938fdd3e4110b71a",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": "doc-1",
+            "method": "updateCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": {
+              "opt": "edit",
+              "nodeType": "leaf",
+              "name": "仪表板",
+              "type": "dashboard",
+              "id": "doc-1"
+            }
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "id": "LC3-SAVE-13",
+      "title": "首次create成功只绑定本epoch返回资源id，无新编辑才清dirty",
+      "initial": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 0,
+        "dirty": true,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": null,
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "old-content",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 0,
+          "confirmEventPairs": 0,
+          "dirtyClears": 0
+        }
+      },
+      "events": [
+        {
+          "type": "capture_create",
+          "seq": 1
+        },
+        {
+          "type": "checks_pass_send",
+          "token": {
+            "intentDigest": "e167308d401bfc37dfe3871ed806b1b46dda956965f113cab91114a0f5c7269b",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": null,
+            "method": "saveCanvas",
+            "contentId": "content-1"
+          }
+        },
+        {
+          "type": "success",
+          "token": {
+            "intentDigest": "e167308d401bfc37dfe3871ed806b1b46dda956965f113cab91114a0f5c7269b",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": null,
+            "method": "saveCanvas",
+            "contentId": "content-1"
+          },
+          "returnedId": "created-id"
+        }
+      ],
+      "expected": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "editGeneration": 1,
+        "cleanGeneration": 1,
+        "dirty": false,
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        },
+        "design": {
+          "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+        },
+        "canvasStyleData": {
+          "background": "white"
+        },
+        "canvasViewInfo": {
+          "chart-A": {
+            "title": "销售"
+          }
+        },
+        "appData": {
+          "enabled": true
+        },
+        "dvInfo": {
+          "id": "created-id",
+          "pid": "folder-1",
+          "name": "仪表板",
+          "type": "dashboard",
+          "status": 0,
+          "optType": null,
+          "dataState": "prepare",
+          "contentId": "content-1",
+          "weight": 9,
+          "datasetFolderPid": "df-1",
+          "datasetFolderName": "示例数据集"
+        },
+        "checkVersion": "test-version",
+        "pending": {},
+        "lastAckSeq": 1,
+        "saveOrderUncertain": false,
+        "effects": {
+          "requests": 1,
+          "confirmEventPairs": 0,
+          "dirtyClears": 1
+        }
+      },
+      "completeRequests": [
+        {
+          "token": {
+            "intentDigest": "e167308d401bfc37dfe3871ed806b1b46dda956965f113cab91114a0f5c7269b",
+            "epoch": "e1",
+            "seq": 1,
+            "revision": 1,
+            "commitId": "c1",
+            "editGeneration": 1,
+            "targetId": null,
+            "method": "saveCanvas",
+            "contentId": "content-1"
+          },
+          "payload": {
+            "$object": "587def73ec885b4e208b9639ed905007a42f589f58f9fe61a0561e3997000280"
+          },
+          "checks": {
+            "appCanvasNameCheck": {
+              "datasetFolderPid": "df-1",
+              "datasetFolderName": "示例数据集"
+            },
+            "dvNameCheck": null
+          },
+          "status": "checking",
+          "overlap": false
+        }
+      ]
+    }
+  ],
+  "action_observations": [
+    {
+      "id": "LC3-PUBLISH-01",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "confirm D",
+      "observations": [
+        {
+          "at": "prepared_no_mutation",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "identity_rechecked_gate_closed",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "publishing",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "single_slot_replaced",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-A",
+            "gate": "publishing",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        },
+        {
+          "at": "selection_rebound",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-D",
+            "gate": "publishing",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        },
+        {
+          "at": "capsule_published",
+          "state": {
+            "epoch": "e1",
+            "revision": 2,
+            "commitId": "c2",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-D",
+            "gate": "open",
+            "reader": "D/c2",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        },
+        {
+          "at": "new_token_confirm_pair_once",
+          "state": {
+            "epoch": "e1",
+            "revision": 2,
+            "commitId": "c2",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-D",
+            "gate": "open",
+            "reader": "D/c2",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 1,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "LC3-HISTORY-01",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "undo valid manifest D",
+      "observations": [
+        {
+          "at": "prepare_target_without_pointer_change",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "gate_closed_before_pointer",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "restoring",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "pointer_and_root_restored",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-A",
+            "gate": "restoring",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 0,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        },
+        {
+          "at": "curComponent_rebound_and_capsule_ready",
+          "state": {
+            "epoch": "e1",
+            "revision": 2,
+            "commitId": "c2",
+            "currentRaw": "raw-D",
+            "curComponentRaw": "raw-D",
+            "gate": "open",
+            "reader": "D/c2",
+            "tokenGeneration": 2,
+            "pointer": 0,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "D",
+            "phase": "managed",
+            "root": {
+              "$object": "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "LC3-HISTORY-02",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "undo missing manifest X",
+      "observations": [
+        {
+          "at": "prepare_original_snapshot",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "invalidate_before_pointer",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "restoring",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "unmanaged",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "native_root_and_pointer",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-X",
+            "curComponentRaw": "raw-A",
+            "gate": "restoring",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 0,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "X",
+            "phase": "unmanaged",
+            "root": {
+              "$object": "40d325c528068af56116b5be85f81d257686392ce6ded4bf04804c160a985157"
+            }
+          }
+        },
+        {
+          "at": "native_selection_before_events",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-X",
+            "curComponentRaw": "raw-X",
+            "gate": "open",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 0,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "X",
+            "phase": "unmanaged",
+            "root": {
+              "$object": "40d325c528068af56116b5be85f81d257686392ce6ded4bf04804c160a985157"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "LC3-HISTORY-03",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "setCanvasStyle throws after root replaced",
+      "observations": [
+        {
+          "at": "prepare",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "gate_closed",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "restoring",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "root_set_then_style_error",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-X",
+            "curComponentRaw": "raw-A",
+            "gate": "invalidated",
+            "reader": "unavailable",
+            "tokenGeneration": 2,
+            "pointer": 0,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "X",
+            "phase": "unmanaged",
+            "root": {
+              "$object": "40d325c528068af56116b5be85f81d257686392ce6ded4bf04804c160a985157"
+            }
+          }
+        }
+      ],
+      "expected_error": "PROPAGATE_ORIGINAL_SETTER_ERROR",
+      "expected_native_events": 0,
+      "rollback_claim": false
+    },
+    {
+      "id": "LC3-HISTORY-04",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "snapshot deep clone prepare fails",
+      "observations": [
+        {
+          "at": "prepare_failed_no_mutation",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        }
+      ],
+      "expected_error": "PREPARE_FAILED",
+      "expected_native_events": 0
+    },
+    {
+      "id": "LC3-SNAPSHOT-01",
+      "input": {
+        "epoch": "e1",
+        "revision": 1,
+        "commitId": "c1",
+        "currentRaw": "raw-A",
+        "curComponentRaw": "raw-A",
+        "gate": "open",
+        "reader": "A/c1",
+        "tokenGeneration": 1,
+        "pointer": 1,
+        "historyAppend": 0,
+        "confirmEventPairs": 0,
+        "rootKind": "A",
+        "phase": "managed",
+        "root": {
+          "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+        }
+      },
+      "action": "recordSnapshot eligibility false then true",
+      "observations": [
+        {
+          "at": "ineligible_no_record_no_manifest",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 1,
+            "historyAppend": 0,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        },
+        {
+          "at": "newSnapshot_raw_record_appended_and_manifest_bound",
+          "state": {
+            "epoch": "e1",
+            "revision": 1,
+            "commitId": "c1",
+            "currentRaw": "raw-A",
+            "curComponentRaw": "raw-A",
+            "gate": "open",
+            "reader": "A/c1",
+            "tokenGeneration": 1,
+            "pointer": 2,
+            "historyAppend": 1,
+            "confirmEventPairs": 0,
+            "rootKind": "A",
+            "phase": "managed",
+            "root": {
+              "$object": "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0"
+            }
+          }
+        }
+      ],
+      "manifest_key": "actual_raw_snapshotData[2]",
+      "not_key": [
+        "confirm candidate",
+        "deepCopy selected history",
+        "JSON cache object"
+      ],
+      "local_cache_contains_manifest": false
+    }
+  ],
+  "objects": {
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945": [],
+    "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": "",
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4
+      }
+    ],
+    "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "mapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "selectValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "X"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "X",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "mapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "selectValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "de1d4b7cd60881ebf7d080c23210efa4982b5c892c1e6229843e55182fa78be0": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "727f4c182148cbc06faa6a1dbeea8bba8b3ccc69194fac83d726ae98bb587be5": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "074565f04b72c1c0e79a5a0224dfb54cde57c85350d6c87e9f8f96607296d185": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 580,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "a866911761c38f41d881f7273528dd5818a6d5b89144f9b88fc8ea2d1426b430": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "X"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "X",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "565f2979f1117a4bed72f2ff48806d83d6b47f197ec69f90dafe4df7cfa97815": {
+      "canvasStyleData": "{\"background\":\"white\"}",
+      "componentData": "[{\"id\":\"query-new\",\"component\":\"VQuery\",\"innerType\":\"VQuery\",\"canvasId\":\"canvas-main\",\"propValue\":[{\"id\":\"q1\",\"name\":\"省\",\"showError\":true,\"timeGranularity\":\"date\",\"timeGranularityMultiple\":\"datetimerange\",\"field\":{\"id\":\"province\",\"type\":\"VARCHAR\",\"name\":\"省\",\"deType\":0},\"displayId\":\"province\",\"sortId\":\"\",\"sort\":\"asc\",\"defaultMapValue\":[\"A\"],\"conditionType\":0,\"conditionValueOperatorF\":\"eq\",\"conditionValueF\":\"\",\"conditionValueOperatorS\":\"like\",\"conditionValueS\":\"\",\"defaultConditionValueOperatorF\":\"eq\",\"defaultConditionValueF\":\"\",\"defaultConditionValueOperatorS\":\"like\",\"defaultConditionValueS\":\"\",\"timeType\":\"fixed\",\"relativeToCurrent\":\"custom\",\"required\":false,\"timeNum\":0,\"relativeToCurrentType\":\"date\",\"around\":\"f\",\"parametersStart\":null,\"parametersEnd\":null,\"arbitraryTime\":\"2026-10-16T00:00:00.000Z\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"date\",\"aroundRange\":\"f\",\"arbitraryTimeRange\":\"2026-10-16T00:00:00.000Z\",\"auto\":false,\"defaultValue\":\"A\",\"optionValueSource\":1,\"valueSource\":[],\"dataset\":{\"id\":\"201\",\"name\":\"销售\",\"fields\":[]},\"visible\":true,\"defaultValueCheck\":true,\"multiple\":false,\"displayType\":\"0\",\"checkedFields\":[\"chart-A\"],\"parameters\":[],\"parametersCheck\":false,\"parametersList\":[],\"checkedFieldsMap\":{\"chart-A\":\"province\"},\"hideConditionSwitching\":false,\"resultMode\":0,\"relativeToCurrentRange\":\"custom\",\"treeDatasetId\":\"201\",\"setTimeRange\":false,\"showEmpty\":false,\"defaultNumValueStart\":null,\"defaultNumValueEnd\":null,\"numValueEnd\":null,\"numValueStart\":null,\"displayFormat\":0,\"timeRange\":{\"intervalType\":\"none\",\"dynamicWindow\":false,\"maximumSingleQuery\":0,\"regularOrTrends\":\"fixed\",\"regularOrTrendsValue\":\"\",\"relativeToCurrent\":\"custom\",\"timeNum\":0,\"relativeToCurrentType\":\"year\",\"around\":\"f\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"year\",\"aroundRange\":\"f\",\"relativeToCurrentRange\":\"custom\"},\"oldTreeLoad\":false,\"treeCheckedList\":[],\"defaultValueFirstItem\":false,\"treeFieldList\":[],\"checkedFieldsMapArr\":{},\"checkedFieldsMapArrNum\":{},\"checkedFieldsMapStart\":{},\"checkedFieldsMapStartNum\":{},\"checkedFieldsMapEnd\":{},\"checkedFieldsMapEndNum\":{},\"parametersArr\":{}}],\"style\":{\"width\":550,\"height\":100},\"x\":1,\"sizeX\":72,\"sizeY\":4,\"cascade\":[]}]",
+      "canvasViewInfo": {
+        "chart-A": {
+          "title": "销售"
+        }
+      },
+      "appData": {
+        "enabled": true
+      },
+      "id": "doc-1",
+      "pid": "folder-1",
+      "name": "仪表板",
+      "type": "dashboard",
+      "status": 0,
+      "optType": null,
+      "dataState": "prepare",
+      "contentId": "content-1",
+      "weight": 9,
+      "datasetFolderPid": "df-1",
+      "datasetFolderName": "示例数据集",
+      "checkVersion": "test-version",
+      "watermarkInfo": null
+    },
+    "416dd1b57cea30c464203565a3ae9301ce005c25bd9decf0f64df0af5d6e742b": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 580,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "bd96e043b7e7e8824b5262de6a2ed5e68f30397a03a04fa4659cc2ba47738c2f": {
+      "canvasStyleData": "{\"background\":\"white\"}",
+      "componentData": "[{\"id\":\"query-new\",\"component\":\"VQuery\",\"innerType\":\"VQuery\",\"canvasId\":\"canvas-main\",\"propValue\":[{\"id\":\"q1\",\"name\":\"省\",\"showError\":true,\"timeGranularity\":\"date\",\"timeGranularityMultiple\":\"datetimerange\",\"field\":{\"id\":\"province\",\"type\":\"VARCHAR\",\"name\":\"省\",\"deType\":0},\"displayId\":\"province\",\"sortId\":\"\",\"sort\":\"asc\",\"defaultMapValue\":[\"A\"],\"conditionType\":0,\"conditionValueOperatorF\":\"eq\",\"conditionValueF\":\"\",\"conditionValueOperatorS\":\"like\",\"conditionValueS\":\"\",\"defaultConditionValueOperatorF\":\"eq\",\"defaultConditionValueF\":\"\",\"defaultConditionValueOperatorS\":\"like\",\"defaultConditionValueS\":\"\",\"timeType\":\"fixed\",\"relativeToCurrent\":\"custom\",\"required\":false,\"timeNum\":0,\"relativeToCurrentType\":\"date\",\"around\":\"f\",\"parametersStart\":null,\"parametersEnd\":null,\"arbitraryTime\":\"2026-10-16T00:00:00.000Z\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"date\",\"aroundRange\":\"f\",\"arbitraryTimeRange\":\"2026-10-16T00:00:00.000Z\",\"auto\":false,\"defaultValue\":\"A\",\"optionValueSource\":1,\"valueSource\":[],\"dataset\":{\"id\":\"201\",\"name\":\"销售\",\"fields\":[]},\"visible\":true,\"defaultValueCheck\":true,\"multiple\":false,\"displayType\":\"0\",\"checkedFields\":[\"chart-A\"],\"parameters\":[],\"parametersCheck\":false,\"parametersList\":[],\"checkedFieldsMap\":{\"chart-A\":\"province\"},\"hideConditionSwitching\":false,\"resultMode\":0,\"relativeToCurrentRange\":\"custom\",\"treeDatasetId\":\"201\",\"setTimeRange\":false,\"showEmpty\":false,\"defaultNumValueStart\":null,\"defaultNumValueEnd\":null,\"numValueEnd\":null,\"numValueStart\":null,\"displayFormat\":0,\"timeRange\":{\"intervalType\":\"none\",\"dynamicWindow\":false,\"maximumSingleQuery\":0,\"regularOrTrends\":\"fixed\",\"regularOrTrendsValue\":\"\",\"relativeToCurrent\":\"custom\",\"timeNum\":0,\"relativeToCurrentType\":\"year\",\"around\":\"f\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"year\",\"aroundRange\":\"f\",\"relativeToCurrentRange\":\"custom\"},\"oldTreeLoad\":false,\"treeCheckedList\":[],\"defaultValueFirstItem\":false,\"treeFieldList\":[],\"checkedFieldsMapArr\":{},\"checkedFieldsMapArrNum\":{},\"checkedFieldsMapStart\":{},\"checkedFieldsMapStartNum\":{},\"checkedFieldsMapEnd\":{},\"checkedFieldsMapEndNum\":{},\"parametersArr\":{}}],\"style\":{\"width\":580,\"height\":100},\"x\":1,\"sizeX\":72,\"sizeY\":4,\"cascade\":[]}]",
+      "canvasViewInfo": {
+        "chart-A": {
+          "title": "销售"
+        }
+      },
+      "appData": {
+        "enabled": true
+      },
+      "id": "doc-1",
+      "pid": "folder-1",
+      "name": "仪表板",
+      "type": "dashboard",
+      "status": 0,
+      "optType": null,
+      "dataState": "prepare",
+      "contentId": "content-2",
+      "weight": 9,
+      "datasetFolderPid": "df-1",
+      "datasetFolderName": "示例数据集",
+      "checkVersion": "test-version",
+      "watermarkInfo": null
+    },
+    "5205fda25dd380ffa38b2903d2bc44e52d10563d3dfb88ee98deb8df6e40f371": {
+      "canvasStyleData": "{\"background\":\"white\"}",
+      "componentData": "[{\"id\":\"query-new\",\"component\":\"VQuery\",\"innerType\":\"VQuery\",\"canvasId\":\"canvas-main\",\"propValue\":[{\"id\":\"q1\",\"name\":\"省\",\"showError\":true,\"timeGranularity\":\"date\",\"timeGranularityMultiple\":\"datetimerange\",\"field\":{\"id\":\"province\",\"type\":\"VARCHAR\",\"name\":\"省\",\"deType\":0},\"displayId\":\"province\",\"sortId\":\"\",\"sort\":\"asc\",\"defaultMapValue\":[\"A\"],\"conditionType\":0,\"conditionValueOperatorF\":\"eq\",\"conditionValueF\":\"\",\"conditionValueOperatorS\":\"like\",\"conditionValueS\":\"\",\"defaultConditionValueOperatorF\":\"eq\",\"defaultConditionValueF\":\"\",\"defaultConditionValueOperatorS\":\"like\",\"defaultConditionValueS\":\"\",\"timeType\":\"fixed\",\"relativeToCurrent\":\"custom\",\"required\":false,\"timeNum\":0,\"relativeToCurrentType\":\"date\",\"around\":\"f\",\"parametersStart\":null,\"parametersEnd\":null,\"arbitraryTime\":\"2026-10-16T00:00:00.000Z\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"date\",\"aroundRange\":\"f\",\"arbitraryTimeRange\":\"2026-10-16T00:00:00.000Z\",\"auto\":false,\"defaultValue\":\"A\",\"optionValueSource\":1,\"valueSource\":[],\"dataset\":{\"id\":\"201\",\"name\":\"销售\",\"fields\":[]},\"visible\":true,\"defaultValueCheck\":true,\"multiple\":false,\"displayType\":\"0\",\"checkedFields\":[\"chart-A\"],\"parameters\":[],\"parametersCheck\":false,\"parametersList\":[],\"checkedFieldsMap\":{\"chart-A\":\"province\"},\"hideConditionSwitching\":false,\"resultMode\":0,\"relativeToCurrentRange\":\"custom\",\"treeDatasetId\":\"201\",\"setTimeRange\":false,\"showEmpty\":false,\"defaultNumValueStart\":null,\"defaultNumValueEnd\":null,\"numValueEnd\":null,\"numValueStart\":null,\"displayFormat\":0,\"timeRange\":{\"intervalType\":\"none\",\"dynamicWindow\":false,\"maximumSingleQuery\":0,\"regularOrTrends\":\"fixed\",\"regularOrTrendsValue\":\"\",\"relativeToCurrent\":\"custom\",\"timeNum\":0,\"relativeToCurrentType\":\"year\",\"around\":\"f\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"year\",\"aroundRange\":\"f\",\"relativeToCurrentRange\":\"custom\"},\"oldTreeLoad\":false,\"treeCheckedList\":[],\"defaultValueFirstItem\":false,\"treeFieldList\":[],\"checkedFieldsMapArr\":{},\"checkedFieldsMapArrNum\":{},\"checkedFieldsMapStart\":{},\"checkedFieldsMapStartNum\":{},\"checkedFieldsMapEnd\":{},\"checkedFieldsMapEndNum\":{},\"parametersArr\":{}}],\"style\":{\"width\":580,\"height\":100},\"x\":1,\"sizeX\":72,\"sizeY\":4,\"cascade\":[]}]",
+      "canvasViewInfo": {
+        "chart-A": {
+          "title": "销售"
+        }
+      },
+      "appData": {
+        "enabled": true
+      },
+      "id": "doc-1",
+      "pid": "folder-1",
+      "name": "仪表板",
+      "type": "dashboard",
+      "status": 0,
+      "optType": null,
+      "dataState": "prepare",
+      "contentId": "content-3",
+      "weight": 9,
+      "datasetFolderPid": "df-1",
+      "datasetFolderName": "示例数据集",
+      "checkVersion": "test-version",
+      "watermarkInfo": null
+    },
+    "587def73ec885b4e208b9639ed905007a42f589f58f9fe61a0561e3997000280": {
+      "canvasStyleData": "{\"background\":\"white\"}",
+      "componentData": "[{\"id\":\"query-new\",\"component\":\"VQuery\",\"innerType\":\"VQuery\",\"canvasId\":\"canvas-main\",\"propValue\":[{\"id\":\"q1\",\"name\":\"省\",\"showError\":true,\"timeGranularity\":\"date\",\"timeGranularityMultiple\":\"datetimerange\",\"field\":{\"id\":\"province\",\"type\":\"VARCHAR\",\"name\":\"省\",\"deType\":0},\"displayId\":\"province\",\"sortId\":\"\",\"sort\":\"asc\",\"defaultMapValue\":[\"A\"],\"conditionType\":0,\"conditionValueOperatorF\":\"eq\",\"conditionValueF\":\"\",\"conditionValueOperatorS\":\"like\",\"conditionValueS\":\"\",\"defaultConditionValueOperatorF\":\"eq\",\"defaultConditionValueF\":\"\",\"defaultConditionValueOperatorS\":\"like\",\"defaultConditionValueS\":\"\",\"timeType\":\"fixed\",\"relativeToCurrent\":\"custom\",\"required\":false,\"timeNum\":0,\"relativeToCurrentType\":\"date\",\"around\":\"f\",\"parametersStart\":null,\"parametersEnd\":null,\"arbitraryTime\":\"2026-10-16T00:00:00.000Z\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"date\",\"aroundRange\":\"f\",\"arbitraryTimeRange\":\"2026-10-16T00:00:00.000Z\",\"auto\":false,\"defaultValue\":\"A\",\"optionValueSource\":1,\"valueSource\":[],\"dataset\":{\"id\":\"201\",\"name\":\"销售\",\"fields\":[]},\"visible\":true,\"defaultValueCheck\":true,\"multiple\":false,\"displayType\":\"0\",\"checkedFields\":[\"chart-A\"],\"parameters\":[],\"parametersCheck\":false,\"parametersList\":[],\"checkedFieldsMap\":{\"chart-A\":\"province\"},\"hideConditionSwitching\":false,\"resultMode\":0,\"relativeToCurrentRange\":\"custom\",\"treeDatasetId\":\"201\",\"setTimeRange\":false,\"showEmpty\":false,\"defaultNumValueStart\":null,\"defaultNumValueEnd\":null,\"numValueEnd\":null,\"numValueStart\":null,\"displayFormat\":0,\"timeRange\":{\"intervalType\":\"none\",\"dynamicWindow\":false,\"maximumSingleQuery\":0,\"regularOrTrends\":\"fixed\",\"regularOrTrendsValue\":\"\",\"relativeToCurrent\":\"custom\",\"timeNum\":0,\"relativeToCurrentType\":\"year\",\"around\":\"f\",\"timeNumRange\":0,\"relativeToCurrentTypeRange\":\"year\",\"aroundRange\":\"f\",\"relativeToCurrentRange\":\"custom\"},\"oldTreeLoad\":false,\"treeCheckedList\":[],\"defaultValueFirstItem\":false,\"treeFieldList\":[],\"checkedFieldsMapArr\":{},\"checkedFieldsMapArrNum\":{},\"checkedFieldsMapStart\":{},\"checkedFieldsMapStartNum\":{},\"checkedFieldsMapEnd\":{},\"checkedFieldsMapEndNum\":{},\"parametersArr\":{}}],\"style\":{\"width\":550,\"height\":100},\"x\":1,\"sizeX\":72,\"sizeY\":4,\"cascade\":[]}]",
+      "canvasViewInfo": {
+        "chart-A": {
+          "title": "销售"
+        }
+      },
+      "appData": {
+        "enabled": true
+      },
+      "id": null,
+      "pid": "folder-1",
+      "name": "仪表板",
+      "type": "dashboard",
+      "status": 0,
+      "optType": null,
+      "dataState": "prepare",
+      "contentId": "content-1",
+      "weight": 9,
+      "datasetFolderPid": "df-1",
+      "datasetFolderName": "示例数据集",
+      "checkVersion": "test-version",
+      "watermarkInfo": null
+    },
+    "2070218fdfef33e9c3594ab51d36611118b693b871218da9a8922fcbda14092c": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "40d325c528068af56116b5be85f81d257686392ce6ded4bf04804c160a985157": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "X"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "X",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 550,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ]
+  },
+  "resolution": "递归展开本文件$object引用；SHA为展开后UTF-8 canonical JSON(sort_keys,ensure_ascii=false,separators逗号冒号)。payload内componentData/canvasStyleData是完整JSON字符串，其他payload字段均在对象中完整列出，不从现场补值。",
+  "fixture_projection": "save state/payload是本合成文档的完整字段，不代表固定生产业务schema；action_observations是完整协调器投影，rootKind指明确A/D/X根状态，实际根值在cases/objects中给出。分析null不是API返回。",
+  "unchanged_policy": "用户C迟到成功缺值只核对一次，核对结束关闭loading，仍缺显示无效；不重开语义决策。",
+  "reopen": "ordinary JSON never certifies private session provenance; remains unmanaged",
+  "source_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QSSDH-SOURCE-LIFECYCLE-design-r002.json",
+      "sha256": "0cc21044e86df2e810149a033f5cedb90b1ff4f1da7618419eb92dfed6fa9a8d"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleDesign-r001.md",
+      "sha256": "43c60b0528b4d1c5e9819ef86934846170036d85d10ca0b79b19de0d4c808a22"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r001.json",
+      "sha256": "56b8c0525c4c35df2512db37fab0a77c47470896234ea1b1198880f7f19ec790"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r001.md",
+      "sha256": "c94cfb7aa43b31e3a91095769ee85462f0d4a9d760cca99d4231337652566ff9"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "sha256": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559",
+      "reason": "直接新建调用链条件扩读"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "sha256": "f189476f0e47234188e959a1219ff52aedbfe84367b7d841a6189b29911b3dd2",
+      "reason": "直接新建调用链条件扩读"
+    }
+  ]
+}

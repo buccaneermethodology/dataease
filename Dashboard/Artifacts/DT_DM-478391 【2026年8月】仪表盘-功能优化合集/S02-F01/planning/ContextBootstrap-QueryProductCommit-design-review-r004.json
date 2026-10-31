@@ -1,0 +1,259 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QUERY-PRODUCT-COMMIT-design-review-r004",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读审查 QPC r004 是否修正 r003 review 的 R3-01/R3-02，复算完整状态摘要并核对具体源码状态转移；复核仍关闭的R2-01/R2-02、已保存画布owner边界、权限/Goal/S01边界。分别出 Design Freeze Validity 与 Implementation Entry Readiness 双结论。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读审查r004对R3-01/R3-02修正是否准确，不修改候选或发放产品接线准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r004.md"
+    ],
+    "forbidden_actions": [
+      "修改r004候选或生产源码/测试",
+      "发放产品 UI/Store admission",
+      "将模型状态或权限占位写成产品运行证据"
+    ],
+    "maximum_claim": "仅给出QPC r004独立设计审查双结论；S02仍开放。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "仓库约束。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "治理边界。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "Goal authority与分母。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r004.md",
+      "revision": "2da3be0fee70ad37abec1d32ad49a780c31d6fe347726d9e4d5d73909c6ffb4e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "待审设计。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r004.json",
+      "revision": "ab5b4e21c3c1f8fd352b542405eef99210a51e42be98d433ee0468c1e9c725c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "待审状态oracle。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r003.md",
+      "revision": "8dd22495bd798a4121ad1b1288c2d305818fd0cfea9b38800bea69a4f7ff8952",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "R3 finding来源。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "commit/invalidate/editGeneration源码。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "缓存调用门槛源码。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildFixtures-r008.json",
+      "revision": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "精确目标载荷来源。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "权限阻塞事实。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r185.json",
+      "revision": "338ddacebd72d48bb0b16318807dbcdeb1589a90ab83f7388ac3b98d418c2ca5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查派发后的最新候选拓扑。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-review-r004"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "bound_digest_drift",
+      "mode": "deterministic",
+      "condition": "任一 required_read_set 摘要漂移",
+      "action": "停止并重新基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_contract_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "r002仍存在多解oracle、owner不兼容、效果口径不符或授权越界",
+      "action": "给编号finding及最小修订，不修改候选",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "高语义事务合同需要独立语义审查。",
+    "route": "semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "R3-01/R3-02 state transitions",
+    "14 case state digests",
+    "R2-01/R2-02 inherited boundaries",
+    "saved canvas owner restriction",
+    "permission BLOCKED/NOT_RUN"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10 Goal AC、26 must-have、16产品义务与Scope Delta none完整保留；S01独立；真实权限验收BLOCKED/NOT_RUN。"
+  },
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r004.md"
+  ],
+  "provenance": null,
+  "task_completion": {
+    "criteria": [
+      "分别输出Design Freeze Validity及Implementation Entry Readiness",
+      "R3-01/R3-02逐项重算与源码对照",
+      "R2-01/R2-02复核仍正确",
+      "14 case全状态摘要/指针一致",
+      "保存画布owner缺口不缩小原分母",
+      "10/26/16、Scope Delta none、S01及权限阻塞边界完整"
+    ],
+    "terminal_status": "independent_review_only"
+  }
+}

@@ -15,6 +15,7 @@ import {
 } from '@/views/chart/components/js/panel/common/common_antv'
 import { queryMapKeyApi } from '@/api/setting/sysParameter'
 import { useMapStoreWithOut } from '@/store/modules/map'
+import type { FilterPasteMapReady } from '../../charts/map/filter-paste-ready'
 const mapStore = useMapStoreWithOut()
 
 export type L7DrawConfig<P> = AntVDrawOptions<P>
@@ -32,19 +33,44 @@ export class L7Wrapper<
   public getScene() {
     return this.scene
   }
-  constructor(scene: S, l7config: O | Array<O> | undefined) {
+  constructor(
+    scene: S,
+    l7config: O | Array<O> | undefined,
+    private readonly filterPaste?: FilterPasteMapReady
+  ) {
     super()
     this.chartInstance = scene
     this.config = l7config
     this.scene = scene
   }
   destroy = () => {
+    this.filterPaste?.dispose()
     if (!this.chartInstance) {
       return
     }
-    this.chartInstance?.destroy()
+    if (!this.filterPaste) this.chartInstance?.destroy()
   }
   render = () => {
+    if (this.filterPaste) {
+      const ready = this.filterPaste
+      const configs = (Array.isArray(this.config) ? this.config : [this.config]).filter(
+        Boolean
+      ) as L7Config[]
+      if (!this.scene || !configs.length) {
+        ready.fail(new Error('paste_map_configuration_missing'))
+        return
+      }
+      ready.errors(this.scene)
+      for (const config of configs) {
+        ready.errors(config)
+        ready.wait(config, 'inited')
+      }
+      const add = ready.callback(() => configs.forEach(config => this.handleConfig(config)))
+      if (this.scene.loaded) add()
+      else ready.wait(this.scene, 'loaded', add)
+      ready.seal()
+      return
+    }
     if (this.scene && this.config) {
       if (this.scene.loaded) {
         if (Array.isArray(this.config)) {

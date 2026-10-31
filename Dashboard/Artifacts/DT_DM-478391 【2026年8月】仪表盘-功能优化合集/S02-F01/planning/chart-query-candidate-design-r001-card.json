@@ -1,0 +1,68 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "CHART-QUERY-CANDIDATE-DESIGN-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "design",
+  "role": "design",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-CHART-QUERY-CANDIDATE-DESIGN-r001.json",
+      "sha256": "ac84663fe1e801019675cf3d6a250be261f4ca1100dd5d5d934a4e22943fbecf"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "CHART-QUERY-CANDIDATE-DESIGN-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartQueryCandidateDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartQueryCandidateCases-r001.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartQueryCandidateDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartQueryCandidateCases-r001.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅真实候选取数工程合同首版；不重开旧事务r003，不证明产品Copy/Paste或Goal完成。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "CHART-QUERY-CANDIDATE-DESIGN-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r404.json",
+  "working_directory": ".",
+  "execution_command": "复验Card/Context。消费你刚完成Trace后不再扩散调查，直接设计真实getData(...,可选内部options)返回的独立candidate bundle/失败类型与取消作用域，服务普通line无drill MVP。保持既有API调用方兼容，复用src/api/chart.ts与既有axios interceptors。重点现有request wrapper只传signal/handleErrorLocally，service仍把全部getData按chartId写cancelMap，stage会覆盖live key；允许最小内部options让特定candidate以caller-owned AbortSignal不登记live cancelMap，或其他经证据安全方案，默认路径完全保留。隔离只针对候选query数据/组件/Store/错误/loading/lastRequest/event，认证刷新/既有error响应/签名/lang/link/embed/proxy流程照常不得隐藏，明确它们不是可回滚沙盒。普通候选传深clone，不让getData入参delete/data转码修改active对象；真正await query settle，typed response/empty/error/aborted/stale，business非零/undefined/transport失败不当成功；每请求仅一个terminal且attempt/adapterDispatch/response/lateIgnored是不同观测不重复计请求。重复prepare/abort/卸载/竞争不取消活动查询、不触及data/drill/Store/snapshot/emitter。提出新helper模块具体API，后续SFC消费（这工程不改SFC）与hand-off给stage renderer。给可执行实际API+axios完整模块或真实handler装载seam的稳定Cases/输入输出/副作用/主错误oracle，冻结首RED必须是行为失败非缺模块/编译错；不复制生产控制流，不万能Proxy，不硬编码期望追绿。源码可能改动仅api/chart.ts、axios wrapper/service接口最小增量、新candidate module及定向tests；不改SDK/后端/S01Store。必要限制明确退回unsupported，保持原Goal复杂场景pending。原10/26/16及真实权限BLOCKED/NOT_RUN不变，第1/3轮候选尽快落盘以Review后马上实现。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints/SKILL.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstAuthority-20261025.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/RequiredCapability-MvpSourceRead-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+    "core/core-frontend/src/api/chart.ts",
+    "core/core-frontend/src/config/axios/index.ts",
+    "core/core-frontend/src/config/axios/service.ts",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "core/core-frontend/src/views/chart/components/views/index.vue",
+    "core/core-frontend/src/store/modules/data-visualization/dvMain.ts"
+  ]
+}

@@ -1,0 +1,608 @@
+{
+  "schema_version": "s02_g2_ownership_helper_repair_evidence_v1",
+  "task_id": "G2-OWNERSHIP-HELPER-REPAIR-r001",
+  "state": "FROZEN_BUILDER_REPAIR_CANDIDATE",
+  "builder_identity": "/root/g2_ownership_red",
+  "red": {
+    "command": [
+      "node",
+      "tests/g2-render-ownership/reentrant-replace-check.mjs"
+    ],
+    "cwd": "core/core-frontend",
+    "started_at": "2026-10-27T01:00:38.598227+00:00",
+    "finished_at": "2026-10-27T01:00:38.630799+00:00",
+    "exitcode": 1,
+    "summary": {
+      "scenarios": 10,
+      "executed": 10,
+      "passed": 2,
+      "assertion_failures": 8,
+      "execution_errors": 0,
+      "production_module_imported": true,
+      "source_sha256": "d31e006939b938594ea46d4258a4b87a43cd129cbe8732ae933f26a0a652f319",
+      "runner_sha256": "50f3c4788e10de38dde0af1896e8f1f250f2a500901e89e56246b9e98c74b999",
+      "fixture_identity_sha256": "7e4dba72e57bb8d8b65cbd90df2224b52b6cf70ead227479a21b0b192ebbb8c0"
+    },
+    "cases": [
+      {
+        "id": "HV001-001",
+        "scenario": "nested_replace",
+        "fixture_sha256": "e36c06da6c3258a69674512abb6d1f6ed8889cc760b9e8e500775a85d96bfb52",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-001: REENTRANT_CLEANUP_CONTRACT",
+        "message": "no registered cleanup may be silently overwritten\n+ actual - expected\n\n  [\n    'old',\n-   'inner',\n    'outer',\n    'destroy'\n  ]\n"
+      },
+      {
+        "id": "HV001-002",
+        "scenario": "inner_throws",
+        "fixture_sha256": "b11d1da6fa7d4b9c182b6e21da9ea8b205d1b15b3e076994bb8d9ea1cf66dfe9",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-002: REENTRANT_CLEANUP_CONTRACT",
+        "message": "outer replace/remove return: length\n\n0 !== 1\n"
+      },
+      {
+        "id": "HV001-003",
+        "scenario": "two_levels_and_errors",
+        "fixture_sha256": "7805599496ebbcd00a8f84500dd08b33a66bb5d6cf45aa1592526129c073b52e",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-003: REENTRANT_CLEANUP_CONTRACT",
+        "message": "outer replace/remove return: length\n\n1 !== 3\n"
+      },
+      {
+        "id": "HV001-004",
+        "scenario": "inner_disposes",
+        "fixture_sha256": "429317513803c11af5c3f126ab62291d394e55b75f9e2685c6f59dffff6d28a7",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-004: REENTRANT_CLEANUP_CONTRACT",
+        "message": "no registered cleanup may be silently overwritten\n+ actual - expected\n\n  [\n    'old',\n+   'outer',\n-   'inner',\n    'sibling',\n    'destroy',\n-   'outer'\n  ]\n"
+      },
+      {
+        "id": "HV001-005",
+        "scenario": "old_disposes_control",
+        "fixture_sha256": "90661246f67f6f3a39fadf2c808fa5c14e8f4f07ec84380fdeb8df5f7f93bdc0",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "sibling",
+            "destroy",
+            "outer"
+          ],
+          "nested_calls": 3,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-006",
+        "scenario": "remove_control",
+        "fixture_sha256": "a63952c41c9fca78d64c4d2caba7c9ab43c233da0168236b00cd7820f0dc456c",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-007",
+        "scenario": "other_key_order",
+        "fixture_sha256": "55ecbef7a4683333195b1e1d98190c37e3e0d5ff07e250b989e5025fa45e7131",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-007: REENTRANT_CLEANUP_CONTRACT",
+        "message": "no registered cleanup may be silently overwritten\n+ actual - expected\n\n  [\n    'old',\n-   'inner',\n    'outer',\n    'b',\n    'a',\n    'destroy'\n  ]\n"
+      },
+      {
+        "id": "HV001-008",
+        "scenario": "inner_and_notify_throw",
+        "fixture_sha256": "ece658f4d6115f5d3011219bf2399b671f8c32010939a180b9929a9a114e626b",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-008: REENTRANT_CLEANUP_CONTRACT",
+        "message": "outer replace/remove return: length\n\n0 !== 2\n"
+      },
+      {
+        "id": "HV001-009",
+        "scenario": "same_function_new_registration",
+        "fixture_sha256": "5edd75ac078aaa6e49f492d00f8116bebf7ab643ba6fc40b403140e6d1c30da2",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-009: REENTRANT_CLEANUP_CONTRACT",
+        "message": "no registered cleanup may be silently overwritten\n+ actual - expected\n\n  [\n    'old',\n-   'inner',\n-   'inner',\n    'outer',\n    'destroy'\n  ]\n"
+      },
+      {
+        "id": "HV001-010",
+        "scenario": "setup_nested_replace",
+        "fixture_sha256": "52dc19bd368633fff1793b01bb7e4cffba20ef4f3ab2f3a97c208f112a36af34",
+        "status": "ASSERTION_FAILURE",
+        "fingerprint": "HV001-010: REENTRANT_CLEANUP_CONTRACT",
+        "message": "outer replace/remove return: length\n\n0 !== 1\n"
+      }
+    ]
+  },
+  "frozen_regression_runner_sha256": "50f3c4788e10de38dde0af1896e8f1f250f2a500901e89e56246b9e98c74b999",
+  "frozen_fixture_identity_sha256": "7e4dba72e57bb8d8b65cbd90df2224b52b6cf70ead227479a21b0b192ebbb8c0",
+  "preserved_inputs_sha256": {
+    "AGENTS.md": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipDesign-r003.md": "ab6aa597e06199bc947ff82f1b16f2955fe22e9e7210ac5bc2301e2b92295761",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipCases-r003.json": "b8844f51bed1f0574215210003ad1d59831c75635f9b0b6ed091baf3b78bbfe7",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2StageLifecycleOwnershipDesignReview-r003.md": "c386d4ad6ab5fc55c4bfa276b8dbcee9afb85e464cc136b1cbb9e9b5871163aa",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipHelperValidation-r001.md": "4beaf3df0dd0a61c58948afc19b16092375da524fa51c32409e9b5e38ecc0c8b",
+    "core/core-frontend/tests/g2-render-ownership/check.mjs": "0155a4e0e0a9dac40046c044b21410d4121b1177542604d48fb5e43a1d01d21f",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HelperBuild-r001.md": "68d5ee22e7696b12c93ff80f094b0bdb09ae25f439606c1546ec3709b4a36682",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-GREEN-r001.identity.json": "a43429931024b6916886f1688230b5e71920e35d2eed382b621c4631a2f90e20",
+    "core/core-frontend/tests/g2-render-ownership/component-check.mjs": "4cf0933a2a6fed90df9146c010e656237367c9e763b4424a19197626c19e7e53",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c"
+  },
+  "green": {
+    "command": [
+      "node",
+      "tests/g2-render-ownership/reentrant-replace-check.mjs"
+    ],
+    "cwd": "core/core-frontend",
+    "started_at": "2026-10-27T01:02:28.731039+00:00",
+    "finished_at": "2026-10-27T01:02:28.766066+00:00",
+    "exitcode": 0,
+    "summary": {
+      "scenarios": 10,
+      "executed": 10,
+      "passed": 10,
+      "assertion_failures": 0,
+      "execution_errors": 0,
+      "production_module_imported": true,
+      "source_sha256": "7ff0a6d2ad931260241a4fc78970a99dc14f78c25bf71234f272a6fc837a90a2",
+      "runner_sha256": "50f3c4788e10de38dde0af1896e8f1f250f2a500901e89e56246b9e98c74b999",
+      "fixture_identity_sha256": "7e4dba72e57bb8d8b65cbd90df2224b52b6cf70ead227479a21b0b192ebbb8c0"
+    },
+    "cases": [
+      {
+        "id": "HV001-001",
+        "scenario": "nested_replace",
+        "fixture_sha256": "e36c06da6c3258a69674512abb6d1f6ed8889cc760b9e8e500775a85d96bfb52",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-002",
+        "scenario": "inner_throws",
+        "fixture_sha256": "b11d1da6fa7d4b9c182b6e21da9ea8b205d1b15b3e076994bb8d9ea1cf66dfe9",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": [
+            "inner"
+          ]
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-003",
+        "scenario": "two_levels_and_errors",
+        "fixture_sha256": "7805599496ebbcd00a8f84500dd08b33a66bb5d6cf45aa1592526129c073b52e",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "deep",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 3,
+          "replacement_error_ids": [
+            "old",
+            "inner",
+            "deep"
+          ]
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-004",
+        "scenario": "inner_disposes",
+        "fixture_sha256": "429317513803c11af5c3f126ab62291d394e55b75f9e2685c6f59dffff6d28a7",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "sibling",
+            "destroy",
+            "outer"
+          ],
+          "nested_calls": 3,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-005",
+        "scenario": "old_disposes_control",
+        "fixture_sha256": "90661246f67f6f3a39fadf2c808fa5c14e8f4f07ec84380fdeb8df5f7f93bdc0",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "sibling",
+            "destroy",
+            "outer"
+          ],
+          "nested_calls": 3,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-006",
+        "scenario": "remove_control",
+        "fixture_sha256": "a63952c41c9fca78d64c4d2caba7c9ab43c233da0168236b00cd7820f0dc456c",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-007",
+        "scenario": "other_key_order",
+        "fixture_sha256": "55ecbef7a4683333195b1e1d98190c37e3e0d5ff07e250b989e5025fa45e7131",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "outer",
+            "b",
+            "a",
+            "destroy"
+          ],
+          "nested_calls": 4,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-008",
+        "scenario": "inner_and_notify_throw",
+        "fixture_sha256": "ece658f4d6115f5d3011219bf2399b671f8c32010939a180b9929a9a114e626b",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": [
+            "inner",
+            "notify"
+          ]
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-009",
+        "scenario": "same_function_new_registration",
+        "fixture_sha256": "5edd75ac078aaa6e49f492d00f8116bebf7ab643ba6fc40b403140e6d1c30da2",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "inner",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 3,
+          "replacement_error_ids": []
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "HV001-010",
+        "scenario": "setup_nested_replace",
+        "fixture_sha256": "52dc19bd368633fff1793b01bb7e4cffba20ef4f3ab2f3a97c208f112a36af34",
+        "observed": {
+          "events": [
+            "old",
+            "inner",
+            "outer",
+            "destroy"
+          ],
+          "nested_calls": 2,
+          "replacement_error_ids": [
+            "inner"
+          ]
+        },
+        "status": "PASS"
+      }
+    ]
+  },
+  "verification_runs": [
+    {
+      "name": "supplemental_same_identity_green",
+      "command": [
+        "node",
+        "tests/g2-render-ownership/reentrant-replace-check.mjs"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:28.731039+00:00",
+      "finished_at": "2026-10-27T01:02:28.766066+00:00",
+      "exitcode": 0,
+      "stdout": "{\"case\":{\"id\":\"HV001-001\",\"scenario\":\"nested_replace\",\"fixture_sha256\":\"e36c06da6c3258a69674512abb6d1f6ed8889cc760b9e8e500775a85d96bfb52\",\"observed\":{\"events\":[\"old\",\"inner\",\"outer\",\"destroy\"],\"nested_calls\":2,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-002\",\"scenario\":\"inner_throws\",\"fixture_sha256\":\"b11d1da6fa7d4b9c182b6e21da9ea8b205d1b15b3e076994bb8d9ea1cf66dfe9\",\"observed\":{\"events\":[\"old\",\"inner\",\"outer\",\"destroy\"],\"nested_calls\":2,\"replacement_error_ids\":[\"inner\"]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-003\",\"scenario\":\"two_levels_and_errors\",\"fixture_sha256\":\"7805599496ebbcd00a8f84500dd08b33a66bb5d6cf45aa1592526129c073b52e\",\"observed\":{\"events\":[\"old\",\"inner\",\"deep\",\"outer\",\"destroy\"],\"nested_calls\":3,\"replacement_error_ids\":[\"old\",\"inner\",\"deep\"]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-004\",\"scenario\":\"inner_disposes\",\"fixture_sha256\":\"429317513803c11af5c3f126ab62291d394e55b75f9e2685c6f59dffff6d28a7\",\"observed\":{\"events\":[\"old\",\"inner\",\"sibling\",\"destroy\",\"outer\"],\"nested_calls\":3,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-005\",\"scenario\":\"old_disposes_control\",\"fixture_sha256\":\"90661246f67f6f3a39fadf2c808fa5c14e8f4f07ec84380fdeb8df5f7f93bdc0\",\"observed\":{\"events\":[\"old\",\"inner\",\"sibling\",\"destroy\",\"outer\"],\"nested_calls\":3,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-006\",\"scenario\":\"remove_control\",\"fixture_sha256\":\"a63952c41c9fca78d64c4d2caba7c9ab43c233da0168236b00cd7820f0dc456c\",\"observed\":{\"events\":[\"old\",\"inner\",\"destroy\"],\"nested_calls\":2,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-007\",\"scenario\":\"other_key_order\",\"fixture_sha256\":\"55ecbef7a4683333195b1e1d98190c37e3e0d5ff07e250b989e5025fa45e7131\",\"observed\":{\"events\":[\"old\",\"inner\",\"outer\",\"b\",\"a\",\"destroy\"],\"nested_calls\":4,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-008\",\"scenario\":\"inner_and_notify_throw\",\"fixture_sha256\":\"ece658f4d6115f5d3011219bf2399b671f8c32010939a180b9929a9a114e626b\",\"observed\":{\"events\":[\"old\",\"inner\",\"outer\",\"destroy\"],\"nested_calls\":2,\"replacement_error_ids\":[\"inner\",\"notify\"]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-009\",\"scenario\":\"same_function_new_registration\",\"fixture_sha256\":\"5edd75ac078aaa6e49f492d00f8116bebf7ab643ba6fc40b403140e6d1c30da2\",\"observed\":{\"events\":[\"old\",\"inner\",\"inner\",\"outer\",\"destroy\"],\"nested_calls\":3,\"replacement_error_ids\":[]},\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"HV001-010\",\"scenario\":\"setup_nested_replace\",\"fixture_sha256\":\"52dc19bd368633fff1793b01bb7e4cffba20ef4f3ab2f3a97c208f112a36af34\",\"observed\":{\"events\":[\"old\",\"inner\",\"outer\",\"destroy\"],\"nested_calls\":2,\"replacement_error_ids\":[\"inner\"]},\"status\":\"PASS\"}}\n{\"summary\":{\"scenarios\":10,\"executed\":10,\"passed\":10,\"assertion_failures\":0,\"execution_errors\":0,\"production_module_imported\":true,\"source_sha256\":\"7ff0a6d2ad931260241a4fc78970a99dc14f78c25bf71234f272a6fc837a90a2\",\"runner_sha256\":\"50f3c4788e10de38dde0af1896e8f1f250f2a500901e89e56246b9e98c74b999\",\"fixture_identity_sha256\":\"7e4dba72e57bb8d8b65cbd90df2224b52b6cf70ead227479a21b0b192ebbb8c0\"}}\n",
+      "stderr": "",
+      "stdout_sha256": "afda9c4808bd40f67b9ed0e029571552eda9d6cd9e7138190ad357e4b5aaf72c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original_23_green",
+      "command": [
+        "node",
+        "tests/g2-render-ownership/check.mjs",
+        "--mode",
+        "green"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:28.766432+00:00",
+      "finished_at": "2026-10-27T01:02:28.799276+00:00",
+      "exitcode": 0,
+      "stdout": "{\"case\":{\"id\":\"G2OWN-001\",\"scenario\":\"success\",\"case_sha256\":\"fa504ba05447e732a3372fdd415b95affac1f5d996a078f58c709a66c9147953\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-002\",\"scenario\":\"stale_start\",\"case_sha256\":\"4c0be08fe0527cfb46bd65126815897bec02a2a252bc7e5bf90460ad6424cce5\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-003\",\"scenario\":\"stale_after_create\",\"case_sha256\":\"1bb2a974433b8ba56ca383aac7eb4a25721b8bc2eedb7f022396b8fa72c91aaa\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-004\",\"scenario\":\"stale_after_setup\",\"case_sha256\":\"5b7071f853a987523c3d8a9625fbc735d63ba660e4ee0c4d683a782b2b360814\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-005\",\"scenario\":\"stale_after_render\",\"case_sha256\":\"c2c35f0b586e128be05ec8c510472f201dc8efe952b4f0c45444a3cfc5bf2f92\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-006\",\"scenario\":\"stale_after_afterRender\",\"case_sha256\":\"ac0a0965782d149b58aaa6416cd38a07d6b6ec02b61e130171400fd672d7dbcc\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-007\",\"scenario\":\"explicit_empty\",\"case_sha256\":\"83dd4b15f1226231c82688362e9b18fba886ddfc92e7694208528d1d7f244531\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-008\",\"scenario\":\"create_reject\",\"case_sha256\":\"2670a9a1cd7ce79c740244412811e652b0cac77e3495e1df9edaa0086bab790a\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-009\",\"scenario\":\"setup_throw\",\"case_sha256\":\"b8926a41e1f59de133d8464a0b97ca928e85868c440264ff7739997be6e5ff65\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-010\",\"scenario\":\"render_reject\",\"case_sha256\":\"993e6523ead5e08b8b5982a9d3f35525ce34147f5a9caf8b2070df74ce6dec0c\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-011\",\"scenario\":\"after_reject\",\"case_sha256\":\"17f4fba691e005085d1a1374576ff10933a51bfb8508a0d856c2c59c3213ae2c\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-012\",\"scenario\":\"dispose_twice\",\"case_sha256\":\"7c3077399676307acdfc0608e1e9543f3ad13c00ea9701b1737906ce4437c647\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-013\",\"scenario\":\"cleanup_throws\",\"case_sha256\":\"4b967ec0a3043d080ec22afd924f907ffe94a245671b5ccf8aa5134be1198f52\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-014\",\"scenario\":\"replace\",\"case_sha256\":\"77cdabf66432e7971dfbd57eb8a865bc64e291369e102c58677158ad87a56535\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-015\",\"scenario\":\"remove_reentrant\",\"case_sha256\":\"b1a6fb25779ff7a003ada8c0e1cadf1347c2ad1da57695572b70cad1462fd954\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-016\",\"scenario\":\"register_closed\",\"case_sha256\":\"b4fd2d490148e538e94f2584bd88ed4f575863b8ad9f783543825b92278ea658\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-017\",\"scenario\":\"scope_isolation\",\"case_sha256\":\"84048e287657408fc133e94dcf8885ee6313e66f21cbcfb165c86ae4ac5889ac\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-018\",\"scenario\":\"destroy_throws\",\"case_sha256\":\"503b8af7ab69a8a127368df853c8c83b5d2b8df48df89c93e5c4f0446612a20b\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-019\",\"scenario\":\"unexpected_undefined\",\"case_sha256\":\"6f05f7a47629635f9c2a2df86d610a5b27af145b1cef33f1a4889fb5825bdbb7\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-020\",\"scenario\":\"stale_cleanup_error\",\"case_sha256\":\"93235b0a0718c43fe0ff68836469d7f436a6497ed619fcff96b1bcfb1a529527\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-021\",\"scenario\":\"failure_cleanup_error\",\"case_sha256\":\"0690f01c2d39df9cf6427e91ba1b9240c8c64bcbd351d6334a0f99b71079f6fd\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-022\",\"scenario\":\"replace_cleanup_error\",\"case_sha256\":\"261dae830a650c3ac2023cde8d8739b61d126ba5fed0a6ef16a3e651d5c0d797\",\"status\":\"PASS\"}}\n{\"case\":{\"id\":\"G2OWN-023\",\"scenario\":\"notify_throws\",\"case_sha256\":\"4188d9ec61d979640fa1ddd3047cc2b5e159ec2d8fe7ebd2c7e4e5470ae8e45b\",\"status\":\"PASS\"}}\n{\"summary\":{\"mode\":\"green\",\"contract_valid\":true,\"production_module_imported\":true,\"helper_cases_executed\":23,\"passed\":23,\"assertion_failures\":0,\"execution_errors\":0,\"first_fingerprint\":null,\"component_cases\":\"NOT_RUN: helper-only RED preparation excludes component changes\",\"cases_sha256\":\"f4348c739094943db73872ebc974d9b5048186d627c5022df2fa9c33d5fd2bba\",\"source_sha256\":\"7ff0a6d2ad931260241a4fc78970a99dc14f78c25bf71234f272a6fc837a90a2\",\"runner_sha256\":\"0155a4e0e0a9dac40046c044b21410d4121b1177542604d48fb5e43a1d01d21f\",\"bundle_sha256\":\"8ece06cd8845b45b1edc022f4e77fb3ea14bc08668ba37329ee2792dbef2724b\",\"red_rule_satisfied\":false}}\n",
+      "stderr": "",
+      "stdout_sha256": "21f1da69ee135beaa728bf50cd6ae5a99366cd026e9b8662ed61d98c15b924f2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "oracle_negative_selftests",
+      "command": [
+        "node",
+        "tests/g2-render-ownership/check.mjs",
+        "--self-test-oracle"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:28.799377+00:00",
+      "finished_at": "2026-10-27T01:02:28.825526+00:00",
+      "exitcode": 0,
+      "stdout": "{\"oracle_negative_witness\":{\"name\":\"020_result_missing_setup\",\"case_id\":\"G2OWN-020\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"021_failure_missing_setup\",\"case_id\":\"G2OWN-021\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"failure.cleanupErrors\",\"message\":\"failure.cleanupErrors: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"022_replace_return_missing_bad\",\"case_id\":\"G2OWN-022\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"operation[1]\",\"message\":\"operation[1] replace:key:new: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"023_result_missing_setup_keeps_notify\",\"case_id\":\"G2OWN-023\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error count differs\\n\\n1 !== 2\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"020_result_duplicate_setup\",\"case_id\":\"G2OWN-020\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error count differs\\n\\n2 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"021_failure_duplicate_setup\",\"case_id\":\"G2OWN-021\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"failure.cleanupErrors\",\"message\":\"failure.cleanupErrors: error count differs\\n\\n2 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"020_result_cloned_error\",\"case_id\":\"G2OWN-020\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error reference/order differs at 0\\n+ actual - expected\\n\\n  Error: fixture error: setup\\n+     at file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:518:38\\n+     at channelWitness (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:482:5)\\n-     at errorFor (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:113:21)\\n-     at Array.map (<anonymous>)\\n-     at channelTranscript (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:437:70)\\n-     at channelWitness (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:481:22)\\n      at runOracleSelfTests (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:517:3)\\n      at file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:601:11\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"023_result_error_order_reversed\",\"case_id\":\"G2OWN-023\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error reference/order differs at 0\\n+ actual - expected\\n\\n+ Error: fixture error: notify\\n- Error: fixture error: setup\\n      at errorFor (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:113:21)\\n      at Array.map (<anonymous>)\\n+     at channelTranscript (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:462:86)\\n-     at channelTranscript (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:437:70)\\n      at channelWitness (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:481:22)\\n      at runOracleSelfTests (file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:520:3)\\n      at file:///Users/xiaomei/Documents/projects/dataease/core/core-frontend/tests/g2-render-ownership/check.mjs:601:11\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"013_manual_dispose_missing_bad\",\"case_id\":\"G2OWN-013\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"operation[3]\",\"message\":\"operation[3] dispose: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"018_dispose_missing_destroy\",\"case_id\":\"G2OWN-018\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"operation[1]\",\"message\":\"operation[1] dispose: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"018_repeat_dispose_returns_error\",\"case_id\":\"G2OWN-018\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"operation[2]\",\"message\":\"operation[2] dispose: error count differs\\n\\n1 !== 0\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"020_notification_missing_error\",\"case_id\":\"G2OWN-020\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"notification[0]\",\"message\":\"notification[0]: error count differs\\n\\n0 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"020_notification_duplicate_callback\",\"case_id\":\"G2OWN-020\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"notification:\",\"message\":\"notification: callback count differs\\n\\n2 !== 1\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"022_result_contaminated_by_operation\",\"case_id\":\"G2OWN-022\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"result.cleanupErrors\",\"message\":\"result.cleanupErrors: error count differs\\n\\n1 !== 0\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"015_remove_unexpected_error\",\"case_id\":\"G2OWN-015\",\"control_accepted\":true,\"mutation_rejected\":true,\"classification\":\"ASSERTION_FAILURE\",\"rejection_channel\":\"operation[1]\",\"message\":\"operation[1] remove:key: error count differs\\n\\n1 !== 0\\n\"}}\n{\"oracle_negative_witness\":{\"name\":\"017_A_stub_B_TypeError\",\"case_id\":\"G2OWN-017\",\"calls\":2,\"classification\":\"EXECUTION_ERROR\",\"original_error_identity_preserved\":true,\"stub_did_not_mask_execution_error\":true}}\n{\"oracle_negative_witness\":{\"name\":\"017_A_TypeError_B_stub\",\"case_id\":\"G2OWN-017\",\"calls\":2,\"classification\":\"EXECUTION_ERROR\",\"original_error_identity_preserved\":true,\"stub_did_not_mask_execution_error\":true}}\n{\"oracle_self_test_summary\":{\"diagnostic_only\":true,\"negative_witnesses_rejected\":17,\"positive_channel_controls_accepted\":15,\"exact_dual_stub_control\":\"PASS\",\"helper_green_proven\":false,\"production_stub_modified\":false}}\n{\"summary\":{\"mode\":\"oracle-self-test\",\"contract_valid\":true,\"production_module_imported\":false,\"helper_cases_executed\":0,\"passed\":0,\"assertion_failures\":0,\"execution_errors\":0,\"first_fingerprint\":null,\"component_cases\":\"NOT_RUN: helper-only RED preparation excludes component changes\",\"oracle_self_test_witnesses\":17,\"diagnostic_only\":true}}\n",
+      "stderr": "",
+      "stdout_sha256": "0ed23537e15ce8f67d83e9a14db23c445a79bb915996afecd282662cbe181c9b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "supplemental_runner_syntax",
+      "command": [
+        "node",
+        "--check",
+        "tests/g2-render-ownership/reentrant-replace-check.mjs"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:28.825637+00:00",
+      "finished_at": "2026-10-27T01:02:28.842681+00:00",
+      "exitcode": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "targeted_eslint",
+      "command": [
+        "./node_modules/.bin/eslint",
+        "src/views/chart/components/views/components/g2-render-attempt.ts"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:28.842729+00:00",
+      "finished_at": "2026-10-27T01:02:29.210980+00:00",
+      "exitcode": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "strict_single_file_typescript",
+      "command": [
+        "./node_modules/.bin/tsc",
+        "--noEmit",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "node",
+        "--strict",
+        "--skipLibCheck",
+        "--types",
+        "node",
+        "src/views/chart/components/views/components/g2-render-attempt.ts"
+      ],
+      "cwd": "core/core-frontend",
+      "started_at": "2026-10-27T01:02:29.211034+00:00",
+      "finished_at": "2026-10-27T01:02:29.474971+00:00",
+      "exitcode": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "tracked_diff_whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts",
+        "core/core-frontend/tests/g2-render-ownership/reentrant-replace-check.mjs"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-27T01:02:29.475032+00:00",
+      "finished_at": "2026-10-27T01:02:29.487227+00:00",
+      "exitcode": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "untracked_complete_file_whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-27T01:02:29.487275+00:00",
+      "finished_at": "2026-10-27T01:02:29.495346+00:00",
+      "exitcode": 1,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitcode_explanation": "1 is expected for an existing untracked file versus /dev/null; empty check output means no whitespace findings"
+    },
+    {
+      "name": "untracked_complete_file_whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "core/core-frontend/tests/g2-render-ownership/reentrant-replace-check.mjs"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-27T01:02:29.495394+00:00",
+      "finished_at": "2026-10-27T01:02:29.503261+00:00",
+      "exitcode": 1,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitcode_explanation": "1 is expected for an existing untracked file versus /dev/null; empty check output means no whitespace findings"
+    }
+  ],
+  "original_23_green_summary": {
+    "mode": "green",
+    "contract_valid": true,
+    "production_module_imported": true,
+    "helper_cases_executed": 23,
+    "passed": 23,
+    "assertion_failures": 0,
+    "execution_errors": 0,
+    "first_fingerprint": null,
+    "component_cases": "NOT_RUN: helper-only RED preparation excludes component changes",
+    "cases_sha256": "f4348c739094943db73872ebc974d9b5048186d627c5022df2fa9c33d5fd2bba",
+    "source_sha256": "7ff0a6d2ad931260241a4fc78970a99dc14f78c25bf71234f272a6fc837a90a2",
+    "runner_sha256": "0155a4e0e0a9dac40046c044b21410d4121b1177542604d48fb5e43a1d01d21f",
+    "bundle_sha256": "8ece06cd8845b45b1edc022f4e77fb3ea14bc08668ba37329ee2792dbef2724b",
+    "red_rule_satisfied": false
+  },
+  "oracle_selftest_summary": {
+    "diagnostic_only": true,
+    "negative_witnesses_rejected": 17,
+    "positive_channel_controls_accepted": 15,
+    "exact_dual_stub_control": "PASS",
+    "helper_green_proven": false,
+    "production_stub_modified": false
+  },
+  "source_patch": "--- before/g2-render-attempt.ts\n+++ after/g2-render-attempt.ts\n@@ -113,10 +113,15 @@\n   }\n \n   const replaceCleanup = (key: string, cleanup: G2RenderCleanup): Error[] => {\n-    const previous = cleanups.get(key)\n-    cleanups.delete(key)\n-    const errors = previous ? runCleanup(previous) : []\n-    // previous 可能重入并关闭 scope，因此清理后再次判断 closed。\n+    const errors: Error[] = []\n+    // 清旧项时可能重入并登记相同 key；外层接管前逐项释放，不能覆盖遗失。\n+    let previous = cleanups.get(key)\n+    while (previous) {\n+      cleanups.delete(key)\n+      errors.push(...runCleanup(previous))\n+      previous = cleanups.get(key)\n+    }\n+    // cleanup 也可能重入并关闭 scope，因此释放后再次判断 closed。\n     if (closed) errors.push(...runCleanup(cleanup))\n     else cleanups.set(key, cleanup)\n     return reportCleanupErrors(errors)\n",
+  "artifacts": {
+    "source": {
+      "path": "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts",
+      "sha256": "7ff0a6d2ad931260241a4fc78970a99dc14f78c25bf71234f272a6fc837a90a2"
+    },
+    "supplemental_runner": {
+      "path": "core/core-frontend/tests/g2-render-ownership/reentrant-replace-check.mjs",
+      "sha256": "50f3c4788e10de38dde0af1896e8f1f250f2a500901e89e56246b9e98c74b999"
+    },
+    "before_source": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HelperRepair-r001.before.ts.txt",
+      "sha256": "d31e006939b938594ea46d4258a4b87a43cd129cbe8732ae933f26a0a652f319"
+    },
+    "report": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HelperRepair-r001.md",
+      "sha256": "232ccb42a7e403cdede664cbfaca98f5dd60b4e8ec8ae8a328da916f4f36e997"
+    },
+    "prior_implementation_validation": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipHelperValidation-r001.md",
+      "sha256": "4beaf3df0dd0a61c58948afc19b16092375da524fa51c32409e9b5e38ecc0c8b"
+    },
+    "card": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/g2-ownership-helper-repair-r001-card.json",
+      "sha256": "5011232bc72d1b0596419f727d0d941f5cac982b45eaf45b7de5a126c04c5510"
+    },
+    "context": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-G2-OWNERSHIP-HELPER-REPAIR-r001.json",
+      "sha256": "6297dbbcaec8bcb0bfb86016693f2c8764b4a0b4bedd114ebb221f56a5772491"
+    },
+    "topology": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r394.json",
+      "sha256": "f1228dafe573837396b8de48ed7e36e8869a01e6d0b098da026606f24a391ff7"
+    },
+    "red_stdout.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-RED.stdout.txt",
+      "sha256": "7fe90a830b8b6a889538941893ab9a59e450892d63019bf1dc7b44ddf78966fe"
+    },
+    "red_stderr.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-RED.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red_exitcode.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-RED.exitcode.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "green_stdout.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-GREEN.stdout.txt",
+      "sha256": "afda9c4808bd40f67b9ed0e029571552eda9d6cd9e7138190ad357e4b5aaf72c"
+    },
+    "green_stderr.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-GREEN.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green_exitcode.txt": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HELPER-REPAIR-r001-GREEN.exitcode.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  "execution_admissions": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/g2-ownership-helper-repair-r001-admission-0.json",
+      "sha256": "4e6c380714c0f1e592df853fd4209dde249ec97ab16ab3510855146bfb62d219",
+      "reverified_before_first_write": true
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/g2-ownership-helper-repair-r001-admission-1.json",
+      "sha256": "38aa13dc901a65ba51a96d82cb1a253111c11875a571bd02c57e55cef4641cf7",
+      "reverified_before_first_write": true
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/g2-ownership-helper-repair-r001-admission-2.json",
+      "sha256": "a778a79da02613d5245eafbbdb0ceedb9274832897d1ac12c2cbbb132f361fc2",
+      "reverified_before_first_write": true
+    }
+  ],
+  "independent_delta_validation": "PENDING",
+  "claim_ceiling": "仅HV-001实现修复candidate及真实补充回归；须独立第二轮delta Validation，不证明组件/浏览器/权限/MVP。"
+}

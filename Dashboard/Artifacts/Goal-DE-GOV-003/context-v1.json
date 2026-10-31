@@ -1,0 +1,138 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-GOV-003-SETUP",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "后续如何策略实际效率收益？请帮我设计一个goal，根据后续任务的执行情况，帮我持续收集数据、测量收益，以判断本次对于skill的优化是否合适\n\n后续明确要求：\n每观察5个任务，出一轮评估报告\n",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "建立每5任务一轮的前瞻收益评估方案和持续采集入口",
+    "authority_role": "projection",
+    "assumptions": [
+      "范围为DataEase后续非平凡任务",
+      "每日09:00本地检查；只在5任务阈值或风险时通知"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "AGENTS.md",
+      "Dashboard/README.md",
+      "Dashboard/Sessions.md",
+      "Dashboard/Decisions.md",
+      "Dashboard/Artifacts/README.md",
+      "Dashboard/Artifacts/Goal-DE-GOV-003/**",
+      "当前聊天 heartbeat 配置"
+    ],
+    "forbidden_actions": [
+      "修改运行时代码",
+      "安装依赖",
+      "构建或启动 DataEase",
+      "数据库写入",
+      "提交或推送",
+      "发布或部署"
+    ],
+    "maximum_claim": "setup可用，长期收益尚无结论"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "current",
+      "applicability": "required",
+      "reason": "原始范围、现有规则及可测量对象",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "current",
+      "applicability": "required",
+      "reason": "原始范围、现有规则及可测量对象",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/goal.md",
+      "revision": "current",
+      "applicability": "required",
+      "reason": "原始范围、现有规则及可测量对象",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/review.md",
+      "revision": "current",
+      "applicability": "required",
+      "reason": "原始范围、现有规则及可测量对象",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "C-01",
+      "condition": "若新增项目级 Dashboard registry 或 canonical KB",
+      "action": "先读取对应工具/KB contract 并扩展 AC 与验证范围",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "C-02",
+      "condition": "若发生范围外行为、authority 或执行拓扑变化",
+      "action": "重新构造 Context Bootstrap 并触发 full rebaseline",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "governance"
+    ],
+    "preservation_statement": "覆盖后续观察的样本选择、时间定义、可比性、质量与采集成本；缺数据不推断收益。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": true,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design -> builder -> independent validation -> closure",
+    "reason": "根代理完成有边界的规则编辑，独立 Validation 检查规则语义和最终冻结包；不改执行判定。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

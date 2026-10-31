@@ -298,6 +298,12 @@ onMounted(async () => {
     }
     nextTick(() => {
       dvMainStore.createInit('dashboard', null, pid, watermarkBaseInfo, preName)
+      dvMainStore.beginQuerySingleSelectSession({
+        resourceId: null,
+        isTemplate: createType === 'template',
+        createInitCompleted: true,
+        rootEmpty: componentData.value.length === 0
+      })
       // 从模板新建
       if (createType === 'template') {
         wsCache.delete('de-template-data')
@@ -372,6 +378,7 @@ const doRecoverToPublished = () => {
 }
 
 onUnmounted(() => {
+  dvMainStore.invalidateQuerySingleSelectSession()
   document.body.style.overflow = ''
   window.removeEventListener('storage', eventCheck)
   window.removeEventListener('message', winMsgHandle)

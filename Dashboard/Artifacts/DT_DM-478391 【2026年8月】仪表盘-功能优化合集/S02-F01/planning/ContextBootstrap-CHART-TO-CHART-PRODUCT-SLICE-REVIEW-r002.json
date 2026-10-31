@@ -1,0 +1,615 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "独立全量审查普通柱图到普通折线图空目标产品 MVP 设计 r002 与案例 r002，并审查 Goal Patch S02-GR-P004 的授权顺序变化；只写报告，不改设计、案例、Goal、源码。一次性列全问题。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "核对 Goal Patch 与完整分母、用户授权 MVP 顺序、S01局部条件、真实权限阻塞、当前调用链、完整 filter tree/字段兼容、query预览、save重开及所有 r001 findings。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartToChartFilterCopyProductSliceReview-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改设计、案例、Goal 或产品源码",
+      "构建、启动应用或数据库",
+      "访问真实权限环境",
+      "使用standalone/admin/mock替代权限验收",
+      "将MVP或部分图表路径声明为完整AC/F01/S02完成"
+    ],
+    "maximum_claim": "仅对r002设计、Cases和Goal实施顺序Patch做独立审查；不证明产品实现、运行、权限、保存重开或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartToChartFilterCopyProductSliceDesign-r002.md",
+      "revision": "6070199623ddca09cff620a17087533cfdaf1a23e14867daa915194435d887cd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartToChartFilterCopyProductSliceCases-r002.json",
+      "revision": "4fae56c21ed25813324c3bc270b3e1481bc94a44ec27865e1b7fcf47d0dbd9de",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/F01SliceContract.md",
+      "revision": "b7935b1c15f60c59c4d19ec487b787e445307f192f4cad5acad6f15aee264b2f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md",
+      "revision": "e07eba2e04340d2aecb97ab063bcbc4a9efe81d5026f30ea04fe1aee74f3cab0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceIssues.json",
+      "revision": "e63ab79767cf0523b181d4b3a677f4958b07f0399fd57f37c67a8fb5638301e1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterPayloadDesignReview-r003.md",
+      "revision": "b87fd41ac4eb6c2c5a898be898e9b08347f21f6db417a52f08100bc1e9d8d55a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterTreeBackendLifecycleTrace-r003.md",
+      "revision": "2b725d67e6f0eda7b0a30e687326c811deb95f68ef7ea9b7df05c024580d1221",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterTreeBackendLifecycleTraceReview-r003.md",
+      "revision": "9bfd35402bbd122459512075f0bcf65f9fbe26e70024280192cd0dacd54319f6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignDeltaReview-r006.md",
+      "revision": "407c08a7d623f68fd7dd8d18a89543618a93e7675318bcccf4804eafbe3e7b79",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/FilterTree.vue",
+      "revision": "683a69f36ea24e60d2777b02fc88adf1c39311d0f59a316516fbc6ab27c145a9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "revision": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "revision": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "revision": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/interactive.ts",
+      "revision": "e554bcb02b1c53730e132286a5b85ef96b25bb61192c1629158c5b6ea28eba70",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/utils/CrossPermission.ts",
+      "revision": "fe56e6e70e92bf4bcb397f992ff88c9b4886a603af2a26c9bf9d4b0ef9db4a39",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/components/dashboard/DbToolbar.vue",
+      "revision": "bbe3a90657b648b1c8b66ea12ac2a9f14a565396f2982572b538fe5048277b1d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/components/data-visualization/DvToolbar.vue",
+      "revision": "ea6171a3d9d822fb9e0ec71b8f8a6004193a162d66e9bfae1606b0da7491551a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立审查普通图表复制路径的产品事实、业务边界和授权/验证限制。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/goal-patch-004.json",
+      "revision": "d29019f331bece96765790a41b276d5afef39ef7b6fb1eb43540b002cde553d5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LoopGoal_Final_r002.md",
+      "revision": "46b5cc98528453caadcc40b15ace3c4c003d5499d9a094e535c94cd5d4237c34",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVPSequenceAuthorization-r001.md",
+      "revision": "59d9908a68d50221465e4cf7a27b4cb5aea19ded40983e6c17c371ffec8b53c8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartToChartFilterCopyProductSliceReview-r001.md",
+      "revision": "df9f03f4b14e9e1ad89269a157c059e910ccd3b1dba28579722f7f628cec3d13",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md",
+      "revision": "b64f0917b1951b07f7469e943955f1478ee73040af3bc9f642587f8b75069e94",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsPostReviewCorrectionReview-r002.md",
+      "revision": "bda036af3c7cf1c1e0251d9fee877b5794f31a0675800bf38cf64a0397522a33",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsCurrentStateAssessment-r001.md",
+      "revision": "404fd98bfeaebfc52146821068e35818ef47675a6caff144f402cf8e0df843dc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对阶段授权、历史轮次、Authority/S01/权限边界及既有 review findings。",
+      "applicability": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "condition": "任一必读摘要变化",
+      "action": "停止评审并重建Context/Card。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "condition": "审查发现当前绑定读集不足以支持一个结论",
+      "action": "扩展读取精确的权威或源码证据，并在报告中限定结论。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "保持Goal 10 AC/26 must-have/16产品义务且Scope Delta none；用户已授权先做bar→line空目标界面MVP，仅变更顺序；当前S01 Entry Packet仍CONDITIONAL并绑定，ORIG-02继续待验；真实权限仍BLOCKED/NOT_RUN；CFP helper仍3/3 NEEDS_REVISION且不可重开。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "独立审查高语义风险产品切片设计与案例；只读",
+    "route": "single_independent_semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "Goal.final完整分母与r004 entry patch",
+    "MVP授权摘要与S01/F01 AC/Gap影响",
+    "Authority Materials Review r003与Correction Review r002的结论限制",
+    "FilterTree/editor/Chart API/calcData/query callback/save调用链",
+    "ChartFilterPayloadReview-r003终轮结论",
+    "真实权限和身份存储边界",
+    "Design r002与Cases r002逐项合同、UI E2E及负例一致性"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-F01-CHART-TO-CHART-PRODUCT-SLICE-REVIEW-r002",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r368.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02"
+  ],
+  "maximum_claim": "只审查r002设计、Cases、Goal Patch及其阶段顺序；不批准Build、不证明真实权限或Goal完成。",
+  "design_objective": "一次性评估用户授权MVP路径、完整F01最终范围保留、S01条件处理、权限边界、载荷/字段schema、同数据集校验、查询预览、保存重开、异步失败与Builder admission。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartToChartFilterCopyProductSliceReview-r002.md"
+}

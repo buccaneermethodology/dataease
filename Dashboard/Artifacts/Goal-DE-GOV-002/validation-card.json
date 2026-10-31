@@ -1,0 +1,80 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "DE-GOV-002-VALIDATION-V1",
+  "session_id": "DE-EXEC-S007",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/Goal-DE-GOV-002/goal.md",
+    "sha256": "3278b941721601c832bfa590c387de28eff5491b3bdbe6cfff3618f34faeb83c"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/raw-user-intent.txt",
+      "sha256": "aa0c5bb55de3a9ef59b37b626c181676c286150bf43e14ca39ed9f07038c37b7"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/analysis-input.md",
+      "sha256": "3ea206b95e80c0bf8397398d17b0d0c3a7b85f67aba3ae7eb3d729307e35a6ab"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/contract.json",
+      "sha256": "0b45b14e38783feb48d1d41c5a9a4f5068973c48f4661918fe22bc9ed49a19c7"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/design-v1.md",
+      "sha256": "5271c321ed96288d443bd505286b08761ad6795313f4b7b177e9f59b65af7caa"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/candidate-manifest.json",
+      "sha256": "ca047d0c5e9030c0ae1df21c78fd41c5b4d83cf44ef3fcf0a0086fb3b818f9fd"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/closeout.md",
+      "sha256": "9f43fcca41bd425b694ab926466b7843edd12c7e072f7bf58131ca9ee615c14c"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/checks.json",
+      "sha256": "247725c563c6ebb1f5e8d50c26ae3b95dfdc55ffcb212d630f6f7ccb1404ef43"
+    },
+    {
+      "path": "Dashboard/Artifacts/Goal-DE-GOV-002/reconciliation.json",
+      "sha256": "575fa2ab114531ee2479c5965f3d738cba7afe688fd4317797d2b8e329c067dc"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "DE-GOV-002-CANDIDATE-V1",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05",
+    "AC-06"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/Goal-DE-GOV-002/review.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/Goal-DE-GOV-002/review.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅本地规则与限定场景验收，不声称时间收益或宿主强制能力",
+    "authority_ref": "Dashboard/Artifacts/Goal-DE-GOV-002/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/Goal-DE-GOV-002/contract.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": true,
+    "user_visible": true,
+    "task_id": "DE-GOV-002",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/Goal-DE-GOV-002/candidate-manifest.json",
+  "working_directory": ".",
+  "execution_command": "独立验收冻结候选包与原始范围；检查全部 manifest 摘要、实际八文件差异和七个现实场景。仅写 review.md，给出 reviewed_at/snapshot_id/as_of_state、AC 逐项结论、场景选择与证据、blocking/non-blocking。不要改实现或生成 Gate。需审查全部收尾状态面但不把未来结果槽位误判为预先缺少 review。"
+}

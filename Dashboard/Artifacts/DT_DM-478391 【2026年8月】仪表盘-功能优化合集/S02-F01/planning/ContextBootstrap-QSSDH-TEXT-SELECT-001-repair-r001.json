@@ -1,0 +1,260 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "处置独立Validation QSSDH-VAL-001/QSSDH-VAL-002：当可选defaultValue字段存在时，无论defaultValueCheck如何都必须为string；增加null和number冻结拒绝用例，保持r006的16个case identity不变；执行证据精确记载实测RED/GREEN计数。只改纯helper、runner和新RepairEvidence。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "按既有Design r006和独立Validation finding修复纯helper类型边界；不接产品UI/Store/query/save/network/permission，不改Goal或原r006 fixtures。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-text-single-select-value-state.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-text-single-select-value-state.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-RepairEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "改写r006 Design/Fixtures、Goal、既有Validation报告或旧ExecutionEvidence",
+      "创建verified identity producer或产品调用点",
+      "接入UI、Store、查询执行、保存/重开、网络或权限",
+      "使用standalone/admin/mock替代权限验收",
+      "安装依赖、启动产品或写数据库",
+      "缩减Goal分母"
+    ],
+    "maximum_claim": "只限r007下的纯helper候选修复和新执行证据；不证明产品接线、权限、保存重开或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionDesign-r006.md",
+      "revision": "b098ecc7241fe809ffbb2407c78befb91583d54b6c35b2118fab05d17e8bd2f2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r006.json",
+      "revision": "8beecc66105cd9075c25f396156f26ba13ea12eae242af7d9b9c26d86647b10c",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r007.json",
+      "revision": "2ba16485d5030d8bc5ffb6096a9e146e1516c25b862804828a87bd1d46aadaf2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QSSDH-TEXT-SELECT-001-RepairContract-r001.json",
+      "revision": "924717c2eeefa8e04492e336d9ff7cc2876338f4c9b338235ba493abdaa3bf5e",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectExtractionDesignReview-r005.md",
+      "revision": "f68aefa3f656fc468e3ed56fd01ca008b8dda95aabc7f16ee8313f805df63dcb",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSSDH-TEXT-SELECT-001-Validation-r001.md",
+      "revision": "cf08a8252f0824dcbbc8758cbac6ebcb02fe88e6b257351a2920b2af2b6671b1",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-text-single-select-value-state.ts",
+      "revision": "17d2be6193324fcfa59a3ff0226f6bc12300fd5cbed914a07c4b9e4d20c7c301",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-text-single-select-value-state.test.ts",
+      "revision": "07ca0fa95813d1ebc35c51bfbaad0329a11f9a24a303b8ae287fc41dbcddfc26",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r162.json",
+      "revision": "4d7238ba4b87ca9f1342ac7edb94e3ccd75a4221f7e1491208cdffe1d1a60fc0",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "c7b1d363e74fe9d06bac701813dd9a2724ba003ad7d6a88710665da55b74f45b",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-repair-r001",
+      "reason": "验证finding和冻结输入类型合同，限定本轮修复范围与实现/验证边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen-input-drift",
+      "condition": "Design/RepairContract/Fixtures/Validation输入摘要变化",
+      "mode": "deterministic",
+      "action": "停止写入并重基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner-unavailable",
+      "condition": "当前Node/esbuild/tsc/lint入口不可用",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "不安装依赖；记录限制并保留阻塞",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "preservation_statement": "完整Goal 10 AC、26 must-have、16产品义务继续保留；真实权限验收BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "独立Validation报告可复现合同缺陷；限helper/type-only修复。",
+    "route": "bounded_builder_after_semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "r007冻结fixtures",
+    "同runner可信RED/GREEN",
+    "输入不可变/失败零输出",
+    "定向ESLint",
+    "validator finding复验",
+    "diff check"
+  ]
+}

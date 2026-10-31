@@ -1,0 +1,513 @@
+{
+  "doc_id": "data",
+  "title": "数据源、文件/API接入与数据集",
+  "domains": [
+    "K03",
+    "K04",
+    "K05"
+  ],
+  "facts": [
+    {
+      "id": "DATA-001",
+      "statement": "前端数据源模块使用统一 request 封装；保存及更新前执行 nameTrim，分别 POST /datasource/save 与 /datasource/update，读取响应 data。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/datasource.ts",
+          "start_line": 101,
+          "end_line": 119,
+          "symbol": "save/update",
+          "sha256": "648c3481755576dc9ca0a7b16dbaec7e90db810e105e92c672566544161d39f9"
+        },
+        {
+          "path": "core/core-frontend/src/api/datasource.ts",
+          "start_line": 1,
+          "end_line": 2,
+          "symbol": "request import",
+          "sha256": "648c3481755576dc9ca0a7b16dbaec7e90db810e105e92c672566544161d39f9"
+        }
+      ]
+    },
+    {
+      "id": "DATA-002",
+      "statement": "DatasourceApi 声明保存/更新输入为 BusiDsRequest、输出 DatasourceDTO；validate/{id}、删除、详情声明 manage，getSimpleDs/getTableField/getTables 声明 read 权限。这是接口注解声明，不能单独证明运行鉴权。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/ds/DatasourceApi.java",
+          "start_line": 41,
+          "end_line": 142,
+          "symbol": "DatasourceApi",
+          "sha256": "d2599a92b6de382fd0eae8238492fc6f192eb7e169873b68b48b9e1657645908"
+        }
+      ]
+    },
+    {
+      "id": "DATA-003",
+      "statement": "数据源 save 在正 ID 输入时转 update；否则解码 configuration、执行 Excel 文件与前置检查、生成 snowID 和审计时间；连接状态检查异常只置 Error，随后仍调用 innerSave。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 296,
+          "end_line": 324,
+          "symbol": "save",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-004",
+      "statement": "innerSave 经 datasourceResourceTree 的 XpackInteract 后置钩子，检查名称非空及同级重复后 saveAndFlush，并登记最近新增操作；查重排除自身且区分 folder 与非 folder。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DataSourceManage.java",
+          "start_line": 128,
+          "end_line": 171,
+          "symbol": "innerSave/checkName",
+          "sha256": "4a07188f8119148cfaf42abf9ba6b14c03d7198c84b660aff54ed6f8387f74af"
+        }
+      ]
+    },
+    {
+      "id": "DATA-005",
+      "statement": "validate 请求解码 configuration、执行 preCheckDs 与 checkDatasourceStatus，只返回 type 和 status；getSchema 将请求转换为 DatasourceRequest 并委派所选 Provider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 575,
+          "end_line": 601,
+          "symbol": "validate/getSchema",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-006",
+      "statement": "ProviderFactory 对 es 选择 esProvider，对内置枚举类型选择 calciteProvider；其他类型走插件缓存且要求有效 License，缺实例抛插件异常；默认 Provider 为 calciteProvider。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/extensions/extensions-datasource/src/main/java/io/dataease/extensions/datasource/factory/ProviderFactory.java",
+          "start_line": 23,
+          "end_line": 48,
+          "symbol": "getProvider/getDefaultProvider/getInstance",
+          "sha256": "81656a4f5dac79ed0af46a3cc7e44ed443cdbd99a5e0c90abfa673a073f39757"
+        }
+      ]
+    },
+    {
+      "id": "DATA-007",
+      "statement": "CalciteProvider.checkStatus 对 pg、kingbase、gaussdb 先确认 schema 存在，再建立连接执行表列表 SQL；成功返回 Success，异常向上传播。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/CalciteProvider.java",
+          "start_line": 223,
+          "end_line": 266,
+          "symbol": "checkStatus",
+          "sha256": "11fa8f5df93fbd41a870439aad76869a2a8796fe4774ec73a8b84b8b74eb435e"
+        }
+      ]
+    },
+    {
+      "id": "DATA-008",
+      "statement": "getTables 拒绝不存在的数据源；API 走反射 getApiTables，Excel 类型走 ExcelUtils，其余走 Provider；Oracle 额外过滤回收站名称，返回前缓存表名。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 858,
+          "end_line": 901,
+          "symbol": "getTables/isOracleRecycleBinName",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-009",
+      "statement": "数据源 update 缺 ID 时转 save；存在 ID 时读取旧配置并保留原 pid，解码新配置和执行前置检查，更新审计人/时间；状态校验失败置 Error。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 425,
+          "end_line": 451,
+          "symbol": "update",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-010",
+      "statement": "数据源删除支持虚拟组织根目录只递归子节点；递归删除 Excel/API 时删除引擎表，API 另删同步任务，再删元数据；普通数据库类型调用 calciteProvider.delete；folder 继续递归。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 742,
+          "end_line": 820,
+          "symbol": "delete/recursionDel",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-011",
+      "statement": "CoreDatasource 是 core_datasource 的 JPA 实体，Long ID；name/type/configuration/createTime/updateTime 非空，configuration 指定 EncryptDecryptConverter，另保存状态、任务状态及同步实例。此处只证明转换器绑定。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasource.java",
+          "start_line": 12,
+          "end_line": 91,
+          "symbol": "CoreDatasource",
+          "sha256": "9f676276b057e0282469e0b391697ee5dc14f446b59fd7be0146bfdb2aeb015a"
+        }
+      ]
+    },
+    {
+      "id": "DATA-012",
+      "statement": "CoreDatasourceRepository 继承 JpaRepository 和 JpaSpecificationExecutor；状态及移动辅助方法在事务中查询实体、修改字段并 saveAndFlush；元数据仓储与分析查询 Provider 是不同路径。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/dao/auto/repository/CoreDatasourceRepository.java",
+          "start_line": 11,
+          "end_line": 61,
+          "symbol": "CoreDatasourceRepository",
+          "sha256": "0b097927a389c243745c7b9ef4a142fdf36db9a02e20a09f6d48985b7035bcd4"
+        }
+      ]
+    },
+    {
+      "id": "DATA-013",
+      "statement": "uploadFile 按文件扩展名白名单拒绝不支持格式，解析并保存文件后合并编辑配置，检查每个 sheet 内字段名称大小写不敏感重复并抛错，返回 ExcelFileData。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1014,
+          "end_line": 1037,
+          "symbol": "uploadFile",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-014",
+      "statement": "ExcelUtils 上传解析流程校验文件名、解析并过滤无字段 sheet，持久保存上传文件；为各 sheet 生成物理表名及 UUID，保存路径、文件名、更新时间和大小，映射 TEXT/DATETIME/LONG/DOUBLE 为 DE 类型 0/1/2/3。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ExcelUtils.java",
+          "start_line": 284,
+          "end_line": 350,
+          "symbol": "excelSaveAndParse",
+          "sha256": "c0babdf956b1910818f8311c66c703a35ec93ba1a19dcaad7324f620dbf600b2"
+        }
+      ]
+    },
+    {
+      "id": "DATA-015",
+      "statement": "loadRemoteFile 解码用户名和密码后调用 parseRemoteExcel，读取已有数据源并合并编辑配置，同样拒绝 sheet 重复字段；本候选不包含任何真实凭据。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1039,
+          "end_line": 1059,
+          "symbol": "loadRemoteFile",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-016",
+      "statement": "追加模式合并 Excel 配置按 sheet 表名匹配；单 CSV 且仅一张目标表时允许按字段匹配而不要求文件名；仅字段兼容的 sheet 保留旧物理表名并进入结果。替换模式按表名合并旧字段配置。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 1063,
+          "end_line": 1100,
+          "symbol": "mergeExcelEditConfig",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-017",
+      "statement": "新建本地 Excel 数据源先建立引擎表，再以 all_scope 抽取；API/远程 Excel 建立引擎表并保存同步任务，默认开始时间取当前时间前20秒，RIGHTNOW 清空 cron，非即时任务拒绝结束早于开始。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+          "start_line": 324,
+          "end_line": 408,
+          "symbol": "save",
+          "sha256": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c"
+        }
+      ]
+    },
+    {
+      "id": "DATA-018",
+      "statement": "DatasourceSyncManage.createEngineTable/dropEngineTable 从当前引擎选择 Provider 与 EngineProvider，后者生成 DDL；needCheckExistTable 为真时先查表存在性，之后通过 Provider.execDDL 执行。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 342,
+          "end_line": 378,
+          "symbol": "createEngineTable/dropEngineTable",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-019",
+      "statement": "同步调度 RIGHTNOW 创建一次性 ExtractDataJob，其他模式创建 cron job；结束时间为空或0表示无结束，已过期结束时间删除调度并返回。Job/Trigger 标识绑定任务 ID 和数据源 ID。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 380,
+          "end_line": 397,
+          "symbol": "addSchedule",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-020",
+      "statement": "本地 Excel all_scope 抽取建立临时表、抽取后替换原表；成功记 Completed，异常尝试删临时表、记 Error 并抛异常，主键重复给专门提示；finally 保存任务日志。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 55,
+          "end_line": 98,
+          "symbol": "extractExcelData",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-021",
+      "statement": "API extractedData 按表抽取；all_scope 使用临时表和替换，成功或失败均记录结束时间；异常记 Error 并尝试清临时表，finally 保存日志，本方法 catch 不重新抛出该异常。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatasourceSyncManage.java",
+          "start_line": 141,
+          "end_line": 175,
+          "symbol": "extractedData",
+          "sha256": "cde9a8f3e9083cc52cfb035ac29eedb24f6365200e0628d5e7c8c4acd4247b26"
+        }
+      ]
+    },
+    {
+      "id": "DATA-022",
+      "statement": "ApiUtils.getApiTables 从 configuration 的 ApiDefinition 列表生成表名/显示名/数据源ID，跳过空定义及 type=params；字段接口按物理表名查配置，异常被捕获后返回当前字段列表。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 77,
+          "end_line": 96,
+          "symbol": "getApiTables",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 180,
+          "end_line": 196,
+          "symbol": "getTableFields",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-023",
+      "statement": "API 抽取返回 fieldList 与 dataList；pageNumber 根据响应路径读取页数/总条数并按页请求，cursor 模式持续请求直到游标缺失、解析失败或与前一游标相同；无分页直接请求解析。缺少 API 定义抛 未找到。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 113,
+          "end_line": 173,
+          "symbol": "fetchApiResultField",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-024",
+      "statement": "checkAPIStatus 跳过参数定义，对每个 API 单独调用取数；成功/异常分别产出 Success/Error 项并序列化整个列表为字符串，不是统一单值连接状态。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/datasource/provider/ApiUtils.java",
+          "start_line": 198,
+          "end_line": 221,
+          "symbol": "checkAPIStatus",
+          "sha256": "3390427c6e912b4b84ab64f7cedfef4709e7832a61497c51edb364e3318c4ba8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-025",
+      "statement": "前端创建/保存数据集先 nameTrim、cloneDeep 和 originNameHandle；请求 /datasetTree/create 或 /save 后还原返回字段。预览请求也复制、处理字段并还原响应 allFields 和 data.fields。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-frontend/src/api/dataset.ts",
+          "start_line": 81,
+          "end_line": 104,
+          "symbol": "saveDatasetTree/createDatasetTree",
+          "sha256": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4"
+        },
+        {
+          "path": "core/core-frontend/src/api/dataset.ts",
+          "start_line": 198,
+          "end_line": 211,
+          "symbol": "getPreviewData",
+          "sha256": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4"
+        }
+      ]
+    },
+    {
+      "id": "DATA-026",
+      "statement": "DatasetTreeApi 声明保存/重命名/删除需目标 manage，新建需父节点 manage，移动需目标及父节点 manage，导出需 export；输入主要是 DatasetGroupInfoDTO 或资源删除/导出请求。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "sdk/api/api-base/src/main/java/io/dataease/api/dataset/DatasetTreeApi.java",
+          "start_line": 30,
+          "end_line": 108,
+          "symbol": "DatasetTreeApi",
+          "sha256": "19a1faded6d1b1d4df6f9438ae352f330acc4207f67af19f01752b2bcbc63571"
+        }
+      ]
+    },
+    {
+      "id": "DATA-027",
+      "statement": "DatasetTreeServer 创建与保存均委派 DatasetGroupManage.save(false,true)，重命名一般用(true,false)，组织根重命名调用 innerEdit；读取预览调用 getDatasetGroupInfoDTO(id,preview)。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetTreeServer.java",
+          "start_line": 41,
+          "end_line": 96,
+          "symbol": "save/create/rename/get",
+          "sha256": "3e7d13a6a3ffb19709e75ab81d661ca5ac0019df98449706e156d024712f26b0"
+        }
+      ]
+    },
+    {
+      "id": "DATA-028",
+      "statement": "DatasetGroupManage.save 是事务入口：dataset 非重命名且无 allFields 时拒绝；构建 union SQL/关系JSON；新建生成 ID、审计字段和默认 pid=0，更新拒绝 id=pid；dataset 节点保存表与字段并清理不再引用项，按 encode 参数编解码。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 99,
+          "end_line": 167,
+          "symbol": "save",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-029",
+      "statement": "saveTable 递归遍历 union/childrenDs；新建数据集若表 ID 已存在则拒绝；每表绑定 datasetGroupId。saveField 在 union 非空时先预览1行，已有字段保留内部别名；新计算字段生成短名，新分组字段固定文本维度并选中。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 364,
+          "end_line": 432,
+          "symbol": "saveTable/saveField",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-030",
+      "statement": "DatasetTableManage 保存前限制显示名和物理表名不超过100字符，使用 JPA saveAndFlush；更新清理只有保留 ID 列表非空时执行 deleteByDatasetGroupIdAndNotInIds。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetTableManage.java",
+          "start_line": 25,
+          "end_line": 72,
+          "symbol": "save/deleteByDatasetGroupUpdate/checkNameLength",
+          "sha256": "8f263b9c00d7fc0422878350f891629934b8b6fb9fad3f8fb56eb4498d3069be"
+        }
+      ]
+    },
+    {
+      "id": "DATA-031",
+      "statement": "DatasetDataServer 编辑预览固定 start=0,count=100,checkPermission=false,encode=true；已保存数据集的 getDatasetGroupInfoDTO 预览则传 checkPermission=true,encode=false。两条入口不得合并为同一权限语义。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/server/DatasetDataServer.java",
+          "start_line": 25,
+          "end_line": 28,
+          "symbol": "previewData",
+          "sha256": "48c9b07f3146fe017b29b41dc2b0ae92ae46fccd4b20badc19a82c689315c7a8"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetGroupManage.java",
+          "start_line": 496,
+          "end_line": 540,
+          "symbol": "getDatasetGroupInfoDTO",
+          "sha256": "d4cb4e163682d9182c6d811c32a0888ac18d6dbcc6ed7ad3f25c71429c4770b8"
+        }
+      ]
+    },
+    {
+      "id": "DATA-032",
+      "statement": "previewDataWithLimit 解码后拒绝空字段，构建 union SQL；checkPermission=true 时过滤列权限并在无列权限时拒绝，仅uid非null且checkPermission=true时加载行权限；检查数据源状态，非跨源且不支持 full join 的类型拒绝 full join。",
+      "kind": "implemented",
+      "scope": "当前 V3 已读源码；静态实现事实，不代表运行验证",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java",
+          "start_line": 229,
+          "end_line": 276,
+          "symbol": "previewDataWithLimit",

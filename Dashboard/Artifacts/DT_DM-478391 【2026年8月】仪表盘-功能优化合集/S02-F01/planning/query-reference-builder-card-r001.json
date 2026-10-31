@@ -1,0 +1,66 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-QPREP-001-builder-r001",
+  "session_id": "S02.1",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidationFixtures-r001.json",
+      "sha256": "08ed4a0c6ef376230baf856dd7cb0a9b6254733c318b914dbcea959bdc7dd915"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+      "sha256": "9278dfa7490a43bdc13f1d1fa7c9165ed578d48ca6c955b74af00f880c72c765"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+      "sha256": "c761633b315dde7463c635999dcdf34a14941c1fe56804e1148acdc2aa789c61"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-query-reference-builder-r001.json",
+      "sha256": "a0aa5ae21403eddb7f1142b4358bf402f24163f4db7f4ca8eea0af515b4c9a6b"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-QPREP-001-builder-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q006",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-reference-plan.test.ts"
+  ],
+  "required_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-reference-plan.test.ts"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅QPREP-001的8项typed查询引用闭包准备合同Builder候选；不代表Goal或完整F01验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-QPREP-001-builder-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+  "working_directory": ".",
+  "execution_command": "先核对本卡摘要及typed fixture，然后只在允许的两个目标内实现prepareQueryReferences。首先执行8个冻结identity对应的真实RED，保存完整原始stdout/stderr及实现前源文件/fixture/runner摘要；不得伪造RED。之后实现设计规定的结构/ID、单射映射、闭包、dataset/field一致性、唯一组件映射、环检测及完整独立输出；失败只返回reason且不泄漏部分value。Node+esbuild通过实际bundle生产TS源模块执行测试，复用同8 identity GREEN；TC-QPREP-008验证输入不可变/深冻结和输出嵌套独立。执行两个目标的定向ESLint。不得改冻结fixture、Goal、既有纯守卫或其他文件，不接Store/UI/fetch/Date/随机ID/事件总线，不安装依赖，不声称产品权限或Goal完成。结束记录实际命令、stdout/stderr证据、源码摘要和结果。"
+}

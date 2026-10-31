@@ -1,0 +1,74 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "SP001-SEMANTIC-data",
+  "session_id": "DE-EXEC-S012",
+  "lane": "semantic-data",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/SP-001/goal.md",
+    "sha256": "9c96708eb54900de0fd6b6768d16f56ccdd9e1bdd1f0960e5fc562e227086e3a"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/context-v2.json",
+      "sha256": "40cce0d74b68f0db62cb6a83098c70c340e62de85764c3d5c03dcf49e1bbcc7e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/object-contract-v1.md",
+      "sha256": "8b9ee134e1fa5e2ca917fc170534de553efc643f9c7349340276b65778f6ca95"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/planning/capability-denominator-v1.json",
+      "sha256": "bf444a606fb83feeef947b9d50337c0126b1ce9d147930e6e480c0329a83eb80"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/data/candidate.json",
+      "sha256": "5bc9735817c8b2aaf4a4a12ac71c74d9a7acecf2284a89ca5181d364d579bcbb"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/data/read-log.json",
+      "sha256": "6047bd328b58b9e8fc20244f51cd29fcea6c7465b76a50e5782e8f4920f5450e"
+    },
+    {
+      "path": "Dashboard/Artifacts/SP-001/extraction/data/gaps.json",
+      "sha256": "9d8409306a106e33994a115bea9a77ee56d8b5f51ed1d6364a5d4398f50eb9d0"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "SP001-data-candidate-review",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC01",
+    "AC02",
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC07",
+    "AC08"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/SP-001/reviews/data-semantic-v1.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/SP-001/reviews/data-semantic-v1.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "独立静态语义复核，不等同全KB/运行验收",
+    "authority_ref": "Dashboard/Artifacts/SP-001/goal.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/SP-001/goal.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "SP001-PRE-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/SP-001/stage-plan.md",
+  "working_directory": ".",
+  "execution_command": "独立复核data候选。亲读每项核心能力对应的关键事实源码，检查触发/输入输出/权限/状态/失败/约束及关系是否真实；非核心逐项导航至少抽一事实。复核断言证据范围，任何错误列ID、源码、影响和具体修正；不改候选。记录逐能力结论、已读事实/来源样本分母、缺口是scope外还是必须补齐的核心。校验schema不代替语义。报告必须具体，不能只复述producer。"
+}

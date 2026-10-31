@@ -1,0 +1,252 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求在QOBS-ASYNC-01设计审查后开始S02实现。本Builder仅实现离线纯异步状态转换，目标模块与测试限于execution admission；不接Vue/Store/权限/保存，不声称Goal完成。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "按已通过有界语义审查的r004 oracle建立纯模型RED/GREEN，验证异步核对、失效身份和计数不变量。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-single-select-observation-async.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-single-select-observation-async.test.ts"
+    ],
+    "forbidden_actions": [
+      "修改冻结Design/Fixtures/Contract/Review/Goal",
+      "Vue/Store/组件接线、真实权限、保存、网络或数据库",
+      "改变维护者裁定或自动重试",
+      "以纯模型GREEN声称产品或S02完成",
+      "扩大本次两文件写范围"
+    ],
+    "maximum_claim": "仅两个目标文件的异步观察纯模型候选通过冻结合同；无产品运行、权限、保存或Goal完成声明。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationAsyncPureModelContract-r001.json",
+      "revision": "e791593aef2d3e3fdc2f303d011c40914672cf63c4722ffc439974e9e15184be",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationResolutionDesign-r004.md",
+      "revision": "8c7636d110a0597f7ac9d1f5b613df108c46aa34ffad6830af3039deebce6005",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationResolutionFixtures-r004.json",
+      "revision": "acb43b7b421d00201fa1f06545d51351c551ddf3eedcf894d067cf9b6ff5d215",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationResolutionDeltaReview-r003.md",
+      "revision": "cefa9f01fff8517e8b1cd0160c14f35dee82d0ed7ba3f436838ae39e97d9d0cd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-observation-async.test.ts",
+      "revision": "d2cf1acc9f37de9b4c26443defbff06ffb3b6785941b76d3ca21f7eb2a482219",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r124.json",
+      "revision": "6e455fff02150b8825bf138894976278021c52c3243c53715ea58930372fe970",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "绑定有界裁定、完整oracle、Contract API与实际目标文件；不扩至产品运行/权限。",
+      "applicability": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "model_contract_missing_or_conflicting",
+      "mode": "deterministic",
+      "condition": "纯API/NOT_READY协议或target-bound admission缺失、摘要漂移",
+      "action": "停止执行并报告精确缺口，不能改Fixtures补权威。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "model_vs_product_scope_collapse",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选被解释为产品原子发布或16/17已验行为",
+      "action": "保留模型/未决/产品三类边界并交父流程纠正，不扩大实现。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10项Goal AC＋14项F01＋Q066/Q067＝26项义务完整保留；纯模块结论不升级为产品、保存、权限或Goal通过。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": true,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_pure_model_builder",
+    "reason": "用户授权设计审核后开始实现；有界纯模型可在无权限环境下验证，产品接线仍另行准入。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "r004独立语义delta review",
+    "新的纯模型Contract",
+    "可信RED/GREEN与同身份fixtures",
+    "target lint",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "acceptance_criteria_ids": [
+    "QOBS-ASYNC-01",
+    "TC-QOBS-012A",
+    "TC-QOBS-012B",
+    "TC-QOBS-012C",
+    "TC-QOBS-012D",
+    "TC-QOBS-013",
+    "TC-QOBS-014"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QSSDH-OBS-ASYNC-PUREMODEL-builder-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r124.json"
+  },
+  "delta_read_set": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationAsyncPureModelContract-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationResolutionDesign-r004.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationResolutionFixtures-r004.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationResolutionDeltaReview-r003.md",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-observation-async.test.ts",
+    "core/core-frontend/src/custom-component/v-query/Select.vue"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "case_id": "RT-F05-PIVOT-REPAIR",
+  "frozen_at": "2026-10-15T13:59:32.389642+00:00",
+  "authority": "既有B2c授权，最小透视条件渲染补测",
+  "fixture": "同名owner表重新建立，仅原fixture前5行；新资源前缀S01_SP005_PivotRepair",
+  "layout": "透视表region行维度、amount求和",
+  "condition": "amount>100，自身背景红色",
+  "expected": {
+    "华东": {
+      "amount": 300,
+      "hit": true
+    },
+    "华南": {
+      "amount": 300,
+      "hit": true
+    },
+    "华北": {
+      "amount": 50,
+      "hit": false
+    }
+  },
+  "checks": [
+    "实际背景命中及不命中",
+    "保存关闭新页面重开保持"
+  ],
+  "cleanup": "登记新ID，UI删除资源后核对owner并drop表；停止本轮新进程"
+}

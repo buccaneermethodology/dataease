@@ -1,0 +1,1145 @@
+{
+  "schema_version": "s02_query_product_paste_preparation_fixtures_r001",
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "design_ref": "QueryProductPastePreparationDesign-r002.md",
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "dependency_refs": [
+    {
+      "path": "QueryProductRebuildFixtures-r008.json",
+      "sha256": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+      "case_id": "TC-QTARGET-REBUILD-001",
+      "parts": [
+        "input.source",
+        "input.referencePlan",
+        "input.targetComponents",
+        "expected.value"
+      ]
+    }
+  ],
+  "canonical_signature": {
+    "algorithm": "UTF-8 SHA-256 of recursive JSON with object keys sorted lexicographically and arrays in original order; no whitespace; ECMAScript JSON primitive encoding"
+  },
+  "base_input": {
+    "schemaVersion": "s02.query-paste-preparation/1",
+    "source": {
+      "componentId": "query-source-1",
+      "sourceRoot": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": []
+      }
+    },
+    "target": {
+      "componentId": "query-target-1",
+      "expectedRevision": 9,
+      "expectedSignature": "64943006319fdeda797bc2989efa7fd30f4596e3cf5cf06cd267dbe34d7a3f8d",
+      "componentData": [
+        {
+          "id": "query-target-1",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "propValue": [],
+          "cascade": [],
+          "style": {
+            "width": 400,
+            "left": 10
+          }
+        },
+        {
+          "id": "chart-B",
+          "component": "Chart",
+          "innerType": "Chart",
+          "datasetId": "201",
+          "fieldIds": [
+            "province"
+          ],
+          "style": {
+            "width": 600,
+            "left": 450
+          }
+        },
+        {
+          "id": "text-keep",
+          "component": "VText",
+          "innerType": "VText",
+          "propValue": "keep me",
+          "style": {
+            "left": 1100
+          }
+        }
+      ]
+    },
+    "referencePlan": {
+      "conditions": [
+        {
+          "id": "q-new",
+          "datasetId": "201",
+          "fieldId": "province",
+          "targetRefs": [
+            {
+              "componentId": "chart-B",
+              "datasetId": "201",
+              "fieldId": "province"
+            }
+          ]
+        }
+      ],
+      "chains": []
+    },
+    "sourceComponents": [
+      {
+        "componentId": "chart-A",
+        "datasetId": "201",
+        "fieldIds": [
+          "province"
+        ]
+      }
+    ],
+    "targetComponents": [
+      {
+        "componentId": "chart-B",
+        "datasetId": "201",
+        "fieldIds": [
+          "province"
+        ]
+      }
+    ],
+    "targetEnumEvidence": {
+      "status": "resolved",
+      "targetComponentId": "query-target-1",
+      "targetRevision": 9,
+      "identityGeneration": 4,
+      "requestInput": {
+        "queryId": "province",
+        "displayId": "province",
+        "sort": "asc",
+        "sortId": "",
+        "resultMode": 0,
+        "searchText": "",
+        "filter": []
+      },
+      "requestKey": "139f0a07084eab14a3f8d442901271ce0feea4dd101f13b7249ad26ed350cdbb",
+      "values": [
+        {
+          "label": "A",
+          "value": "A-code"
+        },
+        {
+          "label": "B",
+          "value": "B-code"
+        }
+      ],
+      "complete": false
+    }
+  },
+  "cases": [
+    {
+      "id": "QPP-001",
+      "title": "A默认/B运行值分离并生成detached目标根",
+      "ops": [],
+      "expected": {
+        "ok": true,
+        "designComponentData": [
+          {
+            "id": "query-target-1",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "style": {
+              "width": 400,
+              "left": 10
+            }
+          },
+          {
+            "id": "chart-B",
+            "component": "Chart",
+            "innerType": "Chart",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ],
+            "style": {
+              "width": 600,
+              "left": 450
+            }
+          },
+          {
+            "id": "text-keep",
+            "component": "VText",
+            "innerType": "VText",
+            "propValue": "keep me",
+            "style": {
+              "left": 1100
+            }
+          }
+        ],
+        "runtimeTargetRoot": [
+          {
+            "id": "query-target-1",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": [],
+            "style": {
+              "width": 400,
+              "left": 10
+            }
+          },
+          {
+            "id": "chart-B",
+            "component": "Chart",
+            "innerType": "Chart",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ],
+            "style": {
+              "width": 600,
+              "left": 450
+            }
+          },
+          {
+            "id": "text-keep",
+            "component": "VText",
+            "innerType": "VText",
+            "propValue": "keep me",
+            "style": {
+              "left": 1100
+            }
+          }
+        ],
+        "eligibility": "requires_product_authorization_and_commit_design",
+        "effects": "none"
+      }
+    },
+    {
+      "id": "QPP-002",
+      "title": "拒绝未支持的源shape",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/source/sourceRoot/propValue/0/displayType",
+          "value": "8"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "SOURCE",
+        "reason": "UNSUPPORTED_SHAPE",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-003",
+      "title": "默认A缺于不完整枚举时保持未确定",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/complete",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/values",
+          "value": [
+            {
+              "label": "B",
+              "value": "B-code"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "DEFAULT_ENUM",
+        "reason": "ENUM_UNCERTAIN",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-004",
+      "title": "完整枚举证明目标默认A不存在",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/requestInput/resultMode",
+          "value": 1
+        },
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/values",
+          "value": [
+            {
+              "label": "B",
+              "value": "B-code"
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/complete",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/values",
+          "value": [
+            {
+              "label": "B",
+              "value": "B-code"
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/requestKey",
+          "value": "d82518fc569697764082147a5750cc89ffb272bf799a598fac19dd52b76dd07c"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "DEFAULT_ENUM",
+        "reason": "DEFAULT_NOT_FOUND",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-005",
+      "title": "目标枚举请求失败",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/status",
+          "value": "failed"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "DEFAULT_ENUM",
+        "reason": "ENUM_UNVERIFIED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-006",
+      "title": "目标目录无法映射源图表",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/targetComponents",
+          "value": []
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "MAPPING",
+        "reason": "TARGET_UNRESOLVED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-007",
+      "title": "目标映射歧义",
+      "ops": [
+        {
+          "op": "add",
+          "path": "/targetComponents/-",
+          "value": {
+            "componentId": "chart-C",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "MAPPING",
+        "reason": "TARGET_AMBIGUOUS",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-008",
+      "title": "缺失目标VQuery",
+      "ops": [
+        {
+          "op": "remove",
+          "path": "/target/componentData/0"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "TARGET",
+        "reason": "TARGET_NOT_UNIQUE",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-009",
+      "title": "目标VQuery ID重复",
+      "ops": [
+        {
+          "op": "add",
+          "path": "/target/componentData/-",
+          "value": {
+            "id": "query-target-1",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [],
+            "cascade": [],
+            "style": {
+              "width": 400,
+              "left": 10
+            }
+          }
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "TARGET",
+        "reason": "TARGET_NOT_UNIQUE",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-010",
+      "title": "source与target身份域不混用",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/target/componentId",
+          "value": "chart-A"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "TARGET",
+        "reason": "TARGET_NOT_UNIQUE",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-011",
+      "title": "计划与源条件不匹配",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/referencePlan/conditions/0/fieldId",
+          "value": "region"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "PLAN",
+        "reason": "PLAN_MISMATCH",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-012",
+      "title": "目标revision在确认期间变化",
+      "phase": "revalidate",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/currentRevision",
+          "value": 10
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "CANDIDATE_BINDING",
+        "reason": "DEPENDENCY_CHANGED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-013",
+      "title": "目标完整根签名在确认期间变化",
+      "phase": "revalidate",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/currentTargetRoot/0/style/left",
+          "value": 11
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "CANDIDATE_BINDING",
+        "reason": "DEPENDENCY_CHANGED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-014",
+      "title": "克隆或替换opaque handle",
+      "phase": "revalidate",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/handle",
+          "value": {
+            "forged": true
+          }
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "CANDIDATE_BINDING",
+        "reason": "HANDLE_INVALID",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-015",
+      "title": "双错按冻结阶段返回Source首错",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/source/sourceRoot/propValue/0/displayType",
+          "value": "8"
+        },
+        {
+          "op": "remove",
+          "path": "/target/componentData/0"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "SOURCE",
+        "reason": "UNSUPPORTED_SHAPE",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-016",
+      "title": "确认时目录签名变化拒绝",
+      "phase": "revalidate",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/currentTargetComponents/0/fieldIds",
+          "value": [
+            "city"
+          ]
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "CANDIDATE_BINDING",
+        "reason": "DEPENDENCY_CHANGED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-017",
+      "title": "输入根声明的目标签名与真实根不符",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/target/expectedSignature",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "TARGET",
+        "reason": "TARGET_VERSION_MISMATCH",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "QPP-018",
+      "title": "枚举响应请求签名不匹配",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/targetEnumEvidence/requestKey",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "stage": "DEFAULT_ENUM",
+        "reason": "ENUM_UNVERIFIED",
+        "effects": {
+          "targetRootUnchanged": true,
+          "targetRuntimeUnchanged": true,
+          "selectionUnchanged": true,
+          "ownerUnchanged": true,
+          "historyCursorAndLengthUnchanged": true,
+          "historyCacheUnchanged": true,
+          "previewCountUnchanged": true,
+          "queryCountUnchanged": true,
+          "saveCountUnchanged": true
+        }
+      }
+    }
+  ],
+  "fixture_resolution": {
+    "ops": "RFC6902-like ordered JSON Pointer patches applied to deep copies of base_input for prepare cases, or base_revalidation_input for revalidate cases; array positions are zero-based. QPP-001 first issues the opaque handle; revalidation cases then apply patches. Derived expected fields such as requestKey are frozen literals in each case.",
+    "source_and_qtarget": "QPP-001 consumes the exact QTARGET case TC-QTARGET-REBUILD-001 (path + SHA-256 + exact case id); all expected roots are complete JSON values. The pure preparation candidate receives the explicit upstream referencePlan, validates it through QTARGET against the exact directories, and does not claim to derive mappings."
+  },
+  "oracle_limits": [
+    "These fixtures freeze detached preparation and revalidation only.",
+    "The upstream referencePlan is explicit input; this candidate validates it against the target directory but does not derive or authenticate the mapping decision.",
+    "No case proves product source authenticity, target enum endpoint completeness, real actor authorization, Store commit, UI, snapshot, preview/query network, save/reopen or Goal completion.",
+    "Fixture enum evidence tests the pure-function contract only; actual endpoint, identity and permissions remain NOT_RUN/BLOCKED."
+  ],
+  "base_revalidation_input": {
+    "currentRevision": 9,
+    "currentTargetSignature": "64943006319fdeda797bc2989efa7fd30f4596e3cf5cf06cd267dbe34d7a3f8d",
+    "currentTargetRoot": [
+      {
+        "id": "query-target-1",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "propValue": [],
+        "cascade": [],
+        "style": {
+          "width": 400,
+          "left": 10
+        }
+      },
+      {
+        "id": "chart-B",
+        "component": "Chart",
+        "innerType": "Chart",
+        "datasetId": "201",
+        "fieldIds": [
+          "province"
+        ],
+        "style": {
+          "width": 600,
+          "left": 450
+        }
+      },
+      {
+        "id": "text-keep",
+        "component": "VText",
+        "innerType": "VText",
+        "propValue": "keep me",
+        "style": {
+          "left": 1100
+        }
+      }
+    ],
+    "currentTargetComponents": [
+      {
+        "componentId": "chart-B",
+        "datasetId": "201",
+        "fieldIds": [
+          "province"
+        ]
+      }
+    ],
+    "currentEnumEvidence": {
+      "status": "resolved",
+      "targetComponentId": "query-target-1",
+      "targetRevision": 9,
+      "identityGeneration": 4,
+      "requestInput": {
+        "queryId": "province",
+        "displayId": "province",
+        "sort": "asc",
+        "sortId": "",
+        "resultMode": 0,
+        "searchText": "",
+        "filter": []
+      },
+      "requestKey": "139f0a07084eab14a3f8d442901271ce0feea4dd101f13b7249ad26ed350cdbb",
+      "values": [
+        {
+          "label": "A",
+          "value": "A-code"
+        },
+        {
+          "label": "B",
+          "value": "B-code"
+        }
+      ],
+      "complete": false
+    },
+    "handle": "opaque-handle-issued-by-QPP-001"
+  },
+  "revision": "r002"
+}

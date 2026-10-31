@@ -1,0 +1,67 @@
+{
+  "delivery_id": "S02-MVP-MAP-FIXTURE-r002",
+  "goal": "DE-S02-F01",
+  "purpose": "补齐现有地图UI要求的地理坐标语义类型，保留独立DECIMAL坐标值与身份",
+  "actions": [
+    {
+      "kind": "normal_dataset_UI_semantic_type",
+      "dataset_id": "1312472054565572608",
+      "dataset_name": "S02_MVP_Runtime_20261027",
+      "fields": [
+        {
+          "id": "1793083721152",
+          "name": "longitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_44cdca304e84f8d6",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721153",
+          "name": "latitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_176ca8c7d8fa07b1",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721155",
+          "name": "end_longitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_1741df101a91258e",
+          "datasetGroupId": "1312472054565572608"
+        },
+        {
+          "id": "1793083721156",
+          "name": "end_latitude",
+          "type": "DECIMAL",
+          "deType": 3,
+          "groupType": "q",
+          "dataeaseName": "f_dddf7a0fc8d331a7",
+          "datasetGroupId": "1312472054565572608"
+        }
+      ],
+      "change": "仅四坐标 deType 3→5，dateFormat 按现UI null→空串；groupType d和物理type DECIMAL/deExtractType3/原始值/ID保持。字段菜单更改类型→地理位置；不拼接坐标。"
+    }
+  ],
+  "admission_predicates": [
+    "r001已保存19字段，仅4个q→d；r002以保存后目录为前态",
+    "先逐项确认四个deType=3且groupType=d",
+    "现handleFieldMore location仅deType=5和dateFormat为空；沿已有UI，不改物理SQL/表",
+    "保存前后比19字段身份与30行，允许四个deType/dateFormat预期差异；数字显示格式差异逐项按CSV数值核对",
+    "先保存当前隔离仪表板可恢复状态，后改dataset；重开清理旧剪贴板，不跨目录身份使用旧clip"
+  ],
+  "restoration": "失败先读角色/type；只把本次确认为5的四项恢复float/deType3，dateFormat前态null若UI不支持恢复须显式记录，不声称逐字节回退",
+  "claims": "只证明fixture可用；后续同dataset图表复制/粘贴、实际地图绘制与正常保存重开仍需独立运行记录；真实权限BLOCKED/NOT_RUN",
+  "counterexamples": [
+    "不把deType5当真实经纬度值转换",
+    "不改物理DECIMAL或SQL，不拼接、降精度、复制字段",
+    "四字段之外变化立即停止并记录",
+    "不把地图正常画面当过滤粘贴已通过"
+  ],
+  "review_budget": "同地图fixture交付物累计2/3；r001只证明角色准备，不改历史报告。"
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "S02-MVP-20261031-restored-predicate",
+  "source_completion_rule_id": "S02-MVP-20261031-restored-completion",
+  "source_completion_rule_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "source_completion_rule_sha256": "70840f20dbab1176639c33c9a1d6dcdbc02784a056cdf67153e92fd80ae8b3a8",
+  "issued_by_authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+  "issued_by_authority_sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+  "issued_by_authority_id": "current-user",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "DE-EXEC-S036",
+            "DE-EXEC-S037",
+            "DE-EXEC-S038",
+            "DE-EXEC-S039",
+            "DE-EXEC-S040"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "human_decisions",
+          "operator": "none_pending_admissible"
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "independent_validation",
+            "final_diff",
+            "original_plan_coverage",
+            "post_closeout_reconciliation",
+            "supported_type_runtime_inventory",
+            "installed_plugin_inventory"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "lane": "data",
+  "gaps": [
+    {
+      "id": "DATA-G01",
+      "uncertainty": "全部数据库方言、Provider和插件尚未逐项执行。",
+      "next_action": "需要隔离数据库与方言回归，插件实现按专有边界另审。"
+    },
+    {
+      "id": "DATA-G02",
+      "uncertainty": "完整鉴权切面及XPack权限实现不在本lane深读范围。",
+      "next_action": "与access lane拼接静态调用证据；实际身份矩阵需运行验证。"
+    },
+    {
+      "id": "DATA-G03",
+      "uncertainty": "迁移只核实调度器成功/失败/重试状态，未逐个证明SqlBlock幂等。",
+      "next_action": "按实际历史版本和目标数据库建立隔离升级验证。"
+    },
+    {
+      "id": "DATA-G04",
+      "uncertainty": "CSV/Excel解析细节、远程下载协议及HTTP执行器未穷尽；分页算法按源码记录而非正确性背书。",
+      "next_action": "补读具体解析与网络执行器；使用受控文件和API分页夹具验证。"
+    },
+    {
+      "id": "DATA-G05",
+      "uncertainty": "未运行测试或读取对应测试文件，不能给出通过率。",
+      "next_action": "独立验证按产品核心场景补充静态复核或隔离测试证据。"
+    },
+    {
+      "id": "DATA-G06",
+      "uncertainty": "缓存失效全调用链与并发/引用共享未全面验证。",
+      "next_action": "针对元数据修改后读表字段与JCache/Redis分别验证。"
+    },
+    {
+      "id": "DATA-G07",
+      "uncertainty": "元数据事务与引擎DDL/文件写入跨资源原子性不由@Transactional自动证明。",
+      "next_action": "用失败注入核实部分接入失败时回滚/补偿行为。"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "chart_filter_payload_cases_v1",
+  "artifact_id": "S02-F01-chart-filter-payload-cases",
+  "round": "1/3",
+  "contract_ref": "ChartFilterPayloadDesign-r001.md#候选纯函数合同",
+  "scope": "detached JSON-shaped chart customFilter copy and leaf field metadata removal only",
+  "cases": [
+    {
+      "id": "TC-CFP-001",
+      "input": { "logic": "or", "items": [{ "fieldId": "f-1", "field": { "name": "Revenue" }, "term": "gt", "value": 10, "type": "item", "subTree": null }] },
+      "expected": { "ok": true, "payload": { "logic": "or", "items": [{ "fieldId": "f-1", "term": "gt", "value": 10, "type": "item", "subTree": null }] }, "input_unchanged": true, "output_deeply_detached": true }
+    },
+    {
+      "id": "TC-CFP-002",
+      "input": { "logic": "and", "items": [{ "logic": "or", "field": { "transient": true }, "subTree": { "logic": "or", "items": [{ "fieldId": "date-1", "field": { "name": "Date" }, "filterTypeTime": "dynamicDate", "dynamicTimeSetting": { "relativeToCurrent": "custom", "timeNum": 2 }, "value": null, "subTree": null }] } }] },
+      "expected": { "ok": true, "payload": { "logic": "and", "items": [{ "logic": "or", "field": { "transient": true }, "subTree": { "logic": "or", "items": [{ "fieldId": "date-1", "filterTypeTime": "dynamicDate", "dynamicTimeSetting": { "relativeToCurrent": "custom", "timeNum": 2 }, "value": null, "subTree": null }] } }] }, "input_unchanged": true, "output_deeply_detached": true }
+    },
+    {
+      "id": "TC-CFP-003",
+      "input": { "logic": "or", "items": [{ "fieldId": "f-2", "field": { "name": "Field" }, "custom": { "field": "business-data" }, "subTree": { "logic": "and", "items": [] } }] },
+      "expected": { "ok": true, "payload": { "logic": "or", "items": [{ "fieldId": "f-2", "custom": { "field": "business-data" }, "subTree": { "logic": "and", "items": [] } }] }, "input_unchanged": true, "output_deeply_detached": true }
+    },
+    {
+      "id": "TC-CFP-004",
+      "input": { "logic": "and", "items": [{ "fieldId": "f-3", "enumValue": ["A", "B"], "dynamicTimeSetting": { "relativeToCurrent": "today" }, "subTree": null }] },
+      "expected": { "ok": true, "payload": { "logic": "and", "items": [{ "fieldId": "f-3", "enumValue": ["A", "B"], "dynamicTimeSetting": { "relativeToCurrent": "today" }, "subTree": null }] }, "input_unchanged": true, "output_deeply_detached": true }
+    },
+    {
+      "id": "TC-CFP-005",
+      "input": { "items": [] },
+      "expected": { "ok": false, "reason": "INVALID_ROOT", "no_partial_payload": true }
+    },
+    {
+      "id": "TC-CFP-006",
+      "input_builder": "replace the object marker with JavaScript undefined before invoking the helper",
+      "input": { "logic": "or", "items": [{ "fieldId": "f-4", "subTree": null, "runtime": { "$fixture": "undefined" } }] },
+      "expected": { "ok": false, "reason": "UNSUPPORTED_VALUE", "no_partial_payload": true }
+    }
+  ],
+  "forbidden_claims": ["product_chart_copy_paste_pass", "permission_verified", "source_read_authorized", "target_commit_atomic", "goal_ac_accepted"]
+}

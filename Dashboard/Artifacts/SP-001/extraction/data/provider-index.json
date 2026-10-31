@@ -1,0 +1,59 @@
+{
+  "scope": "静态Provider路由与存储引擎入口清单；不是运行支持认证",
+  "query_provider_facts": [
+    "DATA-006",
+    "DATA-060",
+    "DATA-061",
+    "DATA-062",
+    "DATA-063"
+  ],
+  "engine_selector_fact": "DATA-064",
+  "engines": [
+    {
+      "name": "Mysql",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/MysqlEngineProvider.java",
+      "difference": "mysqlEngine；反引号；CREATE TABLE IF NOT EXISTS；无需先查表",
+      "fact_id": "DATA-065"
+    },
+    {
+      "name": "Pg",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/PgEngineProvider.java",
+      "difference": "pgEngine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表",
+      "fact_id": "DATA-066"
+    },
+    {
+      "name": "H2",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/H2EngineProvider.java",
+      "difference": "h2Engine；双引号；CREATE TABLE IF NOT EXISTS；无需先查表",
+      "fact_id": "DATA-067"
+    },
+    {
+      "name": "Oracle",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/OracleEngineProvider.java",
+      "difference": "oracleEngine；双引号；CREATE TABLE；需先查表",
+      "fact_id": "DATA-068"
+    },
+    {
+      "name": "Dm",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/DmEngineProvider.java",
+      "difference": "dmEngine；双引号；CREATE TABLE；需先查表",
+      "fact_id": "DATA-069"
+    },
+    {
+      "name": "SqlServer",
+      "entry": "core/core-backend/src/main/java/io/dataease/datasource/provider/SqlServerEngineProvider.java",
+      "difference": "sqlServerEngine；方括号；CREATE TABLE；需先查表",
+      "fact_id": "DATA-070"
+    },
+    {
+      "name": "Kingbase",
+      "fact_id": "DATA-071",
+      "difference": "继承Pg无覆盖"
+    },
+    {
+      "name": "StarRocks",
+      "fact_id": "DATA-071",
+      "difference": "继承Mysql；自定义HASH建表"
+    }
+  ]
+}

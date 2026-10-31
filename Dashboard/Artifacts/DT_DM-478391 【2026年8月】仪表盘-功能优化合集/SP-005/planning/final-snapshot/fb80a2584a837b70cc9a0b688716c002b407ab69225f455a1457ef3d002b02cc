@@ -1,0 +1,37 @@
+# S01 调查收尾候选
+
+## 交付与结论边界
+
+本轮交付八功能静态连接点、影响与依赖分析，171 AC验证映射、19 fixture与14 issue追溯，以及七功能相关本机既有链路与配置保存重开的局部运行证据。70条静态claim摘要复查无漂移。最终独立结论见 [独立审查](IndependentReviewFindings.md)，当前Goal仍未宣告完成；Gate输出槽位为 stop-gate/receipt-final.json。
+
+按 [用户批准差异](ScopeDelta-r001.md)，真实权限实例与指定App/真设备两项延期，均未验证、不计通过。156题、171 AC、19 fixture、14 issue保持完整。S02–S09为候选进入材料，不是设计冻结或开发批准；F02设备与真实权限仍限制相应后续验收。
+
+## 十项验收对账
+
+| S01 AC | 证据 | 当前边界 |
+|---|---|---|
+| 01 | [输入清单](InputManifest.md)、[上下文](S01_ContextBootstrap.md)、SourceSnapshot.json | 固定来源；XPack未初始化 |
+| 02–03 | [F01–F04](FunctionConnectionMap_F01-F04.md)、[F05–F08](FunctionConnectionMap_F05-F08.md)、ClaimsLedger-r002.json | 八功能静态事实/推断/缺口分开 |
+| 04 | [B2c报告](B2c-Runtime-Result.md)、[摘要复核](FinalCandidateChecks.json) | 局部运行，非全部产品AC；两项延期 |
+| 05 | [技术影响](TechnicalImpactMatrix.md)、[依赖图](DependencyGraph.md) | 技术建议，非需求重裁定 |
+| 06 | TestabilityMatrix-r012.json、FixtureTraceLedger.json、TechnicalDependencyLedger-r002.json、ACGapLedger.json | 76部分静态绑定、95显式gap；不删分母、不冒充验收 |
+| 07 | [进入包](S02-S09_EntryPacket.md) | 8片有条件/阻塞，均未授权开发 |
+| 08 | [运行清理](B2c-cleanup-result.json)、[构建](B1-Build-Verified.md) | 经批准构建/初始化/运行/合成数据；本轮对象清理，日志缓存未回滚 |
+| 09 | IndependentReviewFindings.md | 独立主体输出槽位，不预填通过 |
+| 10 | FinalCandidateChecks.json、planning/final-inventory.json、最终Gate | 正在对账，未提前终态 |
+
+## 副作用与实现变更
+
+没有产品源码、API、业务规则实现变更；Implementation Delta对产品不适用。本轮新增调查文档与取证辅助脚本，执行了用户批准的SDK安装、后端构建、前后端启动、既有初始化/迁移和合成对象写入。构建跳过测试。辅助脚本仅供本轮隔离取证；不作为产品或生产运维接口。数据库对象、导出文件及本轮进程清理详见运行报告。既有初始化、日志与缓存未回滚。
+
+源码保持只读，未提交、推送、发布、初始化XPack或改KYM/TCO/稳定KB。Dashboard四面是执行状态，stable KB无新稳定规则需要提升，因此不适用；项目无Session registry工具，仅人工对账。
+
+## 治理与未闭合项
+
+主代理承担Design/Builder/Closure，前期连接点调查及Goal预审有独立主体；完整成果最终审查另起卡片，不复用预审结论。用户scope delta原文来源已定位，见 planning/scope-approval-source.json。当前goal_patch.py要求用户消息含显式机器token，现有自然语言批准不含该token；不得自行伪造或重写authority root。此程序化来源绑定需独立审查确认处置，不影响其余已授权调查工作。
+
+本次恢复在更新部分运行台账前未另备份这些未跟踪文件的原始字节；旧观察可从既有B2b报告与会话取证，但不能把重建内容当原始备份。其余收尾状态面修改前备份于planning/pre-closeout-backup。该保全偏差交独立审查，不隐去。
+
+后续动作：完成独立审查及finding处置，处理机器来源绑定，再运行最终Stop Gate。无论本轮结果如何，真实权限/真设备、复杂树复制、5000边界、导出下载端、全部汇总槽位等仍按各Slice原AC补测。
+
+Closeout language verdict: PASS（中文收尾语言检查通过；实际脚本结果见 planning/closeout-language-r002.txt）。

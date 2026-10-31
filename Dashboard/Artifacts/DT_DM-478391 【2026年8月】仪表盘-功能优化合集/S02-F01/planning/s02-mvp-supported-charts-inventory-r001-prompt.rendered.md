@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-supported-charts-inventory-r001-card.json
+Card SHA-256: 2012174e2e9160a0ca7723d4d2a05d68bdff5ed06139d24fbd6e1f276f0100b0
+Verify: python3 .codex/skills/sge-governed-checkpoints-sp010/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-supported-charts-inventory-r001-card.json --repo . --expected-card-sha256 2012174e2e9160a0ca7723d4d2a05d68bdff5ed06139d24fbd6e1f276f0100b0
+Lane: design | Session: DE-S02-F01 | Role: design
+Mode: full_baseline
+Working directory: .
+Execute: 复验Card/Context，直接source inventory，不再写通用异步资源Design。用户已批准新范围：全部受支持图表基本过滤条件（含已有两个条件，不只一个树样本），开发同页同编辑会话、权限测试桩真实query/save链。以当前ChartViewManager glob真实注册、各constructor name/render/library/继承、产品图表palette元数据、Editor显示过滤入口条件、chartData公共后端链为据列完整内建图表；要区分palette可选/已注册/无过滤能力/插件未知，不能仅目录名推断。扩读明确源码（no-ignore排target/node_modules等），给每个type稳定ID/render/library/class/source路径SHA/行锚、filter是否支持及证据、同dataset/字段承载兼容依据/明确拒绝原因；table/pivot/heatmap/map/other各renderer都纳入，产品实际没有过滤能力可以排但须依据，不可默默漏掉。查询组件不是图表，本轮迁后续单独注明；插件无法确定实际installed则Unknown并定义运行补查，不宣称全runtime清单。给matrix或等价分层规则覆盖全部source×target不必展开N²重复，类别sameDataset/fieldcompat/no-filter/unsupported结构均明确反馈；动态日期/复杂结构可按真实能力明确拒绝与后续Session，但不能把所有图表偷换为line。说明目前FilterTree serializer真实输出结构/字段（缺失undefined动态值），如何复用真实UI两个条件样本，如何在Editor专用copy/paste入口复用全type路径。给每type验证层计划：静态支持、payload/组件检查、真实family代表E2E与未验项，严禁notrun类型填pass。你仅写SupportedCharts JSON/MD，底层不是新业务合同；尽快交GoalAgent/root用于当前TSP评审和直接UIbuild，不再研究通用stage/Carousel。

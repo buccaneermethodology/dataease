@@ -1,0 +1,371 @@
+# Repo evidence: core/core-backend/src/main/java/io/dataease/dataset/manage/DatasetDataManage.java
+package io.dataease.dataset.manage;
+import io.dataease.utils.LogUtil;
+
+import io.dataease.api.chart.dto.DeSortField;
+import io.dataease.api.dataset.dto.*;
+import io.dataease.api.dataset.union.DatasetGroupInfoDTO;
+import io.dataease.api.dataset.union.DatasetTableInfoDTO;
+import io.dataease.api.permissions.auth.dto.BusiPerCheckDTO;
+import io.dataease.api.permissions.dataset.api.RowPermissionsApi;
+import io.dataease.api.permissions.dataset.dto.DataSetRowPermissionsTreeDTO;
+import io.dataease.api.permissions.user.vo.UserFormVO;
+import io.dataease.chart.utils.ChartDataBuild;
+import io.dataease.commons.utils.SqlVariableHandleResult;
+import io.dataease.commons.utils.SqlparserUtils;
+import io.dataease.constant.AuthEnum;
+import io.dataease.constant.BusiResourceEnum;
+import io.dataease.constant.SQLConstants;
+import io.dataease.dao.auto.entity.CoreDatasource;
+import io.dataease.dataset.constant.DatasetTableType;
+import io.dataease.dataset.utils.DatasetUtils;
+import io.dataease.dataset.utils.FieldUtils;
+import io.dataease.dataset.utils.SqlUtils;
+import io.dataease.dataset.utils.TableUtils;
+import io.dataease.datasource.dao.auto.repository.CoreDatasourceRepository;
+import io.dataease.datasource.manage.DataSourceManage;
+import io.dataease.datasource.manage.EngineManage;
+import io.dataease.datasource.utils.DatasourceUtils;
+import io.dataease.engine.constant.ExtFieldConstant;
+import io.dataease.engine.sql.SQLProvider;
+import io.dataease.engine.trans.*;
+import io.dataease.engine.utils.SQLUtils;
+import io.dataease.engine.utils.Utils;
+import io.dataease.exception.DEException;
+import io.dataease.extensions.datasource.api.PluginManageApi;
+import io.dataease.extensions.datasource.constant.SqlPlaceholderConstants;
+import io.dataease.extensions.datasource.dto.*;
+import io.dataease.extensions.datasource.factory.ProviderFactory;
+import io.dataease.extensions.datasource.model.SQLMeta;
+import io.dataease.extensions.datasource.provider.Provider;
+import io.dataease.extensions.datasource.vo.DatasourceConfiguration;
+import io.dataease.extensions.view.dto.ChartExtFilterDTO;
+import io.dataease.extensions.view.dto.ChartExtRequest;
+import io.dataease.extensions.view.dto.ColumnPermissionItem;
+import io.dataease.extensions.view.dto.SqlVariableDetails;
+import io.dataease.i18n.Translator;
+import io.dataease.permission.util.V3UserUtil;
+import io.dataease.system.manage.CorePermissionManage;
+import io.dataease.utils.BeanUtils;
+import io.dataease.utils.JsonUtil;
+import io.dataease.utils.TreeUtils;
+import jakarta.annotation.Resource;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static io.dataease.chart.manage.ChartDataManage.START_END_SEPARATOR;
+import static io.dataease.dataset.utils.TableUtils.format;
+
+/**
+ * @Author Junjun
+ */
+@Component
+public class DatasetDataManage {
+    @Resource
+    private DatasetSQLManage datasetSQLManage;
+    @Autowired
+    private CoreDatasourceRepository coreDatasourceRepository;
+    @Resource
+    private DatasetTableFieldManage datasetTableFieldManage;
+    @Resource
+    private EngineManage engineManage;
+    @Resource
+    private DatasetGroupManage datasetGroupManage;
+    @Resource
+    private PermissionManage permissionManage;
+    @Resource
+    private DatasetTableSqlLogManage datasetTableSqlLogManage;
+    @Autowired(required = false)
+    private PluginManageApi pluginManage;
+    @Resource
+    private CorePermissionManage corePermissionManage;
+    @Autowired(required = false)
+    private RowPermissionsApi rowPermissionsApi;
+    @Resource
+    private DataSourceManage dataSourceManage;
+    @Resource
+    private DatasetCacheManage datasetCacheManage;
+
+    private static Logger logger = LoggerFactory.getLogger(DatasetDataManage.class);
+
+    private RowPermissionsApi getRowPermissionsApi() {
+        return rowPermissionsApi;
+    }
+
+    public static final List<String> notFullDs = List.of("mysql", "mariadb", "Excel", "API", "H2", "h2");
+
+    public List<DatasetTableFieldDTO> getTableFields(DatasetTableDTO datasetTableDTO) throws Exception {
+        List<DatasetTableFieldDTO> list = null;
+        List<TableField> tableFields = null;
+        String type = datasetTableDTO.getType();
+        DatasetTableInfoDTO tableInfoDTO = JsonUtil.parseObject(datasetTableDTO.getInfo(), DatasetTableInfoDTO.class);
+        if (StringUtils.equalsIgnoreCase(type, DatasetTableType.DB) || StringUtils.equalsIgnoreCase(type, DatasetTableType.SQL)) {
+            if (StringUtils.equalsIgnoreCase(type, DatasetTableType.DB)) {
+                // check table name
+                datasetCacheManage.validateTable(datasetTableDTO.getDatasourceId(), tableInfoDTO.getTable());
+            }
+            CoreDatasource coreDatasource = dataSourceManage.getCoreDatasource(datasetTableDTO.getDatasourceId());
+            DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+            if (coreDatasource.getType().contains(DatasourceConfiguration.DatasourceType.Excel.name()) || coreDatasource.getType().contains(DatasourceConfiguration.DatasourceType.API.name())) {
+                coreDatasource = engineManage.getDeEngine();
+            }
+            if (StringUtils.isNotEmpty(coreDatasource.getStatus()) && "Error".equalsIgnoreCase(coreDatasource.getStatus())) {
+                DEException.throwException(Translator.get("i18n_invalid_ds"));
+            }
+            BeanUtils.copyBean(datasourceSchemaDTO, coreDatasource);
+            datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+            Provider provider = ProviderFactory.getProvider(coreDatasource.getType());
+
+            DatasourceRequest datasourceRequest = new DatasourceRequest();
+            datasourceRequest.setIsCross(datasetTableDTO.getIsCross());
+            datasourceRequest.setDsList(Map.of(datasourceSchemaDTO.getId(), datasourceSchemaDTO));
+            String sql;
+            if (StringUtils.equalsIgnoreCase(type, DatasetTableType.DB)) {
+                // add table schema
+                sql = TableUtils.tableName2Sql(datasourceSchemaDTO, tableInfoDTO.getTable()) + " LIMIT 0 OFFSET 0";
+                // replace schema alias, trans dialect
+                Map map = JsonUtil.parseObject(datasourceSchemaDTO.getConfiguration(), Map.class);
+                if (!datasourceRequest.getIsCross()) {
+                    if (ObjectUtils.isNotEmpty(map.get("schema"))) {
+                        sql = sql.replaceAll(SqlPlaceholderConstants.KEYWORD_PREFIX_REGEX + datasourceSchemaDTO.getSchemaAlias() + SqlPlaceholderConstants.KEYWORD_SUFFIX_REGEX, String.format(format, map.get("schema").toString()));
+                    } else {
+                        sql = sql.replaceAll(SqlPlaceholderConstants.KEYWORD_PREFIX_REGEX + datasourceSchemaDTO.getSchemaAlias() + SqlPlaceholderConstants.KEYWORD_SUFFIX_REGEX + "\\.", "");
+                    }
+                    sql = provider.transSqlDialect(sql, datasourceRequest.getDsList());
+                } else {
+                    sql = sql.replaceAll(SqlPlaceholderConstants.KEYWORD_PREFIX_REGEX + datasourceSchemaDTO.getSchemaAlias() + SqlPlaceholderConstants.KEYWORD_SUFFIX_REGEX + "\\.", "");
+                    String tableSchema = datasetSQLManage.putObj2Map(datasourceRequest.getDsList(), datasetTableDTO, datasourceRequest.getIsCross());
+                    sql = SqlUtils.addSchema(sql, tableSchema);
+                }
+            } else {
+                // parser sql params and replace default value
+                String s = new String(Base64.getDecoder().decode(tableInfoDTO.getSql()));
+                s = provider.replaceComment(s);
+                SqlVariableHandleResult sqlResult = new SqlparserUtils().handleVariableDefaultValueWithPreparedParams(s, datasetTableDTO.getSqlVariableDetails(), true, false, null, datasourceRequest.getIsCross(), datasourceRequest.getDsList(), pluginManage, getUserEntity());
+                String originSql = sqlResult.getSql();
+                datasourceRequest.setTableFieldWithValues(sqlResult.getTableFieldWithValues());
+                // add sql table schema
+
+                if (!datasourceRequest.getIsCross()) {
+                    sql = SQLUtils.buildOriginPreviewSql(SqlPlaceholderConstants.TABLE_PLACEHOLDER, 0, 0);
+                    sql = provider.transSqlDialect(sql, datasourceRequest.getDsList());
+                    // replace placeholder
+                    sql = provider.replaceTablePlaceHolder(sql, originSql);
+                } else {
+                    String tableSchema = datasetSQLManage.putObj2Map(datasourceRequest.getDsList(), datasetTableDTO, datasourceRequest.getIsCross());
+                    sql = SqlUtils.addSchema(originSql, tableSchema);
+                }
+            }
+            datasourceRequest.setQuery(sql.replaceAll("\r\n", " ").replaceAll("\n", " "));
+            logger.debug("calcite data table field sql: " + datasourceRequest.getQuery());
+            // 获取数据源表的原始字段
+            if (StringUtils.equalsIgnoreCase(type, DatasetTableType.DB)) {
+                datasourceRequest.setTable(tableInfoDTO.getTable());
+            }
+
+            tableFields = provider.fetchTableField(datasourceRequest);
+        } else if (StringUtils.equalsIgnoreCase(type, DatasetTableType.Es)) {
+            CoreDatasource coreDatasource = dataSourceManage.getCoreDatasource(datasetTableDTO.getDatasourceId());
+            Provider provider = ProviderFactory.getProvider(type);
+            DatasourceRequest datasourceRequest = new DatasourceRequest();
+            DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+            BeanUtils.copyBean(datasourceSchemaDTO, coreDatasource);
+            datasourceRequest.setDatasource(datasourceSchemaDTO);
+            datasourceRequest.setTable(datasetTableDTO.getTableName());
+            tableFields = provider.fetchTableField(datasourceRequest);
+        } else {
+            // check table name
+            datasetCacheManage.validateTable(datasetTableDTO.getDatasourceId(), tableInfoDTO.getTable());
+            // excel,api
+            CoreDatasource coreDatasource = engineManage.getDeEngine();
+            DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+            BeanUtils.copyBean(datasourceSchemaDTO, coreDatasource);
+            datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+            Provider provider = ProviderFactory.getProvider(datasourceSchemaDTO.getType());
+
+            DatasourceRequest datasourceRequest = new DatasourceRequest();
+            datasourceRequest.setDsList(Map.of(datasourceSchemaDTO.getId(), datasourceSchemaDTO));
+            String sql = TableUtils.tableName2Sql(datasourceSchemaDTO, tableInfoDTO.getTable()) + " LIMIT 0 OFFSET 0";
+            // replace schema alias, trans dialect
+            sql = Utils.replaceSchemaAlias(sql, datasourceRequest.getDsList());
+
+            Map map = JsonUtil.parseObject(datasourceSchemaDTO.getConfiguration(), Map.class);
+            if (ObjectUtils.isNotEmpty(map.get("schema"))) {
+                sql = sql.replaceAll(SqlPlaceholderConstants.KEYWORD_PREFIX_REGEX + datasourceSchemaDTO.getSchemaAlias() + SqlPlaceholderConstants.KEYWORD_SUFFIX_REGEX, String.format(format, map.get("schema").toString()));
+            }
+            sql = provider.transSqlDialect(sql, datasourceRequest.getDsList());
+            datasourceRequest.setQuery(sql);
+            logger.debug("calcite data table field sql: " + datasourceRequest.getQuery());
+            tableFields = provider.fetchTableField(datasourceRequest);
+        }
+        return transFields(tableFields, true);
+    }
+
+    public List<DatasetTableFieldDTO> transFields(List<TableField> tableFields, boolean defaultStatus) {
+        return tableFields.stream().map(ele -> {
+            DatasetTableFieldDTO dto = new DatasetTableFieldDTO();
+            dto.setName(StringUtils.isNotEmpty(ele.getName()) ? ele.getName() : ele.getOriginName());
+            dto.setOriginName(ele.getOriginName());
+            dto.setChecked(defaultStatus);
+            dto.setType(ele.getType());
+            int deType = FieldUtils.transType2DeType(ele.getType());
+            dto.setDeExtractType(ObjectUtils.isEmpty(ele.getDeExtractType()) ? deType : ele.getDeExtractType());
+            dto.setDeType(ObjectUtils.isEmpty(ele.getDeType()) ? deType : ele.getDeType());
+            dto.setGroupType(FieldUtils.transDeType2DQ(dto.getDeType()));
+            dto.setExtField(0);
+            dto.setDescription(StringUtils.isNotEmpty(ele.getName()) ? ele.getName() : null);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> previewDataWithLimit(DatasetGroupInfoDTO datasetGroupInfoDTO, Integer start, Integer count, boolean checkPermission, boolean encode) throws Exception {
+        if (encode) {
+            DatasetUtils.dsDecode(datasetGroupInfoDTO);
+        }
+
+        // 获取allFields
+        List<DatasetTableFieldDTO> fields = datasetGroupInfoDTO.getAllFields();
+        if (ObjectUtils.isEmpty(fields)) {
+            DEException.throwException(Translator.get("i18n_no_fields"));
+        }
+
+        Map<String, Object> sqlMap = datasetSQLManage.getUnionSQLForEdit(datasetGroupInfoDTO, null);
+        String sql = (String) sqlMap.get("sql");
+
+        Map<String, ColumnPermissionItem> desensitizationList = new HashMap<>();
+        if (checkPermission) {
+            fields = permissionManage.filterColumnPermissions(fields, desensitizationList, datasetGroupInfoDTO.getId(), null);
+            if (ObjectUtils.isEmpty(fields)) {
+                DEException.throwException(Translator.get("i18n_no_column_permission"));
+            }
+        }
+        buildFieldName(sqlMap, fields);
+        Map<Long, DatasourceSchemaDTO> dsMap = (Map<Long, DatasourceSchemaDTO>) sqlMap.get("dsMap");
+        DatasourceUtils.checkDsStatus(dsMap);
+        List<String> dsList = new ArrayList<>();
+        for (Map.Entry<Long, DatasourceSchemaDTO> next : dsMap.entrySet()) {
+            dsList.add(next.getValue().getType());
+        }
+        boolean needOrder = Utils.isNeedOrder(dsList);
+        boolean crossDs = datasetGroupInfoDTO.getIsCross();
+        if (!crossDs) {
+            if (notFullDs.contains(dsMap.entrySet().iterator().next().getValue().getType()) && (boolean) sqlMap.get("isFullJoin")) {
+                DEException.throwException(Translator.get("i18n_not_full"));
+            }
+            sql = Utils.replaceSchemaAlias(sql, dsMap);
+        }
+        List<DataSetRowPermissionsTreeDTO> rowPermissionsTree = new ArrayList<>();
+        Long uid = V3UserUtil.getUid();
+        if (uid != null && checkPermission) {
+            rowPermissionsTree = permissionManage.getRowPermissionsTree(datasetGroupInfoDTO.getId(), uid);
+        }
+        Provider provider;
+        if (crossDs) {
+            provider = ProviderFactory.getDefaultProvider();
+        } else {
+            provider = ProviderFactory.getProvider(dsList.getFirst());
+        }
+
+        // build query sql
+        SQLMeta sqlMeta = new SQLMeta();
+        Table2SQLObj.table2sqlobj(sqlMeta, null, "(" + sql + ")", crossDs);
+        Field2SQLObj.field2sqlObj(sqlMeta, fields, fields, crossDs, dsMap, Utils.getParams(fields), null, pluginManage);
+        WhereTree2Str.transFilterTrees(sqlMeta, rowPermissionsTree, fields, crossDs, dsMap, Utils.getParams(fields), null, pluginManage);
+        Order2SQLObj.getOrders(sqlMeta, datasetGroupInfoDTO.getSortFields(), fields, crossDs, dsMap, Utils.getParams(fields), null, pluginManage);
+        String querySQL;
+        if (start == null || count == null) {
+            querySQL = SQLProvider.createQuerySQL(sqlMeta, false, needOrder, false);
+        } else {
+            querySQL = SQLProvider.createQuerySQLWithLimit(sqlMeta, false, needOrder, false, start, count);
+        }
+        querySQL = provider.rebuildSQL(querySQL, sqlMeta, crossDs, dsMap);
+        logger.debug("calcite data preview sql: " + querySQL);
+
+        // 通过数据源请求数据
+        // 调用数据源的calcite获得data
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        datasourceRequest.setQuery(querySQL);
+        datasourceRequest.setDsList(dsMap);
+        datasourceRequest.setIsCross(crossDs);
+        applyPreparedParams(datasourceRequest, sqlMap);
+        Map<String, Object> data = provider.fetchResultField(datasourceRequest);
+
+        Map<String, Object> map = new LinkedHashMap<>();
+        // 重新构造data
+        Map<String, Object> previewData = buildPreviewData(data, fields, desensitizationList, encode);
+        map.put("data", previewData);
+        if (ObjectUtils.isEmpty(datasetGroupInfoDTO.getId())) {
+            map.put("allFields", fields);
+        } else {
+            List<DatasetTableFieldDTO> fieldList = datasetTableFieldManage.selectByDatasetGroupId(datasetGroupInfoDTO.getId());
+            if (encode) {
+                DatasetUtils.listEncode(fieldList);
+            }
+            map.put("allFields", fieldList);
+        }
+        map.put("sql", Base64.getEncoder().encodeToString(querySQL.getBytes()));
+        return map;
+    }
+
+    public Long getDatasetTotal(Long datasetGroupId) throws Exception {
+        DatasetGroupInfoDTO dto = datasetGroupManage.getForCount(datasetGroupId);
+        if (ObjectUtils.isEmpty(dto)) return 0L;
+        if (StringUtils.equalsIgnoreCase(dto.getNodeType(), "dataset")) {
+            return getDatasetTotal(dto, null, new ChartExtRequest());
+        }
+        return 0L;
+    }
+
+    public Long getDatasetCountWithWhere(Long datasetGroupId) {
+        try {
+            DatasetGroupInfoDTO datasetGroupInfoDTO = datasetGroupManage.getForCount(datasetGroupId);
+            Map<String, Object> sqlMap = datasetSQLManage.getUnionSQLForEdit(datasetGroupInfoDTO, null);
+            String sql = (String) sqlMap.get("sql");
+
+            // 获取allFields
+            List<DatasetTableFieldDTO> fields = datasetGroupInfoDTO.getAllFields();
+            if (ObjectUtils.isEmpty(fields)) {
+                DEException.throwException(Translator.get("i18n_no_fields"));
+            }
+
+            buildFieldName(sqlMap, fields);
+
+            Map<Long, DatasourceSchemaDTO> dsMap = (Map<Long, DatasourceSchemaDTO>) sqlMap.get("dsMap");
+            DatasourceUtils.checkDsStatus(dsMap);
+            List<String> dsList = new ArrayList<>();
+            for (Map.Entry<Long, DatasourceSchemaDTO> next : dsMap.entrySet()) {
+                dsList.add(next.getValue().getType());
+            }
+            boolean crossDs = datasetGroupInfoDTO.getIsCross();
+            if (!crossDs) {
+                if (notFullDs.contains(dsMap.entrySet().iterator().next().getValue().getType()) && (boolean) sqlMap.get("isFullJoin")) {
+                    DEException.throwException(Translator.get("i18n_not_full"));
+                }
+                sql = Utils.replaceSchemaAlias(sql, dsMap);
+            }
+
+            List<DataSetRowPermissionsTreeDTO> rowPermissionsTree = new ArrayList<>();
+            Long uid = V3UserUtil.getUid();
+            if (uid != null) {
+                rowPermissionsTree = permissionManage.getRowPermissionsTree(datasetGroupInfoDTO.getId(), uid);
+            }
+
+            Provider provider;
+            if (crossDs) {
+                provider = ProviderFactory.getDefaultProvider();
+            } else {
+                provider = ProviderFactory.getProvider(dsList.getFirst());
+            }
+
+            // build query sql
+            SQLMeta sqlMeta = new SQLMeta();
+            Table2SQLObj.table2sqlobj(sqlMeta, null, "(" + sql + ")", crossDs);

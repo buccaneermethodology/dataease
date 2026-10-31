@@ -1,0 +1,118 @@
+{
+  "schema_version": "s02_saved_canvas_owner_implementation_contract_r001",
+  "contract_id": "S02-SAVED-CANVAS-OWNER-001",
+  "revision": "r002",
+  "status": "CANDIDATE_FOR_INDEPENDENT_REVIEW",
+  "goal": {
+    "id": "DE-S02-F01",
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "design_ref": "QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+  "cases_ref": "QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+  "exact_targets": {
+    "source": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+    "runner": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+    "case_fixture": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+    "creation_regression": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts"
+  },
+  "export_contract": {
+    "factory": "createSavedCanvasOwnerLifecycle",
+    "factory_methods": [
+      "beginLoadedResourceSession",
+      "registerTarget",
+      "validate",
+      "validateRegistration",
+      "invalidate"
+    ],
+    "factory_input": "getCurrentContext: () => SavedCanvasContext | null",
+    "owner_handle": "opaque object minted only by this factory; never serialized or reconstructed",
+    "registration_token": "opaque object minted by this factory and bound to one owner generation, target id, and raw target object"
+  },
+  "acceptance": {
+    "identity_cases": "Run every case id in QuerySingleSelectSavedCanvasOwnerCases-r004.json unchanged and in declared order.",
+    "identity_assertions": [
+      "exact API success/error shape and error precedence",
+      "owner state, reason/error, generation, and registration ids as declared",
+      "raw canvas/root/target reference identity according to resolved object references",
+      "duplicate same-id/same-raw registration returns the exact first opaque token object",
+      "validateRegistration checks captured returned tokens, not equal labels",
+      "owner invalidation is one-shot, increments generation once, and invalidates all old tokens",
+      "source_read remains false and paste_commit remains false for every case"
+    ],
+    "creation_regression": "Run the existing query-single-select-session.test.ts with its normal implementation path and assert its current creation-owner cases pass; this helper must not be called by or replace createQuerySingleSelectLifecycleOwner.",
+    "excluded_behavior": [
+      "no product UI, Pinia/Store, saved-canvas producer, or Vue adapter",
+      "no readDesign, source configuration access, copy/paste, target commit, preview, query, history, or save",
+      "no authorization/authentication claim and no mock/standalone permission substitution",
+      "no cached restore/create/copy/template owner creation",
+      "no modifications to existing created-resource lifecycle implementation"
+    ]
+  },
+  "trusted_red": {
+    "required": true,
+    "runner_target": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+    "runner_mode": "same byte-identical runner supports RED and GREEN. In RED, a compile-time-selected local fallback implements every public method with stable UNIMPLEMENTED result envelopes and exposes no extra API; case loop continues independently for all 40 identities.",
+    "source_absent_precondition": "The exact source path must be absent before RED. Verify this with a deterministic filesystem assertion before invoking runner; absence is not inferred from an import failure.",
+    "setup_success": "Runner validates fixture schema/count/order, checks Node v24.21.0 and local esbuild availability, loads RED adapter, and records setup_status=ok before any case assertion. Any setup/import/preflight exception is execution=error, behavior=not_evaluated, red_candidate=false.",
+    "per_case": "For all 40 frozen case IDs, execute the same step interpreter with the UNIMPLEMENTED adapter. Record expected semantic assertion failure separately from exceptions; all 40 cases must be reached and each failure must be attributable to the asserted expected API behavior, not missing methods or uncaught errors.",
+    "terminal": "A valid RED has exit 1, setup_status=ok, all 40 cases executed, 40 expected behavior mismatches, zero execution errors, and SHA-256 manifest for runner bytes, fixture bytes, ordered case IDs, contract bytes, runtime version, and dependency list.",
+    "durable_outputs": [
+      "stdout",
+      "stderr",
+      "exitcode",
+      "identity manifest",
+      "case failure classification"
+    ],
+    "green_guard": "GREEN must hard-fail if source is absent or if RED fallback mode is selected; dynamically bundle/import the exact source, run all same 40 identities, then run creation regression. No case order, fixture, runner, or contract changes between RED and GREEN."
+  },
+  "green": {
+    "identity": "reuse byte-identical runner and r004 fixture with source present",
+    "expected": "all 40 frozen identity cases pass and creation regression passes"
+  },
+  "claim_ceiling": "仅 detached saved-canvas owner helper 与同身份 fixture runner 及既有创建型 owner 回归；不代表 Store/UI 接线、真实身份/权限、复制粘贴、保存重开或任何 Goal AC/产品义务已通过。",
+  "implementation_entry": "Only after r002 independent review accepts these observability and identity rules, preserve trusted RED with the final runner bytes, then validate a fresh action=builder execution admission bound to exact source|runner target, Goal, this contract, implementation Context, r002 design review, and current topology.",
+  "supersedes": "QuerySingleSelectSavedCanvasOwnerImplementationContract-r001.json",
+  "oracle_mapping": {
+    "owner_state": "Never inspect private handle data. Derive final owner state/reason/generation/registrationIds from validate(owner) executed as the final observable call when a fixture expects these fields; preserve its returned object and compare exact relevant fields.",
+    "begin_and_epoch": "Assert each begin response exact discriminant and error. Retain every successful owner handle in a named map. epoch/factory_epoch_count is the runner count of successful begin responses from the same factory, not a product field.",
+    "registration_ids_and_generation": "Derive final registrations and generation only from OwnerValidity returned by validate(owner) at the fixture-declared observation point; compare ordered registrationIds and generation.",
+    "operation_errors": "For each call step compare the full discriminated result shape; registration errors come from result.error, owner validity errors from result.reason, validateRegistration errors from result.error.",
+    "tokens": "Store the exact token returned from each successful register call as firstRegistrationToken/secondRegistrationToken/lastRegistrationToken. Compare first===second for case 039; pass the captured objects to validateRegistration and compare exact result shapes.",
+    "identity": "Resolve every fixture ref to a live object before API invocation. For root, canvas, and target identity steps use strict reference equality at the runner boundary; never convert ref paths to strings as evidence.",
+    "source_context_preserved": "Snapshot the injected context object before helper calls and assert helper calls did not mutate its own keys or replace its canvas/root references; fixture setCurrentContext changes are performed by runner only.",
+    "source_read_and_paste_commit": "These are static exclusion predicates, not runtime claims: runner rejects any API export or invocation named readDesign/copy/paste/commit/query/preview/save and test fixture must show zero such calls. Report as excluded by module/API surface; do not treat a fixture boolean as runtime proof.",
+    "authorization_claim": "Assert no authorization/authentication/permission property is present in exported result keys or public API shape; this is an API surface boundary only, not a permission test.",
+    "create_owner_called_and_existing_create_owner_behavior": "Do not infer from fixture constants. Assert helper module exports only the saved-owner factory and run the frozen existing creation lifecycle regression command with both forced-unimplemented variables unset; its real test exit is the evidence.",
+    "saved_owner_and_cache_restore": "Derive from begin response presence/absence and exact error; no separate saved-owner flag may be synthesized.",
+    "reopen_allowed_and_byte_for_byte_claim": "Treat as design-boundary fields: compare false to frozen expected only alongside absence of reopen/serialization/byte-comparison methods in the helper API; do not claim runtime persistence behavior."
+  },
+  "execution_identity": {
+    "runtime": "Node.js v24.21.0; esbuild resolved from core/core-frontend/node_modules; no network or install.",
+    "owner_runner_cwd": "core/core-frontend",
+    "owner_runner_command": "node tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+    "creation_regression_cwd": "core/core-frontend",
+    "creation_regression_command": "env -u M0_FORCE_UNIMPLEMENTED -u QSSDH_LIFECYCLE_FORCE_UNIMPLEMENTED node tests/filter-copy-query-reference/query-single-select-session.test.ts",
+    "creation_regression_dependencies": [
+      {
+        "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts",
+        "sha256": "2c58be150c8575636b55627fc1949f1beaf943cd5c562ad0e7be7c72825c6f03"
+      },
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierFixtures-r001.json",
+        "sha256": "03613abf4395405162baa736a7592dcaa1bc5be706b7b56960cd96860d93e371"
+      },
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectPreparationCaptureCases-r001.json",
+        "sha256": "09e939e895afc962785f50d578b7efcf144a515d1e002aff41e549444742d12f"
+      },
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectLifecycleImplementationCases-r001.json",
+        "sha256": "e716db472095ab4e530814cd516de59e1cd7ff282d73b5cc59cfc25057cce2f2"
+      }
+    ],
+    "normal_green": "env -u FORCE_UNIMPLEMENTED_VARIABLES before running the owner runner; owner runner itself rejects any RED-only environment flag."
+  }
+}

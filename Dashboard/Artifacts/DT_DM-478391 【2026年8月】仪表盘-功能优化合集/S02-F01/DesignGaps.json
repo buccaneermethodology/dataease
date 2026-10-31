@@ -1,0 +1,76 @@
+{
+  "status": "design_candidate_with_bounded_subcontracts_accepted",
+  "claim_ceiling": "仅设计与开发准备；PureSubcontracts-r002.json中的17个有限纯比较/计数case及输入/oracle绑定经独立窄复核可接收；未实现产品、未运行产品验证、未准入产品Builder",
+  "card_sha256": "04c9226503b5f9b0de41f084e01048bf312f455957561bac287f22ee977e02cc",
+  "rebaseline_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent-supplement-r002.md",
+      "sha256": "6d41927b452194cbef69d2fbff7e2af1b4aed62eabc80fa186c91a9e6e7dfede"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "DG-01",
+      "status": "blocked",
+      "title": "真实权限环境",
+      "ac_refs": "AC-F01-Q009/ORIG-01",
+      "required_evidence": "维护者提供已授权模块来源或隔离实例；建立编辑/只读账号与撤销/恢复基线，直接接口验证。standalone/admin不能替代。",
+      "blocks": "真实权限验收；不阻塞纯设计准备",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    },
+    {
+      "id": "DG-02",
+      "status": "unknown",
+      "title": "跨标签身份代际和可信计时协议",
+      "ac_refs": "AC-F01-Q005/Q008/Q009",
+      "required_evidence": "冻结时钟来源、回拨/异常/刷新策略、身份切换失效权威、并发旧标签不能复活；评估现有服务能力后独立预审，不由Builder选择。",
+      "blocks": "共享存储实现准入",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    },
+    {
+      "id": "DG-03",
+      "status": "unknown",
+      "title": "查询配置白名单、引用闭包及原子提交",
+      "ac_refs": "AC-F04-Q066/Q067",
+      "required_evidence": "逐字段核对propValue/cascade与自身规则模型，确定内部ID重绑定但不名称映射；设计单次提交，避免先清空再nextTick。",
+      "blocks": "查询适配器实现准入",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    },
+    {
+      "id": "DG-04",
+      "status": "bounded_resolved",
+      "title": "精确TTL/容量口径",
+      "ac_refs": "AC-F01-Q008/Q013",
+      "required_evidence": "复核r002/r003确认TTL数值比较、1,000,000 UTF-8计数字节边界、50/51叶子及1001枚举无独立数量限制可作为有限纯子合同冻结；完整final envelope schema/serializer fixture、真实可信时钟和共享生命周期仍未完成。",
+      "blocks": "完整payload serializer/TTL集成与时钟可信协议；不阻塞独立纯比较/计数case实现准备",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    },
+    {
+      "id": "DG-05",
+      "status": "unknown",
+      "title": "持久化、刷新和读取权限完整链",
+      "ac_refs": "AC-F01-Q014/ORIG-01",
+      "required_evidence": "核对编辑快照到保存/发布/重开的实际链；只读接口是否暴露完整过滤配置；确认失败不刷新及成功仅一次逻辑预览。",
+      "blocks": "端到端与接口设计冻结",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    },
+    {
+      "id": "DG-06",
+      "status": "unknown",
+      "title": "动态/历史oracle",
+      "ac_refs": "AC-F01-Q012/ORIG-02",
+      "required_evidence": "复核S01的表达式/时区/类型与旧复制改类型证据，保留未证Provider/历史入口，不凭样例推断全量支持。",
+      "blocks": "对应回归验收",
+      "owner": "S02控制面协调技术设计/独立预审；权限来源由维护者提供"
+    }
+  ],
+  "checks": {
+    "lane_card": "pass",
+    "product_tests": "NOT_RUN",
+    "independent_design_review": "VALID_WITH_BOUNDS"
+  }
+}

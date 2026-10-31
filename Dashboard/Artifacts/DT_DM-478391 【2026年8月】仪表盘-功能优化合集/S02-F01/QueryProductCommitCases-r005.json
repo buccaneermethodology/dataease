@@ -1,0 +1,4593 @@
+{
+  "schema_version": "s02_query_product_commit_cases_r005",
+  "status": "DESIGN_REVISION_CANDIDATE_REVIEW_REQUIRED",
+  "design_ref": "QueryProductCommitDesign-r005.md",
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "reference_resolution": {
+    "algorithm": "Resolve only refs with path, sha256, and RFC6901 json_pointer. Verify sha256 against raw file bytes before parsing. Resolve pointer against parsed JSON, then apply case patches in listed order. No recursive refs, wildcard, fallback, or implicit field defaults.",
+    "qt_rebuild_fixture": {
+      "path": "QueryProductRebuildFixtures-r008.json",
+      "sha256": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+      "json_pointer_prefix": "/cases",
+      "success_case_ids": [
+        "TC-QTARGET-REBUILD-001",
+        "TC-QTARGET-REBUILD-002",
+        "TC-QTARGET-REBUILD-003",
+        "TC-QTARGET-REBUILD-004"
+      ]
+    },
+    "owner_boundary": {
+      "component": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "methods": [
+        "registerPending",
+        "prepareConfirmation",
+        "commitConfirmation",
+        "allowsQuery"
+      ],
+      "source_sha256": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189"
+    },
+    "late_c_decision_ref": "MaintainerDecision-QOBS-ASYNC-01-r001.md"
+  },
+  "effects_vocabulary": {
+    "snapshotCacheMark": "One synchronous call to recordSnapshotCache; may queue later history append.",
+    "historyAppend": "Physical snapshotData append from snapshotCatchToStore/recordSnapshot; counted separately and subject to existing gates.",
+    "previewEventDispatch": "One reRenderAll scheduling plus one queryData event dispatch for the committed owner revision.",
+    "downstreamQueryRequest": "Actual query request fanout from linked target charts; not assumed equal to one preview event."
+  },
+  "cases": [
+    {
+      "id": "QPC-001",
+      "title": "Current environment cannot enter before real source-read authorization",
+      "stage": "SOURCE_READ_AUTH",
+      "input": {
+        "authorization_contract": "unavailable",
+        "source_config_read": false
+      },
+      "expected": {
+        "ok": false,
+        "reason": "AUTH_CONTRACT_UNAVAILABLE",
+        "source_config_read": false,
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "BLOCKED_EXTERNAL_DEPENDENCY",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+    },
+    {
+      "id": "QPC-002",
+      "title": "Unsupported source/target type has one source-shape failure",
+      "stage": "SOURCE_SHAPE",
+      "input": {
+        "source_kind": "chart",
+        "target_kind": "VQuery",
+        "same_dataset": true
+      },
+      "expected": {
+        "ok": false,
+        "stage": "SOURCE_SHAPE",
+        "reason": "UNSUPPORTED_COMPONENT_KIND",
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "MODEL_ONLY",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+    },
+    {
+      "id": "QPC-003",
+      "title": "Target is not the current unique lifecycle owner",
+      "stage": "TARGET_OWNER",
+      "input": {
+        "phase": "open",
+        "registered_top_level_query_count": 2,
+        "target_is_current_component": false
+      },
+      "expected": {
+        "ok": false,
+        "stage": "TARGET_OWNER",
+        "reason": "UNMANAGED_OR_AMBIGUOUS_OWNER",
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "SOURCE_DERIVED_MODEL",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-other-query-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 2,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          },
+          {
+            "id": "query-other",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [],
+            "cascade": [],
+            "opaque": "other-query-root-byte-stable"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-other-query-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 2,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          },
+          {
+            "id": "query-other",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [],
+            "cascade": [],
+            "opaque": "other-query-root-byte-stable"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "00dcc229386b70bfe66f50e651c62a71f3da1c661728f3e198c53e8d9b0dae21",
+      "expected_state_digest": "00dcc229386b70bfe66f50e651c62a71f3da1c661728f3e198c53e8d9b0dae21"
+    },
+    {
+      "id": "QPC-004",
+      "title": "Target owner revision changes while confirmation is open",
+      "stage": "TARGET_IDENTITY/REVISION",
+      "input": {
+        "phase_before_confirm": "open",
+        "prepared_revision": 7,
+        "current_revision_at_observation": 8,
+        "observation_window": "after concurrent owner commit and before the stale confirmation is rejected"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "TARGET_IDENTITY/REVISION",
+        "reason": "STALE_PREPARE",
+        "state_delta": "no paste-side effects from observed revision-8 state; preserve the concurrent owner commit exactly"
+      },
+      "status": "SOURCE_DERIVED_MODEL",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 8,
+          "commitId": "commit-8",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 8,
+          "tokenGeneration": 7,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 8,
+          "commitId": "commit-8",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 8,
+          "tokenGeneration": 7,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "ab9a66e163ca0f3c0ca02415affe0b9a1b7460960df3b0711eaddc621e881518",
+      "expected_state_digest": "ab9a66e163ca0f3c0ca02415affe0b9a1b7460960df3b0711eaddc621e881518"
+    },
+    {
+      "id": "QPC-005",
+      "title": "Copied default A is absent from a complete target enumeration",
+      "stage": "ADAPTER",
+      "input": {
+        "source_default": "A",
+        "target_enum_complete": true,
+        "target_enum_values": [
+          "B",
+          "C"
+        ],
+        "user_selected_value": null
+      },
+      "expected": {
+        "ok": false,
+        "stage": "DEFAULT_ENUM",
+        "reason": "DEFAULT_NOT_FOUND",
+        "confirmation_opened": false,
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "QPP_HELPER_CONTRACT_BOUND; PRODUCT_ENUM_PRODUCER_NOT_VERIFIED",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "substage": "DEFAULT_ENUM",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+    },
+    {
+      "id": "QPC-006",
+      "title": "Late enumeration omits newly selected C after one recheck",
+      "stage": "ASYNC_ENUM",
+      "input": {
+        "user_selected_value": "C",
+        "first_response_missing": true,
+        "recheck_count": 1,
+        "recheck_response_missing": true,
+        "request_count_before": 1,
+        "recheck_requests_during_transition": 1,
+        "requests_after_terminal": 0
+      },
+      "expected": {
+        "loading": false,
+        "selected_value": "C",
+        "invalid": true,
+        "additional_requests": 1,
+        "transaction_effects": "no paste publication/cache/preview/save; enum interaction performed exactly one recheck",
+        "recheck_requests_during_transition": 1,
+        "requests_after_terminal": 0
+      },
+      "authority": "MaintainerDecision-QOBS-ASYNC-01-r001",
+      "status": "USER_DECISION_BOUND; PRODUCT_INTEGRATION_NOT_VALIDATED",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": true,
+          "selectedValue": "C",
+          "invalid": false,
+          "requestCount": 1
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": "C",
+          "invalid": true,
+          "requestCount": 2
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "substage": "LATE_SELECTED_VALUE",
+      "initial_state_digest": "f45f735bf2fddd89a28ae8fae5278a05a81c997f4076abfc6fe093717a56a46f",
+      "expected_state_digest": "83afc0faa815006ba9d838412ad42be5234984de6afc83eea03566b4c02b7ea9"
+    },
+    {
+      "id": "QPC-007",
+      "title": "User cancels a replacement confirmation",
+      "stage": "USER_CANCEL",
+      "input": {
+        "target_has_existing_condition": true,
+        "consent": "cancel"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "USER_CANCEL",
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "MODEL_ONLY",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+    },
+    {
+      "id": "QPC-008",
+      "title": "Authorization is revoked during the confirmation round trip",
+      "stage": "REAUTHORIZE",
+      "input": {
+        "authorization_before_confirm": "allowed",
+        "authorization_after_confirm": "revoked"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "REAUTHORIZE",
+        "reason": "DENIED",
+        "state_delta": "see complete expected_state; every tracked field is explicit"
+      },
+      "status": "BLOCKED_NOT_RUN_REAL_MULTIUSER_ENVIRONMENT",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+    },
+    {
+      "id": "QPC-009",
+      "title": "Owner capsule commits a prepared full root then queues one snapshot mark",
+      "stage": "COMMIT_MODEL",
+      "input": {
+        "authorization": "real_current_subject_result_required",
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v0",
+          "rawTargetRef": "raw-target-v0",
+          "topLevelQueryCount": 1,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true,
+          "next_commit_id": "commit-1"
+        },
+        "target_component_id": "query-target",
+        "outer_root": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "query_root_input_ref": {
+          "path": "QueryProductRebuildFixtures-r008.json",
+          "sha256": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+          "json_pointer": "/cases/0/expected/value/design"
+        },
+        "query_root_adapter": {
+          "copy_payload": "referenced design payload",
+          "component_property": "propValue[0]",
+          "add_field": "mapValue",
+          "added_value": [],
+          "purpose": "satisfy exact carrier input shape; not inherited runtime",
+          "exact_rule": "clone referenced design propValue[0], append only mapValue:[], preserve all other keys and values; pass with cascade:[]"
+        },
+        "carrier_runtime_rule": "selectValue=defaultValue; mapValue=defaultMapValue after prepareQuerySingleSelectCarrier validation",
+        "linked_target_ids": [
+          "chart-1",
+          "chart-2"
+        ],
+        "query_root_input": {
+          "propValue": [
+            {
+              "id": "q-new",
+              "name": "省",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "province",
+                "type": "VARCHAR",
+                "name": "省",
+                "deType": 0
+              },
+              "displayId": "province",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "A-code"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": "2026-10-16T00:00:00.000Z",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+              "auto": false,
+              "defaultValue": "A",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "201",
+                "name": "销售",
+                "fields": []
+              },
+              "visible": true,
+              "defaultValueCheck": true,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart-B"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart-B": "province"
+              },
+              "hideConditionSwitching": false,
+              "resultMode": 0,
+              "relativeToCurrentRange": "custom",
+              "treeDatasetId": "201",
+              "setTimeRange": false,
+              "showEmpty": false,
+              "defaultNumValueStart": null,
+              "defaultNumValueEnd": null,
+              "numValueEnd": null,
+              "numValueStart": null,
+              "displayFormat": 0,
+              "timeRange": {
+                "intervalType": "none",
+                "dynamicWindow": false,
+                "maximumSingleQuery": 0,
+                "regularOrTrends": "fixed",
+                "regularOrTrendsValue": "",
+                "relativeToCurrent": "custom",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "year",
+                "aroundRange": "f",
+                "relativeToCurrentRange": "custom"
+              },
+              "oldTreeLoad": false,
+              "treeCheckedList": [],
+              "defaultValueFirstItem": false,
+              "treeFieldList": [],
+              "checkedFieldsMapArr": {},
+              "checkedFieldsMapArrNum": {},
+              "checkedFieldsMapStart": {},
+              "checkedFieldsMapStartNum": {},
+              "checkedFieldsMapEnd": {},
+              "checkedFieldsMapEndNum": {},
+              "parametersArr": {},
+              "mapValue": []
+            }
+          ],
+          "cascade": []
+        },
+        "owner_initialization_trace": [
+          {
+            "call": "beginSession",
+            "input": {
+              "resourceId": null,
+              "isTemplate": false,
+              "createInitCompleted": true,
+              "rootEmpty": true
+            },
+            "expected": {
+              "ok": true,
+              "epoch": "qss-1"
+            }
+          },
+          {
+            "action": "insert_single_top_level_vquery",
+            "component_id": "query-target"
+          },
+          {
+            "call": "registerPending",
+            "input": {
+              "component_ref": "raw-target-v0",
+              "topLevelCount": 1
+            },
+            "expected": {
+              "ok": true,
+              "epoch": "qss-1"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "root_publish": 1,
+        "owner_revision_advance": 1,
+        "owner_commit_id_advance": 1,
+        "recordSnapshotCacheCalls": 1,
+        "historyAppend": "deferred_to_existing_snapshot_flush_and_gates",
+        "previewEventDispatch": {
+          "reRenderAll": 1,
+          "queryData": 1
+        },
+        "downstreamQueryRequests": "count each linked target request at product observation",
+        "saveRequest": 0,
+        "design_runtime_rule": "published design has no selectValue/mapValue; runtime derived from A/defaultMapValue and used for immediate preview",
+        "authorization": "external precondition, not exercised",
+        "editGeneration_advance": 2,
+        "cache_gate": {
+          "dataPrepareState": true,
+          "recordSnapshotCacheCalls": 1,
+          "snapshotCacheTimes_delta": 1,
+          "editGeneration_delta_from_commit_and_mark": 2
+        }
+      },
+      "status": "CONDITIONAL_MODEL_ONLY_AUTH_AND_OWNER_PRODUCER_UNBOUND",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v0",
+          "rawTargetRef": "raw-target-v0",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": "raw-target-v1",
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 1,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 1,
+          "queryDataDispatches": 1,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "16a4f91f82d87aa359faa187ecea039262a5d0e0f24d9c49f1090ec620da6ea8",
+      "expected_state_digest": "d2ebaf45ee935624eebb7f8c2fe4b9a58c92523caa1fa9e2188bf31cb4430545"
+    },
+    {
+      "id": "QPC-010",
+      "title": "Unexpected error after root publication is not a zero-change rejection",
+      "stage": "POST_COMMIT_EXCEPTION",
+      "input": {
+        "root_published": true,
+        "publish_event_callback_throws": true
+      },
+      "expected": {
+        "owner_invalidated": true,
+        "local_root_reverted": false,
+        "reported_as": "POST_COMMIT_FAILURE",
+        "no_success_claim": true,
+        "recordSnapshotCacheCalls": 1,
+        "state_delta": "root/selection/owner/cache are committed before callback throws; invalidate makes phase unmanaged and clears currentComponent; no preview dispatch",
+        "editGeneration_advance": 2
+      },
+      "status": "MODEL_ONLY_REQUIRES_IMPLEMENTATION_REVIEW",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "unmanaged",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": null,
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 2,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+      "expected_state_digest": "43eed3af8f5975e61355e57951dad624c402b5a8dbb7eaae155a70648d00ef2a"
+    },
+    {
+      "id": "QPC-011",
+      "title": "A later save failure does not claim persisted configuration",
+      "stage": "NORMAL_SAVE",
+      "input": {
+        "commit_id": "commit-1",
+        "normal_save_result": "failure",
+        "save_request_sent": true,
+        "save_response_received": true
+      },
+      "expected": {
+        "paste_save_request": 0,
+        "saved_server_version_claimed": false,
+        "local_edit_retained": true,
+        "owner_dirty": true,
+        "saveSeq": 1,
+        "lastAckSeq": 0,
+        "savedVersion": "server-v6",
+        "saveOrderUncertain": false
+      },
+      "status": "PRODUCT_SAVE_INTEGRATION_NOT_VALIDATED",
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": "raw-target-v1",
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 1,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 1,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 1,
+          "queryDataDispatches": 1,
+          "downstreamQueryRequests": 2
+        },
+        "persistence": {
+          "saveRequests": 1,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": "raw-target-v1",
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 1,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 1,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 1,
+          "queryDataDispatches": 1,
+          "downstreamQueryRequests": 2
+        },
+        "persistence": {
+          "saveRequests": 1,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "fe433330d0f6d100609c616a743f2f1a15ee3330cbf47bc2ac2dbc31f65eaa33",
+      "expected_state_digest": "fe433330d0f6d100609c616a743f2f1a15ee3330cbf47bc2ac2dbc31f65eaa33"
+    },
+    {
+      "id": "QPC-012",
+      "title": "Owner changes after local commit but before nextTick preview gate",
+      "stage": "POST_COMMIT_PREVIEW_GATE",
+      "status": "SOURCE_DERIVED_MODEL",
+      "input": {
+        "commit_completed": true,
+        "committed_revision": 1,
+        "next_tick_owner_phase": "unmanaged",
+        "committed_component_raw_identity": "raw-target-v1",
+        "dataPrepareState": true
+      },
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": "raw-target-v1",
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 1,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "unmanaged",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": null,
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 2,
+          "tokenGeneration": 2,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 1,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "expected": {
+        "root_publish": 1,
+        "owner_revision_advance": 1,
+        "recordSnapshotCacheCalls": 1,
+        "snapshotCacheTimes_delta": 1,
+        "editGeneration_delta": 2,
+        "previewEventDispatch": {
+          "reRenderAll": 0,
+          "queryData": 0
+        },
+        "classification": "COMMITTED_PREVIEW_SUPPRESSED",
+        "rollback": false,
+        "zero_change_rejection": false
+      },
+      "initial_state_digest": "2aeacc0a012667dca2caa2c2a0b436071aeddbb7ec11c6dc523cb4f8b2b6589a",
+      "expected_state_digest": "43eed3af8f5975e61355e57951dad624c402b5a8dbb7eaae155a70648d00ef2a"
+    },
+    {
+      "id": "QPC-013",
+      "title": "Cache function called once while data preparation gate is false",
+      "stage": "COMMIT_MODEL_CACHE_GATE",
+      "status": "SOURCE_DERIVED_MODEL",
+      "input": {
+        "root_publish": 1,
+        "dataPrepareState": false,
+        "snapshotCacheTimes_before": 0
+      },
+      "initial_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 0,
+          "commitId": "initial",
+          "currentComponentRef": "raw-target-v7",
+          "rawTargetRef": "raw-target-v7",
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "target-old",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": false,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "open",
+          "epoch": "qss-1",
+          "revision": 1,
+          "commitId": "commit-1",
+          "currentComponentRef": "raw-target-v1",
+          "rawTargetRef": "raw-target-v1",
+          "topLevelQueryCount": 1,
+          "dirty": true,
+          "editGeneration": 1,
+          "tokenGeneration": 1,
+          "runtimeQueryRoot": {
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "cascade": []
+          },
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": null,
+          "resourceId": null,
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": true
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "query-target"
+        },
+        "snapshot": {
+          "dataPrepareState": false,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 1,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "expected": {
+        "recordSnapshotCacheCalls": 1,
+        "snapshotCacheTimes_delta": 0,
+        "editGeneration_delta": 1,
+        "documentDirty": true,
+        "historyAppend": "not_implied"
+      },
+      "initial_state_digest": "fbb82ef4aa444b8a0f8db50a795d7531e8ca5c73973af16dc104abab962be0d6",
+      "expected_state_digest": "79437136362063bcad4969e5c53cf01dda8f5bc30c434d44f2b0b61ef1f29381"
+    },
+    {
+      "id": "QPC-014",
+      "title": "Existing saved dashboard target cannot be certified by create-only lifecycle owner",
+      "stage": "TARGET_OWNER",
+      "status": "BLOCKED_OWNER_CAPABILITY",
+      "input": {
+        "resourceId": "saved-canvas-42",
+        "isTemplate": false,
+        "createInitCompleted": true,
+        "rootEmpty": false,
+        "existing_resource": true,
+        "owner_phase": "unmanaged"
+      },
+      "initial_state": {
+        "owner": {
+          "phase": "unmanaged",
+          "epoch": null,
+          "revision": null,
+          "commitId": null,
+          "currentComponentRef": null,
+          "rawTargetRef": null,
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": "saved-canvas-42",
+          "resourceId": "saved-canvas-42",
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": false,
+          "runtimeQueryRoot": null
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected_state": {
+        "owner": {
+          "phase": "unmanaged",
+          "epoch": null,
+          "revision": null,
+          "commitId": null,
+          "currentComponentRef": null,
+          "rawTargetRef": null,
+          "topLevelQueryCount": 1,
+          "dirty": false,
+          "editGeneration": 0,
+          "tokenGeneration": 0,
+          "saveSeq": 0,
+          "lastAckSeq": 0,
+          "saveOrderUncertain": false,
+          "targetId": "saved-canvas-42",
+          "resourceId": "saved-canvas-42",
+          "isTemplate": false,
+          "createInitCompleted": true,
+          "rootEmptyAtBegin": false,
+          "runtimeQueryRoot": null
+        },
+        "outerRoot": [
+          {
+            "id": "chart-other",
+            "component": "Chart",
+            "innerType": "Chart",
+            "propValue": {
+              "filters": [
+                "keep-chart"
+              ]
+            },
+            "opaque": "other-root-byte-stable"
+          },
+          {
+            "id": "query-target",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "propValue": [
+              {
+                "id": "target-old",
+                "defaultValue": "X",
+                "selectValue": "Y",
+                "mapValue": [
+                  "Y"
+                ]
+              }
+            ],
+            "cascade": [],
+            "opaque": "target-non-filter-config"
+          }
+        ],
+        "selection": {
+          "componentId": "chart-other"
+        },
+        "snapshot": {
+          "dataPrepareState": true,
+          "snapshotCacheTimes": 0,
+          "snapshotIndex": -1,
+          "historyIds": [],
+          "cacheViewCalc": [],
+          "cacheViewRender": []
+        },
+        "effects": {
+          "recordSnapshotCacheCalls": 0,
+          "reRenderAllDispatches": 0,
+          "queryDataDispatches": 0,
+          "downstreamQueryRequests": 0
+        },
+        "persistence": {
+          "saveRequests": 0,
+          "savedVersion": "server-v6"
+        },
+        "asyncEnum": {
+          "loading": false,
+          "selectedValue": null,
+          "invalid": false,
+          "requestCount": 0
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INELIGIBLE_SOURCE",
+        "state_unchanged": true,
+        "product_entry_readiness": "BLOCKED_UNTIL_EXISTING_CANVAS_OWNER_CONTRACT"
+      },
+      "state_oracle": "fieldwise_exact_plus_canonical_digest",
+      "initial_state_digest": "2852ca79e5a36acaa6b91f2ea113ace98e1d9e82d1c3911c4acb70cda25a7143",
+      "expected_state_digest": "2852ca79e5a36acaa6b91f2ea113ace98e1d9e82d1c3911c4acb70cda25a7143"
+    }
+  ],
+  "oracle_limits": [
+    "QPC-001 / QPC-008 capture current auth blocker and revocation condition; neither executes real multi-user behavior.",
+    "QPC-009 is a conditional owner transition model. The auth provider and trustworthy owner registration producer remain unbound, so it is not an executable success or product result.",
+    "Pre-commit refusals compare every tracked state field and full-root canonical digest with initial_state. Post-commit gate suppression has a separate non-rollback oracle.",
+    "Snapshot cache invocation, snapshotCacheTimes increment, physical history append, preview event dispatch, and downstream query fan-out are distinct counters.",
+    "Current owner supports one registered top-level VQuery only; other Goal shapes remain open and cannot be permanently rejected.",
+    "No case proves real permission, Vue runtime behavior, physical history append, real downstream query count, save/reopen, or S02 completion.",
+    "The current owner admits only a new unsaved dashboard create session. Existing saved dashboard targets remain in the original denominator and have no owner in this candidate; QPC-014 records that concrete blocker."
+  ],
+  "transaction_state_contract": {
+    "canonical_digest": "SHA-256 of UTF-8 JSON with recursively lexicographically sorted object keys, original array order, no insignificant whitespace; numbers/strings retain JSON encoding.",
+    "tracked_state_fields": [
+      "owner.phase",
+      "owner.epoch",
+      "owner.revision",
+      "owner.commitId",
+      "owner.currentComponentRef",
+      "owner.rawTargetRef",
+      "owner.topLevelQueryCount",
+      "outerRoot (all fields and order)",
+      "selection.componentId",
+      "snapshot.dataPrepareState",
+      "snapshot.snapshotCacheTimes",
+      "snapshot.snapshotIndex",
+      "snapshot.historyIds",
+      "snapshot.cacheViewCalc",
+      "snapshot.cacheViewRender",
+      "effects.recordSnapshotCacheCalls",
+      "effects.reRenderAllDispatches",
+      "effects.queryDataDispatches",
+      "effects.downstreamQueryRequests",
+      "persistence.saveRequests",
+      "persistence.savedVersion",
+      "owner.dirty",
+      "owner.editGeneration",
+      "owner.tokenGeneration",
+      "owner.runtimeQueryRoot",
+      "asyncEnum.loading",
+      "asyncEnum.selectedValue",
+      "asyncEnum.invalid",
+      "owner.resourceId",
+      "owner.isTemplate",
+      "owner.createInitCompleted",
+      "owner.rootEmptyAtBegin",
+      "owner.tokenGeneration",
+      "owner.saveSeq",
+      "owner.lastAckSeq",
+      "owner.saveOrderUncertain",
+      "owner.targetId",
+      "asyncEnum.requestCount",
+      "asyncEnum.loading",
+      "asyncEnum.selectedValue",
+      "asyncEnum.invalid",
+      "owner.saveSeq",
+      "owner.lastAckSeq",
+      "owner.saveOrderUncertain"
+    ],
+    "baseline_ref": "/oracle_states/baseline_open_owner",
+    "baseline_sha256": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da",
+    "transition_rule": "Each case embeds complete initial_state and expected_state. A state is compared by canonical digest and fieldwise assertions. Ref expansion verifies raw SHA-256 first, then resolves exactly one RFC6901 pointer. No merge patch, fallback, wildcards, or default values.",
+    "timing_model": "Synchronous commit and nextTick preview gate are distinct observations. A failed pre-commit case preserves every tracked field. A failed post-commit preview gate preserves published root/selection/owner and cache call effects while adding zero preview dispatches.",
+    "permission_status": "BLOCKED_NOT_RUN_REAL_MULTIUSER_ENVIRONMENT",
+    "cache_and_generation_rule": "commitConfirmation increments editGeneration once. If recordSnapshotCache is called with dataPrepareState=true, markQuerySingleSelectDocumentEdited increments editGeneration a second time and snapshotCacheTimes once. If false, that call leaves both editGeneration and snapshotCacheTimes unchanged; function-call count is still observable as one."
+  },
+  "oracle_states": {
+    "baseline_open_owner": {
+      "owner": {
+        "phase": "open",
+        "epoch": "qss-1",
+        "revision": 0,
+        "commitId": "initial",
+        "currentComponentRef": "raw-target-v7",
+        "rawTargetRef": "raw-target-v7",
+        "topLevelQueryCount": 1,
+        "dirty": false,
+        "editGeneration": 0,
+        "tokenGeneration": 0,
+        "runtimeQueryRoot": {
+          "propValue": [
+            {
+              "id": "target-old",
+              "selectValue": "Y",
+              "mapValue": [
+                "Y"
+              ]
+            }
+          ],
+          "cascade": []
+        },
+        "saveSeq": 0,
+        "lastAckSeq": 0,
+        "saveOrderUncertain": false,
+        "targetId": null,
+        "resourceId": null,
+        "isTemplate": false,
+        "createInitCompleted": true,
+        "rootEmptyAtBegin": true
+      },
+      "outerRoot": [
+        {
+          "id": "chart-other",
+          "component": "Chart",
+          "innerType": "Chart",
+          "propValue": {
+            "filters": [
+              "keep-chart"
+            ]
+          },
+          "opaque": "other-root-byte-stable"
+        },
+        {
+          "id": "query-target",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "propValue": [
+            {
+              "id": "target-old",
+              "defaultValue": "X",
+              "selectValue": "Y",
+              "mapValue": [
+                "Y"
+              ]
+            }
+          ],
+          "cascade": [],
+          "opaque": "target-non-filter-config"
+        }
+      ],
+      "selection": {
+        "componentId": "chart-other"
+      },
+      "snapshot": {
+        "dataPrepareState": true,
+        "snapshotCacheTimes": 0,
+        "snapshotIndex": -1,
+        "historyIds": [],
+        "cacheViewCalc": [],
+        "cacheViewRender": []
+      },
+      "effects": {
+        "recordSnapshotCacheCalls": 0,
+        "reRenderAllDispatches": 0,
+        "queryDataDispatches": 0,
+        "downstreamQueryRequests": 0
+      },
+      "persistence": {
+        "saveRequests": 0,
+        "savedVersion": "server-v6"
+      },
+      "asyncEnum": {
+        "loading": false,
+        "selectedValue": null,
+        "invalid": false,
+        "requestCount": 0
+      }
+    },
+    "baseline_sha256": "d57105bb5114f27d5feb7a1267769cf45b016a5537e21132a54f1ccd97f5b8da"
+  }
+}

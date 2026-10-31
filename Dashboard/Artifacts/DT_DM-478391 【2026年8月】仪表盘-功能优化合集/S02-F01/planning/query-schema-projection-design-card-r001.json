@@ -1,0 +1,92 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-query-schema-projection-design-r001",
+  "session_id": "S02.1",
+  "lane": "design",
+  "role": "design",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaDiscovery-r002.md",
+      "sha256": "f3cdef883e90eea8750f97c511a6a1960868296d7dc28355c0e471c89045afb9"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+      "sha256": "9278dfa7490a43bdc13f1d1fa7c9165ed578d48ca6c955b74af00f880c72c765"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidationFixtures-r001.json",
+      "sha256": "08ed4a0c6ef376230baf856dd7cb0a9b6254733c318b914dbcea959bdc7dd915"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+      "sha256": "c761633b315dde7463c635999dcdf34a14941c1fe56804e1148acdc2aa789c61"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "sha256": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "sha256": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "sha256": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "sha256": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "sha256": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/copy.ts",
+      "sha256": "0586a15314c00206be53f585d598204cc481f5d6cd48e3699c681a27b8b4ce16"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-query-schema-projection-design-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q006",
+    "AC-F01-Q012",
+    "AC-F01-Q015",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionFixtures-r001.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionFixtures-r001.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅设计现有query schema到typed闭包模型的最小projection candidate；不代表完整字段白名单、产品适配、Builder准入或运行/权限验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGaps.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-query-schema-projection-design-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+  "working_directory": ".",
+  "execution_command": "只设计一个窄候选：从当前查询条件propValue/cascade结构读取足以构造QPREP-001 typed引用输入的最小映射，字段限于引用身份与闭包结构；不得复制/重写其他过滤语义，不得把名称当身份。沿options.ts、QueryConditionConfiguration.vue、Select.vue、QueryCascade.vue和当前copy.ts调用链核实读写字段与版本/缺省差异，说明真实数据来源边界。字段构造或引用关系若无法从源码完整证明，给出精确不支持条件与证据缺口，不能猜测fixture。输出精确typed projection接口、纯函数输入输出、失败原子语义、ID生成/映射来源由调用方提供、空值/缺失行为、最多6个源码对照正反case及runner候选；说明与现有QPREP函数组合及后续接入copy入口方式。明确不碰权限/UI/Store/保存/历史/树值转换，不声称完整白名单或产品可用；写且仅写卡片两个文件。"
+}

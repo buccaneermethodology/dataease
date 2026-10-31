@@ -1,0 +1,2113 @@
+{
+  "schema_version": "manual2_pure_value_contract_cases_candidate_v1",
+  "status": "candidate",
+  "frozen_for_builder": false,
+  "scope_delta": "none",
+  "api": {
+    "name": "prepareManual2ValueState",
+    "arity": 1,
+    "input": "unknown，运行时精确验证为Manual2ValueState",
+    "authentication": false,
+    "required_keys": [
+      "displayType",
+      "multiple",
+      "optionValueSource",
+      "defaultValueCheck",
+      "defaultValueFirstItem",
+      "defaultMapValue",
+      "valueSource"
+    ],
+    "optional_keys": [
+      "defaultValue",
+      "selectValue",
+      "mapValue"
+    ],
+    "shape": {
+      "displayType": "0",
+      "multiple": false,
+      "optionValueSource": 2
+    },
+    "success_status": "OK",
+    "only_rejection_status": "REJECTED",
+    "no_other_parameters": true
+  },
+  "validation_order": [
+    {
+      "step": 1,
+      "rule": "输入必须是普通对象（prototype为Object.prototype或null），非null/array；仅own enumerable string数据属性；拒绝symbol、自定义原型、accessor、非枚举属性。不得调用getter。代理对象不属于输入域，普通JS不能可靠识别恶意Proxy；本合同不是不可信JS沙箱。"
+    },
+    {
+      "step": 2,
+      "rule": "精确键集合：必需displayType,multiple,optionValueSource,defaultValueCheck,defaultValueFirstItem,defaultMapValue,valueSource；可选defaultValue,selectValue,mapValue；其他一律拒绝，包括stage/binding/optionFilter。缺必需键拒绝。"
+    },
+    {
+      "step": 3,
+      "rule": "固定shape必须严格等于字符串0、false、数值2；defaultValueFirstItem严格false；defaultValueCheck严格boolean。"
+    },
+    {
+      "step": 4,
+      "rule": "defaultMapValue必须严格空的普通稠密数组；valueSource必须非空普通稠密string数组，每项trim后非空且原始字符串不重复；数组无额外属性/symbol/accessor。此为有界候选，不是产品全集schema。"
+    },
+    {
+      "step": 5,
+      "rule": "defaultValue若存在且非undefined必须string；显式undefined按缺失处理。defaultValueCheck=true时必须非空string且精确包含于valueSource；false不要求属于valueSource，但不豁免类型约束。"
+    },
+    {
+      "step": 6,
+      "rule": "selectValue若存在仅允许string或undefined；mapValue若存在须普通稠密string数组（允许空及重复，无额外属性/symbol/accessor）。仅校验后丢弃旧运行值，不从中补设计默认。"
+    },
+    {
+      "step": 7,
+      "rule": "所有检查通过后一次性构造detached carrier/runtime；不产生中间可见结果。所有失败同一REJECTED对象形状，无reason/errors/部分输出。"
+    }
+  ],
+  "input_domain": "caller-owned普通数据对象；不接恶意Proxy/任意可执行JS对象；不认证来源",
+  "upstream_admission": "可信设计来源是上层调用前置；当前来源owner未闭环NOT_READY，本函数不能实现或证明此前置。",
+  "cases": [
+    {
+      "case_id": "M2P-001",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              "A",
+              "B"
+            ],
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "selectValue": "A",
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E01"
+      ],
+      "note": "只传projection；移除bindingFixture/stage，不认证来源；carrier不含身份或revision。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-002",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": false,
+        "defaultValueFirstItem": false,
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": false,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              "A",
+              "B"
+            ]
+          }
+        },
+        "runtime": {
+          "selectValue": {
+            "$js": "undefined"
+          },
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E02"
+      ],
+      "note": "",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-003",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ],
+        "optionFilter": []
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E03"
+      ],
+      "note": "旧细分status统一为REJECTED；不继承旧诊断码。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-004",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [
+          "A"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E04"
+      ],
+      "note": "旧细分status统一为REJECTED；不继承旧诊断码。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-005",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 0,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E05"
+      ],
+      "note": "旧细分status统一为REJECTED；不继承旧诊断码。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-006",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E06"
+      ],
+      "note": "旧细分status统一为REJECTED；不继承旧诊断码。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-007",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              "A",
+              "B"
+            ],
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "selectValue": "A",
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E07"
+      ],
+      "note": "上层live-unknown应阻止调用；纯helper无法观察来源，若只传合法投影则OK，不等于来源认证。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-008",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ],
+        "sourceStageFixture": "trusted-config-confirmed"
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [
+        "M2-E07"
+      ],
+      "note": "fixture标志若误传为字段，由精确键集合拒绝，不因其值真假判断认证。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-009",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 0,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "",
+        "defaultMapValue": [
+          "OLD"
+        ],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ],
+        "optionFilter": [],
+        "extra": true
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "多重失败：未知键优先停止；所有内部失败统一REJECTED，不返回诊断字段。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-010",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": []
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-011",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "A"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-012",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "OUTSIDE",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-013",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "   "
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-014",
+      "input": {
+        "displayType": "0",
+        "multiple": true,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-015",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": false,
+        "defaultValueFirstItem": false,
+        "defaultValue": null,
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-016",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          7
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-017",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": null,
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "候选子域拒绝，不代表整个产品/历史配置非法。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-018",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": false,
+        "defaultValueFirstItem": false,
+        "defaultValue": "IGNORED",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": false,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              "A",
+              "B"
+            ]
+          }
+        },
+        "runtime": {
+          "selectValue": {
+            "$js": "undefined"
+          },
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "默认关闭仍校验可选defaultValue是string，carrier移除该值。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-019",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": " A ",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          " A ",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              " A ",
+              "B"
+            ],
+            "defaultValue": " A "
+          }
+        },
+        "runtime": {
+          "selectValue": " A ",
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "非空边缘空格原样保留，按精确字符串匹配；不trim保存值。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-020",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "缺失map不能补[]。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-021",
+      "input": null,
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "非对象输入。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-022",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ],
+        "bindingFixture": {
+          "resourceId": "dashboard-1"
+        }
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "身份fixture不属于生产API。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-023",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": true,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": "B",
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "首项规则超出候选。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-024",
+      "input": {
+        "displayType": "0",
+        "multiple": false,
+        "optionValueSource": 2,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": "A",
+        "defaultMapValue": [],
+        "selectValue": {
+          "$js": "undefined"
+        },
+        "mapValue": [
+          "B"
+        ],
+        "valueSource": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 2
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "valueSource": [
+              "A",
+              "B"
+            ],
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "selectValue": "A",
+          "mapValue": []
+        }
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "codec在调用前将这一字段解为JS undefined；不把标记对象传入函数。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-025",
+      "input": {
+        "$fixtureRecipe": "accessorDefaultValue",
+        "base": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 2,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "defaultMapValue": [],
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "valueSource": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "输入含getter属性；recipe在测试层构造，生产函数不接受标记对象。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-026",
+      "input": {
+        "$fixtureRecipe": "sparseValueSource",
+        "base": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 2,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "defaultMapValue": [],
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "valueSource": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "数组有hole；recipe在测试层构造，生产函数不接受标记对象。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-027",
+      "input": {
+        "$fixtureRecipe": "symbolKey",
+        "base": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 2,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "defaultMapValue": [],
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "valueSource": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "输入有symbol键；recipe在测试层构造，生产函数不接受标记对象。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    },
+    {
+      "case_id": "M2P-028",
+      "input": {
+        "$fixtureRecipe": "customPrototype",
+        "base": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 2,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "defaultMapValue": [],
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "valueSource": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "expected": {
+        "status": "REJECTED",
+        "carrier": null,
+        "runtime": null
+      },
+      "assertions": {
+        "inputUnchanged": true,
+        "noMutableAliases": true,
+        "networkRequestCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "saveCount": 0,
+        "previewIntentCount": 0,
+        "successToastCount": 0,
+        "partialOutputOnFailure": false
+      },
+      "source_case_ids": [],
+      "note": "输入自定义prototype；recipe在测试层构造，生产函数不接受标记对象。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-07"
+      ],
+      "product_ac_ids": [
+        "AC-F01-Q012",
+        "AC-F04-Q066",
+        "AC-F04-Q067"
+      ]
+    }
+  ],
+  "case_count": 28,
+  "source_case_mapping": [
+    {
+      "source_case_id": "M2-E01",
+      "target_case_ids": [
+        "M2P-001"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E02",
+      "target_case_ids": [
+        "M2P-002"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E03",
+      "target_case_ids": [
+        "M2P-003"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E04",
+      "target_case_ids": [
+        "M2P-004"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E05",
+      "target_case_ids": [
+        "M2P-005"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E06",
+      "target_case_ids": [
+        "M2P-006"
+      ],
+      "compatibility": "保留投影输入；统一输出schema，binding/stage移出API；不是同identity行为等价声明"
+    },
+    {
+      "source_case_id": "M2-E07",
+      "target_case_ids": [
+        "M2P-007",
+        "M2P-008"
+      ],
+      "compatibility": "E07来源判断移出helper；其合法projection仍OK，误传stage额外键REJECTED"
+    }
+  ],
+  "source_manifest": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r251.json",
+      "revision": "88861f7212e51736a40bc073055518b10a1e784a2a003971b209636899cf4524",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectSourceOracleDesignReview-r001.md",
+      "revision": "56305b8e9f1815ca8257a8f1c04492ee2789bea75c3c934718767a107c7df2b3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectSourceOracleDesign-r001.md",
+      "revision": "3a37583118e4991f80dddba7fef3250cc2c6885959fd95d8658024dee79dfac7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectSourceOracleCases-r001.json",
+      "revision": "8234a8c33c2b4f5f46031074cab2fcebea0df211a0c9866b710ff9dc112e7c1d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectSourceOracleStaticValidation-r001.md",
+      "revision": "c03468d54cf7ce061aab03307c3fa774c9139e63ffbcd75a86f1dda8fa80ae81",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "manual2纯值态API、拒绝优先级与来源边界设计依据",
+      "applicability": "S02-F01-QTS-MANUAL2-PURE-HELPER-CONTRACT-r001"
+    }
+  ],
+  "entry": {
+    "card_canonical_sha256": "fb2a70a319f70a1d822cce14a50ae76e5bae35a4b2fd1a8e2317f1d5382902c5",
+    "context_sha256": "efe41756d075c4a18d08320a9c64034a908e5238ec436fab96ae92bd2c8eb85c"
+  },
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16
+  },
+  "goal_ac_ids": [
+    "AC-S02-01",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04",
+    "AC-S02-05",
+    "AC-S02-06",
+    "AC-S02-07",
+    "AC-S02-08",
+    "AC-S02-09",
+    "AC-S02-10"
+  ],
+  "must_have_ids": [
+    "AC-S02-01",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04",
+    "AC-S02-05",
+    "AC-S02-06",
+    "AC-S02-07",
+    "AC-S02-08",
+    "AC-S02-09",
+    "AC-S02-10",
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "product_obligations": [
+    {
+      "ac_id": "AC-F01-Q004",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q005",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q006",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q007",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q008",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q009",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q010",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q011",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q012",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q013",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q014",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-Q015",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-ORIG-01",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F01-ORIG-02",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F04-Q066",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    },
+    {
+      "ac_id": "AC-F04-Q067",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": []
+    }
+  ],
+  "dependencies": {
+    "S01_F01_Packet": "NOT_AVAILABLE",
+    "real_permission": "BLOCKED / NOT_RUN"
+  },
+  "execution_evidence": [],
+  "fixture_codec": {
+    "undefined": "仅指定input.selectValue与expected.runtime.selectValue的{$js:undefined}标记解码成JS undefined；输出序列化省略该键。",
+    "accessorDefaultValue": "复制base为普通对象，将defaultValue替换为enumerable getter；getter计数初始0；拒绝后必须0。",
+    "sparseValueSource": "复制base，valueSource替换为Array(1)（hole）；拒绝。",
+    "symbolKey": "复制base后添加Symbol(\"extra\") own键，拒绝。",
+    "customPrototype": "Object.assign(Object.create({inherited:true}),base)，拒绝。",
+    "recipe_scope": "$fixtureRecipe/base仅测试层，先构造再调用；不得把descriptor当API输入或认证。"
+  }
+}

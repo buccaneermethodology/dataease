@@ -1,0 +1,65 @@
+{
+  "schema_version": "qssdh_preparation_capture_cases_r001",
+  "contract_ref": "QuerySingleSelectPreparationCaptureContract-r001.json",
+  "cases": [
+    {
+      "id": "M0-PREP-001",
+      "oracle": "valid exact revision returns design/runtime projections with KEEP outer properties",
+      "assert": [
+        "same commitId/revision",
+        "target propValue/cascade replaced by distinct carrier projections",
+        "no shared nested object with input or sibling output",
+        "input deep-equal before/after"
+      ]
+    },
+    {
+      "id": "M0-PREP-002",
+      "oracle": "stale revision, absent/duplicate component and malformed query fail closed",
+      "assert": [
+        "explicit reason",
+        "no partial value",
+        "input unchanged"
+      ]
+    },
+    {
+      "id": "M0-CAP-001",
+      "oracle": "full existing-resource update intent",
+      "assert": [
+        "method updateCanvas",
+        "captured id/name/type check parameters",
+        "full payload fields retained",
+        "contentId/checkVersion omitted only from digest input",
+        "queryDesignOverlay replaces only its matching target payload before serialization"
+      ]
+    },
+    {
+      "id": "M0-CAP-002",
+      "oracle": "new/copy save method, detached design overlay and side-effect normalization",
+      "assert": [
+        "new or copy -> saveCanvas",
+        "trimmed name copied only",
+        "top GroupArea absent",
+        "UserView/Group/DeTabs linkageFilters cleared only on captured copy",
+        "only matching target receives overlay propValue/cascade"
+      ]
+    },
+    {
+      "id": "M0-CAP-003",
+      "oracle": "captured result remains unchanged after caller edits original inputs",
+      "assert": [
+        "nested values detached",
+        "payload stable after original mutations",
+        "inputs unchanged during capture"
+      ]
+    },
+    {
+      "id": "M0-CAP-004",
+      "oracle": "invalid JSON, cycles, getter, and invalid names reject without side effects",
+      "assert": [
+        "getter invocation count 0",
+        "no partial value",
+        "invalid name rejected"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-RESOURCE-ENVIRONMENT-REPAIR-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "恢复隔离本地环境资源读取目录，保留完整38项义务和权限阻塞",
+    "objective": "只增加dataease.path.data并在私密备份后重启同一包的本机8100，浏览器复验实际图片",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "/Users/xiaomei/opt/dataease3.0/config/application.yml",
+      "同目录唯一0600私密配置备份",
+      "本机8100的PID1730及本次替换进程",
+      "既有backend-launchd日志",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ResourceEnvironmentRepair-r001.json"
+    ],
+    "forbidden_actions": [
+      "输出或复制凭据到仓库",
+      "修改数据库模式/数据或更改数据库连接",
+      "修改生产源码/安装/升级/重新构建",
+      "停止其他进程或强杀",
+      "改变权限实现",
+      "把配置或健康检查当产品验收"
+    ],
+    "maximum_claim": "环境局部恢复实测；真实权限和完整产品验收仍未完成"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "环境恢复权威/方案/独立审查",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ResourceEnvironmentRepairPlan-r001.md",
+      "revision": "737090ba55b19f6f551bc8fd348be15e6fe00500eb45a54f74a6c2d5cbc3608e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "环境恢复权威/方案/独立审查",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/ResourceEnvironmentRepairReview-r001.md",
+      "revision": "7c921d8a2a3cb8fa4d07cb4a712c01da185aba54bc5a9accb01df550dc64218f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "环境恢复权威/方案/独立审查",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/RuntimeResourcePathDiagnosis-r001.md",
+      "revision": "61270b11850fa460cd90e49e51b4695a0f4d14424509ca3c128496eed40352af",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "环境恢复权威/方案/独立审查",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "root执行独立审查通过的有界本地配置恢复；真实UI另核",
+    "task_id": "S02-MVP-RESOURCE-ENVIRONMENT-REPAIR-r001",
+    "recorded_at": "2026-10-29T07:30:37.261451+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r499.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r500.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-RESOURCE-ENVIRONMENT-REPAIR-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r499.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "环境局部恢复实测；真实权限和完整产品验收仍未完成",
+  "design_objective": "只增加dataease.path.data并在私密备份后重启同一包的本机8100，浏览器复验实际图片",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ResourceEnvironmentRepair-r001.json"
+}

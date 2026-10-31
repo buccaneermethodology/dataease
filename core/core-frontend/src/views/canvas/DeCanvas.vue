@@ -106,6 +106,9 @@ const handleNewFromCanvasMain = newComponentInfo => {
       component: component,
       index: undefined
     })
+    if (component.component === 'VQuery' && component.innerType === 'VQuery') {
+      dvMainStore.registerPendingQuerySingleSelect(component)
+    }
     adaptCurThemeCommonStyle(component)
     nextTick(() => {
       cyGridster.value.addItemBox(component) //在适当的时候初始化布局组件
@@ -126,6 +129,9 @@ const handleDrop = e => {
     addComponent.isShow = true
     syncShapeItemStyle(addComponent, baseWidth.value, baseHeight.value)
     cyGridster.value.handleMouseUp(e, addComponent, componentData.value.length - 1)
+    if (addComponent.component === 'VQuery' && addComponent.innerType === 'VQuery') {
+      dvMainStore.registerPendingQuerySingleSelect(addComponent)
+    }
     snapshotStore.recordSnapshotCacheWithPositionChange('renderChart', addComponent.id)
   }
 }

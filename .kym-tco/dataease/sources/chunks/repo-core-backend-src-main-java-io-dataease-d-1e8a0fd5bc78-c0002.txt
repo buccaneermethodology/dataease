@@ -1,0 +1,71 @@
+    public void createEngineTable(String tableName, List<TableField> tableFields) throws Exception {
+        CoreDeEngine engine = engineManage.info();
+        Provider provider = ProviderFactory.getProvider(engine.getType());
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        DatasourceDTO coreDatasource = new DatasourceDTO();
+        BeanUtils.copyBean(coreDatasource, engine);
+        datasourceRequest.setDatasource(coreDatasource);
+        EngineProvider engineProvider = ProviderUtil.getEngineProvider(engine.getType());
+        datasourceRequest.setQuery(engineProvider.createTableSql(tableName, tableFields, engine));
+        LogUtil.debug(datasourceRequest.getQuery());
+        if (engineProvider.needCheckExistTable()) {
+            if (!provider.getTables(datasourceRequest).stream().map(DatasetTableDTO::getTableName).collect(Collectors.toList()).contains(tableName)) {
+                provider.execDDL(datasourceRequest);
+            }
+        } else {
+            provider.execDDL(datasourceRequest);
+        }
+
+    }
+
+    public void dropEngineTable(String tableName) throws Exception {
+        CoreDeEngine engine = engineManage.info();
+        Provider provider = ProviderFactory.getProvider(engine.getType());
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        DatasourceDTO coreDatasource = new DatasourceDTO();
+        BeanUtils.copyBean(coreDatasource, engine);
+        datasourceRequest.setDatasource(coreDatasource);
+        EngineProvider engineProvider = ProviderUtil.getEngineProvider(engine.getType());
+        datasourceRequest.setQuery(engineProvider.dropTable(tableName, engine));
+        if (engineProvider.needCheckExistTable()) {
+            if (provider.getTables(datasourceRequest).stream().map(DatasetTableDTO::getTableName).collect(Collectors.toList()).contains(tableName)) {
+                provider.execDDL(datasourceRequest);
+            }
+        } else {
+            provider.execDDL(datasourceRequest);
+        }
+    }
+
+    public void addSchedule(CoreDatasourceTask datasourceTask) throws DEException {
+        if (StringUtils.equalsIgnoreCase(datasourceTask.getSyncRate(), DatasourceTaskServer.ScheduleType.RIGHTNOW.toString())) {
+            scheduleManager.addOrUpdateSingleJob(new JobKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()), new TriggerKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()), ExtractDataJob.class, new Date(datasourceTask.getStartTime()), scheduleManager.getDefaultJobDataMap(datasourceTask.getDsId().toString(), datasourceTask.getCron(), datasourceTask.getId().toString(), datasourceTask.getUpdateType()));
+        } else {
+            Date endTime;
+            if (datasourceTask.getEndTime() == null || datasourceTask.getEndTime() == 0) {
+                endTime = null;
+            } else {
+                endTime = new Date(datasourceTask.getEndTime());
+                if (endTime.before(new Date())) {
+                    deleteSchedule(datasourceTask);
+                    return;
+                }
+            }
+
+            scheduleManager.addOrUpdateCronJob(new JobKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()), new TriggerKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()), ExtractDataJob.class, datasourceTask.getCron(), new Date(datasourceTask.getStartTime()), endTime, scheduleManager.getDefaultJobDataMap(datasourceTask.getDsId().toString(), datasourceTask.getCron(), datasourceTask.getId().toString(), datasourceTask.getUpdateType()));
+        }
+    }
+
+    public void deleteSchedule(CoreDatasourceTask datasourceTask) {
+        scheduleManager.removeJob(new JobKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()), new TriggerKey(datasourceTask.getId().toString(), datasourceTask.getDsId().toString()));
+    }
+
+    public void fireNow(CoreDatasourceTask datasourceTask) throws Exception {
+        scheduleManager.fireNow(datasourceTask.getId().toString(), datasourceTask.getDsId().toString());
+    }
+
+    private DatasourceDTO transDTO(CoreDatasource record) {
+        DatasourceDTO datasourceDTO = new DatasourceDTO();
+        BeanUtils.copyBean(datasourceDTO, record);
+        return datasourceDTO;
+    }
+}

@@ -1,0 +1,398 @@
+        paramsList.add(apiDefinition);
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        DatasourceDTO datasource = new DatasourceDTO();
+        datasource.setConfiguration(JsonUtil.toJSONString(paramsList).toString());
+        datasourceRequest.setDatasource(datasource);
+
+        apiDefinition = (ApiDefinition) invokeMethod(request.get("dsType"), "checkApiDefinition", DatasourceRequest.class, datasourceRequest);
+        if (apiDefinition.getRequest().getAuthManager() != null && StringUtils.isNotBlank(apiDefinition.getRequest().getAuthManager().getUsername()) && StringUtils.isNotBlank(apiDefinition.getRequest().getAuthManager().getPassword()) && apiDefinition.getRequest().getAuthManager().getVerification().equals("Basic Auth")) {
+            apiDefinition.getRequest().getAuthManager().setUsername(new String(Base64.getEncoder().encode(apiDefinition.getRequest().getAuthManager().getUsername().getBytes())));
+            apiDefinition.getRequest().getAuthManager().setPassword(new String(Base64.getEncoder().encode(apiDefinition.getRequest().getAuthManager().getPassword().getBytes())));
+        }
+        return apiDefinition;
+    }
+
+    private Map<String, Object> buildAccessTokenResult(String json) {
+        if (ObjectUtils.isEmpty(json)) {
+            DEException.throwException("get access token error");
+        }
+        Map<String, Object> resultMap = JsonUtil.parse(json, Map.class);
+        if (Integer.parseInt(resultMap.get("code").toString()) != 0) {
+            DEException.throwException(resultMap.get("msg").toString());
+        }
+        return resultMap;
+    }
+
+    private String buildAccessTokenParam(String appId, String appSecret) {
+        Map<String, String> param = new HashMap<>();
+        param.put("app_id", appId);
+        param.put("app_secret", appSecret);
+        return Objects.requireNonNull(JsonUtil.toJSONString(param)).toString();
+    }
+
+    @Resource
+    private CorePermissionManage corePermissionManage;
+
+    private void validateExcelFiles(DatasourceDTO requested, DatasourceDTO stored) {
+        if (!"Excel".equalsIgnoreCase(requested.getType())) return;
+        if (V3UserUtil.getUid() == null || V3UserUtil.getLink() != null) {
+            DEException.throwException(Translator.get("i18n_excel_file_forbidden"));
+        }
+        if (stored != null && !corePermissionManage.checkAuth(
+                new BusiPerCheckDTO(stored.getId(), BusiResourceEnum.DATASOURCE, AuthEnum.MANAGE))) {
+            DEException.throwException(Translator.get("i18n_excel_file_forbidden"));
+        }
+        try {
+            ExcelFileGuard.validateConfiguration(java.nio.file.Path.of(ExcelUtils.getExcelPath()),
+                    requested.getConfiguration(), stored != null && "Excel".equalsIgnoreCase(stored.getType())
+                            ? stored.getConfiguration() : null,
+                    V3UserUtil.getUid().toString());
+        } catch (IOException e) {
+            DEException.throwException(Translator.get("i18n_excel_file_forbidden"));
+        }
+    }
+
+    private void preCheckDs(DatasourceDTO datasource) throws DEException {
+        List<String> list = datasourceTypes().stream().map(DatasourceConfiguration.DatasourceType::getType).collect(Collectors.toList());
+        list.remove(DatasourceConfiguration.DatasourceType.h2.getType());
+        if (LicenseUtil.licenseValid()) {
+            List<XpackPluginsDatasourceVO> xpackPluginsDatasourceVOS = pluginManage.queryPluginDs();
+            xpackPluginsDatasourceVOS.forEach(ele -> list.add(ele.getType()));
+        }
+
+        if (!list.contains(datasource.getType())) {
+            DEException.throwException("Datasource type not supported.");
+        }
+    }
+
+    public void checkDatasourceStatus(DatasourceDTO coreDatasource) {
+        if (coreDatasource.getType().equals(DatasourceConfiguration.DatasourceType.Excel.name()) || coreDatasource.getType().equals(DatasourceConfiguration.DatasourceType.folder.name())) {
+            return;
+        }
+        try {
+            DatasourceRequest datasourceRequest = new DatasourceRequest();
+            datasourceRequest.setDatasource(coreDatasource);
+            String status = null;
+            if (coreDatasource.getType().startsWith("API")) {
+                status = (String) invokeMethod(coreDatasource.getType(), "checkAPIStatus", DatasourceRequest.class, datasourceRequest);
+            } else if (coreDatasource.getType().startsWith("Excel")) {
+                status = ExcelUtils.checkStatus(datasourceRequest);
+            } else {
+                Provider provider = ProviderFactory.getProvider(coreDatasource.getType());
+                status = provider.checkStatus(datasourceRequest);
+            }
+            coreDatasource.setStatus(status);
+        } catch (Exception e) {
+            DEException.throwException(e.getMessage());
+        }
+    }
+
+
+    public void updateDemoDs() {
+    }
+
+    @Override
+    public Map<String, Object> previewDataWithLimit(PreviewDataRequest req) throws DEException {
+        String tableName = req.getTable();
+        Long id = Long.valueOf(req.getId());
+        if (ObjectUtils.isEmpty(tableName) || ObjectUtils.isEmpty(id)) {
+            return null;
+        }
+        DatasourceSchemaDTO datasourceSchemaDTO = new DatasourceSchemaDTO();
+        BeanUtils.copyBean(datasourceSchemaDTO, engineManage.getDeEngine());
+
+        Configuration configuration = JsonUtil.parseObject(datasourceSchemaDTO.getConfiguration(), Configuration.class);
+        String schema = StringUtils.isNotEmpty(configuration.getSchema()) ? configuration.getSchema() + "." : "";
+        Map<Long, DatasourceSchemaDTO> dsMap = new HashMap<>();
+        datasourceSchemaDTO.setSchemaAlias(String.format(SQLConstants.SCHEMA, datasourceSchemaDTO.getId()));
+        dsMap.put(datasourceSchemaDTO.getId(), datasourceSchemaDTO);
+        DsTypeDTO datasourceType = datasetSQLManage.getDatasourceType(dsMap, datasourceSchemaDTO.getId());
+        String sql = "SELECT * FROM " + schema + datasourceType.getPrefix() + tableName + datasourceType.getSuffix();
+        Provider provider = ProviderFactory.getProvider(datasourceSchemaDTO.getType());
+        sql = new String(Base64.getEncoder().encode(sql.getBytes()));
+        PreviewSqlDTO previewSqlDTO = new PreviewSqlDTO();
+        previewSqlDTO.setSql(sql);
+        previewSqlDTO.setDatasourceId(id);
+        previewSqlDTO.setIsCross(false);
+        return datasetDataManage.previewSql(previewSqlDTO);
+    }
+
+    @Override
+    public DatasourceDTO getById(Long datasourceId) throws DEException {
+        return dataSourceManage.getDs(datasourceId);
+    }
+
+    @Override
+    public List<String> latestUse() {
+        List<String> types = new ArrayList<>();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        org.springframework.data.domain.Pageable pageableWithSort = PageRequest.of(0, 5, sort);
+        Specification<CoreDatasource> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get("createBy"), V3UserUtil.getUid()));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        List<CoreDatasource> coreDatasources = coreDatasourceRepository.findAll(spec, pageableWithSort).getContent();
+        if (CollectionUtils.isEmpty(coreDatasources)) {
+            return types;
+        }
+        for (CoreDatasource coreDatasource : coreDatasources) {
+            if (!coreDatasource.getType().equalsIgnoreCase("folder") && !types.contains(coreDatasource.getType())) {
+                types.add(coreDatasource.getType());
+            }
+        }
+        return types;
+    }
+
+    private Function<CoreDatasourceTaskLog, CoreDatasourceTaskLogDTO> coreExportToDtoConverter = c -> {
+        CoreDatasourceTaskLogDTO dto = new CoreDatasourceTaskLogDTO();
+        BeanUtils.copyBean(dto, c);
+        return dto;
+    };
+
+    public PageResult<CoreDatasourceTaskLogDTO> listSyncRecord(int goPage, int pageSize, Long dsId) {
+        Pageable pageable = PageRequest.of(goPage - 1, pageSize, Sort.by(Sort.Direction.DESC, "startTime"));
+        Specification<CoreDatasourceTaskLog> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get("dsId"), dsId));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        Page<CoreDatasourceTaskLogDTO> pager = coreDatasourceTaskLogRepository.findAll(spec, pageable).map(coreExportToDtoConverter);
+        CoreDatasource coreDatasource = dataSourceManage.getCoreDatasource(dsId);
+        DatasourceRequest datasourceRequest = new DatasourceRequest();
+        datasourceRequest.setDatasource(transDTO(coreDatasource));
+        List<DatasetTableDTO> datasetTableDTOS = new ArrayList<>();
+        if (coreDatasource.getType().contains(DatasourceConfiguration.DatasourceType.API.toString())) {
+            datasetTableDTOS = (List<DatasetTableDTO>) invokeMethod(coreDatasource.getType(), "getApiTables", DatasourceRequest.class, datasourceRequest);
+        } else {
+            datasetTableDTOS = ExcelUtils.getTables(datasourceRequest);
+        }
+        for (int i = 0; i < pager.getContent().size(); i++) {
+            for (int i1 = 0; i1 < datasetTableDTOS.size(); i1++) {
+                if (pager.getContent().get(i).getTableName().equalsIgnoreCase(datasetTableDTOS.get(i1).getTableName())) {
+                    pager.getContent().get(i).setName(datasetTableDTOS.get(i1).getName());
+                }
+            }
+        }
+        return new PageResult<>(pager.getContent(), pager.getTotalElements(), pageable);
+    }
+
+
+    @XpackInteract(value = "syncDatasourceStatus", before = false)
+    public void updateDatasourceStatus() {
+        Specification<CoreDatasource> findTypeNotInSpec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.not(root.get("type").in(Arrays.asList("Excel", "folder"))));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        List<CoreDatasource> datasources = coreDatasourceRepository.findAll(findTypeNotInSpec);
+        datasources.forEach(datasource -> {
+            if (!syncDsIds.contains(datasource.getId())) {
+                syncDsIds.add(datasource.getId());
+                commonThreadPool.addTask(() -> {
+                    try {
+                        LogUtil.info("Begin to check ds status: " + datasource.getName());
+                        LicenseUtil.validate();
+                        validate(datasource);
+                        LogUtil.info("Finish to check ds status: " + datasource.getName());
+                    } catch (Exception e) {
+                        LogUtil.info("Error to check ds status: " + datasource.getName() + ", error message: " + e.getMessage());
+                    } finally {
+                        syncDsIds.removeIf(id -> id.equals(datasource.getId()));
+                    }
+                });
+            }
+        });
+    }
+
+    public void updateStopJobStatus() {
+        if (this.isUpdatingStatus) {
+            return;
+        } else {
+            this.isUpdatingStatus = true;
+        }
+
+        try {
+            doUpdate();
+        } catch (Exception e) {
+            LogUtil.error(e);
+        } finally {
+            this.isUpdatingStatus = false;
+        }
+    }
+
+    private void doUpdate() {
+        List<QrtzSchedulerState> qrtzSchedulerStates = qrtzSchedulerStateRepository.findAll();
+        Timestamp currentTimestamp = databaseTimeManage.getCurrentDatabaseTime();
+        List<String> activeQrtzInstances = qrtzSchedulerStates.stream().filter(qrtzSchedulerState -> qrtzSchedulerState.getLastCheckinTime() + qrtzSchedulerState.getCheckinInterval() + 1000 > currentTimestamp.getTime()).map(QrtzSchedulerState::getInstanceName).collect(Collectors.toList());
+
+        List<CoreDatasource> datasources = coreDatasourceRepository.findByTaskStatus(TaskStatus.UnderExecution.name());
+
+        List<CoreDatasource> syncCoreDatasources = new ArrayList<>();
+        List<CoreDatasource> jobStoppedCoreDatasources = new ArrayList<>();
+        datasources.forEach(coreDatasource -> {
+            if (StringUtils.isNotEmpty(coreDatasource.getQrtzInstance()) && !activeQrtzInstances.contains(coreDatasource.getQrtzInstance().substring(0, coreDatasource.getQrtzInstance().length() - 13))) {
+                jobStoppedCoreDatasources.add(coreDatasource);
+            } else {
+                syncCoreDatasources.add(coreDatasource);
+            }
+        });
+
+        if (CollectionUtils.isEmpty(jobStoppedCoreDatasources)) {
+            return;
+        }
+        coreDatasourceRepository.updateTaskStatusByIds(jobStoppedCoreDatasources.stream().map(CoreDatasource::getId).collect(Collectors.toList()), TaskStatus.WaitingForExecution.name());
+        //Task
+        datasourceTaskServer.updateByDsIds(jobStoppedCoreDatasources.stream().map(CoreDatasource::getId).collect(Collectors.toList()));
+    }
+
+    public boolean showFinishPage() throws DEException {
+        return coreDsFinishPageRepository.findById(V3UserUtil.getUid()).orElse(null) == null;
+    }
+
+
+    public void setShowFinishPage() throws DEException {
+        CoreDsFinishPage coreDsFinishPage = new CoreDsFinishPage();
+        coreDsFinishPage.setId(V3UserUtil.getUid());
+        coreDsFinishPageRepository.saveAndFlush(coreDsFinishPage);
+    }
+
+    private DatasourceDTO transDTO(CoreDatasource record) {
+        DatasourceDTO datasourceDTO = new DatasourceDTO();
+        BeanUtils.copyBean(datasourceDTO, record);
+        return datasourceDTO;
+    }
+
+
+    private void filterDs(List<BusiNodeVO> busiNodeVOS, List<Long> ids, String type, Long id) {
+        for (BusiNodeVO busiNodeVO : busiNodeVOS) {
+            if (busiNodeVO.getType() != null && busiNodeVO.getType().equalsIgnoreCase(type)) {
+                if (id != null) {
+                    if (!busiNodeVO.getId().equals(id)) {
+                        ids.add(busiNodeVO.getId());
+                    }
+                } else {
+                    ids.add(busiNodeVO.getId());
+                }
+            }
+            if (CollectionUtils.isNotEmpty(busiNodeVO.getChildren())) {
+                filterDs(busiNodeVO.getChildren(), ids, type, id);
+            }
+        }
+    }
+
+    private static void checkParams(String configurationStr) {
+        DatasourceConfiguration configuration = JsonUtil.parseObject(configurationStr, DatasourceConfiguration.class);
+        if (configuration.getInitialPoolSize() < configuration.getMinPoolSize()) {
+            DEException.throwException("初始连接数不能小于最小连接数！");
+        }
+        if (configuration.getInitialPoolSize() > configuration.getMaxPoolSize()) {
+            DEException.throwException("初始连接数不能大于最大连接数！");
+        }
+        if (configuration.getMaxPoolSize() < configuration.getMinPoolSize()) {
+            DEException.throwException("最大连接数不能小于最小连接数！");
+        }
+        if (configuration.getQueryTimeout() < 0) {
+            DEException.throwException("查询超时不能小于0！");
+        }
+    }
+
+    private static void checkName(List<String> tables) {
+        for (int i = 0; i < tables.size() - 1; i++) {
+            for (int j = i + 1; j < tables.size(); j++) {
+                if (tables.get(i).equalsIgnoreCase(tables.get(j))) {
+                    DEException.throwException(Translator.get("i18n_table_name_repeat") + tables.get(i));
+                }
+            }
+        }
+    }
+
+    private String excelDataTableName(String name) {
+        return StringUtils.substring(name, 6, name.length() - 11);
+    }
+
+    private DatasourceDTO getDatasourceDTOById(Long datasourceId, boolean hidePw) throws DEException {
+        CoreDatasource datasource = dataSourceManage.getCoreDatasource(datasourceId);
+        if (datasource == null) {
+            DEException.throwException(Translator.get("i18n_datasource_not_exists"));
+        }
+        return convertCoreDatasource(datasourceId, hidePw, datasource);
+    }
+
+    private DatasourceDTO convertCoreDatasource(Long datasourceId, boolean hidePw, CoreDatasource datasource) {
+        DatasourceDTO datasourceDTO = new DatasourceDTO();
+        BeanUtils.copyBean(datasourceDTO, datasource);
+        if (ObjectUtils.isNotEmpty(datasourceDTO.getConfiguration())) {
+            try {
+                objectMapper.readTree(datasourceDTO.getConfiguration());
+            } catch (Exception e) {
+                LogUtil.error("解析数据源配置失败", e);
+                datasourceDTO.setConfiguration(null);
+                return datasourceDTO;
+
+            }
+        }
+
+        if (datasourceDTO.getType().contains(DatasourceConfiguration.DatasourceType.API.toString())) {
+            List<ApiDefinition> apiDefinitionList = JsonUtil.parseList(datasourceDTO.getConfiguration(), listTypeReference);
+            List<ApiDefinition> apiDefinitionListWithStatus = new ArrayList<>();
+            List<ApiDefinition> params = new ArrayList<>();
+            int success = 0;
+            for (ApiDefinition apiDefinition : apiDefinitionList) {
+                String status = null;
+                if (StringUtils.isNotEmpty(datasourceDTO.getStatus())) {
+                    JsonNode jsonNode = null;
+                    try {
+                        jsonNode = objectMapper.readTree(datasourceDTO.getStatus());
+                        for (JsonNode node : jsonNode) {
+                            if (node.get("name").asText().equals(apiDefinition.getName())) {
+                                status = node.get("status").asText();
+                            }
+                        }
+                        apiDefinition.setStatus(status);
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("Success")) {
+                    success++;
+                }
+                CoreDatasourceTaskLog log = datasourceTaskServer.lastSyncLogForTable(datasourceId, apiDefinition.getDeTableName());
+                if (log != null) {
+                    apiDefinition.setUpdateTime(log.getStartTime());
+                }
+
+
+                if (StringUtils.isEmpty(apiDefinition.getType()) || apiDefinition.getType().equalsIgnoreCase("table")) {
+                    apiDefinitionListWithStatus.add(apiDefinition);
+                } else {
+                    params.add(apiDefinition);
+                }
+            }
+            if (CollectionUtils.isNotEmpty(params)) {
+                datasourceDTO.setParamsStr(RsaUtils.symmetricEncrypt(JsonUtil.toJSONString(params).toString()));
+            }
+            if (CollectionUtils.isNotEmpty(apiDefinitionListWithStatus)) {
+                datasourceDTO.setApiConfigurationStr(RsaUtils.symmetricEncrypt(JsonUtil.toJSONString(apiDefinitionListWithStatus).toString()));
+            }
+            if (success == apiDefinitionList.size()) {
+                datasourceDTO.setStatus("Success");
+            } else {
+                if (success > 0 && success < apiDefinitionList.size()) {
+                    datasourceDTO.setStatus("Warning");
+                } else {
+                    datasourceDTO.setStatus("Error");
+                }
+            }
+        } else {
+            if (hidePw) {
+                Provider provider = ProviderFactory.getProvider(datasourceDTO.getType());
+                provider.hidePW(datasourceDTO);
+            } else {
+                switch (datasourceDTO.getType()) {
+                    case "mysql":
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(JsonUtil.parseObject(datasourceDTO.getConfiguration(), Mysql.class)).toString());
+                        break;
+                    case "h2":
+                        datasourceDTO.setConfiguration(JsonUtil.toJSONString(JsonUtil.parseObject(datasourceDTO.getConfiguration(), H2.class)).toString());
+                        break;
+                    case "oracle":

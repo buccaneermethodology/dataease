@@ -1,0 +1,380 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求继续执行DE-S02-F01直至完成，设计复审后开始实现；依据SOURCE-LIFECYCLE r004独立复审，实施受限的新建非模板单选查询生命周期模块和真实接线。原Goal分母不变；普通JSON重开仍unmanaged；真实权限验收BLOCKED/NOT_RUN。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "实施r004审查准入的新建非模板、单个顶层普通文本单选查询的会话来源协调、确认发布、历史Manifest和同步保存/未知回包闭环，按精确目标及合同用例执行RED/GREEN；不改权限或其他查询类型。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "core/core-frontend/src/views/dashboard/index.vue",
+      "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "core/core-frontend/src/utils/canvasUtils.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/QSSDH-LIFECYCLE-IMPLEMENTATION-r001-ExecutionEvidence.md"
+    ],
+    "forbidden_actions": [
+      "修改冻结Goal/设计/复审/实现Contract/Cases",
+      "实施权限或角色系统、使用standalone/admin/mock代替权限",
+      "将普通JSON重开认证为原会话来源",
+      "扩大到模板/导入/已有资源/多选/移动端/嵌套组件",
+      "声称真实服务器写入顺序、CAS/幂等或Goal完成"
+    ],
+    "maximum_claim": "r004 bounded lifecycle implementation candidate; ordinary reopen and permissions unverified; no full Goal completion"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "全仓工程、Git与测试边界",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "Builder admission、RED/GREEN及验证门槛",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "原始Goal authority及不缩分母",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LoopGoal_Final_r001.md",
+      "revision": "92d8a4ed6d6686ba401351bd9544800cec799c0ac754a3c612cf4cb98d6c63a9",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "冻结目标范围及阶段门槛",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleDesign-r004.md",
+      "revision": "9a5404e9a2636718dd5cdb45da545aca91af0654bee25127295cc106cbaabd73",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "已审查生命周期合同",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r004.json",
+      "revision": "a55e7db1ed99799ed3216a3096b089c869d840a525f9314dc27a1bae9e3d483c",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "完整同步/发布/历史/save oracle",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r004.md",
+      "revision": "e92475d6ae015dc06ee28f1b69cbc5cd4019a18beae6332b9fdb3a7e7dbf1be0",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "独立复审双结论、目标边界及残余限制",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectLifecycleImplementationContract-r001.json",
+      "revision": "5308bd03257044bb540e4efab5f88d746629448210461c0f9edae4bd164bc08e",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "本轮实现合同",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectLifecycleImplementationCases-r001.json",
+      "revision": "e716db472095ab4e530814cd516de59e1cd7ff282d73b5cc59cfc25057cce2f2",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ],
+      "reason": "本轮冻结case身份索引",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSSDH-SOURCE-LIFECYCLE-M0-Validation-r001.md",
+      "revision": "1b6ee21fdbcd5d2872a02f8a1123b4709efe9c6fd2edba73ed72e8c443b82efc",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "已实现M0行为和证据限制",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus.md",
+      "revision": "b2ef6e4a380232c2780977da106eefaac3d6bb01ca2363c98ca75d639ee49c56",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "当前执行阻塞与权限边界",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "18f87b66a2678cd4ac82f8c9b5d147d5bd910e343ca4660ee0686bc1c0f88473",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "最新Session ledger及目标分母",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "S02 F01 entry packet条件",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r149.json",
+      "revision": "ce01f2be6bb29321f1f3ebaedfd2a56f13458547e5262539d800dc0fec9e0a4b",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "最新派发拓扑快照",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "8f1ac0bb695352900041f88dacaf464205c18e858c004318f8ebb0c98c92aad7",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "86fddf5dc5a44dcdce0e0895b10ee22265490174fe3018e05ccca614cf35c1db",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "revision": "f189476f0e47234188e959a1219ff52aedbfe84367b7d841a6189b29911b3dd2",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "8928113933cbf62c96d397d3fed90c6dae5ab0012fe40cfb6280ce9575bc5a3d",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "b77ce1b4c5dbd6afdc75b17ccebee3e28f90611546ad1fffac76d2426953b3dd",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "审查本轮精确源码或测试目标的当前状态与调用链",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts",
+      "revision": "e83a481a8bd4a02ab7904a3d682ecfe35f7e290d74a63442575b9e2fbdd02fb8",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "当前M0测试runner基线与后续同identity回归target",
+      "applicability": "S02-QSSDH-SOURCE-LIFECYCLE-IMPLEMENTATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "admission_or_contract_drift",
+      "mode": "deterministic",
+      "condition": "卡片、合同、用例、Context或准入摘要缺失/漂移",
+      "action": "停止所有实现写入并重新物化/校验准入。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "contract_input_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "真实调用链显示M0冻结输入不足以完整复制捕获语义",
+      "action": "报告精确缺口并停止，不扩大接线或改合同。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "preservation_statement": "只实施独立审查准入的M0；Goal原分母、真实权限阻塞和LC3后续finding不变。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": true,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "implementation",
+    "reason": "独立Design Review明确READY_FOR_BOUNDED_LIFECYCLE_IMPLEMENTATION，按精确源码/runner target与权限边界执行。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal及26项must-have",
+    "SOURCE-LIFECYCLE r004独立Design Review及16条完整save cases/8组actions",
+    "真实createInit模板与非模板分支",
+    "DeCanvas实际新增入口",
+    "QueryConditionConfiguration确认/事件时序",
+    "Component/Select旧异步回调token",
+    "snapshot raw新增/undo/redo语义",
+    "canvasSaveWithParams所有捕获/await/请求/回包路径",
+    "session owner未知结果在同会话导航的保留",
+    "冻结M0/LC4/LC3案例与完整目标源码差异",
+    "S01 F01 Entry Packet及Goal原分母",
+    "权限BLOCKED/NOT_RUN与普通JSON unmanaged边界"
+  ]
+}

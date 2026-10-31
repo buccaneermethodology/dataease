@@ -1,0 +1,848 @@
+{
+  "schema_version": "s02_g2_ownership_cases_v1",
+  "delivery_id": "S02-F01-G2-STAGE-LIFECYCLE-OWNERSHIP",
+  "revision": "r002",
+  "frozen_for_builder": true,
+  "freeze_meaning": "immutable review candidate; not an approved Builder entry",
+  "scope_delta": "implementation-order-only; original acceptance unchanged",
+  "cases": [
+    {
+      "id": "G2OWN-001",
+      "scenario": "success",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "create",
+          "setup",
+          "render",
+          "afterRender"
+        ],
+        "destroy_count": 0,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-001: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-002",
+      "scenario": "stale_start",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "current": false,
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [],
+        "destroy_count": 0,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-002: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-003",
+      "scenario": "stale_after_create",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "create",
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "create",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-003: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-004",
+      "scenario": "stale_after_setup",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "setup",
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "create",
+          "setup",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-004: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-005",
+      "scenario": "stale_after_render",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "render_deferred",
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "create",
+          "setup",
+          "render",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-005: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-006",
+      "scenario": "stale_after_afterRender",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "afterRender_deferred",
+        "setup_registers": "setup",
+        "after_registers": "after"
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "create",
+          "setup",
+          "render",
+          "afterRender",
+          "cleanup:after",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-006: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-007",
+      "scenario": "explicit_empty",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [
+          "initial"
+        ],
+        "create_outcome": "empty",
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "empty",
+        "events": [
+          "create",
+          "cleanup:initial"
+        ],
+        "destroy_count": 0,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-007: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-008",
+      "scenario": "create_reject",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [
+          "initial"
+        ],
+        "throw_at": "create",
+        "error_id": "primary",
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "create",
+          "cleanup:initial"
+        ],
+        "destroy_count": 0,
+        "primary_error_identity": "primary",
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order",
+        "failure_code": "G2_RENDER_ATTEMPT_FAILED"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-008: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-009",
+      "scenario": "setup_throw",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "throw_at": "setup",
+        "error_id": "primary",
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "create",
+          "setup",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": "primary",
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order",
+        "failure_code": "G2_RENDER_ATTEMPT_FAILED"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-009: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-010",
+      "scenario": "render_reject",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "throw_at": "render",
+        "error_id": "primary",
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "create",
+          "setup",
+          "render",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": "primary",
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order",
+        "failure_code": "G2_RENDER_ATTEMPT_FAILED"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-010: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-011",
+      "scenario": "after_reject",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "throw_at": "afterRender",
+        "error_id": "primary",
+        "setup_registers": "setup",
+        "after_registers": "after"
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "create",
+          "setup",
+          "render",
+          "afterRender",
+          "cleanup:after",
+          "cleanup:setup",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": "primary",
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": null,
+        "event_comparison": "exact_order",
+        "failure_code": "G2_RENDER_ATTEMPT_FAILED"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-011: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-012",
+      "scenario": "dispose_twice",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "add:a",
+          "add:b",
+          "dispose",
+          "dispose"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:b",
+          "cleanup:a",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-012: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-013",
+      "scenario": "cleanup_throws",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "add:a",
+          "add:bad",
+          "add:b",
+          "dispose"
+        ],
+        "throw_cleanup": [
+          "bad"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:b",
+          "cleanup:bad",
+          "cleanup:a",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [
+          "bad"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-013: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-014",
+      "scenario": "replace",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "add:key:old",
+          "replace:key:new",
+          "dispose"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:old",
+          "cleanup:new",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-014: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-015",
+      "scenario": "remove_reentrant",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "add:key:reentrant",
+          "remove:key",
+          "dispose"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:reentrant",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-015: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-016",
+      "scenario": "register_closed",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "dispose",
+          "add:late",
+          "dispose"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "destroy",
+          "cleanup:late"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-016: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-017",
+      "scenario": "scope_isolation",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "attempts": [
+          "A:deferred",
+          "B:ready"
+        ],
+        "stale": [
+          "A"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "destroy:A"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [
+          "B_untouched"
+        ],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection",
+        "instance_destroy_counts": {
+          "A": 1,
+          "B": 0
+        }
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-017: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-018",
+      "scenario": "destroy_throws",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "throw_destroy": true,
+        "operation": [
+          "add:a",
+          "dispose",
+          "dispose"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:a",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [
+          "destroy"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-018: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-019",
+      "scenario": "unexpected_undefined",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "create_outcome": "undefined",
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "create"
+        ],
+        "destroy_count": 0,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [],
+        "extra": [
+          "G2_RENDER_INSTANCE_MISSING"
+        ],
+        "event_projection": null,
+        "event_comparison": "exact_order",
+        "failure_code": "G2_RENDER_INSTANCE_MISSING"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-019: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-020",
+      "scenario": "stale_cleanup_error",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "render_deferred",
+        "throw_cleanup": [
+          "setup"
+        ],
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "cleanup:setup",
+          "destroy",
+          "notify:setup"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [
+          "setup"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-020: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-021",
+      "scenario": "failure_cleanup_error",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "throw_at": "render",
+        "throw_cleanup": [
+          "setup"
+        ],
+        "error_id": "primary",
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "failure",
+        "events": [
+          "cleanup:setup",
+          "destroy",
+          "notify:setup"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": "primary",
+        "cleanup_error_ids": [
+          "setup"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection",
+        "failure_code": "G2_RENDER_ATTEMPT_FAILED"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-021: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-022",
+      "scenario": "replace_cleanup_error",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "operation": [
+          "add:key:bad",
+          "replace:key:new",
+          "dispose"
+        ],
+        "throw_cleanup": [
+          "bad"
+        ],
+        "setup_registers": null,
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "ready",
+        "events": [
+          "cleanup:bad",
+          "notify:bad",
+          "cleanup:new",
+          "destroy"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [
+          "bad"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-022: NOT_IMPLEMENTED"
+    },
+    {
+      "id": "G2OWN-023",
+      "scenario": "notify_throws",
+      "arrange": {
+        "instance_id": "A",
+        "initial_cleanup_ids": [],
+        "stale_at": "render_deferred",
+        "throw_cleanup": [
+          "setup"
+        ],
+        "throw_notify": true,
+        "setup_registers": "setup",
+        "after_registers": null
+      },
+      "oracle": {
+        "outcome": "stale",
+        "events": [
+          "cleanup:setup",
+          "destroy",
+          "notify:setup"
+        ],
+        "destroy_count": 1,
+        "primary_error_identity": null,
+        "cleanup_error_ids": [
+          "setup",
+          "notify"
+        ],
+        "extra": [],
+        "event_projection": [
+          "cleanup:",
+          "destroy",
+          "notify:"
+        ],
+        "event_comparison": "exact_order_after_explicit_prefix_projection"
+      },
+      "runner_ref": "core/core-frontend/tests/g2-render-ownership/check.mjs",
+      "red_fingerprint": "G2OWN-023: NOT_IMPLEMENTED"
+    }
+  ],
+  "component_cases": [
+    {
+      "id": "G2OWN-C01",
+      "scenario": "actual_full_render_waits_before_publish",
+      "arrange": {
+        "create": "deferred",
+        "render": "deferred",
+        "afterRender": "deferred"
+      },
+      "assert": [
+        "before_ready myChart new identity not published",
+        "after_ready scope/instance identity match",
+        "old_scope destroy once",
+        "baseline_fingerprint=HELPER_NOT_CONNECTED"
+      ]
+    },
+    {
+      "id": "G2OWN-C02",
+      "scenario": "autoRefresh_and_generation_switch",
+      "arrange": {
+        "updateData": "deferred",
+        "switch_generation_before_callback": true
+      },
+      "assert": [
+        "old callback no assist install",
+        "old completion no replay",
+        "new scope untouched"
+      ]
+    },
+    {
+      "id": "G2OWN-C03",
+      "scenario": "resize_queue_and_unmount",
+      "arrange": {
+        "subcases": [
+          "queued_then_unmount",
+          "forceFit_started_then_unmount"
+        ]
+      },
+      "assert": [
+        "queued callback no options/forceFit/replay",
+        "started forceFit may settle but no post-unmount replay",
+        "scope destroy once"
+      ]
+    },
+    {
+      "id": "G2OWN-C04",
+      "scenario": "unmount_cleanup_failure",
+      "arrange": {
+        "cleanup_throws": true,
+        "pending_render": true
+      },
+      "assert": [
+        "timers cleared and schedule completed",
+        "carousel+queued resize cleanup attempted",
+        "both observers disconnect in finally",
+        "pending returned instance disposed; no publish"
+      ]
+    }
+  ],
+  "known_residuals": [
+    {
+      "id": "G2OWN-027",
+      "owner": "subsequent G2 stage product implementation",
+      "status": "OPEN / NOT_FIXED_BY_THIS_UNIT",
+      "source_ref": "reviews/G2StageLifecycleOwnershipDesignReview-r001.md#G2OWN-R005/R006",
+      "assertion": "create/installer resources not yet returned are outside this unit; cannot claim complete stage failure cleanup"
+    }
+  ],
+  "red_rule": {
+    "helper_executed": 23,
+    "assertion_failures": 23,
+    "execution_errors": 0,
+    "first_fingerprint": "G2OWN-001: NOT_IMPLEMENTED",
+    "component_baseline_fingerprint": "G2OWN-C01: HELPER_NOT_CONNECTED"
+  },
+  "not_proven": [
+    "Copy/Paste产品入口",
+    "隐藏stage host",
+    "query或Store事务",
+    "真实权限",
+    "浏览器G2渲染/tooltip/legend/resize直到实际运行"
+  ]
+}

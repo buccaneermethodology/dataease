@@ -1,0 +1,61 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-FRONTEND-CACHE-RECOVERY-r003",
+  "session_id": "DE-S02-F01",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-FRONTEND-CACHE-RECOVERY-r003.json",
+      "sha256": "43e489b56455b149a916a94b759d835f2cd431c0ff20d0321a59824becfcc949"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-FRONTEND-CACHE-RECOVERY-r003",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/FrontendReloadRecovery-r003.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/FrontendReloadRecovery-r003.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "已确认局部lint与Vite旧缓存诊断差异的恢复，非产品验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r002.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-FRONTEND-CACHE-RECOVERY-r003",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r455.json",
+  "working_directory": ".",
+  "execution_command": "复验卡/两个admission。当前第二次新进程仍输出barUtil旧单行import的prettier诊断，而当前源码已多行且CLI lint0；config/common.ts启用cache:true，插件cacheLocation默认node_modules/.vite/.eslintcache。仅停止确认cwd/127.0.0.1:7070的进程，备份此生成cache到/tmp并记录SHA，再删除该单一缓存（不清node_modules、不改配置/源码），沿既有npm dev启动。新冷UI动态import正常后记录结果；不触碰8100/库。此为有证据的恢复策略变化，不把旧失败计验收。",
+  "delta_read_set": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC1Validation-r001.md",
+    "core/core-frontend/package.json",
+    "core/core-frontend/config/common.ts",
+    "core/core-frontend/config/dev.ts"
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPC-saved-owner-integration-design-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续S02不依赖真实权限环境的设计准备：基于Saved Canvas Owner helper独立Delta Validation r002，形成QPC r006设计增量，精确区分detached helper的已验证能力与真实Store producer/授权能力；修订QPC r005审查指出的dirty条件与引用版本说明。不得改产品源码、cases r005、UI/Store、权限接线，不得缩小Goal分母。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "补齐QPC设计与当前Saved Canvas Owner helper能力之间的边界，并保留真实权限、产品接线和运行效果未验证状态。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesignDelta-r006.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、UI/Store、测试或QueryProductCommitCases-r005.json",
+      "把detached helper视为真实Store producer或授权证据",
+      "改变QPC-06权限阻塞、Goal分母、产品AC或Scope Delta",
+      "把设计增量写成产品实现/验收通过"
+    ],
+    "maximum_claim": "仅一份QPC设计澄清候选；不代表产品Schema冻结、产品Builder准入或权限验证。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "implementation",
+        "validation"
+      ],
+      "reason": "project rules",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "semantic_review"
+      ],
+      "reason": "governance hard gates",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "frozen Goal denominator",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r005.md",
+      "revision": "ddef9ea1e00dcd1cffee040b51e3632cca85d7166fd9782c9ff4246b2ccd3d69",
+      "domains": [
+        "design",
+        "acceptance",
+        "semantic_review"
+      ],
+      "reason": "base local commit protocol",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r005.json",
+      "revision": "388f0719d018b7cd444b6232d8601e0825513f99d0dee98ca68cf89dd3240728",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "r005 complete state oracles",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r005.md",
+      "revision": "c9ab8212e34a86eabdeb8fc9159b59336320a8d7e13ad1f4dbd682ebbdee117a",
+      "domains": [
+        "semantic_review",
+        "readiness"
+      ],
+      "reason": "independent design verdict and nonblocking corrections",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "design",
+        "identity"
+      ],
+      "reason": "saved owner contract",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-source-Validation-r002.md",
+      "revision": "83a2c649d3d2281616116da5387fa9e2303418140f67ffa6ccf4dfa7848b2070",
+      "domains": [
+        "validation",
+        "dependency"
+      ],
+      "reason": "helper source independent validation",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+      "revision": "f475e94fd51c70a6d634ff80caf0cc35d5430556bedf5e5312b8d09f1dd94130",
+      "domains": [
+        "implementation",
+        "identity"
+      ],
+      "reason": "validated detached helper source",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "permissions blocker",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "35a054bb2678cb6b2324799322e2b1ffaedf9b473da7cf49ff3ddcd6ac6e9150",
+      "domains": [
+        "dashboard_state",
+        "next_action"
+      ],
+      "reason": "current session ledger",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r211.json",
+      "revision": "a34cafbb07dd1fb3bdeb961f68145293d6f9108002e56abc46c3f9fbb0c681d9",
+      "domains": [
+        "topology",
+        "scope"
+      ],
+      "reason": "latest actual topology",
+      "applicability": "S02-QPC-saved-owner-integration-design-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "QPC-DESIGN-SEMANTIC",
+      "condition": "新增owner身份字段或dirty/preview状态可能混淆真实能力、权限与本地模型",
+      "action": "扩读helper API、QPC cases及审查报告并记录边界",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "QPC-DESIGN-DELTA",
+      "condition": "引用文件digest或Goal/Session/topology发生变化",
+      "action": "重建Context/Card并重新绑定实际读集",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "局部设计增量不可替代完整Goal、原始产品义务、真实授权契约、实际Store producer、完整多用户验证或S01/S02边界。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single designer then independent semantic review",
+    "reason": "read-mostly local protocol correction; no implementation or external side effect"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "design_objective": "Clarify QPC saved-canvas owner integration and the exact limits of the helper candidate; correct local design wording for dirty marking and r005 references.",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesignDelta-r006.md"
+}

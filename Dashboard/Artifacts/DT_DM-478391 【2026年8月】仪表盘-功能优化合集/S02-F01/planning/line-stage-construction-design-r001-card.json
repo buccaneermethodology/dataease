@@ -1,0 +1,73 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "LINE-STAGE-CONSTRUCTION-DESIGN-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "design",
+  "role": "design",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-LINE-STAGE-CONSTRUCTION-DESIGN-r001.json",
+      "sha256": "87e01f95f860ca4291484a913fe9712fc8a35305de283070cb87b866e1df48fc"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "LINE-STAGE-CONSTRUCTION-DESIGN-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionCases-r001.json"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LineStageConstructionCases-r001.json"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅LineStageConstruction独立工程单元Design/Cases候选；不提供Builder准入或关闭G2OWN-027全部义务。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "LINE-STAGE-CONSTRUCTION-DESIGN-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r399.json",
+  "working_directory": ".",
+  "execution_command": "读真实调用链后写新独立单元 S02-F01-LINE-STAGE-CONSTRUCTION-OWNERSHIP 的第1/3轮Design/Cases。解决Line.drawChart new G2Chart成功后、return前错误的已分配instance/event/Carousel资源所有权，尤其Carousel constructor在init/addEventListeners/observe后、cache.set前失败无法靠外层destroyByContainer找到this。必须具体设计constructor内部异常清理或早owner注册方案，错误出口保留原业务异常身份，cleanup异常不遮盖业务异常，所有清理尽力继续且幂等/cache同owner保护。精确读destroy->stop/clearTimer/removeEventListeners/observer/startqueue/cache/page scroll listener真实路径，列所有调用方及兼容。优先最小完整改动，可影响共用Carousel异常路径但不重写健康逻辑；明确G2库自身constructor在未返回handle前失败的第三方边界，不能假称修复。为真实生产Line类/Carousel类建立可编译module-level harness的具体注入seam，不复制drawChart函数，不万能Proxy；setupOptions等依赖可具名double但被测构造/destroy控制流必须生产代码。machine Cases要有stable ID、fault stage、initial resources/owners、exact cleanup order/count/error refs/return outcome、RED fingerprint、target/testcommand，覆盖empty/success、每个已分配阶段故障、ctor partial DOM listener/observer、start/extremum、cleanup复合异常、同container新旧owner及健康禁用/无host/非line兼容。首次可信RED不能依赖编译失败，需现有真实代码行为违约；Cases尽量一次完整避免微补丁轮。明确独立Review、RED、precise admission、同identityGREEN、独立Validation路线及write exclusions。此设计服务先界面MVP，不新增业务范围/权限API，原10/26/16完整保留。图表公共type/SDK如需改需有确切调用方及理由；优先不加依赖。报告精简但可直接build，不只列抽象理念。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstAuthority-20261025.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/RequiredCapability-MvpSourceRead-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2OwnershipEngineeringCloseout-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipCloseoutReconciliation-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipHelperValidation-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipComponentValidation-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipDesign-r003.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipCases-r003.json",
+    "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+    "core/core-frontend/src/views/chart/components/js/G2TooltipCarousel.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/common.ts",
+    "core/core-frontend/src/views/chart/components/js/extremumUitl.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/types/impl/g2.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+    "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "core/core-frontend/package.json"
+  ]
+}

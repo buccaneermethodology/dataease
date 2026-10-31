@@ -1,0 +1,69 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-QPC-SAVED-OWNER-PRODUCER-delta-validation-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "qpc_saved_owner_producer_delta_validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QPC-saved-owner-producer-delta-validation-r001.json",
+      "sha256": "665cbf4fb7ebbc3a270bb60b8a7f919767b3588659f29149870252f45047fc39"
+    }
+  ],
+  "mode": "delta",
+  "snapshot": {
+    "snapshot_id": "S02-QPC-SAVED-OWNER-PRODUCER-source-validation-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-source-Validation-r001.md"
+  },
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerContract-r002.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerCases-r004.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-source-Validation-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r231.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r232.json",
+    "core/core-frontend/src/custom-component/filter-copy/saved-owner-producer.ts",
+    "core/core-frontend/tests/filter-copy-query-saved-canvas-owner-producer/saved-owner-producer-repair.test.mjs",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-RED.stdout.txt",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-RED.stderr.txt",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-RED.exitcode.txt",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-GREEN.stdout.txt",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-GREEN.stderr.txt",
+    "core/core-frontend/QPC-PRODUCER-REPAIR-r001-GREEN.exitcode.txt",
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-source-DeltaValidation-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPC-PRODUCER-source-DeltaValidation-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "Delta验证仅覆盖producer-local root/target/provider identity变化失效语义、同身份Cases与静态边界；不证明产品接线、Vue/Pinia、真实权限或Goal AC。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitSavedOwnerProducerCasesReview-r004.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-QPC-SAVED-OWNER-PRODUCER-delta-validation-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r232.json",
+  "working_directory": ".",
+  "execution_command": "只读复核QPC-SOURCE-001的关闭情况。独立核验 repair RED应仅在QPC-PROD-007差异且退出1；GREEN全部14项/0行为差异/0执行错误；逐个验证root变化、target缺失/重复/raw替换、provider identity变化均清owner、invalid、generation+1且旧owner后续返回owner_invalidated。不得改实现。"
+}

@@ -1,0 +1,5131 @@
+{
+  "schema_version": "s046_native_dynamic_date_candidate_cases_v1",
+  "status": "candidate_not_frozen_not_executed",
+  "snapshot_id": "S046-NATIVE-DYNAMIC-DATE-DESIGN-r001",
+  "created_at": "2026-10-31T00:08:15.114857+00:00",
+  "source_trace": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/SourceTrace-r001.json",
+    "sha256": "68c45c8a716376ebdb593baf8f83f4b27e223eb15356a541625c76733cad8ae4"
+  },
+  "original_requirements": [
+    "AC-F01-Q012",
+    "AC-F01-Q015",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04"
+  ],
+  "fixtures": {
+    "field_directory": "synthetic D1 field99001 deType1 plus native amount/region/product IDs; must bind actual IDs before runtime",
+    "native_shape_examples": "illustrative shape derived from source, not captured native runtime payload; inactive arbitraryTime example2026/06/15 13:14:15 is not a universal wire-format rule",
+    "timeNum_witnesses": [
+      0,
+      1
+    ],
+    "timeNum_policy": "witness values not product allowlist/max; native UI onlymin0, DTO Integer; fraction/empty/overflow are blocked B03",
+    "FX_COPY_original": "original 5 rows/T IDs2/3/5, oldP0IDs5 preserved; native date extension not bound, B05 pending"
+  },
+  "slice_axes": {
+    "presets": {
+      "year": [
+        "thisYear",
+        "lastYear"
+      ],
+      "month": [
+        "thisMonth",
+        "lastMonth"
+      ],
+      "date": [
+        "today",
+        "yesterday",
+        "monthBeginning",
+        "yearBeginning"
+      ],
+      "datetime": [
+        "today",
+        "yesterday",
+        "monthBeginning",
+        "yearBeginning"
+      ]
+    },
+    "custom_non_datetime_units": {
+      "year": [
+        "year"
+      ],
+      "month": [
+        "year",
+        "month"
+      ],
+      "date": [
+        "year",
+        "month",
+        "date"
+      ]
+    },
+    "direction": [
+      "f",
+      "b"
+    ],
+    "custom_number_witnesses": [
+      0,
+      1
+    ],
+    "date_terms": [
+      "eq",
+      "not_eq",
+      "lt",
+      "gt",
+      "le",
+      "ge",
+      "null",
+      "not_null"
+    ],
+    "source_target_types": [
+      "bar",
+      "table-info",
+      "table-pivot"
+    ],
+    "all_pair_directions": 6,
+    "custom_datetime": "full original axis retained in blocked cases; not deleted/non-goal"
+  },
+  "invariants": [
+    "No Date.now/dayjs/fixValue materialization on copy",
+    "whole-tree independent clone incl known inactive fields/undefined/null in memory; no JSON sanitize",
+    "dynamic Date equality never require old fixed value populated",
+    "timeType independent of dynamic granularity",
+    "unknown malformed whole tree rejects, keep C0/P0/preview; no partial apply",
+    "candidate query/preparation before atomic adoption; once-dispatched failures keep actual query counts",
+    "only explicit normal save; DTO persistence semantic projection separately verified",
+    "real permissions BLOCKED_NOT_RUN; no DEV/admin substitution",
+    "P2 original26 pending; candidates do not close Q012/Q015 or Goal"
+  ],
+  "cases": [
+    {
+      "case_id": "NDD-P-year-thisYear",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设year/thisYear",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "thisYear",
+                "timeGranularity": "year",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar.year"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-year-lastYear",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设year/lastYear",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "lastYear",
+                "timeGranularity": "year",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar minus 1 YEAR, output year"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-month-thisMonth",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设month/thisMonth",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "thisMonth",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar YYYY-MM"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-month-lastMonth",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设month/lastMonth",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "lastMonth",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar minus 1 MONTH, output YYYY-MM"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-date-today",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设date/today",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar date"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-date-yesterday",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设date/yesterday",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "yesterday",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar minus1DAY"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-date-monthBeginning",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设date/monthBeginning",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "monthBeginning",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar DAY=1"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-date-yearBeginning",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设date/yearBeginning",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "yearBeginning",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar MONTH=0 DAY=1"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-datetime-today",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设datetime/today",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "datetime",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar date 00:00:00"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-datetime-yesterday",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设datetime/yesterday",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "yesterday",
+                "timeGranularity": "datetime",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar minus1DAY 00:00:00"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-datetime-monthBeginning",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设datetime/monthBeginning",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "monthBeginning",
+                "timeGranularity": "datetime",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar DAY=1 00:00:00"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-P-datetime-yearBeginning",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生预设datetime/yearBeginning",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "yearBeginning",
+                "timeGranularity": "datetime",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "fixture_kind": "synthetic_shape_from_native_fields_not_recorded_UI_wire"
+      },
+      "expected": {
+        "decision": "allow native rule after approved implementation",
+        "memory_rule": "all six provided fields preserved exactly, value remains null, never replace with now/IDs",
+        "backend_value_expression": "serverCalendar MONTH=0 DAY=1 00:00:00"
+      },
+      "source_facts": [
+        "F05",
+        "F09",
+        "F10",
+        "F15",
+        "F16"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-year-year-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "year",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 year; format year; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-year-year-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "year",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 year; format year; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-year-year-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "year",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 year; format year; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-year-year-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "year",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 year; format year; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-year-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 year; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-year-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 year; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-year-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 year; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-year-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 year; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-month-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "month",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 month; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-month-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 1,
+                "relativeToCurrentType": "month",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 month; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-month-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 0,
+                "relativeToCurrentType": "month",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 month; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-month-month-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "month",
+                "timeNum": 1,
+                "relativeToCurrentType": "month",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 month; format month; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-year-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 year; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-year-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 year; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-year-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 year; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-year-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 year; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-month-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "month",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 month; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-month-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "month",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 month; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-month-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "month",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 month; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-month-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "month",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 month; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-date-f-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 0 date; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-date-f-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "subtract",
+        "backend_value_expression": "serverCalendar f 1 date; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-date-b-0",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 0 date; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-C-date-date-b-1",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生自定义非datetime，0/1为见证不是产品数值上限",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeGranularity": "date",
+                "timeNum": 1,
+                "relativeToCurrentType": "date",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "timeNum_value_domain_note": "known representable integer witnesses only; UI has min0/no max/no precision; do not infer fraction/large policy"
+      },
+      "expected": {
+        "decision": "allow known native integer rule after approved implementation",
+        "rule_clone": "exact setting and complete tree independent from source",
+        "direction": "add",
+        "backend_value_expression": "serverCalendar b 1 date; format date; retain rule rather than result"
+      },
+      "source_facts": [
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F14",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-eq",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界eq",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": "BETWEEN start/end",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-not_eq",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界not_eq",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "not_eq",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": "NOT BETWEEN start/end",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-lt",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界lt",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "lt",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": "< start",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-gt",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界gt",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "gt",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": "> end",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-le",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界le",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "le",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": "<= end",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-OP-ge",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "动态日期算子与边界ge",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "ge",
+              "value": "1999/01/01",
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "old_value_is_stale_and_must_not_drive_dynamic_query": true
+      },
+      "expected": {
+        "rule_preserved": true,
+        "sql_boundary": ">= start",
+        "no_frontend_materialization": true
+      },
+      "source_facts": [
+        "F03",
+        "F14",
+        "F16",
+        "F17"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-NULL-null",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生日期空值算子不调用动态求值",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "null",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {},
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "dynamic_metadata_ignored_by_backend": true
+      },
+      "expected": {
+        "decision": "allow native nullness leaf",
+        "must_not_fill_dynamic_defaults": true,
+        "query_predicate": "IS NULL"
+      },
+      "source_facts": [
+        "F03",
+        "F14"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-NULL-not_null",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生日期空值算子不调用动态求值",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "not_null",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {},
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "dynamic_metadata_ignored_by_backend": true
+      },
+      "expected": {
+        "decision": "allow native nullness leaf",
+        "must_not_fill_dynamic_defaults": true,
+        "query_predicate": "IS NOT NULL"
+      },
+      "source_facts": [
+        "F03",
+        "F14"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-NESTED",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "原生AND/OR混合与基本规则保持",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "recipe": "root OR: group AND(date native today, amount>=150), group AND(region=华南,product=A); sibling basic leaves use existing P1 native schema"
+      },
+      "expected": {
+        "complete_tree_only": true,
+        "no_partial_apply": true,
+        "no_axes_styles_layout_results_in_clip": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-CLONE",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "深拷贝/失败保旧/独立对象",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "recipe": "copy native rule; mutate original nested setting/timeNum and enum sibling; mutate defensive read; paste twice"
+      },
+      "expected": {
+        "clip_target_unchanged_from_source_mutation": true,
+        "no_shared_reference": true,
+        "same_createdAt_revision_after_paste": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-SHAPE",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "保存own undefined/null/缺键与inactive字段",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "recipe": "known six-key schema; inactive setting values missing/null/own undefined, leaf.timeValue own undefined; preserve valid field types; do not fill defaults or serialize clone"
+      },
+      "expected": {
+        "memory_descriptor_exact": true,
+        "inactive_fields_not_computation": true,
+        "no_JSON_roundtrip_for_clone": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-TIMETYPE",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "固定timeType与动态粒度不绑定",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "tree": {
+          "logic": "and",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "99001",
+              "field": null,
+              "filterType": "logic",
+              "term": "eq",
+              "value": null,
+              "enumValue": [],
+              "filterTypeTime": "dynamicDate",
+              "timeType": "year",
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "today",
+                "timeGranularity": "date",
+                "timeNum": 0,
+                "relativeToCurrentType": "year",
+                "around": "b",
+                "arbitraryTime": "2026/06/15 13:14:15"
+              },
+              "subTree": null,
+              "valueType": null,
+              "timeValue": "合成显示文本；非计算oracle"
+            }
+          ]
+        },
+        "leaf_timeType": "year"
+      },
+      "expected": {
+        "accept_independent_native_fields": true,
+        "no_force_timeType_equal_timeGranularity": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-UI-GENERATE",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "真实TimeDialog与RowAuth生成入口",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "actions": [
+          "normal select deType1 field",
+          "dynamicDate + date today, then custom date1 f",
+          "confirm TimeDialog then FilterTree",
+          "normal copy/paste via released compositor"
+        ]
+      },
+      "expected": {
+        "copy_actual_generated_tree": true,
+        "timeValue_is_display": true,
+        "canonical_not_mutated_before_confirm": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-ATOMIC",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "真实wrapper候选query/准备/失败/采用",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "variants": [
+          "query business failure",
+          "network failure",
+          "renderer preparation failure",
+          "cancel overwrite",
+          "stale identity/target/context",
+          "success"
+        ]
+      },
+      "expected": {
+        "prequery_invalid_count": 0,
+        "postdispatch_fail_count": "retain actual count; cannot assert query0 once sent",
+        "failed_target_old_preview_kept": true,
+        "ready_before_adopt": true,
+        "canonical_adopts_request_rule_not_response_materialized_filter": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-PERSIST",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "正常显式save/退出/重开",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "real_vue_then_UI_query_persistence",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "actions": [
+          "native rules valid/same dataset",
+          "normal explicit updateCanvas",
+          "leave panel then findById/newquery",
+          "open FilterTree"
+        ]
+      },
+      "expected": {
+        "memory_exact_before_save": true,
+        "persistent_DTOrule_fields_exact_after_allowed_JSON_null_projection": true,
+        "timeValue_not_DTO_and_rederived_on_open": true,
+        "no_automatic_save": true,
+        "rule_not_resolved_date_saved": true
+      },
+      "source_facts": [
+        "F01",
+        "F02",
+        "F08",
+        "F09",
+        "F18",
+        "F19",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-bar-to-table-info",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "bar",
+        "target_type": "table-info",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-bar-to-table-pivot",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "bar",
+        "target_type": "table-pivot",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-table-info-to-bar",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "table-info",
+        "target_type": "bar",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-table-info-to-table-pivot",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "table-info",
+        "target_type": "table-pivot",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-table-pivot-to-bar",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "table-pivot",
+        "target_type": "bar",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-X-table-pivot-to-table-info",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-F01-Q015",
+        "AC-S02-04"
+      ],
+      "title": "同dataset通用动态规则互复制",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "source_type": "table-pivot",
+        "target_type": "table-info",
+        "tree": "one complete native dynamic/basic nested tree",
+        "preconfigured_target_axes": "ID-visible fixture arranged before copy; different from source"
+      },
+      "expected": {
+        "copy_only_customFilter": true,
+        "preserve_target_axes_metrics_sort_style_layout": true,
+        "target_dynamic_rule_exact": true,
+        "raw_id_oracle": "blocked B02/B05; no assumption same graph visual equals query"
+      },
+      "source_facts": [
+        "F01",
+        "F21"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-REJECT-TRUNCATED",
+      "original_case_identity": [
+        "TC-Q012-02"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "截断内部内容",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "truncated JSON string as internal malformed input; no OS clipboard/parser endpoint added",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority; rejecting a malformed candidateTree object/string is NOT final envelope decode or full original serialized variant verification",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "original_subcase_coverage": "partial representation-level projection only; serialized envelope original subcase still pending B06"
+    },
+    {
+      "case_id": "NDD-REJECT-MISSING",
+      "original_case_identity": [
+        "TC-Q012-03"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "必要树/规则结构缺失",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "missing items or missing granularity/relative mode for active date equality",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority; rejecting a malformed candidateTree object/string is NOT final envelope decode or full original serialized variant verification",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "original_subcase_coverage": "partial representation-level projection only; serialized envelope original subcase still pending B06"
+    },
+    {
+      "case_id": "NDD-REJECT-STYLE",
+      "original_case_identity": [
+        "TC-Q012-04"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "合法JSON但不是过滤",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "object with only style color",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority; rejecting a malformed candidateTree object/string is NOT final envelope decode or full original serialized variant verification",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "original_subcase_coverage": "partial representation-level projection only; serialized envelope original subcase still pending B06"
+    },
+    {
+      "case_id": "NDD-REJECT-UNKNOWN",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-Q015-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "未知动态字段/枚举",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "timeGranularity=week or relativeToCurrent=monthEnd or extra timezone function field",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-REJECT-MIXED",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-Q015-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "合法第一叶+不支持的第二叶",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "nested OR containing one valid dynamicDate leaf and one unknown rule",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "case_id": "NDD-REJECT-TARGET",
+      "original_case_identity": [
+        "TC-Q015-01"
+      ],
+      "ac_ids": [
+        "AC-F01-Q012",
+        "AC-S02-02",
+        "AC-S02-03",
+        "AC-S02-04"
+      ],
+      "title": "目标不能完整承载",
+      "status": "candidate_not_run",
+      "execution_ok": null,
+      "red_fingerprint": null,
+      "layer": "pure_logic_then_real_vue_entry",
+      "preconditions": [
+        "same actual dataset ID and complete field directory, unique date field 99001/deType1 in synthetic fixture",
+        "current identity/permissions/receiver pass through released P1 ports; this is not real-auth proof",
+        "old target P0, old clip C0 and old preview saved for exact preservation comparisons"
+      ],
+      "inputs": {
+        "input_variant": "field missing/type mismatch/capability missing; same dataset ID alone insufficient",
+        "internal_entry": "actual service/receiver guard or controlled component fixture; no OS or new serialized import UI",
+        "component_fault_witness": "真实composable→requestMvpFilterPaste→wrapper链的受控emitter/provider在本次candidateTree传递处构造内部畸形变体；clip仍真实有效C0。不是正常UI能任意改内部clip的观察，也不加OS入口。"
+      },
+      "expected": {
+        "decision": "reject whole operation",
+        "old_clip": "C0 unchanged",
+        "old_tree": "P0 unchanged",
+        "old_preview_ids": [
+          5
+        ],
+        "saved_version": "unchanged",
+        "new_query_refresh": 0,
+        "partial_apply": false,
+        "success_notice": false,
+        "zh_message": "过滤条件不匹配，请重新复制",
+        "receiver_binding": "before query compare complete request.candidateTree against authoritative validated clip.tree; mismatch reject whole; no partial parse"
+      },
+      "source_facts": [
+        "F20",
+        "F21",
+        "F25",
+        "F26",
+        "F27"
+      ],
+      "oracle": {
+        "structural": "own-key/undefined/null sensitive exact tree descriptor equality plus no shared nested references; no JSON stringify clone",
+        "query": "independent calendar/window + frozen dated row IDs, status blocked_oracle until B02/B05 bound; equal source/target results alone insufficient"
+      },
+      "evidence_ceiling": "design only; no case executed; pure equality/doubles do not prove UI/query/save or authority",
+      "unable_to_determine": [
+        "B02",
+        "B04",
+        "B05"
+      ]
+    }
+  ],
+  "blocked_cases": [
+    {
+      "case_id": "NDD-B-DATETIME-year-f-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-year-f-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-year-b-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-year-b-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "year",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-month-f-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "month",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-month-f-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "month",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-month-b-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "month",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-month-b-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "month",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-date-f-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-date-f-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-date-b-0",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-DATETIME-date-b-1",
+      "original_case_identity": [
+        "TC-Q012-01",
+        "TC-AC-F01-Q015"
+      ],
+      "shape": {
+        "logic": "and",
+        "items": [
+          {
+            "type": "item",
+            "fieldId": "99001",
+            "field": null,
+            "filterType": "logic",
+            "term": "eq",
+            "value": null,
+            "enumValue": [],
+            "filterTypeTime": "dynamicDate",
+            "timeType": "year",
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeGranularity": "datetime",
+              "timeNum": 1,
+              "relativeToCurrentType": "date",
+              "around": "b",
+              "arbitraryTime": "2026/06/15 13:14:15"
+            },
+            "subTree": null,
+            "valueType": null,
+            "timeValue": "合成显示文本；非计算oracle"
+          }
+        ]
+      },
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01",
+        "B02",
+        "B04"
+      ],
+      "expected": null,
+      "current_source_interpretation": "arbitraryTime substring(11,19) used; backend relative date + that text",
+      "not_a_reject_requirement": true,
+      "evidence_ceiling": "no executed proof, no unsupported-product ruling"
+    },
+    {
+      "case_id": "NDD-B-Date-wire",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "input_value_domain": [
+        "Date instance",
+        "valid ISO with Z/offset",
+        "numeric epoch",
+        "short/malformed locale string"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B01"
+      ],
+      "expected": null,
+      "not_a_business_rejection_rule": true,
+      "minimum_probe_ref": "SourceTrace.blocked_oracles"
+    },
+    {
+      "case_id": "NDD-B-numeric-domain",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "input_value_domain": [
+        null,
+        "",
+        1.5,
+        -1,
+        2147483647,
+        2147483648,
+        "1"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B03"
+      ],
+      "expected": null,
+      "not_a_business_rejection_rule": true,
+      "minimum_probe_ref": "SourceTrace.blocked_oracles"
+    },
+    {
+      "case_id": "NDD-B-clock-epoch-zone",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "input_value_domain": [
+        "browser/server timezone mismatch",
+        "DST",
+        "epoch seconds vs milliseconds",
+        "request spans calendar boundary"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B02"
+      ],
+      "expected": null,
+      "not_a_business_rejection_rule": true,
+      "minimum_probe_ref": "SourceTrace.blocked_oracles"
+    },
+    {
+      "case_id": "NDD-B-save-shape",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "input_value_domain": [
+        "MVC ignores/retains/rejects timeValue",
+        "DTO Date/ISO conversion",
+        "undefined to missing/null"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B04"
+      ],
+      "expected": null,
+      "not_a_business_rejection_rule": true,
+      "minimum_probe_ref": "SourceTrace.blocked_oracles"
+    },
+    {
+      "case_id": "NDD-B-FX-COPY-dynamic",
+      "original_case_identity": [
+        "TC-Q012-01"
+      ],
+      "input_value_domain": [
+        "original IDs2/3/5 versus new f_date mapping"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B05"
+      ],
+      "expected": null,
+      "not_a_business_rejection_rule": true,
+      "minimum_probe_ref": "SourceTrace.blocked_oracles"
+    },
+    {
+      "case_id": "NDD-B-SERIALIZED-ENVELOPE",
+      "original_case_identity": [
+        "TC-Q012-02",
+        "TC-Q012-03",
+        "TC-Q012-04"
+      ],
+      "status": "blocked_oracle",
+      "blocked_by": [
+        "B06"
+      ],
+      "expected": null,
+      "candidate_scope": "memory request.candidateTree integrity gate only",
+      "not_covered": "final envelope decoder/actual serialized reader and three source-serialized variants",
+      "no_new_OS_or_import_entry": true
+    }
+  ],
+  "expected_red": "after formal admission, current actual service rejects native dynamicDate/non-null dynamic rules; RED must be semantic with execution0 and actual native source fixtures, not case-name matches; no test run in this design",
+  "query_oracle_plan": {
+    "primary": "independent calendar evaluator over frozen rows, anchor interval/timezone and precision; do not call backend fixValue/FE time-format as sole expected generator",
+    "equal_source_target_only": "necessary but insufficient since shared bug can affect both",
+    "clock_gap": "B02 until runtime context bound",
+    "FX_COPY_ID_gap": "B05; original static IDs2/3/5 not guessed for dynamic date variant",
+    "query_rows": "preconfigure ID-visible bar/table/pivot fixtures; copy must not transfer axes; never infer IDs from aggregate number"
+  },
+  "counts": {
+    "candidate_cases": 63,
+    "blocked_cases": 18,
+    "executed": 0
+  },
+  "review_budget": {
+    "used": 0,
+    "maximum": 3
+  },
+  "builder_admission": "NOT_ADMITTED",
+  "candidate_numeric_policy": {
+    "structural_candidate": "custom ordinary witnesses use nonnegative integral JSON numbers that fit Java Integer; this is type-compatibility proposal, NOT existing UI max/precision and not declared final full input domain",
+    "unknown_domains": "fraction/clear/overflow/numeric string are blocked B03, expected=None; no new hard maximum or safe-integer product rule frozen here",
+    "inactive_parameters": "preserve known missing/null/own undefined DTO-compatible inactive fields, never fill TimeDialog defaults during copy"
+  },
+  "positive_default_oracle": {
+    "memory": "exact full descriptor and deep reference isolation at same layer",
+    "persist": "declared FilterTreeObj/FilterTreeItem/DynamicTimeSetting projection; timeValue absent from DTO then rederived; wire B04 pending",
+    "query": "independent fixed data/calendar oracle B02/B05 pending, not just source/target equality"
+  }
+}

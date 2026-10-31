@@ -3,7 +3,9 @@ import CommonAttr from '@/custom-component/common/CommonAttr.vue'
 import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
 
 import { storeToRefs } from 'pinia'
-import { PropType } from 'vue'
+import { computed, PropType } from 'vue'
+import { useI18n } from '@/hooks/web/useI18n'
+import { useChartFilterCopyMvp } from '@/views/chart/components/editor/filter/useChartFilterCopyMvp'
 import PictureGroupUploadAttr from '@/custom-component/picture-group/PictureGroupUploadAttr.vue'
 import PictureGroupDatasetSelect from '@/custom-component/picture-group/PictureGroupDatasetSelect.vue'
 import CarouselSetting from '@/custom-component/common/CarouselSetting.vue'
@@ -19,6 +21,10 @@ const props = defineProps({
 const dvMainStore = dvMainStoreWithOut()
 
 const { curComponent, canvasViewInfo, mobileInPc, batchOptStatus } = storeToRefs(dvMainStore)
+const { t } = useI18n()
+const pictureView = computed(() => canvasViewInfo.value[curComponent.value?.id] as ChartObj)
+const filterCopyMvp = useChartFilterCopyMvp(pictureView)
+const { visible, enabled, permission, copyReason, pasteReason, status, diagnostic } = filterCopyMvp
 </script>
 
 <template>
@@ -58,6 +64,43 @@ const { curComponent, canvasViewInfo, mobileInPc, batchOptStatus } = storeToRefs
         </picture-group-threshold>
       </template>
     </CommonAttr>
+    <section v-if="visible && !batchOptStatus" data-testid="picture-filter-copy-controls">
+      <el-button
+        data-testid="chart-filter-copy"
+        :aria-label="t('chart.filter_copy_mvp.copy')"
+        :disabled="!!copyReason"
+        @click="filterCopyMvp.copy"
+        >{{ t('chart.filter_copy_mvp.copy') }}</el-button
+      >
+      <el-button
+        data-testid="chart-filter-paste"
+        :aria-label="t('chart.filter_copy_mvp.paste')"
+        :disabled="!!pasteReason"
+        @click="filterCopyMvp.paste"
+        >{{ t('chart.filter_copy_mvp.paste') }}</el-button
+      >
+      <p v-if="copyReason" data-testid="chart-filter-copy-reason">
+        {{ t('chart.filter_copy_mvp.' + copyReason) }}
+      </p>
+      <p v-if="pasteReason" data-testid="chart-filter-paste-reason">
+        {{ t('chart.filter_copy_mvp.' + pasteReason) }}
+      </p>
+      <label v-if="enabled">
+        {{ t('chart.filter_copy_mvp.permission_stub') }}
+        <select v-model="permission" data-testid="chart-filter-permission">
+          <option value="unknown">{{ t('chart.filter_copy_mvp.permission_unknown') }}</option>
+          <option value="allow">{{ t('chart.filter_copy_mvp.allow') }}</option>
+          <option value="deny">{{ t('chart.filter_copy_mvp.permission_denied') }}</option>
+        </select>
+      </label>
+      <p v-if="status" role="status" data-testid="chart-filter-copy-status">
+        {{ t('chart.filter_copy_mvp.' + status) }}
+      </p>
+      <details v-if="enabled" data-testid="chart-filter-copy-diagnostic">
+        <summary>{{ t('chart.filter_copy_mvp.diagnostic') }}</summary>
+        <pre>{{ diagnostic }}</pre>
+      </details>
+    </section>
   </div>
 </template>
 

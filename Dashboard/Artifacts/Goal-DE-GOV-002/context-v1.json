@@ -1,0 +1,136 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-GOV-002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "鉴于你在安装本skill的时候的表现，我发现这个skill自身需要优化一下，请参考”/Users/xiaomei/.codex/worktrees/sge-closeout-efficiency/sge-governance-skill/Dashboard/Artifacts/Goal-SGE-CLOSEOUT-EFFICIENCY/AnalysisOnlyOutcome.md“，设立一个skill优化的goal并实施该Goal，目标：仅优化本地的skill，不要动其他库的skill，也不要动本机全局的skill",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "仅优化本地 SGE 流程指引，按分析五项建议验收",
+    "authority_role": "projection",
+    "assumptions": [
+      "项目 Dashboard 记录本次 Goal，其他仓库和全局 Skill 只读"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      ".codex/skills/sge-governed-checkpoints/**",
+      "Dashboard/Artifacts/Goal-DE-GOV-002/**",
+      "Dashboard/README.md",
+      "Dashboard/Sessions.md",
+      "Dashboard/Decisions.md",
+      "Dashboard/Artifacts/README.md"
+    ],
+    "forbidden_actions": [
+      "修改运行时代码",
+      "安装依赖",
+      "构建或启动 DataEase",
+      "数据库写入",
+      "提交或推送",
+      "发布或部署"
+    ],
+    "maximum_claim": "流程规则优化和本轮限定场景审阅；无产品 runtime、宿主自动强制、通用图运行时、节省时长或外部同步声明。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "baseline",
+      "applicability": "required",
+      "reason": "原始意图、指引与当前执行状态",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "baseline",
+      "applicability": "required",
+      "reason": "原始意图、指引与当前执行状态",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "/Users/xiaomei/.codex/worktrees/sge-closeout-efficiency/sge-governance-skill/Dashboard/Artifacts/Goal-SGE-CLOSEOUT-EFFICIENCY/AnalysisOnlyOutcome.md",
+      "revision": "baseline",
+      "applicability": "required",
+      "reason": "原始意图、指引与当前执行状态",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    },
+    {
+      "path": "Dashboard/README.md",
+      "revision": "baseline",
+      "applicability": "required",
+      "reason": "原始意图、指引与当前执行状态",
+      "domains": [
+        "authority",
+        "scope",
+        "governance"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "C-01",
+      "condition": "若新增项目级 Dashboard registry 或 canonical KB",
+      "action": "先读取对应工具/KB contract 并扩展 AC 与验证范围",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "C-02",
+      "condition": "若发生范围外行为、authority 或执行拓扑变化",
+      "action": "重新构造 Context Bootstrap 并触发 full rebaseline",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "governance"
+    ],
+    "preservation_statement": "检查足以覆盖本次项目级安装、原 Dashboard 状态保留、入口可发现性和证据声明边界的信息；缺失任一必要域时扩读或报告证据缺口。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design -> builder -> independent validation -> closure",
+    "reason": "根代理完成有边界的规则编辑，独立 Validation 检查规则语义和最终冻结包；不改执行判定。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

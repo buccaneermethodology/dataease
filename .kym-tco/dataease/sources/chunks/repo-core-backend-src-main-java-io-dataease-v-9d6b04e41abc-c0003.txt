@@ -1,0 +1,369 @@
+            request.setResourceTable(CommonConstants.RESOURCE_TABLE.SNAPSHOT);
+        }
+        String busiFlag = request.getBusiFlag();
+        if (busiFlag.equals("dashboard-dataV")) {
+            BusiNodeRequest requestDv = new BusiNodeRequest();
+            BeanUtils.copyBean(requestDv, request);
+            requestDv.setBusiFlag("dashboard");
+            List<BusiNodeVO> dashboardResult = coreVisualizationManage.tree(requestDv);
+            requestDv.setBusiFlag("dataV");
+            List<BusiNodeVO> dataVResult = coreVisualizationManage.tree(requestDv);
+            List<BusiNodeVO> result = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(dashboardResult)) {
+                resourceTreeTypeAdaptor(dashboardResult, "dashboard");
+                BusiNodeVO dashboardResultParent = new BusiNodeVO();
+                dashboardResultParent.setName(Translator.get("i18n_menu.panel"));
+                dashboardResultParent.setId(-101L);
+                if (dashboardResult.get(0).getId() == 0) {
+                    dashboardResultParent.setChildren(dashboardResult.get(0).getChildren());
+                } else {
+                    dashboardResultParent.setChildren(dashboardResult);
+                }
+                result.add(dashboardResultParent);
+            }
+            if (!CollectionUtils.isEmpty(dataVResult)) {
+                resourceTreeTypeAdaptor(dataVResult, "dataV");
+                BusiNodeVO dataVResultParent = new BusiNodeVO();
+                dataVResultParent.setName(Translator.get("i18n_menu.screen"));
+                dataVResultParent.setId(-102L);
+                if (dataVResult.get(0).getId() == 0) {
+                    dataVResultParent.setChildren(dataVResult.get(0).getChildren());
+                } else {
+                    dataVResultParent.setChildren(dataVResult);
+                }
+                result.add(dataVResultParent);
+            }
+            return result;
+        } else {
+            return coreVisualizationManage.tree(request);
+        }
+    }
+
+    @Override
+    public Map<String, List<BusiNodeVO>> interactiveTree(Map<String, BusiNodeRequest> requestMap) {
+        return coreBusiManage.interactiveTree(requestMap);
+    }
+
+    @DeLog(id = "#p0.id", pid = "#p0.pid", ot = LogOT.MODIFY, stExp = "#p0.type")
+    @Transactional
+    @Override
+    public void move(DataVisualizationBaseRequest request) {
+        coreVisualizationManage.move(request);
+    }
+
+    @Override
+    public List<VisualizationResourceVO> findRecent(@RequestBody VisualizationWorkbranchQueryRequest request) {
+        request.setQueryFrom("recent");
+        PageResult<VisualizationResourceVO> result = coreVisualizationManage.query(1, 20, request);
+        List<VisualizationResourceVO> resourceVOS = result.getRecords();
+        if (!CollectionUtils.isEmpty(resourceVOS)) {
+            resourceVOS.forEach(item -> {
+                item.setCreator(StringUtils.equals(item.getCreator(), "1") ? Translator.get("i18n_sys_admin") : item.getCreator());
+                item.setLastEditor(StringUtils.equals(item.getLastEditor(), "1") ? Translator.get("i18n_sys_admin") : item.getLastEditor());
+            });
+        }
+        return resourceVOS;
+    }
+
+    /**
+     * @Description: 复制仪表板
+     * 复制步骤 1.复制基础可视化数据；2.复制图表数据；3.附加数据（包括联动信息，跳转信息，外部参数信息等仪表板附加信息）
+     */
+    @Transactional
+    @Override
+    public String copy(DataVisualizationBaseRequest request) {
+        Long sourceDvId = request.getId(); //源仪表板ID
+        Long newDvId = IDUtils.snowID(); //目标仪表板ID
+        Long copyId = IDUtils.snowID() / 100; // 本次复制执行ID
+        // 复制仪表板
+        DataVisualizationInfo source = dataVisualizationInfoRepository.findById(sourceDvId).orElse(null);
+        DataVisualizationInfo newDv = new DataVisualizationInfo();
+        BeanUtils.copyBean(newDv, source);
+        newDv.setName(request.getName());
+        newDv.setId(newDvId);
+        newDv.setPid(request.getPid());
+        newDv.setCreateTime(System.currentTimeMillis());
+        // 复制图表 chart_view
+        chartViewManege.viewCopyWithDv(sourceDvId, newDvId, copyId, CommonConstants.RESOURCE_TABLE.CORE);
+        chartViewManege.viewCopyWithDv(sourceDvId, newDvId, copyId, CommonConstants.RESOURCE_TABLE.SNAPSHOT);
+        List<CoreChartView> viewList = coreChartViewRepository.findViewInfoByCopyId(copyId);
+        if (!CollectionUtils.isEmpty(viewList)) {
+            String componentData = newDv.getComponentData();
+            // componentData viewId 数据  并保存
+            for (CoreChartView viewInfo : viewList) {
+                componentData = componentData.replace(String.valueOf(viewInfo.getCopyFrom()), String.valueOf(viewInfo.getId()));
+            }
+            newDv.setComponentData(componentData);
+        }
+        // 复制图表联动信息
+        visualizationLinkageManage.copyLinkage(copyId);
+        visualizationLinkageManage.copyLinkageField(copyId);
+        // 复制图表跳转信息
+        visualizationLinkJumpManage.copyLinkJump(copyId);
+        visualizationLinkJumpManage.copyLinkJumpInfo(copyId);
+        visualizationLinkJumpManage.copyLinkJumpTargetInfo(copyId);
+        DataVisualizationInfo visualizationInfoTarget = new DataVisualizationInfo();
+        BeanUtils.copyBean(visualizationInfoTarget, newDv);
+        visualizationInfoTarget.setPid(-1L);
+        coreVisualizationManage.preInnerSave(visualizationInfoTarget);
+        return String.valueOf(newDvId);
+    }
+
+    @Override
+    public String findDvType(Long dvId) {
+        DataVisualizationInfo dataVisualizationInfo = dataVisualizationInfoRepository.findById(dvId).orElse(null);
+        if (dataVisualizationInfo == null) {
+            DEException.throwException(Translator.get("i18n_resource_not_exists"));
+        }
+        return dataVisualizationInfo.getType();
+
+    }
+
+    @Override
+    public String updateCheckVersion(Long dvId) {
+        dataVisualizationInfoRepository.updateCheckVersionById(dvId, coreLicManage.getVersion());
+        return "";
+    }
+
+    @Override
+    public DataVisualizationVO decompression(DataVisualizationBaseRequest request) throws Exception {
+        try {
+            Long newDvId = IDUtils.snowID();
+            String newFrom = request.getNewFrom();
+            Map<Long,Long> viewIdsMap = new HashMap<>();
+            String templateStyle = null;
+            String templateData = null;
+            String dynamicData = null;
+            String staticResource = null;
+            String appDataStr = null;
+            String name = null;
+            String dvType = null;
+            Integer version = null;
+            //内部模板新建
+            if (DataVisualizationConstants.NEW_PANEL_FROM.NEW_INNER_TEMPLATE.equals(newFrom)) {
+                VisualizationTemplate visualizationTemplate = visualizationTemplateRepository.findById(request.getTemplateId()).orElse(null);
+                templateStyle = visualizationTemplate.getTemplateStyle();
+                templateData = visualizationTemplate.getTemplateData();
+                dynamicData = visualizationTemplate.getDynamicData();
+                name = visualizationTemplate.getName();
+                dvType = visualizationTemplate.getDvType();
+                version = visualizationTemplate.getVersion();
+                appDataStr = visualizationTemplate.getAppData();
+                // 模板市场记录
+                coreOptRecentManage.saveOpt(request.getTemplateId(), OptConstants.OPT_RESOURCE_TYPE.TEMPLATE, OptConstants.OPT_TYPE.NEW);
+                VisualizationTemplate visualizationTemplateUpdate = new VisualizationTemplate();
+                visualizationTemplateUpdate.setId(visualizationTemplate.getId());
+                visualizationTemplateUpdate.setUseCount(visualizationTemplate.getUseCount() == null ? 0 : visualizationTemplate.getUseCount() + 1);
+                visualizationTemplateRepository.saveAndFlush(visualizationTemplateUpdate);
+            } else if (DataVisualizationConstants.NEW_PANEL_FROM.NEW_OUTER_TEMPLATE.equals(newFrom)) {
+                templateStyle = request.getCanvasStyleData();
+                templateData = request.getComponentData();
+                dynamicData = request.getDynamicData();
+                staticResource = request.getStaticResource();
+                name = request.getName();
+                dvType = request.getType();
+            } else if (DataVisualizationConstants.NEW_PANEL_FROM.NEW_MARKET_TEMPLATE.equals(newFrom)) {
+                TemplateManageFileDTO templateFileInfo = templateCenterManage.getTemplateFromMarketV2(request.getResourceName());
+                if (templateFileInfo == null) {
+                    DEException.throwException("Can't find the template's info from market,please check");
+                }
+                templateStyle = templateFileInfo.getCanvasStyleData();
+                templateData = templateFileInfo.getComponentData();
+                dynamicData = templateFileInfo.getDynamicData();
+                staticResource = templateFileInfo.getStaticResource();
+                name = templateFileInfo.getName();
+                dvType = templateFileInfo.getDvType();
+                version = templateFileInfo.getVersion();
+                appDataStr = templateFileInfo.getAppData();
+                // 模板市场记录
+                coreOptRecentManage.saveOpt(request.getResourceName(), OptConstants.OPT_RESOURCE_TYPE.TEMPLATE, OptConstants.OPT_TYPE.NEW);
+            }
+            if (StringUtils.isNotEmpty(appDataStr) && appDataStr.length() > 10) {
+                try {
+                    VisualizationExport2AppVO appDataFormat = JsonUtil.parseObject(appDataStr, VisualizationExport2AppVO.class);
+                    String dvInfo = appDataFormat.getVisualizationInfo();
+                    VisualizationBaseInfoVO baseInfoVO = JsonUtil.parseObject(dvInfo, VisualizationBaseInfoVO.class);
+                    Long sourceDvId = baseInfoVO.getId();
+                    appDataStr = appDataStr.replaceAll(sourceDvId.toString(), newDvId.toString());
+                } catch (Exception e) {
+                    LogUtil.error(e);
+                    appDataStr = null;
+                }
+            } else {
+                appDataStr = null;
+            }
+            // 解析动态数据
+            Map<String, String> dynamicDataMap = JsonUtil.parseObject(dynamicData, Map.class);
+            List<ChartViewDTO> chartViews = new ArrayList<>();
+            Map<Long, ChartViewDTO> canvasViewInfo = new HashMap<>();
+            Map<Long, VisualizationTemplateExtendDataDTO> extendDataInfo = new HashMap<>();
+            for (Map.Entry<String, String> entry : dynamicDataMap.entrySet()) {
+                String originViewId = entry.getKey();
+                Object viewInfo = entry.getValue();
+                try {
+                    // 旧模板图表过滤器适配
+                    if (viewInfo instanceof Map && ((Map) viewInfo).get("customFilter") instanceof ArrayList) {
+                        ((Map) viewInfo).put("customFilter", new HashMap<>());
+                    }
+                } catch (Exception e) {
+                    LogUtil.error("History Adaptor Error", e);
+                }
+                String originViewData = JsonUtil.toJSONString(entry.getValue()).toString();
+                ChartViewDTO chartView = JsonUtil.parseObject(originViewData, ChartViewDTO.class);
+                if (chartView == null) {
+                    continue;
+                }
+                Long newViewId = IDUtils.snowID();
+                chartView.setId(newViewId);
+                chartView.setSceneId(newDvId);
+                chartView.setSourceTableId(chartView.getTableId());
+                chartView.setTableId(null);
+
+                chartView.setDataFrom(CommonConstants.VIEW_DATA_FROM.TEMPLATE);
+                // 数据处理 1.替换viewId 2.加入模板view data数据
+                VisualizationTemplateExtendDataDTO extendDataDTO = new VisualizationTemplateExtendDataDTO(newDvId, newViewId, originViewData);
+                extendDataInfo.put(newViewId, extendDataDTO);
+                templateData = templateData.replaceAll(originViewId, newViewId.toString());
+                viewIdsMap.put(Long.valueOf(originViewId),newViewId);
+                if (StringUtils.isNotEmpty(appDataStr)) {
+                    chartView.setTableId(chartView.getSourceTableId());
+                    appDataStr = appDataStr.replaceAll(originViewId, newViewId.toString());
+                }
+                canvasViewInfo.put(chartView.getId(), chartView);
+                //插入模板数据 此处预先插入减少数据交互量
+                VisualizationTemplateExtendData extendData = new VisualizationTemplateExtendData();
+                templateExtendDataRepository.saveAndFlush(BeanUtils.copyBean(extendData, extendDataDTO));
+            }
+            request.setComponentData(templateData);
+            request.setCanvasStyleData(templateStyle);
+            //Store static resource into the server
+            staticResourceServer.saveFilesToServe(staticResource);
+            return new DataVisualizationVO(newDvId, name, dvType, version, templateStyle, templateData, appDataStr, canvasViewInfo, null,viewIdsMap);
+        } catch (Exception e) {
+            LogUtil.error(e);
+            DEException.throwException("解析错误");
+            return null;
+        }
+
+    }
+
+    @Override
+    public DataVisualizationVO decompressionLocalFile(MultipartFile file) {
+        return null;
+    }
+
+    @Override
+    public List<VisualizationViewTableDTO> detailList(Long dvId) {
+        // This editor-only endpoint exposes draft charts and dataset field metadata.
+        requireVisualizationPermission(dvId, AuthEnum.MANAGE);
+        QSnapshotCoreChartView snapshotCoreChartView = QSnapshotCoreChartView.snapshotCoreChartView;
+        QCoreDatasetTableField coreDatasetTableField = QCoreDatasetTableField.coreDatasetTableField;
+
+        List<VisualizationViewTableDTO> result = queryFactory.select(
+                        Projections.fields(VisualizationViewTableDTO.class,
+                                snapshotCoreChartView.id,
+                                snapshotCoreChartView.title,
+                                snapshotCoreChartView.sceneId,
+                                snapshotCoreChartView.tableId,
+                                snapshotCoreChartView.type,
+                                snapshotCoreChartView.render,
+                                snapshotCoreChartView.sceneId.as("visualizationId"),
+                                coreDatasetTableField.id.as("fieldId"),
+                                coreDatasetTableField.originName,
+                                coreDatasetTableField.name.as("fieldName"),
+                                coreDatasetTableField.type.as("fieldType"),
+                                coreDatasetTableField.deType))
+                .from(snapshotCoreChartView)
+                .join(coreDatasetTableField).on(snapshotCoreChartView.tableId.eq(coreDatasetTableField.datasetGroupId))
+                .where(snapshotCoreChartView.sceneId.eq(dvId)
+                        .and(snapshotCoreChartView.id.isNotNull())
+                        .and(snapshotCoreChartView.type.ne("VQuery"))).fetch();
+
+
+        List<VisualizationViewTableDTO> aggregatedResult = result.stream()
+                .collect(Collectors.groupingBy(dto -> Arrays.asList(
+                        dto.getId(),
+                        dto.getTitle(),
+                        dto.getSceneId(),
+                        dto.getTableId(),
+                        dto.getType(),
+                        dto.getRender(),
+                        dto.getVisualizationId()
+                )))
+                .entrySet().stream()
+                .map(entry -> {
+                    List<VisualizationViewTableDTO> group = entry.getValue();
+                    VisualizationViewTableDTO first = group.get(0);
+
+                    // 创建新的 DTO 对象
+                    VisualizationViewTableDTO aggregatedDto = new VisualizationViewTableDTO();
+                    aggregatedDto.setId(first.getId());
+                    aggregatedDto.setTitle(first.getTitle());
+                    aggregatedDto.setSceneId(first.getSceneId());
+                    aggregatedDto.setTableId(first.getTableId());
+                    aggregatedDto.setType(first.getType());
+                    aggregatedDto.setRender(first.getRender());
+                    aggregatedDto.setVisualizationId(first.getVisualizationId());
+
+                    // 聚合字段信息
+                    List<DatasetTableFieldDTO> tableFields = group.stream()
+                            .map(dto -> {
+                                DatasetTableFieldDTO fieldDto = new DatasetTableFieldDTO();
+                                fieldDto.setId(dto.getFieldId());
+                                fieldDto.setOriginName(dto.getOriginName());
+                                fieldDto.setName(dto.getFieldName());
+                                fieldDto.setType(dto.getFieldType());
+                                fieldDto.setDeType(dto.getDeType());
+                                return fieldDto;
+                            })
+                            .collect(Collectors.toList());
+
+                    aggregatedDto.setTableFields(tableFields);
+                    return aggregatedDto;
+                })
+                .collect(Collectors.toList());
+
+
+        SnapshotDataVisualizationInfo dvInfo = snapshotDataVisualizationInfoRepository.findById(dvId).orElse(null);
+        if (dvInfo != null && !CollectionUtils.isEmpty(result)) {
+            String componentData = dvInfo.getComponentData();
+            return aggregatedResult.stream().filter(item -> componentData.indexOf("\"id\":\"" + item.getId()) > 0).toList();
+        } else {
+            return aggregatedResult;
+
+        }
+    }
+
+    @Override
+    public VisualizationExport2AppVO export2AppCheck(VisualizationAppExportRequest appExportRequest) {
+        List<Long> viewIds = appExportRequest.getViewIds();
+        List<Long> dsIds = appExportRequest.getDsIds();
+        Long dvId = appExportRequest.getDvId();
+        List<AppCoreChartViewVO> chartViewVOInfo = null;
+        List<AppCoreDatasetGroupVO> datasetGroupVOInfo = null;
+        List<AppCoreDatasetTableVO> datasetTableVOInfo = null;
+        List<AppCoreDatasetTableFieldVO> datasetTableFieldVOInfo = null;
+        List<AppCoreDatasourceVO> datasourceVOInfo = null;
+        List<AppCoreDatasourceTaskVO> datasourceTaskVOInfo = null;
+        //获取所有视图信息
+        if (!CollectionUtils.isEmpty(viewIds)) {
+            chartViewVOInfo = coreChartViewRepository.findAllById(viewIds).stream().map(item -> {
+                return BeanUtils.copyBean(new AppCoreChartViewVO(), item);
+            }).collect(Collectors.toList());
+        }
+        if (!CollectionUtils.isEmpty(dsIds)) {
+            QCoreDatasetGroup coreDatasetGroup = QCoreDatasetGroup.coreDatasetGroup;
+            datasetGroupVOInfo = EntityConverter.convertList(queryFactory.selectFrom(coreDatasetGroup).where(coreDatasetGroup.id.in(dsIds)).fetch(), AppCoreDatasetGroupVO.class);
+
+            QCoreDatasetTable coreDatasetTable = QCoreDatasetTable.coreDatasetTable;
+            datasetTableVOInfo = EntityConverter.convertList(queryFactory.selectFrom(coreDatasetTable).where(coreDatasetTable.datasetGroupId.in(dsIds)).fetch(), AppCoreDatasetTableVO.class);
+
+            QCoreDatasetTableField coreDatasetTableField = QCoreDatasetTableField.coreDatasetTableField;
+            datasetTableFieldVOInfo = EntityConverter.convertList(queryFactory.selectFrom(coreDatasetTableField)
+                    .where(coreDatasetTableField.datasetGroupId.in(dsIds)).fetch(), AppCoreDatasetTableFieldVO.class);
+
+            QCoreDatasourceTask coreDatasourceTask = QCoreDatasourceTask.coreDatasourceTask;
+            QCoreDatasource coreDatasource = QCoreDatasource.coreDatasource;
+
+            datasourceVOInfo = EntityConverter.convertList(queryFactory.selectFrom(coreDatasource)
+                    .innerJoin(coreDatasetTable).on(coreDatasetTable.datasourceId.eq(coreDatasource.id))

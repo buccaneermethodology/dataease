@@ -1,0 +1,250 @@
+{
+  "status": "增量候选，未实现",
+  "card_sha256": "0943d69d903c409ae4b82122a7229d1f369016d699cc1d3a96064616e3d0a8b0",
+  "provenance": "合成状态和配置，用于保存/历史算法oracle；非产品运行配置",
+  "save_case": {
+    "event_order": [
+      "paste q13时qB.left=99",
+      "普通样式编辑qB.left=150/color=red",
+      "普通文本编辑textB.propValue=用户最新文字",
+      "保存"
+    ],
+    "capture": {
+      "queryRevision": 13,
+      "queryCommitId": "c13",
+      "latestRoot": [
+        {
+          "id": "qB",
+          "component": "VQuery",
+          "style": {
+            "left": 150,
+            "color": "red"
+          },
+          "propValue": [
+            {
+              "id": "runtime",
+              "selectValue": [
+                "临时"
+              ]
+            }
+          ],
+          "cascade": []
+        },
+        {
+          "id": "textB",
+          "component": "Text",
+          "propValue": "用户最新文字",
+          "style": {
+            "top": 40
+          }
+        }
+      ],
+      "carrier": {
+        "qB": {
+          "propValue": [
+            {
+              "id": "q-new",
+              "defaultValue": [
+                "浙江"
+              ]
+            }
+          ],
+          "cascade": []
+        }
+      }
+    },
+    "expected_save_root": [
+      {
+        "id": "qB",
+        "component": "VQuery",
+        "style": {
+          "left": 150,
+          "color": "red"
+        },
+        "propValue": [
+          {
+            "id": "q-new",
+            "defaultValue": [
+              "浙江"
+            ]
+          }
+        ],
+        "cascade": []
+      },
+      {
+        "id": "textB",
+        "component": "Text",
+        "propValue": "用户最新文字",
+        "style": {
+          "top": 40
+        }
+      }
+    ],
+    "assertions": [
+      "qB.style保留150/red",
+      "textB完整保留",
+      "只overlay qB.propValue/cascade",
+      "不得用paste时left99覆盖最新150"
+    ]
+  },
+  "prepare_style_change": {
+    "prepare": {
+      "queryRevision": 12,
+      "styleLeft": 99
+    },
+    "before_commit": {
+      "queryRevision": 12,
+      "styleLeft": 150
+    },
+    "expected": "同步提交前重取最新根，再局部overlay新查询配置；left150；不使用prepare旧根",
+    "queryRevision_after": 13
+  },
+  "conflicts": [
+    {
+      "change": "目标被删除或id多义",
+      "expected": "拒绝本次候选，不能复活目标"
+    },
+    {
+      "change": "字段绑定/数据集/目标查询规则变更",
+      "expected": "候选失效重新prepare/确认"
+    },
+    {
+      "change": "仅布局/样式/其他组件内容变更",
+      "expected": "基于最新根保留变更，允许局部overlay"
+    },
+    {
+      "change": "保存捕获后继续样式编辑",
+      "expected": "回包只标捕获payload已保存；当前完整投影摘要不同则dirty"
+    },
+    {
+      "change": "异步hydrate把旧根写回",
+      "expected": "禁止；hydrate生成时重取最新根并按目标路径overlay，不回放旧全根"
+    }
+  ],
+  "history_cases": [
+    {
+      "event": "undo",
+      "before": {
+        "pointer": 1,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 13
+      },
+      "after": {
+        "pointer": 0,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 14,
+        "commitId": "c14",
+        "restoredHistoryId": "h0",
+        "effectPlan": [
+          {
+            "id": "c14:preview",
+            "kind": "preview",
+            "status": "pending"
+          }
+        ],
+        "appendSnapshot": false
+      }
+    },
+    {
+      "event": "redo",
+      "before": {
+        "pointer": 0,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 14,
+        "commitId": "c14",
+        "restoredHistoryId": "h0",
+        "effectPlan": [
+          {
+            "id": "c14:preview",
+            "kind": "preview",
+            "status": "pending"
+          }
+        ],
+        "appendSnapshot": false
+      },
+      "after": {
+        "pointer": 1,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 15,
+        "commitId": "c15",
+        "restoredHistoryId": "h1",
+        "effectPlan": [
+          {
+            "id": "c15:preview",
+            "kind": "preview",
+            "status": "pending"
+          }
+        ],
+        "appendSnapshot": false
+      }
+    },
+    {
+      "event": "undo_at_zero",
+      "before": {
+        "pointer": 0,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 14
+      },
+      "after": {
+        "pointer": 0,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 14
+      },
+      "effectPlan": [],
+      "appendSnapshot": false
+    },
+    {
+      "event": "redo_at_end",
+      "before": {
+        "pointer": 1,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 15
+      },
+      "after": {
+        "pointer": 1,
+        "historyIds": [
+          "h0",
+          "h1"
+        ],
+        "queryRevision": 15
+      },
+      "effectPlan": [],
+      "appendSnapshot": false
+    },
+    {
+      "event": "new_edit_after_undo",
+      "expected": "按既有新编辑语义新增快照并截断redo尾；不能将undo本身当新编辑触发该操作"
+    },
+    {
+      "event": "undo_preview_failure",
+      "expected": "pointer保持0、内容h0/carrier一致、revision14；仅重试c14:preview，不添加快照不再次移动pointer"
+    }
+  ],
+  "verification": {
+    "json": "PASS",
+    "overlay_preserves_nonquery": "PASS",
+    "undo_redo_plans": "PASS",
+    "product": "NOT_RUN"
+  }
+}

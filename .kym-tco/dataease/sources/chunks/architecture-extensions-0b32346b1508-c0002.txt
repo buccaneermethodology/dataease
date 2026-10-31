@@ -1,0 +1,714 @@
+          "sha256": "fc9b3430d9535c5488bcc8708876edcee98faa9bd02e17ec355d62b879f25740"
+        }
+      ]
+    },
+    {
+      "id": "BASE-041",
+      "statement": "SysParameterServer在/sysParameter提供单值与基础设置委派；RequestTimeOut默认60并读取Front_Time_Out覆盖；defaultSettings给排序与嵌入导出模式默认值并按基础设置覆盖。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/system/server/SysParameterServer.java",
+          "start_line": 25,
+          "end_line": 98,
+          "symbol": "queryBasicSetting/RequestTimeOut/defaultSettings",
+          "sha256": "0bb0a3f39b9b6cb6a92b86147366cc61c8d6384c48e962159b62566077765228"
+        }
+      ]
+    },
+    {
+      "id": "BASE-042",
+      "statement": "数据源是core_datasource元数据实体，声明Long主键、非空名称与类型、父级ID和configuration；configuration标注EncryptDecryptConverter，不能从注解单独推出加密强度。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasource.java",
+          "start_line": 12,
+          "end_line": 53,
+          "symbol": "CoreDatasource",
+          "sha256": "9f676276b057e0282469e0b391697ee5dc14f446b59fd7be0146bfdb2aeb015a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-043",
+      "statement": "数据集分组实体core_dataset_group声明folder/dataset节点、sql/union类型、直连/同步mode及关联关系info，并包含unionSql和isCross字段；这是数据建模词汇与持久化定义。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreDatasetGroup.java",
+          "start_line": 11,
+          "end_line": 93,
+          "symbol": "CoreDatasetGroup",
+          "sha256": "ad381bce99f379db6ddbbd4d42f8a909ab3a834c9d9e07b4fe7cb965c660a0fd"
+        }
+      ]
+    },
+    {
+      "id": "BASE-044",
+      "statement": "图表实体core_chart_view用tableId关联数据集表、sceneId标注所属场景，保存type/render、x/y轴、customFilter和drillFields；图表资源配置与分析查询结果不是同一对象。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/CoreChartView.java",
+          "start_line": 11,
+          "end_line": 101,
+          "symbol": "CoreChartView",
+          "sha256": "655c86e6163b534a24acc13a700451597e914680699ad0067ff3ee942025c82d"
+        }
+      ]
+    },
+    {
+      "id": "BASE-045",
+      "statement": "可视化实体data_visualization_info保存组织、父级、type、canvasStyleData、componentData及mobileLayout；status注释为0未发布/1已发布，另有deleteFlag和contentId。注释定义不证明所有状态转换约束。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/dao/auto/entity/DataVisualizationInfo.java",
+          "start_line": 10,
+          "end_line": 129,
+          "symbol": "DataVisualizationInfo",
+          "sha256": "5949862752d9baed398cf71659d24d188d7d6467d98f15e43380d0cf639a20af"
+        }
+      ]
+    },
+    {
+      "id": "BASE-046",
+      "statement": "权限操作枚举区分READ、USER、EXPORT、EXPORT_VIEW、EXPORT_DETAIL、MANAGE、AUTH及数值权重；它们是操作级词汇，不能等同固定企业岗位或仅据权重推断允许关系。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/constant/AuthEnum.java",
+          "start_line": 1,
+          "end_line": 21,
+          "symbol": "AuthEnum",
+          "sha256": "52fc4cd6a1e8ef0a20ef1c81bdb56910e9d68cf67525861d6c17f5980c121ce1"
+        }
+      ]
+    },
+    {
+      "id": "BASE-047",
+      "statement": "业务资源枚举将PANEL、SCREEN、DATASET、DATASOURCE、DATA_FILLING、SPREADSHEET与MENU分别编码；资源类别与页面名称/菜单ID须区分。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/constant/BusiResourceEnum.java",
+          "start_line": 1,
+          "end_line": 15,
+          "symbol": "BusiResourceEnum",
+          "sha256": "e9f1ed42f0675def13d1d0bf20ad9016af4647623e6b4987191cb8395aeb6c4d"
+        }
+      ]
+    },
+    {
+      "id": "BASE-048",
+      "statement": "AuthResourceEnum同时保存menuId和flag，包含USER、ROLE、ORG、EMBEDDED和SYS_PARAM；用户/角色/组织是明确的权限资源类型，具体企业授权实现不能由枚举推出。",
+      "kind": "implemented",
+      "scope": "当前V3可访问静态源码；不代表运行可用",
+      "evidence": [
+        {
+          "path": "sdk/common/src/main/java/io/dataease/constant/AuthResourceEnum.java",
+          "start_line": 1,
+          "end_line": 18,
+          "symbol": "AuthResourceEnum",
+          "sha256": "253fcb545c1d574de4f9d32a545a3b73fb61480fb175f51f7f540ebb4c0e591a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-049",
+      "statement": "DeMvcConfig把上传资源URL映射到工作目录，并只对该上传资源路径注册StaticResourceSecurityInterceptor；地图资源先查宿主目录再回退镜像内置目录，自定义geo路径先geo再map。另对所有路径注册LinkInterceptor。",
+      "kind": "implemented",
+      "scope": "后端MVC资源映射；不涵盖绕过后端的外部静态托管",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/config/DeMvcConfig.java",
+          "start_line": 25,
+          "end_line": 54,
+          "symbol": "addResourceHandlers/addInterceptors",
+          "sha256": "aceb1b6d0243ca2efda40c391406f68b1640229a1581c8ac3ca1febb7cdf4e8a"
+        }
+      ]
+    },
+    {
+      "id": "BASE-050",
+      "statement": "StaticResourceSecurityInterceptor仅对ResourceHttpRequestHandler设置nosniff及CSP sandbox/script-src none等头；URI扩展不在png/jpeg/jpg/gif/svg集合时返回404。其他Handler直接继续；此事实不等同所有访问身份均获验证。",
+      "kind": "implemented",
+      "scope": "DeMvcConfig注册的上传资源访问路径",
+      "evidence": [
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/config/StaticResourceSecurityInterceptor.java",
+          "start_line": 10,
+          "end_line": 23,
+          "symbol": "preHandle",
+          "sha256": "c543803742721b87ae4ce37f7a4fae89b1b417383de6aa5d9585bb047594e108"
+        },
+        {
+          "path": "core/core-backend/src/main/java/io/dataease/visualization/server/StaticResourceContentGuard.java",
+          "start_line": 28,
+          "end_line": 30,
+          "symbol": "allowedExtension",
+          "sha256": "cb857696e3f129ed479f1092ee431446b8cf6e013e678eddfca5f88236adba6b"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "F11",
+      "name": "电子表格",
+      "depth": "navigation",
+      "summary": "电子表格的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-019",
+          "BASE-020"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "只核实前端导入与SDK契约；XPack实现、授权和保存计算运行未核实"
+      ]
+    },
+    {
+      "id": "F12",
+      "name": "数据填报",
+      "depth": "navigation",
+      "summary": "数据填报的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-021",
+          "BASE-022"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "只核实管理页与SDK契约；提交落库、任务执行和授权完整实现不可见"
+      ]
+    },
+    {
+      "id": "F13",
+      "name": "数据同步",
+      "depth": "navigation",
+      "summary": "数据同步的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-023",
+          "BASE-024"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "只核实客户端及公共契约；调度引擎、Source/Sink支持与失败恢复未核实"
+      ]
+    },
+    {
+      "id": "F14",
+      "name": "报表任务",
+      "depth": "navigation",
+      "summary": "报表任务的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-025",
+          "BASE-026"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "只核实界面与SDK；实际调度、模板和发送依赖未核实"
+      ]
+    },
+    {
+      "id": "F16",
+      "name": "插件加载",
+      "depth": "navigation",
+      "summary": "插件加载的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-027",
+          "BASE-028",
+          "BASE-029"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "核实主仓库加载桥；不推测专有mapping实现或全路径失败处理均完善"
+      ]
+    },
+    {
+      "id": "F17",
+      "name": "SQLBot嵌入",
+      "depth": "navigation",
+      "summary": "SQLBot嵌入的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-030",
+          "BASE-031"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "外部脚本集成；不代表仓库自带问数引擎或enabled/valid前端拒绝加载"
+      ]
+    },
+    {
+      "id": "F19",
+      "name": "字体管理",
+      "depth": "navigation",
+      "summary": "字体管理的可见入口与契约导航",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-032"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "服务委派导航；字体内容验证与用户授权需专项核实"
+      ]
+    },
+    {
+      "id": "F20",
+      "name": "静态资源访问、上传与模板资源",
+      "depth": "navigation",
+      "summary": "上传资源写入与后端静态访问边界",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [
+          "BASE-033",
+          "BASE-034",
+          "BASE-050"
+        ],
+        "permissions": [],
+        "implementation": [
+          "BASE-033",
+          "BASE-034",
+          "BASE-049",
+          "BASE-050"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": [
+          "BASE-037"
+        ]
+      },
+      "limits": [
+        "核实两个写入入口与MVC资源映射/访问拦截；不涵盖外部静态托管，不代表全站安全评估或运行通过"
+      ]
+    },
+    {
+      "id": "F21",
+      "name": "消息中心与最近操作",
+      "depth": "navigation",
+      "summary": "消息入口与按用户记录最近资源操作",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-035",
+          "BASE-040"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "消息计数仅可见替换挂点与默认0；最近操作核实更新或插入路径，未运行验证"
+      ]
+    },
+    {
+      "id": "F22",
+      "name": "系统参数与菜单装配",
+      "depth": "navigation",
+      "summary": "系统参数默认值/读取和菜单动态装配",
+      "contract": {
+        "trigger": [],
+        "inputs": [],
+        "outputs": [],
+        "preconditions": [],
+        "state_changes": [],
+        "postconditions": [],
+        "invariants": [],
+        "failures": [],
+        "permissions": [],
+        "implementation": [
+          "BASE-016",
+          "BASE-017",
+          "BASE-018",
+          "BASE-041"
+        ],
+        "dependencies": [],
+        "data": [],
+        "tests": []
+      },
+      "limits": [
+        "仅核实参数服务和菜单路由；不把菜单可见等同后端鉴权，不代表全部参数支持矩阵"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "BASE-R-F11-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F11",
+      "to": "BASE-019",
+      "evidence_fact_ids": [
+        "BASE-019"
+      ]
+    },
+    {
+      "id": "BASE-R-F11-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F11",
+      "to": "BASE-020",
+      "evidence_fact_ids": [
+        "BASE-020"
+      ]
+    },
+    {
+      "id": "BASE-R-F12-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F12",
+      "to": "BASE-021",
+      "evidence_fact_ids": [
+        "BASE-021"
+      ]
+    },
+    {
+      "id": "BASE-R-F12-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F12",
+      "to": "BASE-022",
+      "evidence_fact_ids": [
+        "BASE-022"
+      ]
+    },
+    {
+      "id": "BASE-R-F13-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F13",
+      "to": "BASE-023",
+      "evidence_fact_ids": [
+        "BASE-023"
+      ]
+    },
+    {
+      "id": "BASE-R-F13-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F13",
+      "to": "BASE-024",
+      "evidence_fact_ids": [
+        "BASE-024"
+      ]
+    },
+    {
+      "id": "BASE-R-F14-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F14",
+      "to": "BASE-025",
+      "evidence_fact_ids": [
+        "BASE-025"
+      ]
+    },
+    {
+      "id": "BASE-R-F14-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F14",
+      "to": "BASE-026",
+      "evidence_fact_ids": [
+        "BASE-026"
+      ]
+    },
+    {
+      "id": "BASE-R-F16-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F16",
+      "to": "BASE-027",
+      "evidence_fact_ids": [
+        "BASE-027"
+      ]
+    },
+    {
+      "id": "BASE-R-F16-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F16",
+      "to": "BASE-028",
+      "evidence_fact_ids": [
+        "BASE-028"
+      ]
+    },
+    {
+      "id": "BASE-R-F16-2",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F16",
+      "to": "BASE-029",
+      "evidence_fact_ids": [
+        "BASE-029"
+      ]
+    },
+    {
+      "id": "BASE-R-F17-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F17",
+      "to": "BASE-030",
+      "evidence_fact_ids": [
+        "BASE-030"
+      ]
+    },
+    {
+      "id": "BASE-R-F17-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F17",
+      "to": "BASE-031",
+      "evidence_fact_ids": [
+        "BASE-031"
+      ]
+    },
+    {
+      "id": "BASE-R-F19-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F19",
+      "to": "BASE-032",
+      "evidence_fact_ids": [
+        "BASE-032"
+      ]
+    },
+    {
+      "id": "BASE-R-F20-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F20",
+      "to": "BASE-033",
+      "evidence_fact_ids": [
+        "BASE-033"
+      ]
+    },
+    {
+      "id": "BASE-R-F20-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F20",
+      "to": "BASE-034",
+      "evidence_fact_ids": [
+        "BASE-034"
+      ]
+    },
+    {
+      "id": "BASE-R-F20-2",
+      "type": "TEST_ASSET_FOR",
+      "from": "BASE-037",
+      "to": "F20",
+      "evidence_fact_ids": [
+        "BASE-037"
+      ]
+    },
+    {
+      "id": "BASE-R-F21-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F21",
+      "to": "BASE-035",
+      "evidence_fact_ids": [
+        "BASE-035"
+      ]
+    },
+    {
+      "id": "BASE-R-F22-0",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F22",
+      "to": "BASE-016",
+      "evidence_fact_ids": [
+        "BASE-016"
+      ]
+    },
+    {
+      "id": "BASE-R-F22-1",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F22",
+      "to": "BASE-017",
+      "evidence_fact_ids": [
+        "BASE-017"
+      ]
+    },
+    {
+      "id": "BASE-R-F22-2",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F22",
+      "to": "BASE-018",
+      "evidence_fact_ids": [
+        "BASE-018"
+      ]
+    },
+    {
+      "id": "BASE-R-RECENT",
+      "from": "F21",
+      "to": "BASE-040",
+      "type": "CAPABILITY_REALIZED_BY",
+      "evidence_fact_ids": [
+        "BASE-040"
+      ]
+    },
+    {
+      "id": "BASE-R-PARAM",
+      "from": "F22",
+      "to": "BASE-041",
+      "type": "CAPABILITY_REALIZED_BY",
+      "evidence_fact_ids": [
+        "BASE-041"
+      ]
+    },
+    {
+      "id": "BASE-R-PLUGIN-IMPACT",
+      "from": "BASE-028",
+      "to": "F16",
+      "type": "CHANGE_IMPACTS",
+      "evidence_fact_ids": [
+        "BASE-027",
+        "BASE-028"
+      ]
+    },
+    {
+      "id": "BASE-R-MENU-IMPACT",
+      "from": "BASE-017",
+      "to": "F22",
+      "type": "CHANGE_IMPACTS",
+      "evidence_fact_ids": [
+        "BASE-016",
+        "BASE-017",
+        "BASE-018"
+      ]
+    },
+    {
+      "id": "BASE-R-LIB-IMPACT",
+      "from": "BASE-007",
+      "to": "F09",
+      "type": "CHANGE_IMPACTS",
+      "evidence_fact_ids": [
+        "BASE-007"
+      ]
+    },
+    {
+      "id": "BASE-R-STATIC-49",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F20",
+      "to": "BASE-049",
+      "evidence_fact_ids": [
+        "BASE-049"
+      ]
+    },
+    {
+      "id": "BASE-R-STATIC-50",
+      "type": "CAPABILITY_REALIZED_BY",
+      "from": "F20",
+      "to": "BASE-050",
+      "evidence_fact_ids": [
+        "BASE-050"
+      ]
+    }
+  ],
+  "doc_type": "static_knowledge",
+  "version": "0.1",
+  "status": "static_verified",
+  "output_path": "kb/generated/architecture-extensions.md",
+  "metadata": {
+    "owner": "DataEase维护者",
+    "updated_at": "2026-10-14T02:29:33.186884+00:00",
+    "source_repo": "https://github.com/buccaneermethodology/dataease",
+    "source_revision": "24ffb4c08a7532af26e8cd3966e5e42726a40af4",
+    "source_scope": "当前工作区V3可访问源码；提交定位与文件摘要共同绑定，忽略/本地材料以摘要为准；静态范围",
+    "depends_on_docs": []
+  }
+}

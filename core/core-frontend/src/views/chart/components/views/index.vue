@@ -50,6 +50,26 @@ import { sanitizeHtml } from '@/utils/utils'
 import { Base64 } from 'js-base64'
 import DeRichTextView from '@/custom-component/rich-text/DeRichTextView.vue'
 import DePictureGroup from '@/custom-component/picture-group/Component.vue'
+import eventBus from '@/utils/eventBus'
+import FilterPasteRenderer from './components/FilterPasteRenderer.vue'
+import { getData } from '@/api/chart'
+import {
+  registerMvpPasteReceiver,
+  sameMvpPasteInput,
+  prepareMvpCommitDto,
+  type PasteBinding,
+  type PreparedQuery,
+  type PreparedFilterPaste,
+  type FilterPasteRequest
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
+import {
+  getMvpFilterClipboard,
+  getMvpFilterSessionToken,
+  beginMvpPasteObservation,
+  observeMvpPasteQuery,
+  observeMvpPasteResponse,
+  settleMvpPasteObservation
+} from '@/custom-component/filter-copy/mvp-chart-filter-copy'
 import ChartEmptyInfo from '@/views/chart/components/views/components/ChartEmptyInfo.vue'
 import { snapshotStoreWithOut } from '@/store/modules/data-visualization/snapshot'
 import { viewFieldTimeTrans } from '@/utils/viewUtils'
@@ -453,7 +473,7 @@ const chartClick = param => {
 }
 
 // 仪表板和大屏所有额外过滤参数都在此处
-const filter = (firstLoad?: boolean) => {
+const filter = (firstLoad?: boolean, report = true) => {
   const { filter } = useFilter(view.value.id, firstLoad, showPosition.value)
   const result = {
     user: wsCache.get('user.uid'),
@@ -466,7 +486,7 @@ const filter = (firstLoad?: boolean) => {
     resultMode: resultMode.value
   }
   // 定时报告相关勿动
-  if (route.path === '/preview' && route.query.taskId) {
+  if (report && route.path === '/preview' && route.query.taskId) {
     const sceneId = view.value['sceneId']
     const filterJson = window[`de-report-filter-${sceneId}`]
     let filterObj = {}
@@ -478,6 +498,361 @@ const filter = (firstLoad?: boolean) => {
   }
   return result
 }
+
+type PasteNode = {
+  key: string
+  binding: PasteBinding
+  renderer?: InstanceType<typeof FilterPasteRenderer>
+  handle?: PreparedFilterPaste
+}
+const pasteNodes = shallowRef<PasteNode[]>([])
+const pasteActiveKey = ref('')
+let pasteSequence = 0
+let pasteGeneration = 0
+let pasteContextGeneration = 0
+let publishingOperationId: number | null = null
+let pasteUnmounted = false
+let pasteOperation: {
+  id: number
+  request: FilterPasteRequest
+  observation: number | null
+  node?: PasteNode
+} | null = null
+const setLegacyChartComponent = instance => {
+  if (!pasteActiveKey.value) chartComponent.value = instance
+}
+watch(
+  () => pasteNodes.value.find(node => node.key === pasteActiveKey.value)?.renderer?.component,
+  proxy => {
+    if (pasteActiveKey.value) chartComponent.value = proxy
+  },
+  { flush: 'sync' }
+)
+const invalidatePaste = () => {
+  const current = pasteOperation
+  if (!current) return
+  pasteOperation = null
+  if (current.node) {
+    current.node.handle?.dispose()
+    pasteNodes.value = pasteNodes.value.filter(node => node !== current.node)
+  }
+  settleMvpPasteObservation(current.observation, { ok: false, reason: 'paste_stale' })
+  current.request.resolve({ ok: false, reason: 'paste_stale' })
+}
+watch(
+  [view, element, scale, () => props.fontFamily, () => props.commonParams, () => props.disabled],
+  () => {
+    if (publishingOperationId !== null && publishingOperationId === pasteOperation?.id) return
+    pasteGeneration++
+    invalidatePaste()
+    const adopted = pasteNodes.value.find(node => node.key === pasteActiveKey.value)
+    if (
+      adopted &&
+      (adopted.binding.current.value.view !== view.value ||
+        adopted.binding.current.value.element !== element.value)
+    ) {
+      adopted.binding.current.value = { phase: 'active', view: view.value, element: element.value }
+    }
+  },
+  { deep: true, flush: 'sync' }
+)
+watch(
+  () => filter(false, false),
+  () => {
+    if (publishingOperationId !== null && publishingOperationId === pasteOperation?.id) return
+    pasteContextGeneration++
+    invalidatePaste()
+  },
+  { deep: true, flush: 'sync' }
+)
+
+const receiveFilterPaste = async (request: FilterPasteRequest) => {
+  const observation = beginMvpPasteObservation(request.targetId, request.operationId, true)
+  const resolve = (result: Parameters<FilterPasteRequest['resolve']>[0]) => {
+    settleMvpPasteObservation(observation, result)
+    request.resolve(result)
+  }
+  if (pasteOperation || loading.value) {
+    resolve({ ok: false, reason: 'paste_busy' })
+    return
+  }
+  if (
+    pasteUnmounted ||
+    request.targetId !== view.value.id ||
+    curComponent.value?.id !== view.value.id ||
+    editMode.value !== 'edit' ||
+    !['canvas', 'canvasDataV', 'edit'].includes(showPosition.value)
+  ) {
+    resolve({ ok: false, reason: 'paste_stale' })
+    return
+  }
+  const library = chartViewManager.getChartView(view.value.render, view.value.type)?.library
+  if (
+    !['g2', 's2', 'indicator', 'l7', 'l7plot', 'rich-text', 'picture-group'].includes(library) ||
+    view.value.isPlugin ||
+    view.value.plugin?.isPlugin ||
+    typeof chartComponent.value?.prepareFilterPaste !== 'function'
+  ) {
+    resolve({ ok: false, reason: 'preparation_unavailable' })
+    return
+  }
+  if (
+    ['l7', 'l7plot'].includes(library) &&
+    chartComponent.value?.canPrepareFilterPaste?.() !== true
+  ) {
+    resolve({ ok: false, reason: 'map_infrastructure_unavailable' })
+    return
+  }
+  const canonicalView = view.value
+  const canonicalElement = element.value
+  const viewSnapshot = cloneDeep(canonicalView)
+  const elementSnapshot = cloneDeep(canonicalElement)
+  const context = cloneDeep(filter(false, false))
+  const generation = pasteGeneration
+  const contextGeneration = pasteContextGeneration
+  const session = getMvpFilterSessionToken()
+  const clip = getMvpFilterClipboard()
+  const op = {
+    id: ++pasteSequence,
+    request,
+    observation,
+    node: undefined as PasteNode | undefined
+  }
+  pasteOperation = op
+  const isCurrent = () =>
+    !pasteUnmounted &&
+    pasteOperation === op &&
+    request.isCurrent() &&
+    request.editSessionId === session.editSessionId &&
+    sameMvpPasteInput(session, getMvpFilterSessionToken()) &&
+    !!getMvpFilterClipboard() &&
+    getMvpFilterClipboard().revision === clip?.revision &&
+    canonicalView === view.value &&
+    canonicalElement === element.value &&
+    curComponent.value?.id === request.targetId &&
+    editMode.value === 'edit' &&
+    pasteGeneration === generation &&
+    pasteContextGeneration === contextGeneration &&
+    sameMvpPasteInput(canonicalView, viewSnapshot) &&
+    sameMvpPasteInput(canonicalElement, elementSnapshot) &&
+    sameMvpPasteInput(context, filter(false, false))
+  try {
+    if (!clip || !isCurrent()) {
+      resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const candidate = cloneDeep(canonicalView)
+    candidate.customFilter = cloneDeep(request.candidateTree)
+    candidate.chartExtRequest = cloneDeep(context)
+    if (library === 's2') {
+      if (candidate.customAttr?.basicStyle?.tablePageStyle === 'general') {
+        candidate.chartExtRequest.pageSize =
+          dvMainStore.getViewPageInfo(candidate.id)?.pageSize ?? 20
+      } else delete candidate.chartExtRequest.pageSize
+    }
+    let prepared: PreparedQuery
+    const staticPicture =
+      library === 'picture-group' && !parseJson(candidate.senior)?.threshold?.enable
+    if (staticPicture) {
+      observeMvpPasteQuery(observation, 'static-picture', candidate)
+      prepared = { kind: 'static-picture', local: cloneDeep(candidate) }
+    } else {
+      const wireRequest = cloneDeep(candidate)
+      if (library === 'picture-group') {
+        wireRequest.type = 'table-info'
+        wireRequest.render = 'antv'
+        wireRequest.resultCount = 1
+      } else if (
+        library === 'rich-text' &&
+        !wireRequest.yAxis?.some(axis => axis?.compareCalc?.type !== 'none')
+      ) {
+        wireRequest.resultCount = 1
+        wireRequest.resultMode = 'custom'
+      }
+      observeMvpPasteQuery(observation, 'queried', wireRequest)
+      const outcome = await getData<ChartObj>(wireRequest, { reportOutcome: true })
+      if (outcome.ok === true) observeMvpPasteResponse(observation, outcome.value?.data)
+      if (!isCurrent()) {
+        resolve({ ok: false, reason: 'paste_stale' })
+        return
+      }
+      if (outcome.ok !== true) {
+        resolve({ ok: false, reason: 'paste_query_failed' })
+        return
+      }
+      const response = cloneDeep(outcome.value)
+      if (
+        !response ||
+        response.id !== wireRequest.id ||
+        response.type !== wireRequest.type ||
+        response.render !== wireRequest.render
+      ) {
+        resolve({ ok: false, reason: 'paste_response_invalid' })
+        return
+      }
+      if (library === 'picture-group') {
+        response.type = 'picture-group'
+        response.render = 'custom'
+      }
+      prepared = {
+        kind: 'queried',
+        request: cloneDeep(wireRequest),
+        response: prepareMvpCommitDto(response, canonicalView)
+      }
+    }
+    const node: PasteNode = {
+      key: `filter-paste-${candidate.id}-${op.id}`,
+      binding: {
+        current: shallowRef({
+          phase: 'candidate',
+          view: cloneDeep(candidate),
+          element: cloneDeep(canonicalElement)
+        })
+      }
+    }
+    op.node = node
+    pasteNodes.value = [...pasteNodes.value, node]
+    await nextTick()
+    if (!isCurrent() || !node.renderer) {
+      resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const ready = await node.renderer.prepareFilterPaste(prepared, node.binding, () =>
+      node.binding.current.value.phase === 'active'
+        ? !pasteUnmounted && pasteActiveKey.value === node.key
+        : isCurrent()
+    )
+    if (ready.ok !== true) {
+      resolve({ ok: false, reason: ready.reason })
+      return
+    }
+    node.handle = ready.handle
+    if (
+      !isCurrent() ||
+      ready.handle.key !== node.key ||
+      ready.handle.binding !== node.binding ||
+      !node.renderer.component
+    ) {
+      resolve({ ok: false, reason: 'paste_stale' })
+      return
+    }
+    const metadata = ready.handle.metadata
+    if (
+      (['g2', 'l7', 'l7plot'].includes(library) && metadata.kind !== 'g2') ||
+      (library === 's2' && metadata.kind !== 's2') ||
+      (library === 'indicator' && metadata.kind !== 'indicator') ||
+      (library === 'rich-text' && metadata.kind !== 'rich-text') ||
+      (library === 'picture-group' &&
+        (metadata.kind !== 'picture-group' || metadata.queried !== (prepared.kind === 'queried')))
+    ) {
+      resolve({ ok: false, reason: 'paste_response_invalid' })
+      return
+    }
+    const oldNodes = pasteNodes.value.filter(item => item !== node)
+    // 唯一同步发布段。只有本次内部写入获豁免，不跨 await/timer。
+    publishingOperationId = op.id
+    try {
+      canonicalView.customFilter = cloneDeep(request.candidateTree)
+      node.binding.current.value = {
+        phase: 'active',
+        view: canonicalView,
+        element: canonicalElement
+      }
+      if (prepared.kind === 'queried') {
+        chartExtRequest.value = cloneDeep(prepared.request.chartExtRequest)
+        dvMainStore.setLastViewRequestInfo(
+          canonicalView.id,
+          cloneDeep(prepared.request.chartExtRequest)
+        )
+        dvMainStore.setViewDataDetails(canonicalView.id, cloneDeep(prepared.response))
+        state.drillFilters = cloneDeep(metadata.drillFilters)
+      }
+      if (metadata.kind === 'rich-text') {
+        canonicalView.curFields = cloneDeep(metadata.fields)
+        canonicalElement.propValue.innerType = metadata.innerType
+        canonicalElement.propValue.render = metadata.render
+      }
+      if (metadata.kind === 'picture-group' && metadata.queried)
+        canonicalView.curFields = cloneDeep(metadata.fields || [])
+      if (metadata.kind === 'g2' && metadata.publishOrigin)
+        dvMainStore.setViewOriginData(canonicalView.id, cloneDeep(metadata.originData))
+      if (metadata.kind === 's2' && prepared.kind === 'queried') {
+        if (metadata.publishPure)
+          dvMainStore.setPureCanvasViewDataInfo(canonicalView.id, cloneDeep(prepared.response))
+        dvMainStore.setViewPageInfo(canonicalView.id, cloneDeep(metadata.pageInfo))
+        dvMainStore.setViewInstanceInfo(canonicalView.id, ready.handle.instance)
+      }
+      pasteActiveKey.value = node.key
+      chartComponent.value = node.renderer.component
+      snapshotStore.recordSnapshotCache('calcData', canonicalView.id)
+      pasteOperation = null
+      pasteNodes.value = [node]
+    } finally {
+      publishingOperationId = null
+    }
+    resolve({ ok: true })
+    oldNodes.forEach(old => old.handle?.dispose())
+    if (metadata.kind === 'g2' && metadata.publishOrigin) emitter.emit('chart-data-change')
+    if (metadata.kind === 'rich-text') eventBus.emit('initCurFields-' + canonicalElement.id)
+  } catch {
+    resolve({ ok: false, reason: 'paste_failed' })
+  } finally {
+    if (pasteOperation === op) pasteOperation = null
+    if (op.node && pasteActiveKey.value !== op.node.key) {
+      op.node.handle?.dispose()
+      pasteNodes.value = pasteNodes.value.filter(node => node !== op.node)
+    }
+  }
+}
+let unregisterPaste: (() => void) | null = null
+watch(
+  () => [
+    view.value.id,
+    view.value.type,
+    view.value.render,
+    view.value.isPlugin,
+    view.value.plugin?.isPlugin,
+    editMode.value,
+    showPosition.value,
+    curComponent.value?.id
+  ],
+  () => {
+    unregisterPaste?.()
+    unregisterPaste = null
+    invalidatePaste()
+    const library = chartViewManager.getChartView(view.value.render, view.value.type)?.library
+    const supported =
+      ['g2', 's2', 'indicator', 'l7', 'l7plot', 'rich-text', 'picture-group'].includes(library) &&
+      !view.value.isPlugin &&
+      !view.value.plugin?.isPlugin
+    if (pasteActiveKey.value && !supported) {
+      // 后续普通换类型继续走既有原生分派，不让尚未接入的 C2–C4 成为空白图。
+      const old = pasteNodes.value
+      pasteActiveKey.value = ''
+      pasteNodes.value = []
+      chartComponent.value = undefined
+      old.forEach(node => node.handle?.dispose())
+    }
+    if (
+      import.meta.env.DEV &&
+      editMode.value === 'edit' &&
+      curComponent.value?.id === view.value.id &&
+      supported &&
+      ['canvas', 'canvasDataV', 'edit'].includes(showPosition.value)
+    ) {
+      unregisterPaste = registerMvpPasteReceiver(view.value.id, request => {
+        void receiveFilterPaste(request)
+      })
+    }
+  },
+  { immediate: true, flush: 'sync' }
+)
+onBeforeUnmount(() => {
+  pasteUnmounted = true
+  unregisterPaste?.()
+  invalidatePaste()
+  pasteNodes.value.forEach(node => node.handle?.dispose())
+})
 
 const onDrillFilters = param => {
   state.drillFilters = param ? param : []
@@ -662,7 +1037,8 @@ const queryDataFromSelect = (firstLoad = false) => {
  * 合并连续查询触发，阻止重复请求及非预览编辑画布的定时查询
  * 定时刷新复用上一次筛选参数，并将刷新来源传入取数与绘制链路
  */
-const queryData = debounce((firstLoad = false, autoRefresh = false) => {
+const queryDataDebounced = debounce((firstLoad = false, autoRefresh = false) => {
+  invalidatePaste()
   if (
     loading.value ||
     (autoRefresh &&
@@ -681,12 +1057,17 @@ const queryData = debounce((firstLoad = false, autoRefresh = false) => {
   chartExtRequest.value = queryFilter
   calcData(params, autoRefresh)
 }, 300)
+const queryData = (firstLoad = false, autoRefresh = false) => {
+  invalidatePaste()
+  queryDataDebounced(firstLoad, autoRefresh)
+}
 
 /**
  * 记录本轮请求并调用图表组件，定时刷新仅隐藏加载动画而不取消请求锁
  * 插件沿用原调用参数，原生图表额外接收刷新来源
  */
 const calcData = (params, autoRefresh = false) => {
+  invalidatePaste()
   dvMainStore.setLastViewRequestInfo(params.id, params.chartExtRequest)
   if (chartComponent?.value) {
     isAutoRefreshing.value = autoRefresh
@@ -722,13 +1103,13 @@ const showChartView = (...libs: ChartLibraryType[]) => {
   }
 }
 
+let registeredQueryEvent = ''
 onBeforeMount(() => {
   if (!showPosition.value.includes('viewDialog')) {
     nextTick(() => {
-      useEmitt({
-        name: `query-data-${view.value.id}`,
-        callback: queryDataFromSelect
-      })
+      if (pasteUnmounted) return
+      registeredQueryEvent = `query-data-${view.value.id}`
+      emitter.on(registeredQueryEvent, queryDataFromSelect)
     })
   }
 })
@@ -825,7 +1206,10 @@ const changeDataset = () => {
   checkFieldIsAllowEmpty()
 }
 
-onBeforeUnmount(() => queryData.cancel())
+onBeforeUnmount(() => {
+  queryDataDebounced.cancel()
+  if (registeredQueryEvent) emitter.off(registeredQueryEvent, queryDataFromSelect)
+})
 
 const loadPlugin = ref(false)
 
@@ -932,6 +1316,7 @@ onMounted(() => {
   }
 
   const renderChartByViewInfo = async viewInfo => {
+    invalidatePaste()
     if (view.value?.plugin?.isPlugin) {
       const renderResult = chartComponent?.value?.invokeMethod({
         methodName: 'renderChart',
@@ -945,6 +1330,7 @@ onMounted(() => {
   }
 
   const handleRenderChart = function (val) {
+    invalidatePaste()
     if (!state.initReady) {
       return
     }
@@ -1335,100 +1721,143 @@ const clearG2Tooltip = () => {
       </div>
     </div>
     <!--这里去渲染不同图库的图表-->
-    <div v-if="allEmptyCheck || (chartAreaShow && !showEmpty)" style="flex: 1; overflow: hidden">
-      <plugin-component
-        v-if="view.plugin?.isPlugin && loadPlugin"
-        :jsname="view.plugin.staticMap['index']"
+    <div
+      v-if="allEmptyCheck || (chartAreaShow && !showEmpty)"
+      style="flex: 1; position: relative; min-height: 0; overflow: hidden"
+    >
+      <template v-if="!pasteActiveKey">
+        <plugin-component
+          v-if="view.plugin?.isPlugin && loadPlugin"
+          :jsname="view.plugin.staticMap['index']"
+          :scale="scale"
+          :dynamic-area-id="dynamicAreaId"
+          :view="view"
+          :show-position="showPosition"
+          :element="element"
+          :request="request"
+          :emitter="emitter"
+          :store="store"
+          :suffixId="suffixId"
+          :ref="setLegacyChartComponent"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @resetLoading="() => (loading = false)"
+        />
+        <de-picture-group
+          v-else-if="showChartView(ChartLibraryType.PICTURE_GROUP)"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :element="element"
+          :active="active"
+          :view="view"
+          :show-position="showPosition"
+          :suffixId="suffixId"
+        >
+        </de-picture-group>
+        <de-rich-text-view
+          v-else-if="showChartView(ChartLibraryType.RICH_TEXT)"
+          :scale="scale"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :element="element"
+          :disabled="!['canvas', 'canvasDataV'].includes(showPosition) || disabled"
+          :active="active"
+          :show-position="showPosition"
+          :edit-mode="editMode"
+          :suffixId="suffixId"
+        />
+        <de-indicator
+          :scale="scale"
+          v-else-if="showChartView(ChartLibraryType.INDICATOR)"
+          :themes="canvasStyleData.dashboard.themeColor"
+          :ref="setLegacyChartComponent"
+          :view="view"
+          :element="element"
+          :show-position="showPosition"
+          :suffixId="suffixId"
+          :font-family="fontFamily"
+          :common-params="commonParams"
+          @touchstart="clearG2Tooltip"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @onComponentEvent="() => emit('onComponentEvent')"
+        />
+        <chart-component-g2-plot
+          :scale="scale"
+          :dynamic-area-id="dynamicAreaId"
+          :view="view"
+          :show-position="showPosition"
+          :element="element"
+          :suffixId="suffixId"
+          :font-family="fontFamily"
+          :active="active"
+          v-else-if="
+            showChartView(ChartLibraryType.G2, ChartLibraryType.L7_PLOT, ChartLibraryType.L7)
+          "
+          :ref="setLegacyChartComponent"
+          @onChartClick="chartClick"
+          @onPointClick="onPointClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          @resetLoading="() => (loading = false)"
+        />
+        <chart-component-s2
+          :view="view"
+          :scale="scale"
+          :show-position="showPosition"
+          :element="element"
+          :drill-length="drillClickLength"
+          :font-family="fontFamily"
+          v-else-if="showChartView(ChartLibraryType.S2)"
+          :ref="setLegacyChartComponent"
+          @onPointClick="onPointClick"
+          @onChartClick="chartClick"
+          @onDrillFilters="onDrillFilters"
+          @onJumpClick="jumpClick"
+          :suffixId="suffixId"
+        />
+      </template>
+      <filter-paste-renderer
+        v-for="node in pasteNodes"
+        :key="node.key"
+        :ref="
+          instance => {
+            node.renderer = instance
+          }
+        "
+        :binding="node.binding"
+        :suffix-id="node.key"
         :scale="scale"
-        :dynamic-area-id="dynamicAreaId"
-        :view="view"
         :show-position="showPosition"
-        :element="element"
-        :request="request"
-        :emitter="emitter"
-        :store="store"
-        :suffixId="suffixId"
-        ref="chartComponent"
-        @onChartClick="chartClick"
-        @onPointClick="onPointClick"
-        @onDrillFilters="onDrillFilters"
-        @onJumpClick="jumpClick"
-        @resetLoading="() => (loading = false)"
-      />
-      <de-picture-group
-        v-else-if="showChartView(ChartLibraryType.PICTURE_GROUP)"
-        :themes="canvasStyleData.dashboard.themeColor"
-        ref="chartComponent"
-        :element="element"
-        :active="active"
-        :view="view"
-        :show-position="showPosition"
-        :suffixId="suffixId"
-      >
-      </de-picture-group>
-      <de-rich-text-view
-        v-else-if="showChartView(ChartLibraryType.RICH_TEXT)"
-        :scale="scale"
-        :themes="canvasStyleData.dashboard.themeColor"
-        ref="chartComponent"
-        :element="element"
-        :disabled="!['canvas', 'canvasDataV'].includes(showPosition) || disabled"
-        :active="active"
-        :show-position="showPosition"
-        :edit-mode="editMode"
-        :suffixId="suffixId"
-      />
-      <de-indicator
-        :scale="scale"
-        v-else-if="showChartView(ChartLibraryType.INDICATOR)"
-        :themes="canvasStyleData.dashboard.themeColor"
-        ref="chartComponent"
-        :view="view"
-        :element="element"
-        :show-position="showPosition"
-        :suffixId="suffixId"
         :font-family="fontFamily"
+        :themes="canvasStyleData.dashboard.themeColor"
         :common-params="commonParams"
-        @touchstart="clearG2Tooltip"
+        :edit-mode="editMode"
+        :disabled="disabled"
+        :dynamic-area-id="dynamicAreaId"
+        :active="active && node.binding.current.value.phase === 'active'"
+        :drill-length="drillClickLength"
+        :aria-hidden="node.binding.current.value.phase === 'candidate' ? 'true' : null"
+        :inert="node.binding.current.value.phase === 'candidate' ? '' : null"
+        :style="{
+          position: 'absolute',
+          inset: '0',
+          width: '100%',
+          height: '100%',
+          visibility: node.binding.current.value.phase === 'candidate' ? 'hidden' : 'visible',
+          pointerEvents: node.binding.current.value.phase === 'candidate' ? 'none' : undefined
+        }"
+        :data-filter-paste-key="node.key"
         @onChartClick="chartClick"
         @onPointClick="onPointClick"
         @onDrillFilters="onDrillFilters"
         @onJumpClick="jumpClick"
         @onComponentEvent="() => emit('onComponentEvent')"
-      />
-      <chart-component-g2-plot
-        :scale="scale"
-        :dynamic-area-id="dynamicAreaId"
-        :view="view"
-        :show-position="showPosition"
-        :element="element"
-        :suffixId="suffixId"
-        :font-family="fontFamily"
-        :active="active"
-        v-else-if="
-          showChartView(ChartLibraryType.G2, ChartLibraryType.L7_PLOT, ChartLibraryType.L7)
-        "
-        ref="chartComponent"
-        @onChartClick="chartClick"
-        @onPointClick="onPointClick"
-        @onDrillFilters="onDrillFilters"
-        @onJumpClick="jumpClick"
         @resetLoading="() => (loading = false)"
-      />
-      <chart-component-s2
-        :view="view"
-        :scale="scale"
-        :show-position="showPosition"
-        :element="element"
-        :drill-length="drillClickLength"
-        :font-family="fontFamily"
-        v-else-if="showChartView(ChartLibraryType.S2)"
-        ref="chartComponent"
-        @onPointClick="onPointClick"
-        @onChartClick="chartClick"
-        @onDrillFilters="onDrillFilters"
-        @onJumpClick="jumpClick"
-        :suffixId="suffixId"
       />
     </div>
     <chart-empty-info

@@ -1,0 +1,51 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-CURRENT-WORKTREE-COMPONENT-VALIDATION-r002",
+  "recorded_at": "2026-10-20T18:23:46Z",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r269.json",
+  "phase": "bounded_component_validation",
+  "task_id": "DE-S02-F01-implementation-20261018",
+  "execution": {
+    "identity": "root",
+    "state": "component_validation_completed",
+    "result": "Extended PA-006/007 component assertions to verify cleared mapValue and cascade currentSelectValue remain cleared after stale success/failure. Component renderer PA-001..007 PASS; async pure model 9/9 PASS; targeted ESLint and git diff --check PASS. Stubbed network/Store; independent delta validation pending."
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/S02-CURRENT-LOCAL-VALIDATION-r003.md",
+      "sha256": "b9dd8fe36eb15f6ca3c59aa3d6fe4d1f7b406a66a8da633c200ecc9c044eb864"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-observation-component/check.mjs",
+      "sha256": "7326d108fb774cc0f10d66229b8b3727603bbc1af9b7b510425fdb9dc846b4be"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "sha256": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-observation-async.test.ts",
+      "sha256": "bc1cad8262ecb36f8975094dd302dfcae95bb0a4dac2f317e5d6c531b1d7af80"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-observation-async.ts",
+      "sha256": "1bfec813d68d02139a9c46b80eb1188437d91a6e66e740ac7531b07cf3392e7a"
+    }
+  ],
+  "planned_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+    "Dashboard/Artifacts/Goal-DE-GOV-003/data/tasks/DE-S02-F01-implementation-20261018/v007.json"
+  ],
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "只证明当前Select.vue在隔离stub组件runner PA-001..007及纯异步模型9/9的局部行为，并有定向ESLint和diff检查；不证明真实API/Store接线、权限、保存/恢复或Goal验收。",
+  "blockers": [
+    "真实多用户权限环境BLOCKED/NOT_RUN，S01 F01 Entry Packet CONDITIONAL。",
+    "全量TypeScript检查因3个TS6504 .vue.js输入失败，基线归因尚未独立确认。",
+    "本轮新增组件断言的独立Delta Validation尚待完成。"
+  ]
+}

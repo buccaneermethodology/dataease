@@ -1,0 +1,63 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S00-KYM-TCO-REVIEW",
+  "session_id": "S00-KYM-TCO-UPDATE",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md",
+    "sha256": "45cdc9ce3f70e0acd49c9364e2f6fa3e05aed498e61177a2d0bf6b5838cec525"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/S00-KYM-TCO-Update/candidate-manifest.json",
+      "sha256": "480c8f82f0aa3cc84d80198a48c2b1174621938f72fc79b809a215ba4bc67844"
+    },
+    {
+      "path": ".kym-tco/dataease/kym/revisions/kym-r006.json",
+      "sha256": "5a778262182f052871febc066e2423f257d77f312c6b40865cf951511feb072b"
+    },
+    {
+      "path": ".kym-tco/dataease/tco/models/tco-r002.json",
+      "sha256": "bfb708f4023d3ed3d9a68650fa345386d704630029bad33e28430acf1c181149"
+    },
+    {
+      "path": ".kym-tco/dataease/tco/proposals/coverage-kym-r006-r002.json",
+      "sha256": "8e7f7b8015d7da715d9f1324988f99595a122915ec41edaf4112fab18da7be5f"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S00-KYM-R006-TCO-R002",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "sources",
+    "decisions",
+    "profiles",
+    "coverage",
+    "packages"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/review.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/S00-KYM-TCO-Update/review.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "候选KYM/TCO语义与来源复核，不代表产品实现",
+    "authority_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/Closeout.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S00-KYM-TCO-REVIEW",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/S00-KYM-TCO-Update/intake.md",
+  "working_directory": ".",
+  "execution_command": "独立只读审查KYM r006/TCO r002/coverage及普通CLI产物是否准确吸收S00成果。核验两次用户裁定、被关闭旧问题及来源定位，不把文档完成当运行实现，保留W0-W4 Profile分母及无关未决。检查source refs精确性、语义supersession是否丢原有效规则、投影是否跨功能错配、TCO证据与新要求匹配；检查包、Closeout及Met/Gap声明。只写review.md，发现可修复实质问题报告主代理，不代修、不重做S00/代码调查。用户已授权覆盖Skill限制使用普通CLI，不因缺supported-host阻断。"
+}

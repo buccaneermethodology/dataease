@@ -1,0 +1,123 @@
+{
+  "schema_version": "s02_mvp_area_failure_cases_v1",
+  "case_set_id": "S02-MVP-AREA-PASTE-FAILURE-r002",
+  "goal_id": "DE-S02-F01",
+  "goal_sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+  "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstFullAcceptanceAuthority-20261027.md",
+  "runtime_witness_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeAreaPasteFailure-r001.json",
+  "scope": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-12"
+  ],
+  "claim_ceiling": "area failure diagnosis and bounded candidate only; no all-type or Goal acceptance",
+  "invariants": [
+    "candidate preparation must not mutate canonical target/tree/result/dirty/snapshot/save marker/success feedback before readiness",
+    "failure leaves the frozen TargetStateProjection byte-equivalent at declared observation points",
+    "area stays in eligible chart denominator",
+    "one paste attempt emits at most one logical getData call for captured case",
+    "raw request/response, business rows, credentials, raw errors and stack are never persisted in diagnostics",
+    "candidate-private state, operation counters and canonical target state are observed separately"
+  ],
+  "cases": [
+    {
+      "id": "AREA-PASTE-REAL-001",
+      "source": "MVP-20261027/evidence/RuntimeAreaPasteFailure-r001.json",
+      "setup": "Captured real UI target chart changed from saved base bar to area; two-condition source tree and same dataset; captured request/response returned. No injected draw/render/afterRender rejection is permitted.",
+      "expected": "Production SFC strict prepare/render path executes and yields a sanitized fingerprint containing actual production phase/call point, allowlisted error category or return branch, paste result, exactly one logical query, and declared state-projection outcomes. Compare with historical observed query-returned + paste_render_failed + unchanged tree. If exact production phase/error evidence cannot be safely observed or the fingerprint does not reproduce, report NOT_REPRODUCED / BLOCKED_ORACLE; do not call it RED.",
+      "historic_projection": {
+        "canonical_filter_tree": "observed_unchanged",
+        "target_id": "not_observed",
+        "target_render_type": "not_observed",
+        "dataset_identity": "not_observed",
+        "published_chart_result_identity": "not_observed",
+        "dirty_snapshot_revision": "not_observed",
+        "save_load_marker": "not_observed",
+        "success_feedback_count": "not_observed"
+      },
+      "status": "blocked_until_sanitized_production_fingerprint_is_observed"
+    },
+    {
+      "id": "AREA-PASTE-ATOMIC-002",
+      "setup": "Same eligible area target; renderer preparation explicitly rejected after query response by a test-only injected failure.",
+      "expected": "At each frozen observation point, canonical TargetStateProjection is unchanged; candidate state is disposed; exactly one query; no success feedback. This case alone permits injected renderer rejection."
+    },
+    {
+      "id": "AREA-PASTE-READY-003",
+      "setup": "Same eligible area target; production renderer readiness succeeds and target identity remains current.",
+      "expected": "One candidate query; ready result and current target identity are confirmed; full tree is atomically adopted; runner does not claim persistence. Real save/leave/reopen is separate isolated UI evidence."
+    },
+    {
+      "id": "AREA-PASTE-STALE-004",
+      "setup": "Captured area candidate is invalidated by target edit/type switch/unmount before renderer readiness.",
+      "expected": "No late publication; candidate renderer is disposed; canonical TargetStateProjection remains unchanged at stale/dispose points."
+    },
+    {
+      "id": "AREA-DIAGNOSTIC-PRIVACY-005",
+      "setup": "If diagnostics exist, inject unique unrelated canaries into message, stack, nested exception property, request, response, row, and token fields; capture every reachable console/log/event/diagnostic sink. If diagnostics do not exist, mark NOT_APPLICABLE and record absence by source/sink inventory.",
+      "expected": "When enabled, emitted keys are a strict subset of allowlisted static keys, values are static stage/error categories, and none of the canary strings appear in any captured sink; no raw exception object is emitted."
+    }
+  ],
+  "red_green_rule": "REAL-001 red requires SFC setup and production call path success, zero harness/setup errors, no injected renderer failure, and a recorded sanitized production phase/error fingerprint. If unavailable, BLOCKED_ORACLE. GREEN must reuse exact r002 case identity/fingerprint after source repair. ATOMIC-002 is the sole injection case.",
+  "forbidden_collapses": [
+    "Do not call 317 map unit cases 49 chart-type runtime passes.",
+    "Do not treat readonly-view console warning as the area failure cause without causal evidence.",
+    "Do not treat local G2 doubles as real UI or real G2 acceptance.",
+    "Do not change Goal denominator, permission requirement, or Area eligibility.",
+    "Do not use same-name injected paste_render_failed as REAL-001 RED.",
+    "Do not treat READY-003 runner adoption as save/leave/reopen evidence.",
+    "Do not persist full chart result, store, business rows, request/response or raw errors to satisfy state projection."
+  ],
+  "revision": "r002",
+  "design_ref": "MVP-20261027/AreaPasteFailureDesign-r002.md",
+  "target_state_projection": {
+    "fields": [
+      {
+        "path": "target.id",
+        "observation": "in-memory exact identity"
+      },
+      {
+        "path": "target.render_type",
+        "observation": "in-memory exact identity"
+      },
+      {
+        "path": "target.dataset_identity",
+        "observation": "in-memory exact identity"
+      },
+      {
+        "path": "canonical_filter_tree",
+        "observation": "deterministic canonical JSON equality"
+      },
+      {
+        "path": "published_chart_result_identity",
+        "observation": "in-memory stable identity/version; no rows persisted"
+      },
+      {
+        "path": "dirty_snapshot_revision",
+        "observation": "exact revision/value"
+      },
+      {
+        "path": "save_load_marker",
+        "observation": "save sequence and last-loaded persisted identity"
+      },
+      {
+        "path": "success_feedback_count",
+        "observation": "exact count"
+      }
+    ],
+    "observation_points": [
+      "before_query",
+      "query_returned_before_renderer_decision",
+      "renderer_rejected_or_ready",
+      "stale_or_dispose"
+    ],
+    "separate_observations": [
+      "logical_getData_count",
+      "production_stage",
+      "allowlisted_error_class",
+      "candidate_private_state"
+    ],
+    "persistence_rule": "Runner captures full values only in memory; durable evidence stores per-field unchanged/changed/not_observed and sanitized status, never business data or whole-store dumps."
+  }
+}

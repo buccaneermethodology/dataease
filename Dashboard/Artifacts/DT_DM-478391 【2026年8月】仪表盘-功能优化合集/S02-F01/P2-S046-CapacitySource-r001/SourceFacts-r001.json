@@ -1,0 +1,120 @@
+{
+  "schema_version": "s02_p2_capacity_source_facts_v1",
+  "recorded_at": "2026-10-31T00:02:50.962130+00:00",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "original_ac": "AC-F01-Q013",
+  "status": "SOURCE_FACTS_ONLY_PRODUCT_NOT_IMPLEMENTED_NOT_ACCEPTED",
+  "claim_ceiling": "静态源事实；没有运行新测试/产品/UI/DB；原26仍pending",
+  "refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+      "sha256": "eeec347d7f07fe4a2de1cc12e7ac96411679f399594b934f7ce5a85703eb29ea"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md",
+      "sha256": "e409424999af0473836ab9d3f08a3589d1edb098128d70990a4e874f26c347f1"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "sha256": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/F01SliceContract.md",
+      "sha256": "b7935b1c15f60c59c4d19ec487b787e445307f192f4cad5acad6f15aee264b2f"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/TechnicalDependencyLedger-r003.md",
+      "sha256": "1373a966a08bd524853d84d3db24b715cc3798994b055c4c657bb89eebe847ec"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+      "sha256": "579bfaf261b3d9a2325554f2e21f6ac44c7bd3a66f611661d97bcd05188de844"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-pure/check.mjs",
+      "sha256": "907fba4a3416ea6c7f00b11899dbc4007029eadf74ee5c60158cedc184ce028f"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+      "sha256": "9f4eca86173318b7b964648d216fd7a6c153b41abce9eda12f8f6e9fc6944b82"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "sha256": "b760fffb47db4a8a187cc3dc996d6ddffb5f2b187038da625c5c8e0839d87e5d"
+    }
+  ],
+  "findings": [
+    {
+      "id": "CAP-SRC-01",
+      "kind": "observed_source",
+      "statement": "纯合同释放的是17个比较/计数向量；decimal1000000 inclusive、terminal leaves<=50、enum1001不另设count拒绝。最终envelope serializer/parser被明确排除。",
+      "refs": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md"
+      ],
+      "product_effect": "不可据纯合同/旧GREEN声称产品接线或最终schema已冻结"
+    },
+    {
+      "id": "CAP-SRC-02",
+      "kind": "observed_source",
+      "statement": "当前MVP copy在checkMvpFilterTree后构造冻结内存对象；没有原50叶或1000000 bytes guard，也没有先构建并保存同一版本化JSON字符串。目标校验复用checkMvpFilterTree检查既有target与clipboard tree。",
+      "source": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+      "line": 389,
+      "effect": "容量是原P2待实现责任，不回判P1原基本范围验收"
+    },
+    {
+      "id": "CAP-SRC-03",
+      "kind": "observed_source_and_static_inference",
+      "statement": "旧countTerminalLeaves按node.items直接递归，合同tree是抽象group；native分组是type=tree的item，其子树在subTree.items。不能直接用抽象helper当native计数。当前产品未调用该helper，故这不是产品误计数bug。",
+      "source": "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+      "line": 48,
+      "illustrative_not_executed": "native root.items=[{type:tree, subTree:{items:[leafA,leafB]}}]在旧helper结构推导为1而native应2；只是结构反例，非合法产品fixture/实际运行"
+    },
+    {
+      "id": "CAP-SRC-04",
+      "kind": "observed_source",
+      "statement": "旧纯runner的enum1001案核enum_count=1001与bounded vector；within_limit被映射为常数12 bytes，没有构造1001个实际native enumValue并测最终payload。当前MVP enum校验只有非空array和scalar元素，不设1000硬count上限。",
+      "sources": [
+        {
+          "path": "core/core-frontend/tests/filter-copy-pure/check.mjs",
+          "line": 108
+        },
+        {
+          "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+          "line": 356
+        }
+      ],
+      "effect": "保留纯层结论，不把它升格真实UI/query/最终byte范围"
+    },
+    {
+      "id": "CAP-SRC-05",
+      "kind": "candidate_dependency_not_new_authority",
+      "statement": "Design.md提出最终版本化envelope全字段UTF8未压缩JSON计量，含身份/时间/资源/规则/枚举；它是旧设计projection，纯子合同review未冻结最终产品envelope。当前MVP只有内部内存clip，不能自行改成只测tree或把抽象字符串量当最终配置字节。",
+      "source": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "line": 43,
+      "blocked_dependency": "先复核DG02/最终payload schema的有效释放与真实集成形状；不重新打开已耗尽旧整包或伪造业务批准"
+    }
+  ],
+  "candidate_next_units": [
+    {
+      "unit": "native leaf count integration candidate",
+      "original_ac": "AC-F01-Q013 leaf bound + AC-F01-Q007 overwrite compatibility",
+      "prerequisite": "native tree shape已从实际checkMvpFilterTree定位；与动态日期变更共享service，必须串行写入/重绑源码，不能并发覆盖",
+      "proposal": "单独设计native wrapper/subTree计数及50/51边界；校验copy候选完成后、替换clip前执行。注意通用tree checker也检查旧target，别因把新payload容量无差别塞入通用checker而误拒正常覆写旧target。此为待评审实现风险/回归输入，不新增原义务。",
+      "claim": "最多Q013子谓词，不关闭1MB/1001或完整Q013"
+    },
+    {
+      "unit": "final byte envelope / native1001 observation",
+      "prerequisite": "最终envelope schema/测量点有效冻结；真实native1001输入及同一序列化字节，按原envelope未压缩UTF8",
+      "proposal": "在实际产品串行入口建999999/1000000/1000001 bytes ASCII与中文emoji边界；真实1001 enum array、分组不计叶，失败保clip；UI/query层另采，不用常数12替代",
+      "claim": "未实施，依赖明确保留"
+    }
+  ]
+}

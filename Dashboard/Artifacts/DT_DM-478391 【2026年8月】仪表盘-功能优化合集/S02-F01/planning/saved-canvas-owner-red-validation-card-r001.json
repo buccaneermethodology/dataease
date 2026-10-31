@@ -1,0 +1,51 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-SAVED-CANVAS-OWNER-red-runner-validation-r001",
+  "session_id": "S02.1",
+  "lane": "independent_red_validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-SavedCanvasOwner-red-validation-r001.json",
+      "sha256": "c9d9000a204219c18eb1e44a8d83ced05c36a81726549f5e51fb82714b6b4534"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-SAVED-CANVAS-OWNER-red-runner-validation-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅可信RED候选独立验证；不批准源码实现。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-SAVED-CANVAS-OWNER-red-runner-validation-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r198.json",
+  "working_directory": ".",
+  "execution_command": "独立read-only复核：从durable bytes重算runner/fixture/contract/ordered IDs摘要；确认source精确路径当前不存在；读取原stdout/stderr/exitcode及identity manifest，独立重跑 `node tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs --mode red`，核对exit 1且setup ok、40 IDs各一次、40 behavior mismatch、0 execution errors、0 static cases；不得写runner或source，不运行mock权限或GREEN。输出read manifest、findings、Builder repair/claim ceiling与verdict。"
+}

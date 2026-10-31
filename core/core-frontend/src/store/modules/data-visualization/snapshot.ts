@@ -86,6 +86,7 @@ export const snapshotStore = defineStore('snapshot', {
     },
     recordSnapshotCache(type?, viewId = 'all') {
       if (dataPrepareState.value) {
+        dvMainStore.markQuerySingleSelectDocumentEdited()
         if (type === 'calcData') {
           this.cacheViewIdInfo.snapshotCacheViewCalc.push(viewId)
         } else if (type === 'renderChart') {
@@ -95,35 +96,47 @@ export const snapshotStore = defineStore('snapshot', {
       }
     },
     undo() {
-      if (this.snapshotIndex > 0) {
-        this.snapshotIndex--
-        const componentSnapshot =
-          deepCopy(this.snapshotData[this.snapshotIndex]) || getDefaultCanvasInfo()
-        componentSnapshot.dvInfo.id = dvInfo.value.id
-        componentSnapshot.dvInfo.pid = dvInfo.value.pid
-        componentSnapshot.dvInfo.dataState = dvInfo.value.dataState
-        componentSnapshot.dvInfo.contentId = dvInfo.value.contentId
-        // undo 是当前没有记录
-        this.snapshotPublish(componentSnapshot)
-        this.styleChangeTimes++
-        this.snapshotDisableTime = Date.now() + 3000
-      }
+      if (this.snapshotIndex > 0) this.restoreHistorySnapshot(this.snapshotIndex - 1)
     },
 
     redo() {
-      if (this.snapshotIndex < this.snapshotData.length - 1) {
-        this.snapshotIndex++
-        const snapshotInfo = deepCopy(this.snapshotData[this.snapshotIndex])
+      if (this.snapshotIndex < this.snapshotData.length - 1)
+        this.restoreHistorySnapshot(this.snapshotIndex + 1)
+    },
+    restoreHistorySnapshot(targetIndex) {
+      const rawSnapshot = this.snapshotData[targetIndex]
+      if (!rawSnapshot) return
+      const lifecycle = dvMainStore.querySingleSelectLifecycleState()
+      if (lifecycle.phase === 'open') {
+        const prepared = dvMainStore.prepareQuerySingleSelectHistory(rawSnapshot, dvInfo.value)
+        if (!prepared.ok && prepared.reason !== 'MANIFEST_UNAVAILABLE') return
+        const emitEvents = { value: null as null | (() => void) }
+        const result = dvMainStore.commitQuerySingleSelectHistory(prepared, {
+          moveIndex: () => {
+            this.snapshotIndex = targetIndex
+          },
+          publishSnapshot: snapshot => {
+            emitEvents.value = this.snapshotPublish(snapshot, true)
+          },
+          publishSelection: () => undefined,
+          publishEvents: () => emitEvents.value?.()
+        })
+        if (result.reason === 'UNMANAGED_FALLBACK') {
+          // The capability was invalidated; ordinary history behavior has been preserved.
+        }
+      } else {
+        this.snapshotIndex = targetIndex
+        const snapshotInfo = deepCopy(rawSnapshot)
         snapshotInfo.dvInfo.id = dvInfo.value.id
         snapshotInfo.dvInfo.pid = dvInfo.value.pid
         snapshotInfo.dvInfo.dataState = dvInfo.value.dataState
         snapshotInfo.dvInfo.contentId = dvInfo.value.contentId
         this.snapshotPublish(snapshotInfo)
-        this.styleChangeTimes++
-        this.snapshotDisableTime = Date.now() + 3000
       }
+      this.styleChangeTimes++
+      this.snapshotDisableTime = Date.now() + 3000
     },
-    snapshotPublish(snapshotInfo) {
+    snapshotPublish(snapshotInfo, deferEvents = false) {
       dvMainStore.updateCurDvInfo(snapshotInfo.dvInfo)
       dvMainStore.setComponentData(snapshotInfo.componentData)
       dvMainStore.setCanvasStyle(snapshotInfo.canvasStyleData)
@@ -167,13 +180,17 @@ export const snapshotStore = defineStore('snapshot', {
         ],
         canvasViewInfo: snapshotInfo.canvasViewInfo
       }
-      eventBus.emit('snapshotChange')
-      if (
-        paramCacheViewInfo.snapshotCacheViewCalc.length > 0 ||
-        paramCacheViewInfo.snapshotCacheViewRender.length > 0
-      ) {
-        useEmitt().emitter.emit('snapshotChangeToView', paramCacheViewInfo)
+      const emitEvents = () => {
+        eventBus.emit('snapshotChange')
+        if (
+          paramCacheViewInfo.snapshotCacheViewCalc.length > 0 ||
+          paramCacheViewInfo.snapshotCacheViewRender.length > 0
+        ) {
+          useEmitt().emitter.emit('snapshotChangeToView', paramCacheViewInfo)
+        }
       }
+      if (!deferEvents) emitEvents()
+      return emitEvents
     },
 
     resetStyleChangeTimes() {
@@ -210,6 +227,7 @@ export const snapshotStore = defineStore('snapshot', {
           dvInfo: deepCopy(dvInfo.value)
         }
         this.snapshotData[++this.snapshotIndex] = newSnapshot
+        dvMainStore.recordQuerySingleSelectManifest(newSnapshot, true)
         // 在 undo 过程中，添加新的快照时，要将它后面的快照清理掉
         if (this.snapshotIndex < this.snapshotData.length - 1) {
           this.snapshotData = this.snapshotData.slice(0, this.snapshotIndex + 1)

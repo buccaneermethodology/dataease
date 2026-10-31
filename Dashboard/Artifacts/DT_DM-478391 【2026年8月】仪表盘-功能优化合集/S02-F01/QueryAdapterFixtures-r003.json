@@ -1,0 +1,554 @@
+{
+  "status": "candidate_not_runtime_verified",
+  "card_sha256": "5dff47e9e04001bafd85110b49c9c0b3e6c727fc5766179a39a0ecf922cf3b98",
+  "fixture_provenance": "真实源码结构的合成字段片段，不是现存运行配置导出；完整可挂载fixture仍缺树/参数/时间oracle",
+  "evidence": {
+    "E01": "core/core-frontend/src/custom-component/v-query/options.ts:6-65",
+    "E02": "core/core-frontend/src/custom-component/v-query/options.ts:80-136",
+    "E03": "core/core-frontend/src/custom-component/v-query/Select.vue:132-150",
+    "E04": "core/core-frontend/src/custom-component/v-query/Select.vue:158-166,248-273",
+    "E05": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1591-1629",
+    "E06": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1676-1684,1769-1783,1836-1908",
+    "E07": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts:1437-1501",
+    "E08": "core/core-frontend/src/utils/canvasUtils.ts:843-864,887-904,643-667",
+    "E09": "core/core-frontend/src/custom-component/v-query/Component.vue:330-338,660-747",
+    "E10": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:362-420,534-550,1730-1755",
+    "E11": "core/core-frontend/src/hooks/web/useFilter.ts:515-586",
+    "E12": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue:74-78,142-165",
+    "E13": "core/core-frontend/src/custom-component/v-query/Tree.vue:280-285,363-364",
+    "E14": "core/core-frontend/src/custom-component/v-query/Select.vue:294-298,405-443"
+  },
+  "field_treatments": [
+    {
+      "shape": "普通/枚举",
+      "fields": "defaultValueCheck/defaultValueFirstItem/defaultValue/defaultMapValue",
+      "treatment": "复制未污染设计态默认规则；FirstItem为规则，不能冻结源当时第一项；目标合法候选确定后按E03重算映射",
+      "evidence": "E01,E03,E04,E14"
+    },
+    {
+      "shape": "全部",
+      "fields": "mapValue/selectValue",
+      "treatment": "剥离源运行值；在候选中依据默认规则重建。defaultValueCheck=false时不得保留源运行选择；具体空值形态保留控件既有约定",
+      "evidence": "E04,E09"
+    },
+    {
+      "shape": "级联",
+      "fields": "selectValue/currentSelectValue",
+      "treatment": "不直接复制；候选默认派生完成后两者各自深拷贝默认映射值。配置态改select且current，运行态仅current；不能统一清空丢失默认",
+      "evidence": "E04,E05,E09"
+    },
+    {
+      "shape": "外部注入",
+      "fields": "optionFilter",
+      "treatment": "不是已证持久自过滤规则：E07运行时注入，E08序列化没有VQuery专门清洗。只从注入前设计快照提取；目标运行上下文重新应用自己的限制，禁止传播源注入值。无法确认快照来源时停止复制并报告来源不明",
+      "evidence": "E07,E08,E13,E14"
+    },
+    {
+      "shape": "数据集枚举",
+      "fields": "optionValueSource/field.id/dataset.id/displayId/sortId/sort",
+      "treatment": "保留条件语义与ID；名称/type/deType/dataset.fields按目标当前授权元数据校验重建，不用名称映射；排序影响FirstItem，不能误作无关图表样式删除",
+      "evidence": "E01,E03,E14"
+    },
+    {
+      "shape": "手工枚举",
+      "fields": "valueSource/multiple/displayType/required",
+      "treatment": "保留合法配置；optionValueSource!=1时E03映射为空，不从源mapValue恢复",
+      "evidence": "E01,E03"
+    },
+    {
+      "shape": "参数/范围",
+      "fields": "checkedFields/checkedFieldsMap/checkedFieldsMapArr/Start/End及Num系列",
+      "treatment": "typed重绑定组件键，数组/值仍是精确参数或字段ID；不能删除Arr只留主字段。缺端点或端点不在数组中拒绝",
+      "evidence": "E10,E11"
+    },
+    {
+      "shape": "参数",
+      "fields": "parameters/parametersArr/parametersStart/End/parametersCheck/parametersList",
+      "treatment": "parametersArr按组件键重绑定；参数定义从目标当前getSqlParams结果精确核对，不能仅凭参数同名替换。内部参数完整schema尚未证实，未知结构保留待核实，不将任意对象透传认作完成",
+      "evidence": "E01,E10,E11"
+    },
+    {
+      "shape": "文本/数值范围",
+      "fields": "defaultConditionValueF/S及OperatorF/S、conditionType、defaultNumValueStart/End",
+      "treatment": "复制默认；conditionValue及numValue运行值由默认重派生；0不得当空。范围上下端及类型需校验",
+      "evidence": "E01,E02,E09"
+    },
+    {
+      "shape": "日期1/日期范围7",
+      "fields": "timeType/timeGranularity/timeGranularityMultiple/relativeToCurrent及Range/timeNum及Range/relativeToCurrentType及Range/around及Range/arbitraryTime及Range",
+      "treatment": "复制规则；dynamic时不用源defaultValue/selectValue计算日期结果，按目标固定时钟/时区调用既有求值。fixed日期编码转换和时区完整oracle待核实",
+      "evidence": "E01,E02,E09"
+    },
+    {
+      "shape": "日期窗口",
+      "fields": "timeRange/setTimeRange",
+      "treatment": "保留规则对象深拷贝；不能以当前new Date补历史缺值而宣称保持旧语义，部分历史缺省仍待核实",
+      "evidence": "E02,E06"
+    },
+    {
+      "shape": "树9",
+      "fields": "treeDatasetId/treeFieldList/treeCheckedList/oldTreeLoad",
+      "treatment": "保持dataset/field ID与层级顺序，元数据重建；treeCheckedList具体默认/运行分类尚未完整追清，完整树适配器仍待核实。optionFilter按外部注入规则处理",
+      "evidence": "E02,E06,E13"
+    },
+    {
+      "shape": "展示/实例",
+      "fields": "id/name/showError/visible/hideConditionSwitching/displayFormat/resultMode",
+      "treatment": "id重生；目标样式布局不覆盖。name及其余混合字段尚需逐消费点区分配置UI与查询语义，不能按名字直接剥离或透传",
+      "evidence": "E01,E02"
+    },
+    {
+      "shape": "历史缺省",
+      "fields": "attributes新增键、treeDatasetId、timeRange.relativeToCurrentRange、映射字典",
+      "treatment": "仅按当前实际parameterCompletion/handleCondition在独立副本恢复；已有值不覆盖；时间对象深拷贝。缺dataset/timeRange等会触发当前代码前提，未证可恢复不能臆造",
+      "evidence": "E06"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "F01-default-vs-runtime",
+      "kind": "source_shaped_fragment",
+      "evidence": [
+        "E03",
+        "E04",
+        "E05"
+      ],
+      "source_config": {
+        "id": "q-region",
+        "displayType": "0",
+        "optionValueSource": 1,
+        "dataset": {
+          "id": "D1"
+        },
+        "field": {
+          "id": "f-region"
+        },
+        "displayId": "f-label",
+        "multiple": true,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": [
+          "华东"
+        ],
+        "defaultMapValue": [
+          "E"
+        ],
+        "mapValue": [
+          "S"
+        ],
+        "selectValue": [
+          "华南"
+        ],
+        "checkedFields": [
+          "chart-A"
+        ],
+        "checkedFieldsMap": {
+          "chart-A": "f-region"
+        }
+      },
+      "target_metadata": {
+        "component_id": "chart-B",
+        "dataset_id": "D1",
+        "field_ids": [
+          "f-region",
+          "f-label"
+        ],
+        "enum_rows": [
+          {
+            "f-region": "E",
+            "f-label": "华东"
+          },
+          {
+            "f-region": "S",
+            "f-label": "华南"
+          }
+        ]
+      },
+      "expected_candidate": {
+        "id": "q-region-new",
+        "displayType": "0",
+        "optionValueSource": 1,
+        "dataset": {
+          "id": "D1"
+        },
+        "field": {
+          "id": "f-region"
+        },
+        "displayId": "f-label",
+        "multiple": true,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": [
+          "华东"
+        ],
+        "defaultMapValue": [
+          "E"
+        ],
+        "mapValue": [
+          "E"
+        ],
+        "selectValue": [
+          "华东"
+        ],
+        "checkedFields": [
+          "chart-B"
+        ],
+        "checkedFieldsMap": {
+          "chart-B": "f-region"
+        }
+      },
+      "expected_cascade_default": [
+        "E"
+      ],
+      "note": "源码形态合成fragment，不是运行实例导出；未列字段不表示完整可挂载组件"
+    },
+    {
+      "id": "F02-external-pollution",
+      "evidence": [
+        "E07",
+        "E08"
+      ],
+      "clean_design_fragment": {
+        "id": "q-region",
+        "displayType": "0",
+        "optionValueSource": 1,
+        "dataset": {
+          "id": "D1"
+        },
+        "field": {
+          "id": "f-region"
+        },
+        "displayId": "f-label",
+        "multiple": true,
+        "defaultValueCheck": true,
+        "defaultValueFirstItem": false,
+        "defaultValue": [
+          "华东"
+        ],
+        "defaultMapValue": [
+          "E"
+        ],
+        "mapValue": [
+          "S"
+        ],
+        "selectValue": [
+          "华南"
+        ],
+        "checkedFields": [
+          "chart-A"
+        ],
+        "checkedFieldsMap": {
+          "chart-A": "f-region"
+        }
+      },
+      "runtime_overlay": {
+        "optionFilter": [
+          "华南"
+        ],
+        "defaultValue": [
+          "华南"
+        ],
+        "defaultMapValue": [
+          "S"
+        ]
+      },
+      "expected": "读取clean_design_fragment；无可信未污染副本时SOURCE_PROVENANCE_UNKNOWN，目标零变化"
+    },
+    {
+      "id": "F03-no-default",
+      "evidence": [
+        "E09"
+      ],
+      "source_patch": {
+        "defaultValueCheck": false,
+        "multiple": true,
+        "mapValue": [
+          "S"
+        ],
+        "selectValue": [
+          "华南"
+        ]
+      },
+      "expected_patch": {
+        "selectValue": [],
+        "mapValue": []
+      },
+      "cascade_expected": {
+        "selectValue": [],
+        "currentSelectValue": []
+      }
+    },
+    {
+      "id": "F04-tree",
+      "evidence": [
+        "E02",
+        "E13"
+      ],
+      "input_fragment": {
+        "displayType": "9",
+        "treeDatasetId": "D1",
+        "treeFieldList": [
+          {
+            "id": "f-province",
+            "datasetGroupId": "D1"
+          },
+          {
+            "id": "f-city",
+            "datasetGroupId": "D1"
+          }
+        ],
+        "treeCheckedList": []
+      },
+      "expected_identity_projection": {
+        "treeDatasetId": "D1",
+        "ordered_field_ids": [
+          "f-province",
+          "f-city"
+        ]
+      },
+      "positive_status": "身份投影明确，完整树默认值转换unknown",
+      "negative_patch": {
+        "target_missing_field": "f-city"
+      },
+      "negative_expected": "REJECT_MISSING_FIELD"
+    },
+    {
+      "id": "F05-parameters",
+      "evidence": [
+        "E10",
+        "E11"
+      ],
+      "input_fragment": {
+        "checkedFields": [
+          "chart-A"
+        ],
+        "checkedFieldsMap": {
+          "chart-A": "p-start"
+        },
+        "checkedFieldsMapArr": {
+          "chart-A": [
+            "p-start",
+            "p-end"
+          ]
+        },
+        "checkedFieldsMapStart": {
+          "chart-A": "p-start"
+        },
+        "checkedFieldsMapEnd": {
+          "chart-A": "p-end"
+        },
+        "parametersArr": {
+          "chart-A": [
+            {
+              "id": "p-start"
+            },
+            {
+              "id": "p-end"
+            }
+          ]
+        }
+      },
+      "expected_reference_projection": {
+        "checkedFields": [
+          "chart-B"
+        ],
+        "checkedFieldsMap": {
+          "chart-B": "p-start"
+        },
+        "checkedFieldsMapArr": {
+          "chart-B": [
+            "p-start",
+            "p-end"
+          ]
+        },
+        "checkedFieldsMapStart": {
+          "chart-B": "p-start"
+        },
+        "checkedFieldsMapEnd": {
+          "chart-B": "p-end"
+        }
+      },
+      "positive_status": "引用映射明确，参数定义只含id为不完整fragment，完整参数求值unknown",
+      "negative_expected": "目标缺p-end或端点不在Arr则整次拒绝"
+    },
+    {
+      "id": "F06-dynamic-date",
+      "evidence": [
+        "E09"
+      ],
+      "input_fragment": {
+        "displayType": "1",
+        "timeType": "dynamic",
+        "defaultValueCheck": true,
+        "timeNum": 0,
+        "relativeToCurrentType": "date",
+        "around": "f",
+        "defaultValue": "2026-01-01",
+        "selectValue": "2026-01-01"
+      },
+      "expected_rule_projection": {
+        "timeType": "dynamic",
+        "timeNum": 0,
+        "relativeToCurrentType": "date",
+        "around": "f"
+      },
+      "expected": "不复制2026-01-01为默认结果；通过现有getDynamicRange在目标时钟重算，确切日期oracle未执行"
+    },
+    {
+      "id": "F07-history",
+      "evidence": [
+        "E06"
+      ],
+      "input_fragment": {
+        "dataset": {
+          "id": "D1"
+        },
+        "treeDatasetId": "",
+        "timeRange": {
+          "intervalType": "none"
+        }
+      },
+      "expected_patch": {
+        "treeDatasetId": "D1",
+        "timeRange": {
+          "intervalType": "none",
+          "relativeToCurrentRange": "custom"
+        }
+      },
+      "negative_input": {
+        "dataset": null
+      },
+      "negative_expected": "不可宣称parameterCompletion可恢复；拒绝并标历史形态待核实"
+    }
+  ],
+  "typed_reference_maps": {
+    "condition_ids": {
+      "q-region": "q-region-new",
+      "q-city": "q-city-new"
+    },
+    "cascade_node_ids": {
+      "node-1": "node-new-1",
+      "node-2": "node-new-2"
+    },
+    "external_component_ids": {
+      "chart-A": "chart-B"
+    },
+    "stable_dataset_ids": [
+      "D1"
+    ],
+    "stable_field_ids": [
+      "f-region",
+      "f-city"
+    ]
+  },
+  "closure_fixtures": [
+    {
+      "id": "C1",
+      "input": [
+        {
+          "id": "node-1",
+          "datasetId": "D1--q-region--f-region",
+          "fieldId": ""
+        },
+        {
+          "id": "node-2",
+          "datasetId": "D1--q-city--f-city",
+          "fieldId": ""
+        }
+      ],
+      "expected": [
+        {
+          "id": "node-new-1",
+          "datasetId": "D1--q-region-new--f-region",
+          "fieldId": ""
+        },
+        {
+          "id": "node-new-2",
+          "datasetId": "D1--q-city-new--f-city",
+          "fieldId": ""
+        }
+      ],
+      "verdict": "candidate_valid",
+      "evidence": [
+        "E12"
+      ]
+    },
+    {
+      "id": "C2",
+      "mutation": "删除q-city条件但保留节点",
+      "expected": "REJECT_MISSING_REFERENCE"
+    },
+    {
+      "id": "C3",
+      "mutation": "chart-A映射到两个可选目标chart-B/chart-C而无唯一身份绑定",
+      "expected": "REJECT_AMBIGUOUS_REFERENCE"
+    },
+    {
+      "id": "C4",
+      "edges": [
+        [
+          "q-region",
+          "q-city"
+        ],
+        [
+          "q-city",
+          "q-region"
+        ]
+      ],
+      "expected": "REJECT_DIRECT_CYCLE"
+    },
+    {
+      "id": "C5",
+      "edges": [
+        [
+          "q-region",
+          "q-city"
+        ],
+        [
+          "q-city",
+          "q-third"
+        ],
+        [
+          "q-third",
+          "q-region"
+        ]
+      ],
+      "expected": "REJECT_INDIRECT_CYCLE"
+    },
+    {
+      "id": "C6",
+      "mutation": "成功后源defaultValue[0]改为华南，目标保持华东；目标再改不能反向影响源",
+      "expected": "NO_SHARED_OBJECT_REFERENCE"
+    }
+  ],
+  "transaction": {
+    "prepare_forbidden_effects": [
+      "修改源/目标/Store",
+      "快照",
+      "过滤查询或刷新",
+      "发布事件",
+      "持久化保存"
+    ],
+    "commit_preconditions": [
+      "确认同一候选摘要",
+      "目标版本未变",
+      "身份代际与权限重验成功",
+      "全部引用闭包和类型校验成功"
+    ],
+    "abort_invariants": [
+      "目标树与预览保持",
+      "查询计数不增",
+      "快照计数不增",
+      "P0不变"
+    ],
+    "commit_proposal": "先构造完整新组件对象，保持目标非配置属性；一次替换Store中目标组件引用，禁止先清空；提交后单次通知快照与逻辑刷新",
+    "unresolved": "Store/watch同步观察和快照失败恢复尚未运行证明，不能声称事务机制已存在"
+  },
+  "remaining_unknowns": [
+    "完整树默认规则与treeCheckedList用途",
+    "完整参数对象schema和日期编码/时区oracle",
+    "纯设计态权威副本获取及运行注入污染检测",
+    "全量字段分类与单次发布Store接缝验证"
+  ],
+  "product_tests": "NOT_RUN"
+}

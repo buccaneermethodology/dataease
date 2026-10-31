@@ -1,0 +1,334 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SLICE-A-ROLE-PORTS-BUILDER-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立预审2/3通过；消费四项约束，生产权限不扩张",
+    "objective": "实现UI04三独立DEV三态角色端口，同步聚合与旧统一setter兼容，补start/before_publish参数化回归",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "core/core-frontend/src/locales/zh-CN.ts",
+      "core/core-frontend/src/locales/en.ts",
+      "core/core-frontend/src/locales/tw.ts",
+      "core/core-frontend/tests/filter-copy-mvp/check.mjs",
+      "core/core-frontend/tests/filter-copy-mvp-paste/check.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceARolePortsBuild-r001.json"
+    ],
+    "forbidden_actions": [
+      "改frozen Goal/Cases/旧证据",
+      "改service/clipboard/TTL/renderer/真实权限",
+      "提交安装部署或其他源码修改"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/RolePermissionPortDesign-r001.md",
+      "revision": "d72932df9d3ccc863dd4d1b29be1e5c745db98218411ab330df70c12d1d0a9ce",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceARolePortDesignReview-r002.md",
+      "revision": "202f1ed6ce1780dbdba1af5d2b59ef018db9475cd8dc59a903f3631fc300864c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/manifest.json",
+      "revision": "c882863b9ef210e3ab1461e70179b9543344bc69e6fd93f805e117c0a640f851",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r573.json",
+      "revision": "05460247ba9877e14186467defb993754c848129f1120c68a55824e0d213abc3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "revision": "658027b89e327a6bfa65481f7fd5f43a19b048c15427cd16207f8048773204a8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "revision": "0a9b782b8b72f3f6ac95148187d49e09a8d24f1610ea43b18e9e7002db06d5ee",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/src/locales/zh-CN.ts",
+      "revision": "32af92a537d6cbc7e4155d084f0cc35b6afdfbe696a063a58ba787d876c11858",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/src/locales/en.ts",
+      "revision": "1809323f6282f08fc6c86fba5fae9659124db524f1da2fe9897c859e63a91a8e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/src/locales/tw.ts",
+      "revision": "8827fff6250df55d81a5124aeadacde6a2560eeb8e582a7746a544032a8ef57b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-mvp/check.mjs",
+      "revision": "9409e6388d9989b2476f0b0f679cad5d60247741e82af2d5932d542b899a6989",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-mvp-paste/check.mjs",
+      "revision": "868b41984942796d4a6092f88b016b9333034f0a9ef88e1f178a5dec783be69a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "冻结预审入口和实际写集合，locale仅三标签；fixed assets不随observer改版",
+      "applicability": "UI04 DEV role ports"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "root校正selector并执行，前author候选仅syntax",
+    "task_id": "S02-SLICE-A-ROLE-PORTS-BUILDER-r001",
+    "recorded_at": "2026-10-30T17:57:15.888878+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r573.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-SLICE-A-ROLE-PORTS-BUILDER-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-09"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "实现UI04三独立DEV三态角色端口，同步聚合与旧统一setter兼容，补start/before_publish参数化回归",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceARolePortsBuild-r001.json"
+}
