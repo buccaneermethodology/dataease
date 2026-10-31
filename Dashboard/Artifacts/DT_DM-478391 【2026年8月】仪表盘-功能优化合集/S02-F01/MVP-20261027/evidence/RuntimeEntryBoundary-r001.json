@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-10-29T05:13:53.106234+00:00",
+  "log": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeEntryBoundary-events-r001.jsonl",
+    "sha256": "7207a7ee95a4f0e7e9a1aedff2550ce9386de036790d9330a4c87b63de1ff159"
+  },
+  "fixture": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/TeaMaterialExtended-r001.csv",
+    "sha256": "abc8bed0862129d58724bcefff2563862e48d1ea057365ae8d5d2c853e64472b"
+  },
+  "checks": [
+    {
+      "event_line": 3,
+      "source": "indicator",
+      "target": "picture-group",
+      "oracle_matches": true,
+      "one_logical_call": true,
+      "tree_equals_clipboard": true,
+      "outcome": "success",
+      "expected": "明细table-info默认只返回1行；该行全部19列应属于14条CSV条件匹配原始行。不将其当6761汇总。"
+    },
+    {
+      "event_line": 4,
+      "source": "picture-group",
+      "target": "indicator",
+      "oracle_matches": true,
+      "one_logical_call": true,
+      "tree_equals_clipboard": true,
+      "outcome": "success",
+      "expected": "CSV独立sum(amount)=6761"
+    }
+  ],
+  "all_data_checks_match": true,
+  "new_type_both_roles": "picture-group",
+  "claim_ceiling": "仅本机DEV桩下合法条件绑定与复制粘贴/查询局部观察；图片实际显示未通过，非独立Validation。",
+  "limitations": [
+    "图片条件设置最初误按sum6761，但实际请求table-info返回单条明细277；不把该规则命中当证据。随后大于0配置未保存即重载；服务器仍是等于6761。",
+    "真实图片120x80未显示，曾观察24x24交叉占位图；resourceImageCache失败占位与candidate readiness可能有契约缺口，待有界设计及可信RED。",
+    "上传一次tool持续约2019秒，期间未能发送更新；不将工具耗时当产品上传性能。",
+    "一轮Vite依赖优化重载有日志证据；其他恢复提示不统一归因。",
+    "正常保存后被动重载并选择否读取服务器树；不是完整正常离开重开用例。",
+    "存在两个新图片组，前者为空白未配置，后者绑定dataset和条件；均为S02隔离资源，后续可复用负向测试。",
+    "真实权限BLOCKED/NOT_RUN，地图五类缺口不变，完整38项尚未完成。"
+  ],
+  "next": "先审查并复现图片缓存失败占位图被当作候选ready的风险；并继续地图合法fixture及P1负向矩阵。"
+}

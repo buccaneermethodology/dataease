@@ -1,0 +1,503 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-P2-NATIVE-DYNAMIC-DATE-DESIGN-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "P1实际接纳后P2原生动态日期切片设计",
+    "objective": "# P2/S046 原生动态日期完整规则复制设计输入\n\nP1已实际独立有界接纳12AC/49指定基本配置，原Goal要求继续P2原26。当前切片对应AC-F01-Q012/Q015及AC-S02-02/03/04；只准备图表→图表同dataset的原生动态日期规则完整保留与既有准备采用链复用，原26均不因本切片关闭。真实权限来源BLOCKED，当前不使用standalone或DEV代验真实鉴权。\n\n这是新明确有界原生源事实设计，不重开旧Authority Materials/Chart Payload等已耗尽整包第4轮。先定位当前真实FilterTree→chart RowAuth/FilterFiled→TimeDialog/DynamicTimeForViewFilter→API DTO→CustomWhere2Str链，列全部相关callers。不是用纯guard的抽象model推产品schema。每个rule字段/枚举/default/Date或字符串转换/用于display或计算/空值/持久化值及后端解释须给source path+line+SHA。TimeDialog around默认注释和实际枚举/后端可能不同，按真实执行链辨析，不抄注释当oracle，不改既有日期计算策略。\n\n最小设计目标：不把动态规则物化成当前结果，完整独立复制原树/规则，候选query/预览准备成功再采用，失败/非法/未知结构整次拒绝并保原clip/目标；沿现有MVP Editor/service与权限port，不开新的Store/UI/双host框架，不修改backend日期算法。原系统参数/查询组件/跨context/权限/容量等其它P2责任保留，不因本切片未覆盖而删掉。\n\n请先判断可定位的原生year/month/date/datetime相对规则和arbitraryTime精确值域；以可证current native语义形成最小完整可执行slice与案例，确实未知的规则/epoch/timezone/Date-wire输入标blocked_oracle和最短源观察方案，不自行加业务限制或默认策略，不把全部更严建议变must-have。若源事实足够，给候选Design/机器Cases、逐AC轴/正反例/深拷贝及独立查询oracle/纯逻辑→Vue真实入口→实际UI/query/save/reopen验证方案与精确写域；设计仅candidate，待独立审查/正式admission方可Builder。\n\n只读源及已存在证据，禁止UI/HTTP/DB、运行测试/构建/安装、产品源码/旧合同/旧报告修改。允许输出本目录Design-r001.md、Cases-r001.json、SourceTrace-r001.json、ValidationHandoff-r001.md。Case含原case identity/shape/value域/前提/明确oracle/evidence ceiling/无法判定项，不用case名称或mock result冒充验证。所有问题一次列全，声明已核/未核/同类残余及下一准入条件。本新设计交付物review最多3轮，当前尚0轮。\n",
+    "authority_role": "projection",
+    "assumptions": [
+      "read-only design source acquisition, no product acceptance or oracle substitution"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/Design-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/Cases-r001.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/SourceTrace-r001.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/ValidationHandoff-r001.md"
+    ],
+    "forbidden_actions": [
+      "UI/HTTP/DB/测试/构建/安装",
+      "改产品/旧合同/旧报告/Goal/共享状态",
+      "默认未知规则或改变原生日期算法"
+    ],
+    "maximum_claim": "可证source facts与candidate设计；P2原26/真实权限保持未验"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/AcceptanceReport-r001.md",
+      "revision": "4af0900384e9220dc01540e53a2f32c2afce356d761456b53f90529f61be0ee6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/AcDecisions-r001.json",
+      "revision": "6a1b183298f5c20589702361d10e7414eea65f1f1c12712301c23046aa48ed33",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/TSP.md",
+      "revision": "ae03f58a18373d41a139f8831101e3294b9c80e7252ad48cefb779a4a878acae",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/FullAcceptancePhaseCrosswalk-r001.json",
+      "revision": "e0a5d2aee17d9d11354d32de02b68debc4b0e7d6cc20b9b0899c55c400e284cf",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+      "revision": "eeec347d7f07fe4a2de1cc12e7ac96411679f399594b934f7ce5a85703eb29ea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Cases.candidate.json",
+      "revision": "484eaa5f834a2512e3d7eaf2fa41d7dbd9fa4ce43f970ec1292ddd4fe4fcd2da",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/DesignTask-r001.md",
+      "revision": "a302cf179c20fb089d9837f6b0200d929cb48997b11b67c8b7ad709dec0427cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+      "revision": "9f4eca86173318b7b964648d216fd7a6c153b41abce9eda12f8f6e9fc6944b82",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-paste.ts",
+      "revision": "d3ebbd6236bf832df6e3e9971841a9ee68300dfb9e31a015c1532b5dc46a3e9e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "revision": "b760fffb47db4a8a187cc3dc996d6ddffb5f2b187038da625c5c8e0839d87e5d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/FilterTree.vue",
+      "revision": "683a69f36ea24e60d2777b02fc88adf1c39311d0f59a316516fbc6ab27c145a9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/auth-tree-chart/RowAuth.vue",
+      "revision": "ebef31245e8525d82e6c82dbe4e83c313b74f1d9af8bae5e7d76b788eba0e775",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/auth-tree-chart/FilterFiled.vue",
+      "revision": "772a4ba9b0702a26891e7a9c290ea9be875d0807598ec15497e64924df8fa0e0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/TimeDialog.vue",
+      "revision": "5ca966f4db04bfac192325832fdb5ff36f9a03dcbfbf27a6c223a3c7a8f42dea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/DynamicTimeForViewFilter.vue",
+      "revision": "33264b22a916fb65e63f49ab92ab9b6246f2b09c77473b6fff99665e2930bd90",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/views/visualized/data/dataset/options.js",
+      "revision": "8a2f9102d86428dc9f4e6cc90507ee8549d9bb3c8e7993a334b8139c65a497f6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "revision": "9f160c78f24bf50be80c9510529682267530dcc28d203478074af4add865c74b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/engine/trans/CustomWhere2Str.java",
+      "revision": "9543197543bee34418427f77c94758f23065770feecf1ef9113076370e2ca80e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/filter/DynamicTimeSetting.java",
+      "revision": "83fd5cdd4becc28f473ceb5bfe46d64dc0584685aacea940d5740211ef42ee34",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/filter/FilterTreeItem.java",
+      "revision": "ab375a030e4efc4ee372de8d8f5c30c628f977e59384f9afe5cf6abf213cf628",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/filter/FilterTreeObj.java",
+      "revision": "711ef0420ab24387e839cd148e987beea7b23e4822cc99c3ee598c96d8bf7fca",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r601.json",
+      "revision": "4a04b515aed5287e796fc0e59e21ef3cccdbac40dfef1c1eccf6480283558e9e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原Goal、P1释放依赖与native语义链",
+      "applicability": "native dynamic date design"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "delegated_design_then_independent_review",
+    "reason": "current original P2 requirement with source-first finite design",
+    "task_id": "S02-P2-NATIVE-DYNAMIC-DATE-DESIGN-r001",
+    "recorded_at": "2026-10-30T23:50:12.885922+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r601.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-P2-NATIVE-DYNAMIC-DATE-DESIGN-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q012",
+    "AC-F01-Q015",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "当前原生动态日期源事实与可执行有限设计，不提前Builder",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/P2-S046-NativeDynamicDate-r001/Design-r001.md"
+}

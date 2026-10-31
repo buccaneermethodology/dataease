@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>G2 返回实例所有权浏览器夹具</title>
+    <style>
+      body { margin: 24px; font: 15px/1.6 system-ui, sans-serif; color: #182230; background: #f5f7fa; }
+      h1 { font-size: 23px; margin-bottom: 8px; }
+      p { max-width: 1000px; }
+      .controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
+      button { padding: 9px 16px; border: 1px solid #9aa9bc; border-radius: 5px; background: white; cursor: pointer; font: inherit; }
+      button:disabled { opacity: .45; cursor: default; }
+      button:focus-visible { outline: 3px solid #2d74da; }
+      #chart-host { width: 760px; min-height: 340px; background: white; border: 1px solid #ccd5e0; }
+      .chart-slot { height: 340px; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px; background: #fff; border: 1px solid #ccd5e0; }
+      #runtime-errors { color: #9e1b1b; min-height: 24px; }
+    </style>
+  </head>
+  <body>
+    <h1>G2 返回实例所有权浏览器夹具</h1>
+    <p>仅测试生产 createG2RenderAttempt 与真实 AntV G2 普通折线。静态虚构数据；此页不是 DataEase 完整 renderer 或过滤复制粘贴界面 MVP。</p>
+    <div class="controls" aria-label="夹具操作">
+      <button id="render-o">渲染 O</button>
+      <button id="render-n">延迟渲染 N</button>
+      <button id="release-n" disabled>释放 N</button>
+      <button id="render-empty">空数据</button>
+      <button id="resize">调整宽度</button>
+      <button id="unmount">卸载</button>
+      <button id="repeat">重复渲染 5 次</button>
+    </div>
+    <p id="notice" role="status">夹具已加载。请点击“渲染 O”。</p>
+    <p>点击图内原生图例“系列甲 / 系列乙”可筛选；移动鼠标到折线数据点可查看原生 tooltip。延迟 N 在真实 render 后暂停于 afterRender，释放后才允许 ready 发布。</p>
+    <div id="chart-host" aria-label="真实 G2 图表容器"></div>
+    <h2>运行错误</h2>
+    <pre id="runtime-errors" role="alert">无</pre>
+    <h2>实时 JSON 观察值</h2>
+    <pre id="snapshot" aria-label="实时 JSON"></pre>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,280 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "继续 S02 Goal 直至完成；本轮合同独立设计审查通过后开始实施。Goal完整分母保持10项Goal AC、26项must-have、16项产品义务。真实权限实现与隔离多用户环境尚无授权来源；权限验收保持BLOCKED/NOT_RUN，不用standalone、admin或mock替代。用户已裁定迟到枚举响应缺C时只追加一次核对请求，结束loading，仍缺则保留无效选择。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读独立审核一个普通文本单选、空级联查询目标的产品调用/提交合同；检查源码支持、输入输出、字段身份、拒绝优先级、零副作用及权限边界；给准入或精确修订结论。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改设计、fixtures、源码、测试、Goal或权限状态",
+      "将单形态审查扩大为完整query schema或产品验收",
+      "以按钮显隐、editMode、standalone、admin或mock声称真实授权通过",
+      "缩减Goal任何分母或把late-C策略与默认缺失策略混同"
+    ],
+    "maximum_claim": "仅对绑定版本合同给出独立设计审查和有界准入建议；不证明产品实现、权限、保存回显或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "治理约束与完整分母",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "SP-010 路由、审查独立性与准入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "Goal authority、AC、must-have、产品义务与claim ceiling",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LoopGoal_Final_r001.md",
+      "revision": "92d8a4ed6d6686ba401351bd9544800cec799c0ac754a3c612cf4cb98d6c63a9",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "完整冻结Goal及原始业务边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r001.md",
+      "revision": "5bdf606bd906a5cf39a2807bf018225499ff59512aa0c420591d696f89e46b04",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "本轮待独立审查的产品提交合同",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r001.json",
+      "revision": "1f39af8fda9123e4e20ee7b923d662b1de98550a2092169933ca7c3c6a9594aa",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "本轮案例与副作用oracle",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildDesign-r008.md",
+      "revision": "89ec61d05223f113af04bfdf4be27b43b65dc00d52ab14ff9ebd3e1536ce22ee",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "QTARGET候选输入/输出和字段动作边界",
+      "domains": [
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductRebuildFixtures-r008.json",
+      "revision": "82fd0a80b0df95feac231661c6307476f1270d96752851d9636b3f8bb1dabd42",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "QTARGET完整payload oracle和身份映射",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaLifecycleMatrix-r003.md",
+      "revision": "8ed2bb9dfd5598161067a4c4e8d31ab15adece5213967385bc060ab4defb95f9",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "字段生命周期、schema未知策略及late-C授权裁定",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaLifecycleMatrixFixtures-r003.json",
+      "revision": "0d7828db13a90770b516e866ec57c7bde54d21ba56a2a01c56488f72289cd69b",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "字段矩阵用例identity与副作用向量",
+      "domains": [
+        "acceptance",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "真实VQuery编辑入口和事件链",
+      "domains": [
+        "implementation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "真实配置草稿、确认分支和预览事件",
+      "domains": [
+        "implementation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "Pinia画布根写入入口",
+      "domains": [
+        "implementation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "快照、撤销/重做路径",
+      "domains": [
+        "implementation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-target-rebuild.ts",
+      "revision": "3e46cb7e34532670c561347a9322c5692e6679df2203632ad54670d4fb311fe6",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "现有QTARGET实现边界",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "QCARRIER完整条件支持域",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r168.json",
+      "revision": "b1d9ed5226a4bbc846c4bdae3f48130de582123d84aa688a16e972943979ec79",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-DESIGN-REVIEW-r001",
+      "reason": "当前追加式执行拓扑与未决事项",
+      "domains": [
+        "dependency"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-or-contract-gap",
+      "condition": "调用入口、完整目标输入/输出、身份映射或失败副作用oracle不够精确，或与当前源码不符",
+      "mode": "deterministic",
+      "action": "报告精确finding并拒绝准入",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "authorization-contract-gap",
+      "condition": "没有公开服务契约可重新验证当前主体的数据访问权与目标编辑权",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "禁止产品UI接线的准入并说明最小外部依赖",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "完整10/26/16分母不变；权限相关验收BLOCKED/NOT_RUN。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "产品提交原子性、身份和授权属于高语义风险；要求独立审查。",
+    "route": "independent_design_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal与完整分母",
+    "产品提交合同和案例",
+    "QTARGET/QCARRIER输入输出",
+    "QSL r003字段动作与late-C裁定",
+    "实际Vue/Pinia/快照调用链",
+    "真实权限API能力与环境阻塞",
+    "未覆盖范围和claim ceiling",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

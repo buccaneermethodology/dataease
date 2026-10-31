@@ -1,0 +1,75 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-PICTURE-RESOURCE-READY-REVIEW-r001",
+  "session_id": "DE-EXEC-S038",
+  "lane": "design_semantic",
+  "role": "semantic",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-PICTURE-RESOURCE-READY-REVIEW-r001.json",
+      "sha256": "6350b1736baf328ca0ad6acfffa181a2d7a914257e175ee7680d7afb612a43e2"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/PictureResourceReadyDesign-r001.md",
+      "sha256": "b79560e2ce44d6381013f8466bcabf86f3b7e888915996159447cc48912db1e7"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/PictureResourceReadyCases-r001.json",
+      "sha256": "ceaf2b34d6581ece44d8be602a1578ab1c63a41d95e7338c72cc8b49ea6fe60d"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeEntryBoundary-r001.json",
+      "sha256": "8a2463e68208655ed60dcdf5ef7ae19d0035ead9e8af72c3fc6d8794a864385a"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/picture-group/Component.vue",
+      "sha256": "acd9737cec09583f9a959e2782bbdab4fe503f4c4d35db07ca57e913f4a84f32"
+    },
+    {
+      "path": "core/core-frontend/src/utils/resourceImages.ts",
+      "sha256": "6de8490685e96d70a3f6036a52d13d978e7435ad6cbd22c2ab1a4e882a0097fa"
+    },
+    {
+      "path": "core/core-frontend/src/utils/resourceImageCache.ts",
+      "sha256": "c6187c3279003bb6c0feca04b34d0d3a1c19135a09ecd8ef28f0f4fbbc1ef2c8"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-mvp-picture/check.mjs",
+      "sha256": "0ca8d94665c6e0ab35b6be8274f0470786c9fb8e06a8384167becc540da1fb15"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-PICTURE-RESOURCE-READY-REVIEW-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-10"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/PictureResourceReadyDesignReview-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/PictureResourceReadyDesignReview-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅本有界设计freeze/entry裁决，不证明修复、运行、真实鉴权或全Goal完成",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/PictureResourceReadyDesign-r001.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-PICTURE-RESOURCE-READY-REVIEW-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r489.json",
+  "working_directory": ".",
+  "execution_command": "先复验card digest，再独立只读审查全部绑定代码与Design/Cases。给出Design Freeze Validity和Implementation Entry Readiness两个verdict。必须一次尽量查全全部发现、已检查无问题维度、未检查原因、同类残余和修复后准入预测；不能遇首个blocker就返回。重点审查既有waitForResourceImages是否足以等待真实加载、pending与failed占位事件竞态、10秒timeout late与dispose/stale、外链/data URL、无关root、empty/OFF与既有runner兼容、是否触碰其他任务通用缓存。可提出更小安全切片。第1/3轮，最多3轮。不能修改源码或冻结Cases，仅写指定报告。"
+}

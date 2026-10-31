@@ -1,0 +1,128 @@
+{
+  "schema_version": "query_product_adapter_design_fixtures_v1",
+  "status": "design_candidate_not_frozen_for_builder",
+  "goal_ref": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "identity_policy": "The eight identities are source-grounded design probes only. Product execution, permissions and persistence are not represented as passed.",
+  "cases": [
+    {
+      "id": "TC-QPAD-001",
+      "topic": "ordinary_remote_condition",
+      "candidate_input_shape": {
+        "displayType": "0",
+        "optionValueSource": 1,
+        "conditionId": "condition-src-1",
+        "datasetId": "dataset-1",
+        "fieldId": "field-a",
+        "checkedFields": ["chart-src"],
+        "checkedFieldsMap": {"chart-src": "field-b"},
+        "cascade": []
+      },
+      "expected_candidate": "Projection to the typed QPIPE input may succeed only when the caller supplies a unique source directory proving chart-src belongs to dataset-1 and field-b; QMAP must resolve one authorized-compatible target by exact IDs.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1185-1212",
+        "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+        "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts"
+      ]
+    },
+    {
+      "id": "TC-QPAD-002",
+      "topic": "tree_filter_mapping",
+      "candidate_input_shape": {
+        "displayType": "9",
+        "treeFieldList": ["field-a", "field-b"],
+        "treeCheckedList": ["per-level checkedFields/checkedFieldsMap"],
+        "cascade": "composite dataset-query-field references"
+      },
+      "expected_candidate": "No partial projection. Preserve every tree level and its independent component/field references or reject the complete paste. Current QPROJ narrow scope does not accept this as a successful projection.",
+      "execution_status": "NOT_RUN",
+      "design_gap": "Need a versioned complete tree mapping schema and historical fixture before implementation."
+    },
+    {
+      "id": "TC-QPAD-003",
+      "topic": "parameter_and_numeric_range_branches",
+      "candidate_input_shape": {
+        "displayTypes": ["8", "22"],
+        "fields": ["parameters", "parametersList", "parametersStart", "parametersEnd", "checkedFieldsMapArrNum", "checkedFieldsMapStartNum", "checkedFieldsMapEndNum"]
+      },
+      "expected_candidate": "Retain or explicitly regenerate every required reference. Never omit nonempty shape fields and report success under the ordinary 0/2/5 projector.",
+      "execution_status": "NOT_RUN",
+      "design_gap": "Caller usage and target capability need a complete source-to-storage map for each branch."
+    },
+    {
+      "id": "TC-QPAD-004",
+      "topic": "configured_default_vs_runtime_selection",
+      "candidate_input_shape": {
+        "defaultValue": ["configured-value"],
+        "defaultMapValue": ["configured-map"],
+        "selectValue": ["runtime-selection"],
+        "mapValue": ["runtime-map"],
+        "currentSelectValue": ["cascade-runtime-selection"]
+      },
+      "expected_candidate": "Preserve configured filter/default rules and do not copy runtime selections as source query results. Any derived target defaults or cascade values require an explicit reviewed reconstruction oracle.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": [
+        "core/core-frontend/src/custom-component/v-query/options.ts:48-65",
+        "core/core-frontend/src/custom-component/v-query/Select.vue:124-150",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:164-176"
+      ],
+      "design_gap": "Historical configuration and all writer/reader paths have not been exhaustively classified."
+    },
+    {
+      "id": "TC-QPAD-005",
+      "topic": "exact_target_resolution",
+      "candidate_input_shape": {
+        "sourceDatasetId": "dataset-1",
+        "sourceFieldIds": ["field-a", "field-b"],
+        "targetDirectory": ["one component on dataset-1 covering both exact field IDs"]
+      },
+      "expected_candidate": "QMAP may return the unique target component only after the product caller proves both directories are complete and currently authorized; directory uniqueness alone is not authorization.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": ["core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts"]
+    },
+    {
+      "id": "TC-QPAD-006",
+      "topic": "same_name_different_identity_or_ambiguous_target",
+      "candidate_input_shape": {
+        "sourceFieldId": "field-a",
+        "targetSameNameFieldId": "field-z",
+        "targetCandidates": ["two components covering field-a"]
+      },
+      "expected_candidate": "Reject by exact field ID when no candidate matches; reject ambiguity when multiple candidates match. Do not select by name, order, or same dataset alone.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": ["core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts"]
+    },
+    {
+      "id": "TC-QPAD-007",
+      "topic": "cascade_placeholder_identity",
+      "candidate_input_shape": {
+        "firstNode": {"nodeId": "node-src-1", "encoded": "dataset-1--condition-src-1--field-a"},
+        "sameDatasetSuccessor": {"nodeId": "node-src-2", "encoded": "dataset-1--condition-src-2--", "placeholder": "configure-cascaded-fields", "fieldId": ""}
+      },
+      "expected_candidate": "Keep node ID distinct from condition/query ID and the encoded dataset/condition/field tuple. Rebind all typed IDs explicitly; do not infer missing successor field ID from placeholder text.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": ["core/core-frontend/src/custom-component/v-query/QueryCascade.vue:142-175"]
+    },
+    {
+      "id": "TC-QPAD-008",
+      "topic": "stale_prepare_commit_race",
+      "candidate_input_shape": {
+        "preparedQueryRevision": "r1",
+        "currentQueryRevisionAtConfirmation": "r2",
+        "permissionOrTargetRevisionChanged": true
+      },
+      "expected_candidate": "Revalidate the current identity, permissions, target and complete document revision before commit; stale confirmation must leave target and preview unchanged and issue no new filter query.",
+      "execution_status": "NOT_RUN",
+      "evidence_refs": ["core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1590-1629"],
+      "design_gap": "Current confirmClick has no demonstrated compare-and-swap revision contract; this is a required future design, not current behavior."
+    }
+  ],
+  "source_limitations": [
+    "Static source evidence does not prove a complete runtime directory or permission check.",
+    "No standalone, admin-only, or mock environment was used as a substitute for true multi-user authorization.",
+    "These probes do not replace the full 10 Goal AC and 16 product obligations."
+  ]
+}

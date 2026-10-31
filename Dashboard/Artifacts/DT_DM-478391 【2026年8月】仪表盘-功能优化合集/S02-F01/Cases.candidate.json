@@ -1,8 +1,8 @@
 {
   "contract_id": "DE-S02-F01",
-  "revision": "design-r001",
+  "revision": "design-r003",
   "frozen_for_builder": false,
-  "reason": "设计预审及S01输入稳定后冻结实现边界；未执行RED/GREEN",
+  "reason": "Concrete subcases are prepared, but the complete payload schema, trusted time source, query-field whitelist, and real permission topology are not frozen; no RED/GREEN or Builder admission is claimed.",
   "axes": [
     "source_kind",
     "target_kind",
@@ -37,12 +37,94 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q004-01",
+          "title": "图表同类通过",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_kind": "chart",
+            "target_kind": "chart",
+            "dataset_id": "D1",
+            "old_target": "P0"
+          },
+          "expected": {
+            "compatibility_decision": "allow"
+          },
+          "oracle": "source_kind equals target_kind and both are same supported adapter; this case does not assert commit, refresh, permission, or persistence",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q004-02",
+          "title": "查询同类通过",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_kind": "query",
+            "target_kind": "query",
+            "dataset_id": "D1",
+            "old_target": "P0"
+          },
+          "expected": {
+            "compatibility_decision": "allow"
+          },
+          "oracle": "source_kind equals target_kind and both are same supported adapter; this case does not assert commit, refresh, permission, or persistence",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q004-03",
+          "title": "图表到查询拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_kind": "chart",
+            "target_kind": "query",
+            "dataset_id": "D1",
+            "old_target": "P0"
+          },
+          "expected": {
+            "compatibility_decision": "reject",
+            "target": "P0",
+            "refresh_count": 0
+          },
+          "oracle": "kind mismatch rejects before any mutation or query refresh",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q004-04",
+          "title": "查询到图表拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_kind": "query",
+            "target_kind": "chart",
+            "dataset_id": "D1",
+            "old_target": "P0"
+          },
+          "expected": {
+            "compatibility_decision": "reject",
+            "target": "P0",
+            "refresh_count": 0
+          },
+          "oracle": "kind mismatch rejects before any mutation or query refresh",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q005",
@@ -56,12 +138,35 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q005-01",
+          "title": "同浏览器标签共享且读取不续期",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "copy_at_ms": 1000,
+            "first_read_at_ms": 2000,
+            "second_read_at_ms": 9000,
+            "refresh_between_reads": true
+          },
+          "expected": {
+            "payload_same": true,
+            "created_at_after_reads_ms": 1000,
+            "expires_at_after_reads_unchanged": true
+          },
+          "oracle": "identity_and_timestamp_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q006",
@@ -75,12 +180,90 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q006-01",
+          "title": "同ID允许",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_dataset_id": "D1",
+            "target_dataset_id": "D1",
+            "target_metadata_status": "resolved"
+          },
+          "expected": {
+            "decision": "allow"
+          },
+          "oracle": "PURE-DATASET-001: explicit dataset ID and target_metadata_status inputs; allow iff IDs are same non-empty string and status is resolved; no implicit defaults",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q006-02",
+          "title": "同名异ID拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_dataset_id": "D1",
+            "target_dataset_id": "D2",
+            "source_name": "销售",
+            "target_name": "销售",
+            "target_metadata_status": "resolved"
+          },
+          "expected": {
+            "decision": "reject",
+            "reason": "dataset_id_mismatch"
+          },
+          "oracle": "PURE-DATASET-001: explicit dataset ID and target_metadata_status inputs; allow iff IDs are same non-empty string and status is resolved; no implicit defaults",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q006-03",
+          "title": "数据集元数据已删除",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_dataset_id": "D1",
+            "target_dataset_id": "D1",
+            "target_metadata_status": "not_found"
+          },
+          "expected": {
+            "decision": "reject",
+            "reason": "dataset_metadata_not_found",
+            "target_unchanged": true
+          },
+          "oracle": "PURE-DATASET-001: explicit dataset ID and target_metadata_status inputs; allow iff IDs are same non-empty string and status is resolved; no implicit defaults"
+        },
+        {
+          "case_id": "TC-Q006-04",
+          "title": "数据集权限无法确认",
+          "layer": "real_API_or_persistence",
+          "status": "BLOCKED_ENVIRONMENT",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source_dataset_id": "D1",
+            "target_dataset_id": "D1",
+            "permission_lookup": "denied_or_unavailable"
+          },
+          "expected": {
+            "decision": "reject",
+            "target_unchanged": true
+          },
+          "oracle": "real permission implementation required; unknown/denied access must fail closed"
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q007",
@@ -94,12 +277,75 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q007-01",
+          "title": "确认后整树替换",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "old_tree": "金额<50",
+            "candidate_tree": "T",
+            "user_confirmation": "confirm"
+          },
+          "expected": {
+            "decision": "commit_after_confirmation",
+            "target_tree": "T",
+            "old_condition_absent": true,
+            "refresh_count": 1
+          },
+          "oracle": "all validations pass, then explicit confirm; target becomes exactly T",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q007-02",
+          "title": "取消保持旧状态",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "old_tree": "金额<50",
+            "candidate_tree": "T",
+            "user_confirmation": "cancel",
+            "preview": "P0"
+          },
+          "expected": {
+            "target_tree": "金额<50",
+            "preview": "P0",
+            "refresh_count": 0
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q007-03",
+          "title": "空目标无需确认",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "old_tree": null,
+            "candidate_tree": "T"
+          },
+          "expected": {
+            "decision": "commit",
+            "target_tree": "T",
+            "refresh_count": 1
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q008",
@@ -113,12 +359,88 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q008-1799999",
+          "title": "明确now参数的TTL边界",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "created_at_ms": 1000000,
+            "now_ms": 2799999,
+            "trusted_clock_asserted": false
+          },
+          "expected": {
+            "valid": true,
+            "created_at_unchanged": true
+          },
+          "oracle": "compute age_ms = now_ms - created_at_ms; valid iff age_ms >= 0 and age_ms < 1800000; explicit-now helper semantics only, not clock trust",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q008-1800000",
+          "title": "明确now参数的TTL边界",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "created_at_ms": 1000000,
+            "now_ms": 2800000,
+            "trusted_clock_asserted": false
+          },
+          "expected": {
+            "valid": false,
+            "created_at_unchanged": true
+          },
+          "oracle": "compute age_ms = now_ms - created_at_ms; valid iff age_ms >= 0 and age_ms < 1800000; explicit-now helper semantics only, not clock trust",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q008-1800001",
+          "title": "明确now参数的TTL边界",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "created_at_ms": 1000000,
+            "now_ms": 2800001,
+            "trusted_clock_asserted": false
+          },
+          "expected": {
+            "valid": false,
+            "created_at_unchanged": true
+          },
+          "oracle": "compute age_ms = now_ms - created_at_ms; valid iff age_ms >= 0 and age_ms < 1800000; explicit-now helper semantics only, not clock trust",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q008-FUTURE-CREATED",
+          "title": "创建时间晚于now时拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "created_at_ms": 1000001,
+            "now_ms": 1000000
+          },
+          "expected": {
+            "valid": false,
+            "reason": "negative_age"
+          },
+          "oracle": "compute age from timestamps; negative age fails closed"
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q009",
@@ -132,12 +454,53 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q009-01",
+          "title": "身份代际不匹配拒绝",
+          "layer": "real_API_or_persistence",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_owner": "U",
+            "current_user": "U",
+            "payload_generation": 1,
+            "current_generation": 3
+          },
+          "expected": {
+            "decision": "reject",
+            "target_unchanged": true
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q009-02",
+          "title": "粘贴时撤权拒绝",
+          "layer": "real_API_or_persistence",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "permission_at_copy": "allow",
+            "permission_at_paste": "deny"
+          },
+          "expected": {
+            "decision": "reject",
+            "target_unchanged": true,
+            "refresh_count": 0
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q010",
@@ -151,12 +514,32 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q010-01",
+          "title": "DataEase内部跨标签传递",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "internal_payload": "T",
+            "system_clipboard": "external text"
+          },
+          "expected": {
+            "target_payload": "T",
+            "system_clipboard_after": "external text"
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q011",
@@ -170,12 +553,32 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q011-01",
+          "title": "空树复制不覆盖旧内容",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "old_payload": "T",
+            "source_tree": []
+          },
+          "expected": {
+            "copy_enabled": false,
+            "old_payload_after": "T"
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q012",
@@ -189,12 +592,119 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q012-01",
+          "title": "合法嵌套树语义一致",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "tree": "T",
+            "expected_matching_record_ids": [
+              2,
+              3,
+              5
+            ],
+            "dynamic_rule": "preserved"
+          },
+          "expected": {
+            "decision": "allow",
+            "matching_record_ids": [
+              2,
+              3,
+              5
+            ],
+            "dynamic_rule": "preserved",
+            "style_layout_result_absent": true
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q012-02",
+          "title": "截断载荷拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_variant": "truncated_json",
+            "old_tree": "金额<50",
+            "preview_ids": [
+              5
+            ]
+          },
+          "expected": {
+            "decision": "reject",
+            "target_tree": "金额<50",
+            "preview_ids": [
+              5
+            ],
+            "refresh_count": 0,
+            "success_notice": false
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q012-03",
+          "title": "缺必要结构拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_variant": "missing_filter_structure",
+            "old_tree": "金额<50",
+            "preview_ids": [
+              5
+            ]
+          },
+          "expected": {
+            "decision": "reject",
+            "target_tree": "金额<50",
+            "preview_ids": [
+              5
+            ],
+            "refresh_count": 0
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q012-04",
+          "title": "非过滤对象拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_variant": "valid_json_non_filter",
+            "old_tree": "金额<50",
+            "preview_ids": [
+              5
+            ]
+          },
+          "expected": {
+            "decision": "reject",
+            "target_tree": "金额<50",
+            "preview_ids": [
+              5
+            ],
+            "refresh_count": 0
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q013",
@@ -208,12 +718,783 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q013-LEAF-50",
+          "title": "50叶子允许",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "leaf_count": 50,
+            "enum_count": 0,
+            "payload_bytes": "within_limit",
+            "old_payload": "T"
+          },
+          "expected": {
+            "decision": "allow",
+            "old_payload_replaced": true
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-LEAF-51",
+          "title": "51叶子拒绝且保留旧载荷",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "leaf_count": 51,
+            "enum_count": 0,
+            "payload_bytes": "within_limit",
+            "old_payload": "T"
+          },
+          "expected": {
+            "decision": "reject",
+            "old_payload_after": "T"
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-ENUM-1001",
+          "title": "1001枚举不设额外数量上限",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "leaf_count": 1,
+            "enum_count": 1001,
+            "payload_bytes": "within_limit"
+          },
+          "expected": {
+            "decision": "allow"
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-BYTES-999999",
+          "title": "UTF-8载荷999999字节",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_utf8_fixture": {
+              "construction": "ASCII A repeated N bytes; second vector starts with UTF-8 prefix 猫🙂 (7 bytes) then ASCII A padding",
+              "target_utf8_bytes": 999999
+            },
+            "final_envelope_schema_bound": false
+          },
+          "expected": {
+            "measured_utf8_bytes": 999999,
+            "byte_guard_allows": true
+          },
+          "oracle": "measure UTF-8 bytes of exact fixture, not Unicode code points; this freezes byte-counter threshold only, not full final-envelope serializer",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-BYTES-1000000",
+          "title": "UTF-8载荷1000000字节",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_utf8_fixture": {
+              "construction": "ASCII A repeated N bytes; second vector starts with UTF-8 prefix 猫🙂 (7 bytes) then ASCII A padding",
+              "target_utf8_bytes": 1000000
+            },
+            "final_envelope_schema_bound": false
+          },
+          "expected": {
+            "measured_utf8_bytes": 1000000,
+            "byte_guard_allows": true
+          },
+          "oracle": "measure UTF-8 bytes of exact fixture, not Unicode code points; this freezes byte-counter threshold only, not full final-envelope serializer",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-BYTES-1000001",
+          "title": "UTF-8载荷1000001字节",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "payload_utf8_fixture": {
+              "construction": "ASCII A repeated N bytes; second vector starts with UTF-8 prefix 猫🙂 (7 bytes) then ASCII A padding",
+              "target_utf8_bytes": 1000001
+            },
+            "final_envelope_schema_bound": false
+          },
+          "expected": {
+            "measured_utf8_bytes": 1000001,
+            "byte_guard_allows": false
+          },
+          "oracle": "measure UTF-8 bytes of exact fixture, not Unicode code points; this freezes byte-counter threshold only, not full final-envelope serializer",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q013-TREE-50",
+          "title": "实际语义树50叶子允许",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "tree": {
+              "logic": "AND",
+              "items": [
+                {
+                  "leaf_id": "L01",
+                  "field_id": "F01",
+                  "operator": "eq",
+                  "value": 1
+                },
+                {
+                  "leaf_id": "L02",
+                  "field_id": "F02",
+                  "operator": "eq",
+                  "value": 2
+                },
+                {
+                  "leaf_id": "L03",
+                  "field_id": "F03",
+                  "operator": "eq",
+                  "value": 3
+                },
+                {
+                  "leaf_id": "L04",
+                  "field_id": "F04",
+                  "operator": "eq",
+                  "value": 4
+                },
+                {
+                  "leaf_id": "L05",
+                  "field_id": "F05",
+                  "operator": "eq",
+                  "value": 5
+                },
+                {
+                  "leaf_id": "L06",
+                  "field_id": "F06",
+                  "operator": "eq",
+                  "value": 6
+                },
+                {
+                  "leaf_id": "L07",
+                  "field_id": "F07",
+                  "operator": "eq",
+                  "value": 7
+                },
+                {
+                  "leaf_id": "L08",
+                  "field_id": "F08",
+                  "operator": "eq",
+                  "value": 8
+                },
+                {
+                  "leaf_id": "L09",
+                  "field_id": "F09",
+                  "operator": "eq",
+                  "value": 9
+                },
+                {
+                  "leaf_id": "L10",
+                  "field_id": "F10",
+                  "operator": "eq",
+                  "value": 10
+                },
+                {
+                  "leaf_id": "L11",
+                  "field_id": "F11",
+                  "operator": "eq",
+                  "value": 11
+                },
+                {
+                  "leaf_id": "L12",
+                  "field_id": "F12",
+                  "operator": "eq",
+                  "value": 12
+                },
+                {
+                  "leaf_id": "L13",
+                  "field_id": "F13",
+                  "operator": "eq",
+                  "value": 13
+                },
+                {
+                  "leaf_id": "L14",
+                  "field_id": "F14",
+                  "operator": "eq",
+                  "value": 14
+                },
+                {
+                  "leaf_id": "L15",
+                  "field_id": "F15",
+                  "operator": "eq",
+                  "value": 15
+                },
+                {
+                  "leaf_id": "L16",
+                  "field_id": "F16",
+                  "operator": "eq",
+                  "value": 16
+                },
+                {
+                  "leaf_id": "L17",
+                  "field_id": "F17",
+                  "operator": "eq",
+                  "value": 17
+                },
+                {
+                  "leaf_id": "L18",
+                  "field_id": "F18",
+                  "operator": "eq",
+                  "value": 18
+                },
+                {
+                  "leaf_id": "L19",
+                  "field_id": "F19",
+                  "operator": "eq",
+                  "value": 19
+                },
+                {
+                  "leaf_id": "L20",
+                  "field_id": "F20",
+                  "operator": "eq",
+                  "value": 20
+                },
+                {
+                  "leaf_id": "L21",
+                  "field_id": "F21",
+                  "operator": "eq",
+                  "value": 21
+                },
+                {
+                  "leaf_id": "L22",
+                  "field_id": "F22",
+                  "operator": "eq",
+                  "value": 22
+                },
+                {
+                  "leaf_id": "L23",
+                  "field_id": "F23",
+                  "operator": "eq",
+                  "value": 23
+                },
+                {
+                  "leaf_id": "L24",
+                  "field_id": "F24",
+                  "operator": "eq",
+                  "value": 24
+                },
+                {
+                  "leaf_id": "L25",
+                  "field_id": "F25",
+                  "operator": "eq",
+                  "value": 25
+                },
+                {
+                  "leaf_id": "L26",
+                  "field_id": "F26",
+                  "operator": "eq",
+                  "value": 26
+                },
+                {
+                  "leaf_id": "L27",
+                  "field_id": "F27",
+                  "operator": "eq",
+                  "value": 27
+                },
+                {
+                  "leaf_id": "L28",
+                  "field_id": "F28",
+                  "operator": "eq",
+                  "value": 28
+                },
+                {
+                  "leaf_id": "L29",
+                  "field_id": "F29",
+                  "operator": "eq",
+                  "value": 29
+                },
+                {
+                  "leaf_id": "L30",
+                  "field_id": "F30",
+                  "operator": "eq",
+                  "value": 30
+                },
+                {
+                  "leaf_id": "L31",
+                  "field_id": "F31",
+                  "operator": "eq",
+                  "value": 31
+                },
+                {
+                  "leaf_id": "L32",
+                  "field_id": "F32",
+                  "operator": "eq",
+                  "value": 32
+                },
+                {
+                  "leaf_id": "L33",
+                  "field_id": "F33",
+                  "operator": "eq",
+                  "value": 33
+                },
+                {
+                  "leaf_id": "L34",
+                  "field_id": "F34",
+                  "operator": "eq",
+                  "value": 34
+                },
+                {
+                  "leaf_id": "L35",
+                  "field_id": "F35",
+                  "operator": "eq",
+                  "value": 35
+                },
+                {
+                  "leaf_id": "L36",
+                  "field_id": "F36",
+                  "operator": "eq",
+                  "value": 36
+                },
+                {
+                  "leaf_id": "L37",
+                  "field_id": "F37",
+                  "operator": "eq",
+                  "value": 37
+                },
+                {
+                  "leaf_id": "L38",
+                  "field_id": "F38",
+                  "operator": "eq",
+                  "value": 38
+                },
+                {
+                  "leaf_id": "L39",
+                  "field_id": "F39",
+                  "operator": "eq",
+                  "value": 39
+                },
+                {
+                  "leaf_id": "L40",
+                  "field_id": "F40",
+                  "operator": "eq",
+                  "value": 40
+                },
+                {
+                  "leaf_id": "L41",
+                  "field_id": "F41",
+                  "operator": "eq",
+                  "value": 41
+                },
+                {
+                  "leaf_id": "L42",
+                  "field_id": "F42",
+                  "operator": "eq",
+                  "value": 42
+                },
+                {
+                  "leaf_id": "L43",
+                  "field_id": "F43",
+                  "operator": "eq",
+                  "value": 43
+                },
+                {
+                  "leaf_id": "L44",
+                  "field_id": "F44",
+                  "operator": "eq",
+                  "value": 44
+                },
+                {
+                  "leaf_id": "L45",
+                  "field_id": "F45",
+                  "operator": "eq",
+                  "value": 45
+                },
+                {
+                  "leaf_id": "L46",
+                  "field_id": "F46",
+                  "operator": "eq",
+                  "value": 46
+                },
+                {
+                  "leaf_id": "L47",
+                  "field_id": "F47",
+                  "operator": "eq",
+                  "value": 47
+                },
+                {
+                  "leaf_id": "L48",
+                  "field_id": "F48",
+                  "operator": "eq",
+                  "value": 48
+                },
+                {
+                  "leaf_id": "L49",
+                  "field_id": "F49",
+                  "operator": "eq",
+                  "value": 49
+                },
+                {
+                  "leaf_id": "L50",
+                  "field_id": "F50",
+                  "operator": "eq",
+                  "value": 50
+                }
+              ]
+            }
+          },
+          "expected": {
+            "leaf_count": 50,
+            "guard_allows": true
+          },
+          "oracle": "count terminal filter leaves recursively; combination nodes do not count"
+        },
+        {
+          "case_id": "TC-Q013-TREE-51",
+          "title": "实际语义树51叶子拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "tree": {
+              "logic": "AND",
+              "items": [
+                {
+                  "leaf_id": "L01",
+                  "field_id": "F01",
+                  "operator": "eq",
+                  "value": 1
+                },
+                {
+                  "leaf_id": "L02",
+                  "field_id": "F02",
+                  "operator": "eq",
+                  "value": 2
+                },
+                {
+                  "leaf_id": "L03",
+                  "field_id": "F03",
+                  "operator": "eq",
+                  "value": 3
+                },
+                {
+                  "leaf_id": "L04",
+                  "field_id": "F04",
+                  "operator": "eq",
+                  "value": 4
+                },
+                {
+                  "leaf_id": "L05",
+                  "field_id": "F05",
+                  "operator": "eq",
+                  "value": 5
+                },
+                {
+                  "leaf_id": "L06",
+                  "field_id": "F06",
+                  "operator": "eq",
+                  "value": 6
+                },
+                {
+                  "leaf_id": "L07",
+                  "field_id": "F07",
+                  "operator": "eq",
+                  "value": 7
+                },
+                {
+                  "leaf_id": "L08",
+                  "field_id": "F08",
+                  "operator": "eq",
+                  "value": 8
+                },
+                {
+                  "leaf_id": "L09",
+                  "field_id": "F09",
+                  "operator": "eq",
+                  "value": 9
+                },
+                {
+                  "leaf_id": "L10",
+                  "field_id": "F10",
+                  "operator": "eq",
+                  "value": 10
+                },
+                {
+                  "leaf_id": "L11",
+                  "field_id": "F11",
+                  "operator": "eq",
+                  "value": 11
+                },
+                {
+                  "leaf_id": "L12",
+                  "field_id": "F12",
+                  "operator": "eq",
+                  "value": 12
+                },
+                {
+                  "leaf_id": "L13",
+                  "field_id": "F13",
+                  "operator": "eq",
+                  "value": 13
+                },
+                {
+                  "leaf_id": "L14",
+                  "field_id": "F14",
+                  "operator": "eq",
+                  "value": 14
+                },
+                {
+                  "leaf_id": "L15",
+                  "field_id": "F15",
+                  "operator": "eq",
+                  "value": 15
+                },
+                {
+                  "leaf_id": "L16",
+                  "field_id": "F16",
+                  "operator": "eq",
+                  "value": 16
+                },
+                {
+                  "leaf_id": "L17",
+                  "field_id": "F17",
+                  "operator": "eq",
+                  "value": 17
+                },
+                {
+                  "leaf_id": "L18",
+                  "field_id": "F18",
+                  "operator": "eq",
+                  "value": 18
+                },
+                {
+                  "leaf_id": "L19",
+                  "field_id": "F19",
+                  "operator": "eq",
+                  "value": 19
+                },
+                {
+                  "leaf_id": "L20",
+                  "field_id": "F20",
+                  "operator": "eq",
+                  "value": 20
+                },
+                {
+                  "leaf_id": "L21",
+                  "field_id": "F21",
+                  "operator": "eq",
+                  "value": 21
+                },
+                {
+                  "leaf_id": "L22",
+                  "field_id": "F22",
+                  "operator": "eq",
+                  "value": 22
+                },
+                {
+                  "leaf_id": "L23",
+                  "field_id": "F23",
+                  "operator": "eq",
+                  "value": 23
+                },
+                {
+                  "leaf_id": "L24",
+                  "field_id": "F24",
+                  "operator": "eq",
+                  "value": 24
+                },
+                {
+                  "leaf_id": "L25",
+                  "field_id": "F25",
+                  "operator": "eq",
+                  "value": 25
+                },
+                {
+                  "leaf_id": "L26",
+                  "field_id": "F26",
+                  "operator": "eq",
+                  "value": 26
+                },
+                {
+                  "leaf_id": "L27",
+                  "field_id": "F27",
+                  "operator": "eq",
+                  "value": 27
+                },
+                {
+                  "leaf_id": "L28",
+                  "field_id": "F28",
+                  "operator": "eq",
+                  "value": 28
+                },
+                {
+                  "leaf_id": "L29",
+                  "field_id": "F29",
+                  "operator": "eq",
+                  "value": 29
+                },
+                {
+                  "leaf_id": "L30",
+                  "field_id": "F30",
+                  "operator": "eq",
+                  "value": 30
+                },
+                {
+                  "leaf_id": "L31",
+                  "field_id": "F31",
+                  "operator": "eq",
+                  "value": 31
+                },
+                {
+                  "leaf_id": "L32",
+                  "field_id": "F32",
+                  "operator": "eq",
+                  "value": 32
+                },
+                {
+                  "leaf_id": "L33",
+                  "field_id": "F33",
+                  "operator": "eq",
+                  "value": 33
+                },
+                {
+                  "leaf_id": "L34",
+                  "field_id": "F34",
+                  "operator": "eq",
+                  "value": 34
+                },
+                {
+                  "leaf_id": "L35",
+                  "field_id": "F35",
+                  "operator": "eq",
+                  "value": 35
+                },
+                {
+                  "leaf_id": "L36",
+                  "field_id": "F36",
+                  "operator": "eq",
+                  "value": 36
+                },
+                {
+                  "leaf_id": "L37",
+                  "field_id": "F37",
+                  "operator": "eq",
+                  "value": 37
+                },
+                {
+                  "leaf_id": "L38",
+                  "field_id": "F38",
+                  "operator": "eq",
+                  "value": 38
+                },
+                {
+                  "leaf_id": "L39",
+                  "field_id": "F39",
+                  "operator": "eq",
+                  "value": 39
+                },
+                {
+                  "leaf_id": "L40",
+                  "field_id": "F40",
+                  "operator": "eq",
+                  "value": 40
+                },
+                {
+                  "leaf_id": "L41",
+                  "field_id": "F41",
+                  "operator": "eq",
+                  "value": 41
+                },
+                {
+                  "leaf_id": "L42",
+                  "field_id": "F42",
+                  "operator": "eq",
+                  "value": 42
+                },
+                {
+                  "leaf_id": "L43",
+                  "field_id": "F43",
+                  "operator": "eq",
+                  "value": 43
+                },
+                {
+                  "leaf_id": "L44",
+                  "field_id": "F44",
+                  "operator": "eq",
+                  "value": 44
+                },
+                {
+                  "leaf_id": "L45",
+                  "field_id": "F45",
+                  "operator": "eq",
+                  "value": 45
+                },
+                {
+                  "leaf_id": "L46",
+                  "field_id": "F46",
+                  "operator": "eq",
+                  "value": 46
+                },
+                {
+                  "leaf_id": "L47",
+                  "field_id": "F47",
+                  "operator": "eq",
+                  "value": 47
+                },
+                {
+                  "leaf_id": "L48",
+                  "field_id": "F48",
+                  "operator": "eq",
+                  "value": 48
+                },
+                {
+                  "leaf_id": "L49",
+                  "field_id": "F49",
+                  "operator": "eq",
+                  "value": 49
+                },
+                {
+                  "leaf_id": "L50",
+                  "field_id": "F50",
+                  "operator": "eq",
+                  "value": 50
+                },
+                {
+                  "leaf_id": "L51",
+                  "field_id": "F51",
+                  "operator": "eq",
+                  "value": 51
+                }
+              ]
+            },
+            "old_payload": "T"
+          },
+          "expected": {
+            "leaf_count": 51,
+            "guard_allows": false,
+            "old_payload_after": "T"
+          },
+          "oracle": "count terminal filter leaves recursively; reject before replacing old payload"
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q014",
@@ -227,12 +1508,58 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q014-01",
+          "title": "粘贴先预览保存后重开",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "p0": "old",
+            "tree": "T",
+            "save": "success"
+          },
+          "expected": {
+            "editing_tree": "T",
+            "preview_ids": [
+              2,
+              3,
+              5
+            ],
+            "reopen_tree": "T",
+            "auto_save": false
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q014-02",
+          "title": "保存失败另一会话保持P0",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "other_session_p0": "old",
+            "tree": "T",
+            "save": "failure"
+          },
+          "expected": {
+            "other_session_p0_after": "old",
+            "auto_save": false
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-Q015",
@@ -246,12 +1573,34 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q015-01",
+          "title": "目标不能完整承载则整次拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "tree": "T",
+            "target_supports_all_nodes": false,
+            "old_tree": "P0"
+          },
+          "expected": {
+            "decision": "reject",
+            "target_tree": "P0",
+            "partial_apply": false
+          },
+          "oracle": "exact_structural_equality",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-ORIG-01",
@@ -265,12 +1614,59 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-ORIG01-EDITOR",
+          "title": "编辑用户按既有权限可操作",
+          "layer": "real_API_or_persistence",
+          "status": "BLOCKED_ENVIRONMENT",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "user_role": "editor",
+            "action": "read_filter_copy_paste",
+            "authorization_source": "real_permission_module_required"
+          },
+          "expected": {
+            "decision": "allow_when_authorized",
+            "target_mutates_only_after_valid_commit": true
+          },
+          "oracle": "real isolated permission implementation; standalone substitute forbidden",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-ORIG01-VIEWER",
+          "title": "只读用户不可查看或操作过滤配置",
+          "layer": "real_API_or_persistence",
+          "status": "BLOCKED_ENVIRONMENT",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "user_role": "viewer",
+            "actions": [
+              "read_filter_config",
+              "copy",
+              "paste",
+              "direct_api_read",
+              "direct_api_modify"
+            ],
+            "authorization_source": "real_permission_module_required"
+          },
+          "expected": {
+            "all_actions": "deny",
+            "configuration_disclosed": false,
+            "target_unchanged": true
+          },
+          "oracle": "real isolated permission implementation and direct API observation; UI hiding alone is insufficient",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F01-ORIG-02",
@@ -284,12 +1680,32 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-ORIG02-REGRESSION",
+          "title": "既有组件复制改类型回归",
+          "layer": "real_UI",
+          "status": "NOT_RUN",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "existing_flow": "copy_component_then_change_type",
+            "new_filter_copy_feature_enabled": true
+          },
+          "expected": {
+            "existing_flow_still_works": true,
+            "used_as_substitute_for_filter_copy": false
+          },
+          "oracle": "existing regression fixture and observed UI result",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F04-Q066",
@@ -303,12 +1719,60 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q066-01",
+          "title": "查询过滤与级联完整独立副本",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "propValue": "P",
+            "cascade": "C",
+            "reference_closure": "complete",
+            "cascade_selection_state": {
+              "source_selectValue": "derived_from_default_mapValue",
+              "source_currentSelectValue": "runtime_only"
+            }
+          },
+          "expected": {
+            "decision": "candidate_only",
+            "deep_copy": true,
+            "source_target_mutation_independent": true,
+            "query_result_style_absent": true,
+            "target_selectValue": "rederived_from_target_default_mapValue",
+            "source_currentSelectValue_copied": false
+          },
+          "oracle": "abstract model only: preserve default semantics, rederive destination configuration/runtime cascade values; actual query schema and ID rebinding pending",
+          "evidence_refs": []
+        },
+        {
+          "case_id": "TC-Q066-02",
+          "title": "缺引用或循环拒绝",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "reference_closure": "missing_or_cycle",
+            "old_target": "P0"
+          },
+          "expected": {
+            "decision": "reject",
+            "target": "P0",
+            "partial_apply": false
+          },
+          "oracle": "abstract graph oracle only; actual query schema and ID rebinding pending",
+          "evidence_refs": []
+        }
+      ]
     },
     {
       "case_id": "TC-AC-F04-Q067",
@@ -322,12 +1786,58 @@
       "layers": [
         "pure_logic",
         "real_UI",
-        "API_permission_or_persistence_when_applicable"
+        "real_API_or_persistence_when_applicable"
       ],
       "status": "DESIGN_ONLY",
       "execution_ok": null,
       "red_fingerprint": null,
-      "evidence_refs": []
+      "evidence_refs": [],
+      "subcases": [
+        {
+          "case_id": "TC-Q067-01",
+          "title": "源与目标深拷贝相互独立",
+          "layer": "pure_logic",
+          "status": "PREPARATION_ONLY",
+          "execution_ok": null,
+          "red_fingerprint": null,
+          "inputs": {
+            "source": "A",
+            "target_copy": "B",
+            "mutate_source": true,
+            "mutate_target": true
+          },
+          "expected": {
+            "source_changes_affect_target": false,
+            "target_changes_affect_source": false
+          },
+          "oracle": "deep structural isolation; persistence still NOT_RUN",
+          "evidence_refs": []
+        }
+      ]
     }
-  ]
+  ],
+  "prepared_vectors": {
+    "ttl_age_ms": [
+      1799999,
+      1800000,
+      1800001
+    ],
+    "payload_utf8_bytes": [
+      999999,
+      1000000,
+      1000001
+    ],
+    "leaf_count": [
+      50,
+      51
+    ],
+    "enum_count": [
+      1001
+    ],
+    "notes": [
+      "Explicit-now TTL cases only test comparison semantics; not clock trust.",
+      "UTF-8 byte vectors use serialized envelope byte length; exact bytes await frozen envelope schema.",
+      "Cases are PREPARATION_ONLY; no trusted RED/GREEN exists."
+    ]
+  }
 }

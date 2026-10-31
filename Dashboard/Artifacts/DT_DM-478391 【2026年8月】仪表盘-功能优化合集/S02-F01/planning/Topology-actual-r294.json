@@ -1,0 +1,76 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-QOBS-ASYNC-IMPLEMENTATION-RECHECK-r001",
+  "recorded_at": "2026-10-20T19:54:11.052138+00:00",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r293.json",
+  "phase": "qobs_async_implementation_recheck",
+  "task_id": "S02-F01-QOBS-ASYNC-IMPLEMENTATION-RECHECK-r001",
+  "execution": {
+    "identity": "/root",
+    "state": "completed",
+    "result": "PA-001..009; handler 12/12; infoFormat harness; targeted ESLint and diff-check pass; full TS check fails on three TS6504 .vue.js include errors."
+  },
+  "inputs": [
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-observation-component/check.mjs",
+      "sha256": "48f39f6107e00002d10bbec663bb937e979512ed9ec3b5ee91c7a705ba418a0c"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/handler-harness.mjs",
+      "sha256": "408466f899c3b9c1f7002dd07296ec8b5d2adf153da7d728190e9db9d5b469c1"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/info-format-harness.mjs",
+      "sha256": "e5ad9536160635ca287010eec42db161cd62ef11f3d5b02353fea144fe25323d"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "sha256": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "sha256": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "sha256": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "sha256": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "sha256": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "sha256": "4d94499b2b83a2b79914594daa9cd00cce99caff2da676c34973b83302db2813"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "sha256": "4d94499b2b83a2b79914594daa9cd00cce99caff2da676c34973b83302db2813"
+    }
+  ],
+  "commands": [
+    "node tests/filter-copy-query-observation-component/check.mjs",
+    "node tests/filter-copy-query-select-text-source/handler-harness.mjs",
+    "node tests/filter-copy-query-select-text-source/info-format-harness.mjs",
+    "./node_modules/.bin/eslint <5 changed v-query/store files>",
+    "npm run ts:check (TS6504 baseline failure)"
+  ],
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "定向隔离组件/handler harness 证据；不证明产品端到端、真实权限、保存历史或Goal AC完成。",
+  "blockers": [
+    "S01 F01 CONDITIONAL; real permission BLOCKED / NOT_RUN",
+    "全量 TS6504 错误的来源归因仍待独立确认"
+  ],
+  "next_action": "MATERIALIZE_NEXT_ENTRY"
+}

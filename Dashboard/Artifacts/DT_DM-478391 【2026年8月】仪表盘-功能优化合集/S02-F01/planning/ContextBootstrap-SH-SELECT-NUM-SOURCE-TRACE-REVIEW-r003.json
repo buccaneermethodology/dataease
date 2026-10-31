@@ -1,0 +1,549 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-REVIEW-r003",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "独立复核 Select Number 来源追踪 r003；完整检查 r002 三项 finding 的修订、r001/r002 历史 finding disposition、维护者对迟到 C 的 authority、当前源码断言和未决边界；一次列全 findings，只写 review r003。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "第 3/3 轮独立复核 SH-SELECT-NUM 静态来源索引，验证全部历史与本轮 finding 处置及 claim ceiling。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumSourceTraceReview-r003.md"
+    ],
+    "forbidden_actions": [
+      "修改源码、Goal、Contract/Cases、r003候选或历史Review",
+      "把静态代码差异推断为 numeric 产品策略或 bug",
+      "宣称完整保存恢复、迟到响应产品行为、权限或 Goal AC 通过"
+    ],
+    "maximum_claim": "仅判定 r003 静态来源追踪准确性及未决清单；不证明产品行为、数值 oracle、权限或 Goal 完成。"
+  },
+  "required_read_set": [
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MaintainerDecision-QOBS-ASYNC-01-r001.md",
+      "revision": "d85931cea91604e95c5c97f30a041c42d30df81953f03a7ab564ed81f85f9761",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Bind the maintainer decision for late enum response missing selected C.",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeCases-r001.json",
+      "revision": "a68a4bf534b3986d354005d78a3cfa92c824bb52d94b17f76e4f83cb8549c226",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r001.md",
+      "revision": "55151a44c4d8ff2eed5893bda071e2c6e3d1ee69d8f0547ad2777e35d75fdc67",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeEvidenceReconciliation-r002.md",
+      "revision": "ab193b6c03828c4fb6bca0d677c16e3747eee7b3c76e040727b7e3e18d7e0bde",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r001.md",
+      "revision": "f1ceee5e07eae376d49fbce84a8b424aa7886ce7b0641df2694eaaa9881f1fa9",
+      "domains": [
+        "design",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "原始来源追踪和范围限制。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r002.md",
+      "revision": "e97d44834dfb0fb3a35aeeb9003a801e0e147ca2a634abbedff46685346fc39a",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Compare prior source map and ensure no historical claims were silently overwritten.",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r003.md",
+      "revision": "192a09534d6a72e3c2e348cc48d3539641bbe7ce56afa3d4fd623d47ac9e7f64",
+      "domains": [
+        "design",
+        "acceptance",
+        "implementation",
+        "claim_ceiling"
+      ],
+      "reason": "本轮精确review target。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "eefb526faa79bb9e56ba2652d7470f4c05699e2070e80208fbe37c21e65db454",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r345.json",
+      "revision": "98668657700a49a1d616b7419af95ddab21d6f2ddc7a3e15aab590dc01bc877e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定本轮审查前已存在的完整拓扑快照；本次 dispatch 另记于后续实际拓扑。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeEvidenceReconciliationReview-r002.md",
+      "revision": "85c04bd31f5ab27800403c6efc8730765ea96ad88cab73d5617120ac9a9af057",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumSourceTraceReview-r001.md",
+      "revision": "ee5f0d2342538d660c4d37ebc8aae138ebea0f686469ef0e70e8467226342aec",
+      "domains": [
+        "design",
+        "acceptance",
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "五项独立审查finding和边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumSourceTraceReview-r002.md",
+      "revision": "f785ab9810c743b99f753b53e34b8f69f6f949aff240bbca181a0fc0286ae300",
+      "domains": [
+        "authority",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "Review all previous-round findings and confirm their disposition.",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTraceReview-r003.md",
+      "revision": "c8d47a0e6561ec2a09193515d9ae81254db1a25bd23a3f405d42d811bbc10b6d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "core/core-frontend/src/api/dataset.ts",
+      "revision": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "核对 Select-Num 的当前源码路径、权威分母、当前全形态finding和依赖边界。",
+      "applicability": "S02-F01-SH-SELECT-NUM-SOURCE-TRACE-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "referenced_runtime_consumer_or_persistence_owner",
+      "condition": "若当前引用路径进入未绑定的查询consumer、配置确认、保存/加载或撤销恢复实现",
+      "mode": "deterministic",
+      "action": "扩展到其实际owner源码并更新摘要；若本任务只允许静态入口追踪，则记录未覆盖，不宣称闭环。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "numeric_semantic_or_legality_gap",
+      "condition": "若源码或旧候选不足以裁定0、字符串数字、精度、2/5差异或合法组合",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "保持NOT_READY并标明所需authority/owner，不把推断写成规则。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal 10项AC/26项must-have/16项产品义务及Scope Delta none不变；产品义务NOT_RUN；S01 F01 CONDITIONAL；真实权限BLOCKED / NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_static_design_review",
+    "reason": "复核来源图 r002 的finding处置及来源引用，不运行产品或权限行为。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "当前V3源码的对应行范围",
+    "原始Goal与AC分母",
+    "R4 FullShape全形态finding",
+    "S01 Entry Packet与真实权限状态",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ]
+}

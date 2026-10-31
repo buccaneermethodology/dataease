@@ -1,0 +1,31 @@
+# QMAP-001 纯目标组件映射设计候选
+
+仅设计，两个新输出写前不存在。card canonical摘要5764839b0c2387f4d65f57c49c777dd9daa15a51b4f7f1e6497cbec04b148d89已复验通过（包含ContextBootstrap绑定摘要）。可作为有界候选进入独立复核，不授予Builder，不改QPROJ/QPREP或产品入口。
+
+## 契约与依据
+
+现有core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts的SourceComponent包含componentId/datasetId/fieldIds，输出conditions[].targetRefs使用这三个引用身份；query-reference-plan.ts接受componentMap:Record<string,string[]>，对每个被引用source要求一个目标：0为MISSING_COMPONENT，>1为AMBIGUOUS_COMPONENT。它只检查condition/node映射单射，未要求componentMap全局单射。因此QMAP允许不同source复用同一唯一target，但这一结论限引用计划，不能据此证明产品多个条件合并后的行为。
+
+QueryConditionConfiguration.vue:147–162由canvasViewInfo[id]的id/tableId形成组件目录；1710–1750通过数据集信息/字段目录关联元数据。这是未来调用方可构造显式目录的来源候选，不证明目录当前可信、可访问或已获编辑权。Q006要求数据集ID相同且可确认，即使名字/字段相同也不能跨数据集；QMAP据此只比较精确datasetId/fieldId，不读取name。Q006本身不裁定自动选择目标UI，本算法只是调用者提供有限目录上的唯一性推导。
+
+## 接口与确定算法
+
+输入、错误顺序、6项fixture见JSON。references为QPROJ成功后的conditions.flatMap(targetRefs)，不是原propValue；sourceComponents与targetComponents为显式目录。所有ID是非空字符串且不含--，不强转数字、不trim。fieldIds空数组可表示无字段，不能据此满足非空引用；重复fieldId按集合处理。
+
+先校验所有输入结构和两个目录各自componentId唯一性；重复目录身份即使完全相同仍拒绝，避免掩盖来源冲突。源目录与目标目录可以出现相同ID（例如同文档），它们处于不同角色域。对每个reference核对源component存在、datasetId等于源目录、fieldId属于源字段集；任何不一致SOURCE_REFERENCE_UNRESOLVED。相同三元组重复引用只去重；同一source含两个dataset身份不能通过源一致性校验。
+
+按source首次出现顺序分组全部引用字段。候选目标必须datasetId与源相同且fieldIds覆盖该source所需字段全集；不是逐字段分别映到不同目标。零候选返回MISSING_COMPONENT，一候选输出source:[target]，多个返回AMBIGUOUS_COMPONENT，不按名称、顺序、与源同ID等规则擅自择一。全部source成功后一次返回新对象；失败无partial map、不修改输入。空references在结构/目录唯一性检查后输出{}；不因空引用跳过坏目录检查。
+
+## 与既有模块接续
+
+QPROJ当前要求maps.componentMap对象但不要求所有目标已解析，因此调用方可先传{}获得typed引用；QMAP成功填入componentMap后调用QPREP。已有conditionMap/nodeMap由调用者提供，QMAP不生成或修改它们。QPREP继续负责闭包/环/条件节点映射检查；QMAP不宣布完整计划可粘贴。仅生成componentMap，无过滤值/默认/样式/树路径/保存/历史转换。
+
+最多6个case：唯一覆盖与重复引用/多对一、异数据集零候选、多候选、重复目录ID、空引用、源字段未确认。规则及完整正例/replace负例在JSON可复核；同目录所有项都校验，不把未引用坏条目静默忽略。后续测试可派生source目录重复、缺字段、空字段集防御反例，但不得改变这6个冻结候选identity的预期。
+
+## 版本与准入边界
+
+绑定ContextBootstrap-target-component-map-design-r001.json存在残留：task_profile为implementation，write_scope/claim仍指QPROJ源码和执行证据；与当前Design卡不一致。本lane仅消费它的阅读上下文，写范围以用户当前指令及Design卡的两个文件为准，不执行其旧实现scope。控制面须在后续Builder准入前修正新版本Context，不能把此残留当实现授权。
+
+父流程报告S01 receipt已GOAL_COMPLETE，但S02 entry仍CONDITIONAL_DESIGN_ONLY；本lane未重跑其终态，只记录该来源通知，不扩大产品进入范围。真实权限仍阻塞。显式目录输入既不证明源/目标访问权，也不证明元数据服务可信、目标实际承载或运行可用。
+
+本合同无必须重新裁定的业务选择，可作为有限纯函数候选独立复核；Context不一致是后续准入修复项，产品自动目标选择仍是集成设计边界。仅完成card摘要、JSON、case唯一性及手算检查；没有QMAP运行、权限或产品验收。拟实现可新增query-target-component-map.ts及专属测试，但本lane不写代码、不自行启动Builder。

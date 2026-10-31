@@ -1,0 +1,71 @@
+{
+  "schema_version": "s02_local_source_harness_design_candidate_v1",
+  "design_id": "ST-SRC-006-SourceHandlerHarnessDesign-r001",
+  "goal_id": "DE-S02-F01",
+  "status": "candidate",
+  "frozen_for_builder": false,
+  "execution_status": "NOT_RUN",
+  "case_ids": [
+    "ST-SRC-006-RUNTIME-FIRST",
+    "ST-SRC-006-RUNTIME-MULTIPLE-FIRST",
+    "ST-SRC-006-CASCADE-FIRST",
+    "ST-SRC-006-EMPTY",
+    "ST-SRC-006-CONFIG-CASCADE-CLEAR",
+    "ST-SRC-006-CONFIRM-GUARD"
+  ],
+  "source_functions": [
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "name": "setDefaultValueFirstItem",
+      "lines": "533-563"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "name": "setDefaultMapValue",
+      "lines": "134-153"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "name": "setCascadeValueBack",
+      "lines": "160-171"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "name": "emitCascade",
+      "lines": "184-196"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "name": "emitCascadeConfig",
+      "lines": "198-212"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "name": "setCascadeDefault",
+      "lines": "165-178"
+    },
+    {
+      "file": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "name": "isConfirmSearch",
+      "lines": "484-487"
+    }
+  ],
+  "oracle": "Full constrained state snapshot: selection and map values, cascade target fields, emitted cascade event names/order, isConfirmSearch arguments, and controlled nextTick queue; extract listed real AST initializers. Only external injection/DOM/store dependencies may be stubbed.; Component:isConfirmSearch is the extracted owner guard with componentWithSure fixture; its queryDataForId downstream is a call-recording stub only.",
+  "excluded": [
+    "300ms handleFieldIdChange timer path",
+    "Vue mount/DOM",
+    "provide/inject runtime wiring",
+    "query emitter subscriptions",
+    "API/store/network",
+    "save/reopen/history",
+    "real multi-user permissions"
+  ],
+  "claim_ceiling": "Would support only the extracted source functions under injected local dependencies; not product cascade wiring or Goal AC acceptance.",
+  "scope_delta": "none",
+  "case_fixture_ref": "ST-SRC-006-SourceHandlerHarnessCases-candidate-r001.json",
+  "negative_control": {
+    "identity": "mutate one expected full-snapshot leaf for an existing case without changing case_id/variant_id",
+    "expected": "runner fails on the exact same identity snapshot assertion; restore original expected bytes and runner returns GREEN with same identity digest"
+  },
+  "case_fixture_sha256": "55e3fd164711204a3f5c4eeec97d3b5a7f88e83fdf65b6e5b8fed23003ee2386"
+}

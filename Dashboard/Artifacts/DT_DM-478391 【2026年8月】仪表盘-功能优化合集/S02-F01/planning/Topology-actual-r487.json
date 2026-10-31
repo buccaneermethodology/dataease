@@ -1,0 +1,68 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-actual-r487",
+  "recorded_at": "2026-10-29T03:02:23.745404+00:00",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r486.json",
+  "phase": "post_special_runtime_batch",
+  "task_id": "S02-MVP-CARTESIAN-RUNTIME-BATCH-r001",
+  "execution": {
+    "identity": "/root IAB tab1",
+    "state": "bounded_batch_complete",
+    "result": "43/49 types role-observed; full verified 0; failures preserved"
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r479.json",
+      "sha256": "bef1d9b22ba9ae9a88a62e83abbb45f7ce0c2c2666bdb735c3fb072254d66534"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeOracle-r001.json",
+      "sha256": "4caa318b01266011c27eedefdf6df7c597fde6f5ad7879668fdbbc00016c9fb8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-events-r001.jsonl",
+      "sha256": "bac70380777e6fead9235d587d58a0dec88efc96a61a1df7d976663f4d057169"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialBatch-r001.json",
+      "sha256": "2ffbc700e7e03fabf6f340e42c3ded180d330cdababbb0a7d0592758f30fca66"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeSpecialIndependentOracle-r001.json",
+      "sha256": "1d2be7a22be311e21dbe4d5466cece85a181d7cb642ea63fa14438b3ce9dad98"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeUiProgress-r005.json",
+      "sha256": "e756019cfa0c2e0c2992f1d7ef034d4cb2bb5c0448bf376644b0da0a76cf26b4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "sha256": "5923cc60a648eb098e3e6d5cfaa854364199c56ff97f5da720015f443d150813"
+    }
+  ],
+  "goal_denominator": {
+    "p1_mvp_obligations": 12,
+    "p2_original_obligations": 26,
+    "total": 38,
+    "landed": 0,
+    "scope_delta": "none",
+    "status": "all pending"
+  },
+  "claim_ceiling": "每种类型的完整P1验收还要求真实两条件独立oracle、专用按钮/权限状态、拒绝/取消/失败/局部失效/TTL、结果保存重开与独立验证；本快照只有零散真实UI配对，不能记类型通过。",
+  "blockers": [
+    "Builder正常UI运行及独立CSV计算，不是独立Validation；38项完整验收不减。",
+    "地图世界村资源404；气泡地图沿用同一资源尚未运行；流向/热力/符号地图缺经纬度合成维度，未使用shop替代。",
+    "富文本默认空内容一次paste_render_failed；配置可见非空文字后双向成功并重开，未修改源码，不宣称空内容缺陷修复。",
+    "图片组入口创建后页面重载并提示恢复草稿，选择否；原因未知，未完成测试。",
+    "双轴原始paste事件没有tableRow，另以新查询dual_axis_query保留左右轴；不能倒填旧查询。",
+    "K线图继承了其他隐藏轴，显示出额外线条；当前只核对四指标查询与保存，不证明纯K线样式配置无残余。",
+    "真实权限BLOCKED/NOT_RUN；历史圆形填充点击异常、量程饱和、草稿提示及Area专项RED/GREEN未决继续保留。"
+  ],
+  "single_agent_exception": "Mechanical evidence projection; no independent validation claim."
+}

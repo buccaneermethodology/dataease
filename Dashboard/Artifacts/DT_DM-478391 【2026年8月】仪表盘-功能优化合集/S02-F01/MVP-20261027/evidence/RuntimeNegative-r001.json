@@ -1,0 +1,594 @@
+{
+  "schema_version": "s02_runtime_negative_observation_v1",
+  "at": "2026-10-30T02:19:28.244964+00:00",
+  "builder": "/root",
+  "event_log": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeNegative-events-r001.jsonl",
+    "sha256": "1112c9c7ca34711eb86fcffd853a3a783c35ab4b961cb7a97216f52609141ceb"
+  },
+  "actual_persistence_wire": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeNegative-persistence-wire-r001.json",
+    "sha256": "fd7c92056824d77e08ae3df73070e73e457ba27308277af31bf3c5481e07fa94"
+  },
+  "admission": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/runtime-negative-admission-r001.json",
+    "sha256": "af9c1cfe89cae528046ab3afccb6a640b7798ad6a53131e006676e8a8fbdf846"
+  },
+  "scenarios_observed": 8,
+  "checks": {
+    "cancel_clean": {
+      "source_full_descriptor_equal": true,
+      "clipboard_equal": true,
+      "indicator_equal": true,
+      "save_disabled_unchanged": true,
+      "logical_calls_zero": true,
+      "outcome_cancelled": true,
+      "getData_responses_empty": true
+    },
+    "injected_business_error": {
+      "source_full_descriptor_equal": true,
+      "clipboard_equal": true,
+      "indicator_equal": true,
+      "save_disabled_unchanged": true,
+      "logical_one_failure": true,
+      "one_intercepted_wire_request": true
+    },
+    "injected_network_error": {
+      "source_full_descriptor_equal": true,
+      "clipboard_equal": true,
+      "indicator_equal": true,
+      "save_disabled_unchanged": true,
+      "indicator_png_equal": false,
+      "logical_one_failure": true,
+      "one_aborted_wire_request": true
+    },
+    "DEV 权限未知，操作已禁用": {
+      "copy_disabled": true,
+      "paste_disabled": true,
+      "no_wire_query": true,
+      "source_equal": true,
+      "clipboard_equal": true,
+      "indicator_png_equal": true,
+      "save_disabled": true
+    },
+    "DEV 权限拒绝，操作已禁用": {
+      "copy_disabled": true,
+      "paste_disabled": true,
+      "no_wire_query": true,
+      "source_equal": true,
+      "clipboard_equal": true,
+      "indicator_png_equal": true,
+      "save_disabled": true
+    },
+    "busy_duplicate_DEV_revoke_actual_late_response": {
+      "source_full_descriptor_equal": true,
+      "clipboard_equal": true,
+      "indicator_equal": true,
+      "save_disabled_unchanged": true,
+      "indicator_png_equal": true,
+      "second_click_disabled": true,
+      "one_held_request": true,
+      "actual_response_success5093": true,
+      "logical_one_failure": true,
+      "old_threshold200": true
+    },
+    "user_edit_actual_late_response": {
+      "source_full_descriptor_equal": true,
+      "clipboard_equal": true,
+      "indicator_equal": true,
+      "indicator_png_equal": false,
+      "user_edit300_preserved": true,
+      "actual_response_success5093": true,
+      "logical_one_failure": true,
+      "user_dirty_after_actual_response": true
+    },
+    "recovery_success_actual_save_reopen": {
+      "success_one_logical_query": true,
+      "complete_tree_matches_clip": true,
+      "actual_wire_tree_equal": true,
+      "saved_and_find_return_code0": true,
+      "resource_id_equal": true,
+      "actual_two_full_trees_save_find_equal": true,
+      "indicator_tree_save_find_ui_equal": true,
+      "stable_reopen5093": true,
+      "clipboard_empty": true,
+      "normal_left_workbranch": true
+    }
+  },
+  "status": "PARTIAL_WITH_FINDINGS_PENDING_INDEPENDENT_VALIDATION",
+  "unresolved_checks": [
+    [
+      "injected_network_error",
+      "indicator_png_equal"
+    ],
+    [
+      "user_edit_actual_late_response",
+      "indicator_png_equal"
+    ]
+  ],
+  "initial_checker_findings": [
+    [
+      "injected_network_error",
+      "indicator_png_equal"
+    ],
+    [
+      "user_edit_actual_late_response",
+      "save_disabled_unchanged"
+    ],
+    [
+      "user_edit_actual_late_response",
+      "indicator_png_equal"
+    ]
+  ],
+  "checker_correction": "user_edit场景用户编辑应变dirty；初版通用same函数要求dirty与编辑前相同属于错误oracle，删除该相等要求，仍保留after saveDisabled=false明确断言。两个PNG摘要不相等继续未决，不降级为相等。",
+  "original_case_mapping": [
+    "MVP-UI-04 DEV stub only, real permissions NOT_RUN",
+    "MVP-UI-08 business/network failure local injected transport",
+    "MVP-UI-09 duplicate busy, DEV revoke and target filter edit after actual delayed HTTP",
+    "MVP-UI-12 stable cancel; other confirm race cases NOT_RUN",
+    "MVP-UI-13/14 actual one recovery pair save/findById+stable indicator500, not49types"
+  ],
+  "limitations": [
+    "所有截图和DOM记录是Builder操作，尚非独立runtime；8场景不是8项完整AC通过；network与stale两场景的indicator PNG摘要不相等，原图未保存仅有摘要，不能复原差异，也不能宣称像素画面完全保留",
+    "业务错误/网络失败/响应延期为当前浏览器局部故障注入，无全局服务端改动；DEV permission unknown/deny/revoke均不是实际鉴权",
+    "首个cancel快照dirty曾改变，不能归因为取消副作用；随后稳定cancel_clean不变；旧记录保留",
+    "preliminary busy/stale在实际响应前采样，verified事件才证明成功响应抵达后的保原态；原事件不倒填",
+    "business_error初次等待错误标签failed超时，实际产品outcome为failure，错误记录保留；route随后明确移除",
+    "post_failure_success_after的保存禁用状态采样早于toolbar异步收敛，不作为成功不dirty或已dirty证据；实际updateCanvas code0及findById/稳定重开另负责",
+    "raw persistence仅记录首次故障后恢复的save+find，后续基线恢复不补写冻结原始载荷",
+    "正常符号地图离开仍存在ubo异常；details/flow/heat稳定画面原缺口不因本批关闭",
+    "49/49双侧局部观察、0/49完整类型、P1 12+P2 26=38义务保持；真实权限BLOCKED/NOT_RUN，plugin安装数unknown"
+  ],
+  "final_restoration": {
+    "source": "symbolic-map500",
+    "target": "indicator500",
+    "custom_fault_routes_removed": true,
+    "held_routes": 0,
+    "actual_state": {
+      "diag": {
+        "source": {
+          "tree": {
+            "logic": "and",
+            "items": [
+              {
+                "enumValue": [],
+                "fieldId": "1793083721146",
+                "filterType": "logic",
+                "filterTypeTime": "dateValue",
+                "dynamicTimeSetting": {
+                  "relativeToCurrent": null,
+                  "timeGranularity": null,
+                  "timeNum": null,
+                  "relativeToCurrentType": null,
+                  "around": null,
+                  "arbitraryTime": null
+                },
+                "term": "gt",
+                "timeType": "year",
+                "value": "500",
+                "type": "item",
+                "subTree": null
+              },
+              {
+                "enumValue": [],
+                "fieldId": "",
+                "filterType": "",
+                "term": "",
+                "timeType": "year",
+                "type": "tree",
+                "value": "",
+                "filterTypeTime": "dateValue",
+                "timeValue": "",
+                "dynamicTimeSetting": {},
+                "subTree": {
+                  "logic": "or",
+                  "items": [
+                    {
+                      "enumValue": [
+                        "果元店",
+                        "南都店",
+                        "香橙店",
+                        "乐园店",
+                        "红叶店",
+                        "水围店"
+                      ],
+                      "fieldId": "1793083721149",
+                      "filterType": "enum",
+                      "filterTypeTime": "dateValue",
+                      "dynamicTimeSetting": {
+                        "relativeToCurrent": null,
+                        "timeGranularity": null,
+                        "timeNum": null,
+                        "relativeToCurrentType": null,
+                        "around": null,
+                        "arbitraryTime": null
+                      },
+                      "term": "",
+                      "timeType": "year",
+                      "value": null,
+                      "type": "item",
+                      "subTree": null
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "ownKeys": {
+            "$": [
+              "logic",
+              "items"
+            ],
+            "$.items": [
+              "0",
+              "1"
+            ],
+            "$.items.0": [
+              "enumValue",
+              "fieldId",
+              "timeValue",
+              "filterType",
+              "filterTypeTime",
+              "dynamicTimeSetting",
+              "term",
+              "timeType",
+              "value",
+              "type",
+              "subTree"
+            ],
+            "$.items.0.enumValue": [],
+            "$.items.0.dynamicTimeSetting": [
+              "relativeToCurrent",
+              "timeGranularity",
+              "timeNum",
+              "relativeToCurrentType",
+              "around",
+              "arbitraryTime"
+            ],
+            "$.items.1": [
+              "enumValue",
+              "fieldId",
+              "filterType",
+              "term",
+              "timeType",
+              "type",
+              "value",
+              "filterTypeTime",
+              "timeValue",
+              "dynamicTimeSetting",
+              "subTree"
+            ],
+            "$.items.1.enumValue": [],
+            "$.items.1.dynamicTimeSetting": [],
+            "$.items.1.subTree": [
+              "logic",
+              "items"
+            ],
+            "$.items.1.subTree.items": [
+              "0"
+            ],
+            "$.items.1.subTree.items.0": [
+              "enumValue",
+              "fieldId",
+              "timeValue",
+              "filterType",
+              "filterTypeTime",
+              "dynamicTimeSetting",
+              "term",
+              "timeType",
+              "value",
+              "type",
+              "subTree"
+            ],
+            "$.items.1.subTree.items.0.enumValue": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "$.items.1.subTree.items.0.dynamicTimeSetting": [
+              "relativeToCurrent",
+              "timeGranularity",
+              "timeNum",
+              "relativeToCurrentType",
+              "around",
+              "arbitraryTime"
+            ]
+          },
+          "undefinedPaths": [
+            "$.items.0.timeValue",
+            "$.items.1.subTree.items.0.timeValue"
+          ]
+        },
+        "clipboard": {
+          "tree": {
+            "logic": "and",
+            "items": [
+              {
+                "type": "item",
+                "fieldId": "1793083721146",
+                "field": null,
+                "filterType": "logic",
+                "term": "gt",
+                "value": "500",
+                "enumValue": [],
+                "filterTypeTime": "dateValue",
+                "dynamicTimeSetting": {
+                  "relativeToCurrent": null,
+                  "timeGranularity": null,
+                  "timeNum": null,
+                  "relativeToCurrentType": null,
+                  "around": null,
+                  "arbitraryTime": null
+                },
+                "timeType": "year",
+                "subTree": null,
+                "valueType": null
+              },
+              {
+                "type": "tree",
+                "fieldId": null,
+                "field": null,
+                "filterType": "",
+                "term": "",
+                "value": "",
+                "enumValue": [],
+                "filterTypeTime": "dateValue",
+                "dynamicTimeSetting": {
+                  "relativeToCurrent": null,
+                  "timeGranularity": null,
+                  "timeNum": null,
+                  "relativeToCurrentType": null,
+                  "around": null,
+                  "arbitraryTime": null
+                },
+                "timeType": "year",
+                "subTree": {
+                  "logic": "or",
+                  "items": [
+                    {
+                      "type": "item",
+                      "fieldId": "1793083721149",
+                      "field": null,
+                      "filterType": "enum",
+                      "term": "",
+                      "value": null,
+                      "enumValue": [
+                        "果元店",
+                        "南都店",
+                        "香橙店",
+                        "乐园店",
+                        "红叶店",
+                        "水围店"
+                      ],
+                      "filterTypeTime": "dateValue",
+                      "dynamicTimeSetting": {
+                        "relativeToCurrent": null,
+                        "timeGranularity": null,
+                        "timeNum": null,
+                        "relativeToCurrentType": null,
+                        "around": null,
+                        "arbitraryTime": null
+                      },
+                      "timeType": "year",
+                      "subTree": null,
+                      "valueType": null
+                    }
+                  ]
+                },
+                "valueType": null
+              }
+            ]
+          },
+          "ownKeys": {
+            "$": [
+              "logic",
+              "items"
+            ],
+            "$.items": [
+              "0",
+              "1"
+            ],
+            "$.items.0": [
+              "type",
+              "fieldId",
+              "field",
+              "filterType",
+              "term",
+              "value",
+              "enumValue",
+              "filterTypeTime",
+              "dynamicTimeSetting",
+              "timeType",
+              "subTree",
+              "valueType"
+            ],
+            "$.items.0.enumValue": [],
+            "$.items.0.dynamicTimeSetting": [
+              "relativeToCurrent",
+              "timeGranularity",
+              "timeNum",
+              "relativeToCurrentType",
+              "around",
+              "arbitraryTime"
+            ],
+            "$.items.1": [
+              "type",
+              "fieldId",
+              "field",
+              "filterType",
+              "term",
+              "value",
+              "enumValue",
+              "filterTypeTime",
+              "dynamicTimeSetting",
+              "timeType",
+              "subTree",
+              "valueType"
+            ],
+            "$.items.1.enumValue": [],
+            "$.items.1.dynamicTimeSetting": [
+              "relativeToCurrent",
+              "timeGranularity",
+              "timeNum",
+              "relativeToCurrentType",
+              "around",
+              "arbitraryTime"
+            ],
+            "$.items.1.subTree": [
+              "logic",
+              "items"
+            ],
+            "$.items.1.subTree.items": [
+              "0"
+            ],
+            "$.items.1.subTree.items.0": [
+              "type",
+              "fieldId",
+              "field",
+              "filterType",
+              "term",
+              "value",
+              "enumValue",
+              "filterTypeTime",
+              "dynamicTimeSetting",
+              "timeType",
+              "subTree",
+              "valueType"
+            ],
+            "$.items.1.subTree.items.0.enumValue": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "$.items.1.subTree.items.0.dynamicTimeSetting": [
+              "relativeToCurrent",
+              "timeGranularity",
+              "timeNum",
+              "relativeToCurrentType",
+              "around",
+              "arbitraryTime"
+            ]
+          },
+          "undefinedPaths": [],
+          "tableId": "1312472054565572608",
+          "createdAt": 2613118.800000012,
+          "revision": 8
+        },
+        "session": {
+          "identityEpoch": 13,
+          "editSessionId": 13,
+          "revision": 8
+        },
+        "fieldsReady": true,
+        "copyReason": null,
+        "pasteReason": null,
+        "queryObservation": {
+          "targetId": "7520752064427724800",
+          "operationId": 2,
+          "logicalGetDataCalls": 1,
+          "counterScope": "logical_getData_calls_not_physical_HTTP",
+          "queryPlan": "queried",
+          "request": {
+            "id": "7520752064427724800",
+            "type": "indicator",
+            "render": "custom",
+            "tableId": "1312472054565572608",
+            "customFilter": {
+              "logic": "and",
+              "items": [
+                {
+                  "type": "item",
+                  "fieldId": "1793083721146",
+                  "field": null,
+                  "filterType": "logic",
+                  "term": "gt",
+                  "value": "500",
+                  "enumValue": [],
+                  "filterTypeTime": "dateValue",
+                  "dynamicTimeSetting": {
+                    "relativeToCurrent": null,
+                    "timeGranularity": null,
+                    "timeNum": null,
+                    "relativeToCurrentType": null,
+                    "around": null,
+                    "arbitraryTime": null
+                  },
+                  "timeType": "year",
+                  "subTree": null,
+                  "valueType": null
+                },
+                {
+                  "type": "tree",
+                  "fieldId": null,
+                  "field": null,
+                  "filterType": "",
+                  "term": "",
+                  "value": "",
+                  "enumValue": [],
+                  "filterTypeTime": "dateValue",
+                  "dynamicTimeSetting": {
+                    "relativeToCurrent": null,
+                    "timeGranularity": null,
+                    "timeNum": null,
+                    "relativeToCurrentType": null,
+                    "around": null,
+                    "arbitraryTime": null
+                  },
+                  "timeType": "year",
+                  "subTree": {
+                    "logic": "or",
+                    "items": [
+                      {
+                        "type": "item",
+                        "fieldId": "1793083721149",
+                        "field": null,
+                        "filterType": "enum",
+                        "term": "",
+                        "value": null,
+                        "enumValue": [
+                          "果元店",
+                          "南都店",
+                          "香橙店",
+                          "乐园店",
+                          "红叶店",
+                          "水围店"
+                        ],
+                        "filterTypeTime": "dateValue",
+                        "dynamicTimeSetting": {
+                          "relativeToCurrent": null,
+                          "timeGranularity": null,
+                          "timeNum": null,
+                          "relativeToCurrentType": null,
+                          "around": null,
+                          "arbitraryTime": null
+                        },
+                        "timeType": "year",
+                        "subTree": null,
+                        "valueType": null
+                      }
+                    ]
+                  },
+                  "valueType": null
+                }
+              ]
+            }
+          },
+          "responseData": null,
+          "outcome": "failure",
+          "reason": "paste_stale"
+        }
+      },
+      "indicator": "5,093",
+      "saveDisabled": true,
+      "indicatorPngSha256": "6787c2a207846f28ca4189adb3ddcbd82c3039aa69671d867aa9907f39e82500"
+    },
+    "basis": "正常UI恢复/更新/必要时保存，不写Store或直接改数据库"
+  },
+  "next": "独立审查8场景全部证据与失败时点；继续原P1稳定画面与保存/失败完整矩阵，并精确追踪symbolic details查询语义，不默认扩大通用生命周期框架"
+}

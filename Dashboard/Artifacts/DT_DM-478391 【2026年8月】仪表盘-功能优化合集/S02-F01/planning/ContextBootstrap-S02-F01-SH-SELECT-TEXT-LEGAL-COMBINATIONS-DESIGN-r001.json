@@ -1,0 +1,390 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续 DE-S02-F01：针对SH-SELECT-TEXT识别能由当前源码证据支持的合法组合、来源阶段和fixture/oracle；未知组合明确NOT_READY并列出所需来源。只写指定候选设计与Cases，不改产品源码或既有冻结合同，不运行产品，不解除S01或真实权限阻塞。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "把现有全形态候选中SH-SELECT-TEXT可证部分细化为组合/fixture候选，保留未决项和原分母。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceLegalCombinations-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceLegalCombinationsCases-r001.json"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、Goal、CoverageMatrix和既有Cases/Contracts",
+      "将候选/NOT_READY提升为产品合同或准入",
+      "模拟真实权限或产品行为作为验收",
+      "缩小10/26/16分母或改写S01/权限状态"
+    ],
+    "maximum_claim": "仅形成SH-SELECT-TEXT组合与局部fixture/oracle候选；不代表Design Freeze、产品实现或AC验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CompatibilityMatrix.md",
+      "revision": "842db1cd39c359a95a34411cd4da1558015fa4ddeedf476732e0f256a58b0cea",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r001.md",
+      "revision": "55151a44c4d8ff2eed5893bda071e2c6e3d1ee69d8f0547ad2777e35d75fdc67",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeCases-r001.json",
+      "revision": "a68a4bf534b3986d354005d78a3cfa92c824bb52d94b17f76e4f83cb8549c226",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r003.md",
+      "revision": "67251797198a725662920aed1fe29a4767c94a492e76b8d32452cc547a815f9f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r003.json",
+      "revision": "64c2b0b03ef720de5c62353d183edf262a2db68f096d6ee1f1c0338c07eee960",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r003.md",
+      "revision": "32432d6647dde7728eb9bd655f9c5caca752d0e828bcf5c22210843152d8a379",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceHarness-Validation-r001.md",
+      "revision": "68fb2f20220df9bf5f857008395fa26076d9ba2b5d1224e33698aa3baf2972bb",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "ff9c8079d4cfadebbd6d6b8eee261e0561b2425e824460c182c573aee331f69f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r291.json",
+      "revision": "21e1e631951343382f2797701df8ba22717a7d8b331172b835246312d3894fc7",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "SH-SELECT-TEXT legal-combination and fixture/oracle refinement",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LEGAL-COMBINATION-DESIGN-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_gap",
+      "condition": "所需owner或源码行为无法由required-read证明",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "保留NOT_READY并指明最小待补来源",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "authority_drift",
+      "condition": "Goal、S01、真实权限或分母发生变化",
+      "mode": "deterministic",
+      "action": "停止并保留原分母/claim ceiling",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal10项AC/26项must-have/16项产品义务与Scope Delta none不变；S01仍CONDITIONAL，真实权限BLOCKED/NOT_RUN；未知组合保留NOT_READY。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single-agent design lane",
+    "reason": "仅产出候选设计/fixture，不触碰产品代码；高语义风险通过精确源码读集与NOT_READY边界控制。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "来源代码与既有候选的逐项差异",
+    "候选cases与各自before/expected/唯一oracle",
+    "变体合法性证据及NOT_READY待补项",
+    "完整分母、S01和权限claim ceiling"
+  ]
+}

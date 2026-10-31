@@ -1,0 +1,1308 @@
+{
+  "schema_version": "s02_mvp_direct_ui_cases_v1",
+  "artifact_id": "S02-MVP-UI-CASES-r002",
+  "revision_round": "2/3",
+  "status": "DESIGN_CANDIDATE_NOT_RUN",
+  "language": "zh-CN",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+    "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+    "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+    "scope_delta": "人类明确批准开发环境权限桩下全部受支持图表基本MVP；通用工程迁后续"
+  },
+  "bindings": {
+    "card_sha256": "8a9c9620a2b025859f2fb93a1d563fe2fde56026cc8130bce3815c83367e6ec9",
+    "context_raw_sha256": "b14eaf7c1c1586615c3f6b80abff5d5536f811d7e80ce94313b4425735549532",
+    "inventory": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SupportedCharts.json",
+      "sha256": "163edf6b7f0a03f99256d02bb10f77c993847513f953a3e4fc743d0500c8dec4"
+    },
+    "design": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "sha256": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468"
+    },
+    "previous_cases": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r001.json",
+      "sha256": "cdc9eb077f3651c2fa0f810de08f7ec85a1ba7a2ec3a5f66661cd90859f8750e"
+    },
+    "reviews": [
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r001.md",
+        "sha256": "670549656ea584b74b77af77638ec3717d68281f37a4e3ed2e6bb7c1e993fd03"
+      },
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r001-supplement.md",
+        "sha256": "7a5336f925176e3c12c32d33772927d5e42f676b7bd90d96c52ceed834ab836e"
+      }
+    ],
+    "sql_oracle": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/TwoConditionSqlOracle-r001.json",
+      "sha256": "a2b0b6834b4e53c6465cf6a60e050dfc8ccbcc037c9f233d7c9a51edb41c5506"
+    }
+  },
+  "claim_ceiling": "r002可执行合同候选；15主ID保留，必要subcase为组件故障设计，未由本lane执行；A/B既有实现/运行事实由其原证据负责，不改为NOT_RUN或回退；每eligible type真实E2E仍待逐项",
+  "fixtures": {
+    "persisted_source": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionPersisted-r001.json",
+      "sha256": "2832b27bb94e5d5435800ef390993b2781f97968d65fbe554f83acfca8ea9cbc",
+      "tree_pointer": "/rows/0/customFilter",
+      "field_metadata_pointer": "/fields",
+      "empty_target_pointers": [
+        "/rows/1/customFilter",
+        "/rows/2/customFilter"
+      ],
+      "scope": "真实DB持久样本，不能冒充RowAuth前传输输出"
+    },
+    "ui_visible": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionSample-r001.json",
+      "sha256": "082a3edf400e14ae2a64b360685aee65f1ca7cc0af8cc2694f7f16235ad89353",
+      "scope": "AX仅证明显示语义，不是serializer JSON"
+    },
+    "persisted_source_and_ui_runtime_capture": {
+      "persisted_ref": "persisted_source",
+      "runtime_capture_status": "PENDING",
+      "required": [
+        "真实FilterTree filter-data/view.customFilter",
+        "递归ownKeys与undefinedPaths",
+        "真实getData传输JSON",
+        "真实canvas save/findById tree JSON"
+      ],
+      "not_allowed": "从AX或DB树猜造前传输own-key/undefined golden"
+    },
+    "component_C1": {
+      "kind": "explicit_synthetic_component_fixture_not_runtime_golden",
+      "constructor": "导入当前BASE_VIEW_CONFIG并cloneDeep；用SQL oracle.results.actual_chart_axes中对应type的JSON轴覆盖BASE；source树仅从persisted_source读取；标记synthetic，不倒填真实DTO",
+      "target_ids": {
+        "line": "7518826617452367872",
+        "table-info": "7518830600032096256",
+        "indicator": "mvp-component-indicator"
+      },
+      "view_overrides": {
+        "id": "按target_ids选",
+        "render": "antv（indicator为custom）",
+        "type": "line/table-info/indicator",
+        "tableId": "985189703189925888",
+        "customFilter": {
+          "logic": null,
+          "items": null
+        },
+        "calParams": [
+          {
+            "id": "keep",
+            "value": "old-kept"
+          },
+          {
+            "id": "zero",
+            "value": 0
+          }
+        ]
+      },
+      "element": {
+        "id": "与target一致",
+        "component": "UserView",
+        "innerType": "按现component-list的合法chart元素取；不能把图片组送通用Editor",
+        "style": {
+          "width": 640,
+          "height": 360
+        },
+        "propValue": {},
+        "actionSelection": {
+          "linkageActive": "auto"
+        },
+        "dashboardHidden": false,
+        "linkageFilters": [],
+        "outerParamsFilters": [],
+        "webParamsFilters": []
+      },
+      "request_context": {
+        "user": "component-user",
+        "filter": [],
+        "linkageFilters": [],
+        "outerParamsFilters": [],
+        "webParamsFilters": [],
+        "drill": [],
+        "resultCount": 1000,
+        "resultMode": "all"
+      },
+      "response_constructor": "{...clone(targetView), customFilter:clone(persisted_source.tree), data:branchData, drill:false, drillFilters:[], chartExtRequest:clone(requestContext), totalItems:1, calParams:[{id:keep,value:server},{id:zero,value:server-zero}]}",
+      "branchData": {
+        "g2": {
+          "data": [
+            {
+              "field": "synthetic-shop",
+              "value": 301,
+              "name": "amount"
+            }
+          ],
+          "fields": [],
+          "sourceFields": []
+        },
+        "s2": {
+          "data": [],
+          "fields": [],
+          "tableRow": [
+            {
+              "synthetic-column": "candidate"
+            }
+          ]
+        },
+        "indicator": {
+          "fields": [],
+          "series": [
+            {
+              "name": "amount",
+              "data": [
+                6761
+              ]
+            }
+          ]
+        }
+      },
+      "data_boundary": "B的ok.value为response_constructor整个DTO；G2/S2/indicator消费response.data，不再解envelope。synthetic.fields仅用于组件故障；真实browser必须从真实DTO取得fields/values。空态子案显式把G2 data.data置[]或S2 data/tableRow均[]；不能用空态fixture触发draw失败案",
+      "environment": {
+        "DEV": true,
+        "VITE_FILTER_COPY_DEV_VALIDATION": "true",
+        "permission": "allow",
+        "identity": "known opaque session，敏感值不输出",
+        "editMode": "edit",
+        "resource": "1310568323901165568",
+        "showPosition": "canvas",
+        "scale": 1,
+        "terminal": "pc",
+        "fontFamily": "inherit",
+        "nodeSize": [
+          640,
+          360
+        ]
+      },
+      "setup_order": [
+        "初始化独立Pinia/current target和已解析目录，两字段取DB fixture",
+        "真实挂载wrapper/Editor与该真实renderer SFC；非相关服务可stub，候选消费链不能stub",
+        "先完成old active渲染并capture下述独立投影",
+        "A真实copy建立clip，固定performance.now=1000",
+        "发paste；deferred B query返回上方synthetic DTO；推进各真实timer/queue/renderer入口"
+      ],
+      "library_fault_seam": "只在component harness替换chartViewManager.getChartView返回的相应drawChart/afterRender或其返回实例render/error等；actual SFC的prepareFilterPaste/render分支与wrapper/publish不替换。test double补齐实际调用所需methods，若TypeError/编译/module失败，execution_error而非契约RED。browser不替换library/getData结果"
+    },
+    "independent_old_projection": {
+      "capture_time": "old active首次渲染完成后、paste发出前，除map基础设施预热已完成",
+      "literal_sentinels": {
+        "details": {
+          "marker": "OLD_DETAILS"
+        },
+        "origin": {
+          "marker": "OLD_ORIGIN"
+        },
+        "lastRequest": {
+          "marker": "OLD_REQUEST"
+        },
+        "purecanvas": {
+          "marker": "OLD_PURE"
+        },
+        "page": {
+          "currentPage": 3,
+          "pageSize": 20,
+          "total": 888
+        },
+        "appearance_currentFont": "OldFont",
+        "oldParagraph": "<p data-old-paragraph=\"true\" onclick=\"oldClick()\">OLD_ACTIVE</p>"
+      },
+      "record": [
+        "Reflect ownKeys+undefinedPaths of canonical view/element/filter",
+        "dv.canvasViewDataInfo[targetId]（真实details getter层）",
+        "dv.canvasViewOriginDataInfo[targetId]",
+        "dv.lastViewRequestInfo[targetId]",
+        "dv.pureCanvasViewDataInfo[targetId]",
+        "canonical pageInfo/calParams/curFields",
+        "dv.canvasViewInstanceInfo[targetId] identity",
+        "wrapper drillFilters/chartExtRequest",
+        "old active DOM identity/text/outerHTML+library instance identity/destroy counter",
+        "snapshotCacheTimes/cacheViewIdInfo.snapshotCacheViewCalc/render、dirty",
+        "业务emitter累计事件名和参数及query dispatch count"
+      ],
+      "oracle": "测试直接从Store/DOM/实例capture，与prepare前对象比较，禁止调用被测projection/helper重算expected；failed candidate除query dispatch记录保留外，所有target投影深等且old instance未destroy/remove/repaint；appearance/old及无关paragraph额外比较",
+      "post_success": "callee setViewDataDetails实际.data+calParams truthy merge、origin/pure/page/instance按Design表分别断言；snapshot calcData目标ID一次，不把普通changeFilter算等价"
+    },
+    "deferred_events": {
+      "query": "显式deferred Promise，只有call getData发生后才resolve/reject",
+      "g2": "advance 300ms timer + flush队列；draw/render/afterRender三个可分别defer/reject",
+      "s2": "advance 500ms debounce；在render调用前挂layout；render Promise与LAYOUT_AFTER_RENDER独立defer；节点须connected",
+      "indicator": "Vue nextTick+局部error boundary；检查实际node内6761或合法-",
+      "map": "先cold prewarm成功再old capture；scene loaded、每个layer inited、plot loaded、dot add/loaded各独立deferred；桥已注册再触发",
+      "tinymce": "先注册init/content/error；editor init deferred，之后SetContent同步/异步各一variant；1秒paragraph timer可推进并在discard后检查",
+      "picture": "src写入前load/error订阅；load/decode deferred；static分支0query"
+    }
+  },
+  "comparison_policy": {
+    "runtime": "deep equality + own-key presence + undefined paths，不经JSON归一化",
+    "transport_persisted": "比较实际JSON语义，preserve null/empty；只允许观察到的undefined对象键省略",
+    "no_partial_tree": "所有叶子/分组/字段全量，失败整包拒绝；不允许只比较首leaf"
+  },
+  "old_state_oracle": [
+    "target view.customFilter完整对象",
+    "target view/element非过滤配置",
+    "可见active DOM/instance/数据画面",
+    "details/origin/lastRequest/purecanvas/page/instance/drill等既有分支metadata",
+    "snapshot/dirty",
+    "全局业务emit与query计数"
+  ],
+  "forbidden_collapses": [
+    "API fulfilled=业务成功",
+    "render fulfilled/callback/finally=render成功",
+    "UI截图=完整树保真",
+    "DB JSON=UI serializer前传输对象",
+    "family代表通过=49types通过",
+    "2401兼容规则=2401 E2E",
+    "开发桩allow=真实权限验收",
+    "旧图失败后回画=准备成功再采用",
+    "prepare后再次query=已准备结果消费",
+    "静态cases=执行证据"
+  ],
+  "case_count": 15,
+  "cases": [
+    {
+      "id": "MVP-UI-01",
+      "title": "真实Editor专用按钮可信RED",
+      "level": "真实SFC/浏览器组件",
+      "status": "NOT_RUN",
+      "setup": [
+        "成功打开现有编辑路由并选中source图表；Editor/结果过滤子树真实挂载；非相关icon/router可stub，不能stub被断言区域"
+      ],
+      "actions": [
+        "断言既有“过滤”按钮可见",
+        "对结果过滤区域执行getByRole(button,name=复制过滤条件/粘贴过滤条件)及稳定testid数量断言"
+      ],
+      "expect": {
+        "baseline": "expect 2专用按钮，actual 0；仅此组件断言失败为可信RED",
+        "green": "同一case identity下两按钮真实存在；空target的copy禁用；不以新增module缺失/编译错/依赖错误作RED"
+      },
+      "baseline_failure_fingerprint": {
+        "case": "MVP-UI-01",
+        "assertion": "专用复制/粘贴按钮数量",
+        "expected": 2,
+        "actual": 0
+      },
+      "query_calls": 0,
+      "external_history": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MVP-UI-01-red-r001.json",
+        "meaning": "root既有按钮RED，不由本lane重跑；不充当C子caseRED"
+      }
+    },
+    {
+      "id": "MVP-UI-02",
+      "title": "完整持久两条件复制与失败保留上次clip",
+      "level": "真实Editor+内存服务",
+      "status": "NOT_RUN",
+      "setup": [
+        "使用DB golden rows[0].customFilter及fields；user/dataset/source读权限显式allow；同页编辑会话已解析"
+      ],
+      "actions": [
+        "点击copy，再切target",
+        "用先前source对象的深层值改动检验clip非别名",
+        "再次copy空源/动态结构/权限unknown，检验旧clip仍在"
+      ],
+      "expect": {
+        "success": "完整deep clone所有group/leaf/enum/and/or/value/type/field:null/valueType:null/dynamicTimeSetting六null键；不新增timeValue",
+        "failed_copy": "旧clipRevision/创建时间/tree不变，无query，无target变更",
+        "exclusions": "clip不含style/axis/results/token/proxySecret；source的后续修改不污染clip"
+      },
+      "fixture": "persisted_source",
+      "query_calls": 0
+    },
+    {
+      "id": "MVP-UI-03",
+      "title": "单调TTL与同页会话清除",
+      "level": "真实服务+Editor生命周期",
+      "status": "NOT_RUN",
+      "setup": [
+        "旧clip在known identity/editSession内创建；注入单调now只用于组件测试"
+      ],
+      "actions": [
+        "分别令age=1799999、1800000、负值、NaN；操作paste guard",
+        "执行普通数据刷新",
+        "执行退出编辑/切资源/user.clear/clearCache/uid或oid或登录session或proxy身份变化/页面reload"
+      ],
+      "expect": {
+        "ttl": "1799999有效，1800000及异常无效，拒绝不query；复制新clip重置计时",
+        "data_refresh": "clip保留",
+        "clear_paths": "所有清除路径立即清clip并invalidate pending operation；clear仅删cache仍被检出；reload内存为空"
+      },
+      "query_calls_for_guards": 0
+    },
+    {
+      "id": "MVP-UI-04",
+      "title": "权限三态和未知identity不能旁路",
+      "level": "真实按钮与权限adapter",
+      "status": "NOT_RUN",
+      "setup": [
+        "DEV与显式验证flag开；对每一read-source/read-dataset/edit-target权限维度参数化allow/deny/unknown"
+      ],
+      "actions": [
+        "依次copy/paste；allow时把uid/oid/session缺失或cache已清空再试",
+        "准备中把权限改deny再完成response/preview"
+      ],
+      "expect": {
+        "allow": "只有全部所需permission=allow且identity已解析才允许开始",
+        "deny_unknown": "按钮有原因、无query无dirty无Store写无成功提示",
+        "identity_unknown": "即使permission=allow也拒绝",
+        "revoked": "提交前重检拒绝，旧tree/data/画面保留"
+      },
+      "matrix": {
+        "permission": [
+          "allow",
+          "deny",
+          "unknown"
+        ],
+        "identity": [
+          "known",
+          "unknown"
+        ],
+        "phase": [
+          "start",
+          "before_publish"
+        ]
+      }
+    },
+    {
+      "id": "MVP-UI-05",
+      "title": "同数据集和完整字段目录兼容",
+      "level": "实际Editor字段接口/组件",
+      "status": "NOT_RUN",
+      "setup": [
+        "source fixture引用真实dataset及两个field；target完整目录已解析；与axis独立"
+      ],
+      "actions": [
+        "参数化dataset不等/缺失、字段同名不同ID、字段缺失、deType变化、count/-1、不可用chart计算字段、目录loading/error",
+        "合法target不选amount/shop轴但目录含二字段时尝试",
+        "picture-group显式加载既有字段目录再试"
+      ],
+      "expect": {
+        "invalid": "整包拒绝；不按name或axis推测；query=0/旧target不变",
+        "valid": "两个fieldID/type完全一致才eligible，Long保持字符串",
+        "picture_group": "必须从实际Attr入口选择并用type:table-info纯getFieldByDQ，目录请求前后axis/config/dirty不变；不能调用onDatasetUpdate；目录不可得明确失败但type仍未完成"
+      },
+      "fixture": "persisted_source"
+    },
+    {
+      "id": "MVP-UI-06",
+      "title": "静态结构保真和复杂形态显式拒绝",
+      "level": "真实serializer+guard",
+      "status": "NOT_RUN",
+      "setup": [
+        "真实DB持久树可直接运行；另从RowAuth捕获提交对象并记录ownKeys/undefinedPaths"
+      ],
+      "actions": [
+        "copy/paste合法nested and/or、逻辑/枚举/静态日期",
+        "参数化active dynamicDate、系统参数、空组、未知非兼容键、畸形subTree",
+        "比较缺键/undefined/null/空串/[]/{}；对field:null/valueType:null及六null动态占位验证可接受"
+      ],
+      "expect": {
+        "valid": "完整clone不损失键和值；不通过dfsInit再造树",
+        "invalid": "整包拒绝且失败copy保旧clip，失败paste保旧target",
+        "boundary": "运行态own-key保真与真实query/save JSON边界分开判；不能只stringify比较"
+      },
+      "fixture": "persisted_source_and_ui_runtime_capture"
+    },
+    {
+      "id": "MVP-UI-07",
+      "title": "49种type作为source与target的共同接线分母",
+      "level": "实际SFC/字段请求组件矩阵",
+      "status": "NOT_RUN",
+      "setup": [
+        "枚举绑定SupportedCharts.json.charts中的49 type；每type构造合法既有view/element/字段目录配置；不用只有bar-line白名单"
+      ],
+      "actions": [
+        "按SupportedCharts49 type逐项从真实宿主选中（图片组Attr、富文本合法原宿主），验证source copy与target paste",
+        "每type至少一次source与target真实UI/query/可见结果/正常save-leave-reopen；可轮转type[i]→type[(i+1)%49]，为各type配置合法轴/资产/数据oracle",
+        "49×49仅枚举同dataset静态兼容规则；12family只排序与故障复用"
+      ],
+      "expect": {
+        "counts": {
+          "source_types": 49,
+          "target_types": 49,
+          "static_rule_pairs": 2401
+        },
+        "routing": "49全部保持；每type缺口独立NOT_RUN/BLOCKED，不由family代表或C1首链填PASS；installed未知plugin不填0，确认应支持后显式追加",
+        "limits": "2401是兼容规则检查，非2401次E2E；未知plugin明确拒绝且installed_count保持null；每type状态独立记录"
+      },
+      "type_ids": [
+        "area",
+        "area-stack",
+        "bar",
+        "bar-group",
+        "bar-group-stack",
+        "bar-horizontal",
+        "bar-range",
+        "bar-stack",
+        "bar-stack-horizontal",
+        "bidirectional-bar",
+        "box-plot",
+        "bubble-map",
+        "bullet-graph",
+        "chart-mix",
+        "chart-mix-dual-line",
+        "chart-mix-group",
+        "chart-mix-stack",
+        "circle-packing",
+        "flow-map",
+        "funnel",
+        "gauge",
+        "heat-map",
+        "indicator",
+        "line",
+        "liquid",
+        "map",
+        "multi-scatter",
+        "percentage-bar-stack",
+        "percentage-bar-stack-horizontal",
+        "picture-group",
+        "pie",
+        "pie-donut",
+        "pie-donut-rose",
+        "pie-rose",
+        "progress-bar",
+        "quadrant",
+        "radar",
+        "rich-text",
+        "sankey",
+        "scatter",
+        "stock-line",
+        "symbolic-map",
+        "t-heatmap",
+        "table-info",
+        "table-normal",
+        "table-pivot",
+        "treemap",
+        "waterfall",
+        "word-cloud"
+      ]
+    },
+    {
+      "id": "MVP-UI-08",
+      "title": "真实getData严格业务结果与各组件查询适配",
+      "level": "真实api wrapper组件harness/浏览器",
+      "status": "NOT_RUN",
+      "setup": [
+        "captured old target state；只在故障组件harness用deferred transport；正常E2E真实后端"
+      ],
+      "actions": [
+        "getData reportOutcome分支分别返回code非0、网络reject、code0正常DTO、code0合法空结果",
+        "分别检查stock-line/S2分页/rich-text比较/picture-group table-info适配",
+        "在候选请求前后比较传入原view/axes/tree及lastRequest/Store"
+      ],
+      "expect": {
+        "failures": "非0fulfilled仍失败；network失败保旧；query=1、候选render=0、dirty=0",
+        "success": "由envelope code0解码后标记ok，不从DTO无code推断；合法空态可成功",
+        "api_contract": "不另建axios；既有默认getData调用返回形状/解码/签名不变；传clone避免delete data污染",
+        "adapters": "严格区分needsQuery；picture threshold=false沿withInit真实静态0query、不造DTO；threshold=true+dataset为该type真实正向见证query1/type还原；其余沿现参数"
+      },
+      "subcases": [
+        {
+          "id": "MVP-UI-08-QERR",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "api/chart.ts getData(reportOutcome)→views prepare receiver",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "click paste，assert query1",
+            "独立variant resolve {code:403,msg:denied}/reject NetworkError",
+            "flush microtasks"
+          ],
+          "expected": {
+            "outcome": "失败",
+            "candidate_mounts": 0,
+            "snapshot_delta": 0,
+            "success_events": 0,
+            "old": "independent_old_projection unchanged",
+            "dispatch_log": "保留一次query"
+          },
+          "variants": [
+            "BUSINESS_NONZERO",
+            "NETWORK_REJECT"
+          ]
+        },
+        {
+          "id": "MVP-UI-08-DTO",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "views/index→actual G2/S2/indicator prepareFilterPaste",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "B真实strict分支返回ok.value=完整DTO",
+            "assert candidate consume response.data",
+            "合法空数据variant走actual空态；非空variant走library draw"
+          ],
+          "expected": {
+            "query": 1,
+            "second_query": 0,
+            "empty": "合法空态node connected且语义empty，不以缺字段/资产当empty",
+            "dto": "不多解data层，prepared DTO/原request保持独立"
+          },
+          "variants": [
+            "LINE_NONEMPTY",
+            "LINE_EMPTY",
+            "S2_NONEMPTY",
+            "S2_EMPTY",
+            "INDICATOR_VALUE",
+            "INDICATOR_EMPTY"
+          ]
+        },
+        {
+          "id": "MVP-UI-08-ADAPTER",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "views queryPlan+原SFC request分支",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "分别创建stock-line / table-info分页 / rich-text compare开启合法配置",
+            "点击paste捕获传给B clone request",
+            "返回deferred DTO，准备阶段断言canonical无写"
+          ],
+          "expected": {
+            "stock": "xAxis sort沿B现逻辑",
+            "s2": "general currentPageSize非0用其值，否则pageInfo.pageSize；非general不带pageSize",
+            "rich": "!checkCompareCalc时resultCount1/mode custom",
+            "request_context": "user/filter/linkage/outer/web/drill/resultMode/count完整"
+          },
+          "variants": [
+            "STOCK",
+            "S2_PAGE_GENERAL",
+            "S2_PAGE_OTHER",
+            "RICH_COMPARE"
+          ]
+        },
+        {
+          "id": "MVP-UI-08-PICTURE",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "picture-group实际Attr→共用服务→Component queryPlan",
+          "fixture": {
+            "base": "component_C1",
+            "override": "真实picture-group配置/urlList；两个variants阈值开关分开，开时真实dataset fields与确定threshold映射"
+          },
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "从dashboard真实选择图片组并进入Attr",
+            "纯getFieldByDQ type:table-info请求目录",
+            "paste准备静态或真实query响应、src load/decode"
+          ],
+          "expected": {
+            "host": "可见专用入口",
+            "directory": "原xAxis/config/dirty不变；没有onDatasetUpdate",
+            "OFF": "needsQuery=false,getData0,no DTO/details/lastRequest fake writes",
+            "ON": "needsQuery=true,getData1,type table-info/render antv/resultCount1，response恢复picture-group/custom",
+            "completion": "仅ON可作图片组过滤数据正向验收"
+          },
+          "variants": [
+            "THRESHOLD_OFF",
+            "THRESHOLD_ON"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MVP-UI-09",
+      "title": "busy和最小失效复核",
+      "level": "Editor+wrapper真实组件deferred query",
+      "status": "NOT_RUN",
+      "setup": [
+        "target一次paste已busy；query或preview尚未resolve"
+      ],
+      "actions": [
+        "再次点击paste",
+        "参数化切target、编辑view/element/过滤/数据集、外部query context变更、普通刷新、卸载、身份清除、新复制、TTL到期",
+        "完成旧query与旧preview ready"
+      ],
+      "expect": {
+        "duplicate": "第二次不发query，busy立即disable",
+        "stale": "旧operation不得publish；无tree/data/画面/dirty/成功提示变更；候选被丢弃",
+        "receiver": "只当前编辑receiver处理；同ID panel/移动/预览不同时接收；无receiver有限超时无query",
+        "bounds": "仅paste期间target hook；不宣称全局竞争已解决"
+      },
+      "subcases": [
+        {
+          "id": "MVP-UI-09-TARGET",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "选择另一target",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "target identity",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-CONFIG",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "只改canonical view.name一次（其余不变）；另variant axis/style单独改动",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "configGeneration/deep snapshot",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-CONTEXT",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "仅外部query condition值变化，target view/element保持不变",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "chartExtRequest",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-IDENTITY",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "仅invalidateMvpFilterSession/identity epoch变化",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "session token",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-CLIP",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "相同identity下仅成功copy新clip，使revision变化",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "clip revision",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-TTL",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "只把now推进至createdAt+1800000，其他不变",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "TTL",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-UNMOUNT",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "只unmount当前receiver",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "alive",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        },
+        {
+          "id": "MVP-UI-09-BUSY",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "Editor/composable→views receiver+最终token复核",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "第一次paste query deferred；capture operationId与单独投影",
+            "同target第二次click paste，第一仍pending",
+            "完成旧query；若已进入candidate则完成其ready；flush"
+          ],
+          "expected": {
+            "isolated_axis": "busy",
+            "expected": "BUSY时第二次query0；其它轴第一operation不publish，无成功/dirty，old active不被candidate改；target/context确有用户改动仅保留该改动",
+            "query_total": 1,
+            "guard_specificity": "必须证明未变的其它token仍等于capture；禁止同时改多轴掩盖缺失guard"
+          }
+        }
+      ]
+    },
+    {
+      "id": "MVP-UI-10",
+      "title": "候选真实渲染失败保留旧画面",
+      "level": "5个真实SFC/6入口分组故障组件harness",
+      "status": "NOT_RUN",
+      "setup": [
+        "每子案独立重置component_C1或下列map/rich/picture fixture；capture independent_old_projection；不把多故障合并后归因",
+        "候选binding stageclone，与old active真实不同DOM/suffix；库错误只在声明的真实入口注入"
+      ],
+      "actions": [
+        "G2实际draw/render/afterRender各注入一次失败；L7/L7Plot timer实际body或ready error/timeout；S2实际draw/render/layout失败；indicator内容计算异常；rich-text内容初始化错误；picture image error",
+        "各失败期间触发candidate action/tooltip/default-range/global-init/resize/timer回调，检查无对外效果",
+        "失败结束再触发迟到ready"
+      ],
+      "expect": {
+        "old_state": "old DOM/instance不被destroy/remove/repaint；完整tree/data/全部已知Store状态和可见画面保持",
+        "outcome": "显式失败；不能以timer安排/fulfilled/finally/loading callback为ok；无成功toast/dirty",
+        "candidate": "销毁已知candidate实例/DOM、解除本地timer/订阅；迟到ready永不提升",
+        "scope_limit": "不声明所有内部构造资源泄漏或全局竞态已解决；未见资源列后续Session"
+      },
+      "subcases": [
+        {
+          "id": "MVP-UI-10-G2-DRAW",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "ChartComponentG2Plot.vue prepareFilterPaste→renderG2（真实300ms+queue）",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "query ok且非空",
+            "advance timer；在DRAW精确库调用reject Error(TEST_DRAW)",
+            "flush promise/timers"
+          ],
+          "expected": {
+            "typed_failure": true,
+            "old": "完整独立投影保持，old.instance.destroy=0",
+            "dirty": 0,
+            "success": 0,
+            "candidate": "已知instance/DOM释放；resolve旧deferred仍不提升"
+          }
+        },
+        {
+          "id": "MVP-UI-10-G2-RENDER",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "ChartComponentG2Plot.vue prepareFilterPaste→renderG2（真实300ms+queue）",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "query ok且非空",
+            "advance timer；在RENDER精确库调用reject Error(TEST_RENDER)",
+            "flush promise/timers"
+          ],
+          "expected": {
+            "typed_failure": true,
+            "old": "完整独立投影保持，old.instance.destroy=0",
+            "dirty": 0,
+            "success": 0,
+            "candidate": "已知instance/DOM释放；resolve旧deferred仍不提升"
+          }
+        },
+        {
+          "id": "MVP-UI-10-G2-AFTER_RENDER",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "ChartComponentG2Plot.vue prepareFilterPaste→renderG2（真实300ms+queue）",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "query ok且非空",
+            "advance timer；在AFTER_RENDER精确库调用reject Error(TEST_AFTER_RENDER)",
+            "flush promise/timers"
+          ],
+          "expected": {
+            "typed_failure": true,
+            "old": "完整独立投影保持，old.instance.destroy=0",
+            "dirty": 0,
+            "success": 0,
+            "candidate": "已知instance/DOM释放；resolve旧deferred仍不提升"
+          }
+        },
+        {
+          "id": "MVP-UI-10-S2",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "ChartComponentS2.vue prepare→draw→render Promise/layout",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "query ok→500ms debounce",
+            "候选render Promise resolve/reject 与LAYOUT_AFTER_RENDER按variant序驱动",
+            "flush：销毁/disconnect variant即便fulfilled不准ready"
+          ],
+          "expected": {
+            "WAIT_LAYOUT": "render fulfilled但无layout仍pending，timeout失败保旧",
+            "REJECT": "render reject typed failure",
+            "LAYOUT_THEN_RESOLVE": "先layout再render完成且connected/current才ready",
+            "DISCONNECTED": "fulfilled/layout晚到均不提升",
+            "metadata": "prepare期间page/instance/purecanvas/details不变"
+          },
+          "variants": [
+            "WAIT_LAYOUT",
+            "REJECT",
+            "LAYOUT_THEN_RESOLVE",
+            "DISCONNECTED"
+          ]
+        },
+        {
+          "id": "MVP-UI-10-INDICATOR",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "DeIndicator.vue prepared data→真实computed/DOM flush",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "正常data.series[0].data[0]=6761，await Vue flush",
+            "独立error variant令render依赖getter抛Error(TEST_INDICATOR)，由实际局部error boundary捕获"
+          ],
+          "expected": {
+            "normal": "node可读6761且ready，不靠callback",
+            "error": "typed failure、旧投影/画面保持、无dirty/success"
+          },
+          "variants": [
+            "NORMAL_VALUE",
+            "VUE_RENDER_ERROR"
+          ]
+        },
+        {
+          "id": "MVP-UI-10-L7",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "G2Plot严格地图timer→各L7 drawChart→L7Wrapper opt-in renderPrepared",
+          "fixture": {
+            "kind": "synthetic_component_map_fixture_not_runtime_golden",
+            "types": [
+              "flow-map",
+              "heat-map",
+              "symbolic-map"
+            ],
+            "config": "从各实际class构造合法经纬/起终点/数据配置；scene已预热，无secret输出；each必要configList layer各自deferred inited",
+            "old": "independent_old_projection"
+          },
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "为SCENE_READY/SCENE_WAIT两variant在addLayer前注册",
+            "只触发scene loaded，断言未ready",
+            "逐layer inited并完成其mapRendered/qqMapRendered及tooltip/label必要回调，最后一个前仍未ready",
+            "独立error或30s timeout后再emit迟到inited"
+          ],
+          "expected": {
+            "ready": "只有本次全部必要layer/init配置完成且alive才ready",
+            "failure": "typed failure保旧；timeout/迟到不得提升",
+            "paths": "flow多layer/heat单layer/symbolic含label+tooltip；不向无once的Wrapper订阅"
+          },
+          "variants": [
+            "SCENE_READY",
+            "SCENE_WAIT",
+            "LAYER_ERROR",
+            "TIMEOUT_THEN_LATE"
+          ]
+        },
+        {
+          "id": "MVP-UI-10-L7PLOT",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "map.ts/bubble-map.ts/point-fallback.ts真实loaded callbacks",
+          "fixture": {
+            "kind": "synthetic_component_map_fixture_not_runtime_golden",
+            "types": [
+              "map",
+              "bubble-map"
+            ],
+            "geometry": [
+              "polygon",
+              "point-only"
+            ],
+            "old": "独立投影，map infra已预热"
+          },
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "构造前挂plot/scene error与ready桥",
+            "触发plot.loaded，map必要配置/标签first draw完成；bubble与point-only dot层尚未add/loaded时不ready",
+            "触发dot add/loaded及本地初始化完毕",
+            "独立callback throw/timeout/discard后触发迟到loaded"
+          ],
+          "expected": {
+            "map": "plot callback全部完成才ready",
+            "bubble_point": "dot必要add/loaded均完成才ready；订阅先于addToScene",
+            "failure": "保旧且无成功/dirty；缺geo/container/轴配置不能用undefined wrapper算empty"
+          },
+          "variants": [
+            "POLYGON_MAP",
+            "POLYGON_BUBBLE",
+            "POINT_MAP",
+            "POINT_BUBBLE",
+            "CALLBACK_ERROR",
+            "TIMEOUT_LATE"
+          ]
+        },
+        {
+          "id": "MVP-UI-10-TINY",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "DeRichTextView真实Editor setup/init→assignment/setContent",
+          "fixture": {
+            "kind": "component_only",
+            "view": "合法富文本+数据占位符；旧editor已init且旧p literal/appearance OldFont",
+            "candidate": "unique tinymceId、canEdit=false；私有channel",
+            "data": "表字段映射与值来自显式synthetic DTO，非真实golden"
+          },
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "candidate mount，先推进Vue nextTick，editor.init未到→不得ready",
+            "emit init；SetContent同步/异步variant，核本次editor DOM内容",
+            "触发公开fieldSelect-resource channel，candidate不能接收；assignment init/timer均不动old paragraph/appearance",
+            "error或discard后推进1000ms timer/迟到init"
+          ],
+          "expected": {
+            "ready": "真实init+本次SetContent/实际内容等值才能ready",
+            "scope": "old与无关p outerHTML/onclick及appearance均保持，局部p可安全改",
+            "failure": "local timer清除/存活guard/private channel注销，不污染active"
+          },
+          "variants": [
+            "SYNC_SETCONTENT",
+            "ASYNC_SETCONTENT",
+            "INIT_ERROR",
+            "CONTENT_ERROR",
+            "TIMEOUT_DISCARD_LATE"
+          ]
+        },
+        {
+          "id": "MVP-UI-10-PICTURE",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "picture-group/Component.vue prepare→img load/decode",
+          "fixture": {
+            "kind": "component_only",
+            "branch": "threshold=true+dataset+合法threshold图片映射",
+            "url": "组件测试本地可控image资源，真实E2E不stub",
+            "old": "独立投影"
+          },
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "真实query ok，先挂img load/error再赋src",
+            "load到达后decode仍pending→不得ready",
+            "decode resolve/reject或error/timeout；discard后触发旧load及timer"
+          ],
+          "expected": {
+            "success": "nonzero naturalWidth/decode完成或明确合法empty才ready",
+            "failure": "保旧/无dirty/success，候选timer不query/轮播；迟到不提升"
+          },
+          "variants": [
+            "LOAD_DECODE",
+            "IMAGE_ERROR",
+            "DECODE_REJECT",
+            "EMPTY_LEGAL",
+            "DISCARD_LATE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MVP-UI-11",
+      "title": "准备成功采用同一实例且不二次查询",
+      "level": "真实Editor+wrapper+各native入口",
+      "status": "NOT_RUN",
+      "setup": [
+        "同页known identity/allow；DB golden source、空target（包括持久shape logic:null/items:null）；真实query返回新结果"
+      ],
+      "actions": [
+        "copy、paste、观察prepare结束前旧active不变",
+        "候选成功且tokens一致时publish",
+        "再次普通刷新检验新active可用"
+      ],
+      "expect": {
+        "paste_counts": {
+          "queried_branch_getData": 1,
+          "static_picture_getData": 0,
+          "prepared_consume_queries": 0,
+          "snapshot_record_calcData_targetId": 1
+        },
+        "promotion": "同key/组件/DOM/instance提升；binding及props切canonical view/element引用、不query/redraw；后续普通编辑立即读取新canonical；精确setter与原分支一致；undo/redo沿现snapshot重算独立计数",
+        "preservation": "仅target customFilter和相应数据派生状态变化，样式/轴/ID不来自source",
+        "refresh": "独立的用户刷新正常发原流程query；clip/tree不丢；不把该query计为paste重复请求"
+      },
+      "subcases": [
+        {
+          "id": "MVP-UI-11-PUBLISH",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "views/index 同步publish+native SFC shared binding",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "query1→candidate严格ready→最终tokens一致",
+            "执行publish同步段",
+            "flush Vue patch；比较prepare前ready nodeKey/DOM/instance"
+          ],
+          "expected": {
+            "same": "key/DOM/实例均同一；draw次数不增加/query总数1",
+            "inputs": "binding.current及实际props切canonical引用，patch前闭包也读取binding canonical",
+            "metadata": "细查下一个子案列表，不只tree",
+            "snapshot": "recordSnapshotCache(calcData,targetId)一次且cacheViewCalc含该ID",
+            "self_write_guard": "仅同步publishOperationId标记防自有tree/metadata写触发失效；finally清；之后用户编辑仍能正常触发，不能宽泛静默watch"
+          }
+        },
+        {
+          "id": "MVP-UI-11-METADATA",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "dvMain真实setter与wrapper refs",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "premerge独立DTO，prepare阶段抓setter spy调用数0",
+            "按G2/S2/indicator三个独立variant publish",
+            "逐个从真实Store读值，不用被测helper算expected"
+          ],
+          "expected": {
+            "common": "chartExtRequest与lastRequest=prepared request；canvasViewDataInfo=DTO.data；calParams keep=old-kept、zero=server-zero（保现truthy行为）",
+            "G2": "!drill且无linkage才origin=chartData并发一次chart-data-change；drillFilters本地更新；无额外S2 instance写",
+            "S2": "!drill才purecanvas=DTO.data；pageInfo prepared、instance=新S2；currentPageSize保留；无origin写",
+            "INDICATOR": "details/calParams/drillFilters；origin/pure/page/instance旧值保持",
+            "forbidden": "shared setter不出现在prepare；不可无分支批量写所有metadata"
+          },
+          "variants": [
+            "G2_ORIGIN",
+            "G2_NO_ORIGIN_DRILL",
+            "G2_NO_ORIGIN_LINKAGE",
+            "S2_PURE",
+            "S2_DRILL",
+            "INDICATOR"
+          ]
+        },
+        {
+          "id": "MVP-UI-11-CANONICAL",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "同实例激活后的真实action/分页/Editor更新",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "成功publish后保持同node/instance",
+            "只修改canonical实际axis label/style/过滤输入（逐variant独立）",
+            "从当前active触发正常render/分页/交互，观察使用最新输入；不得重新读stageclone"
+          ],
+          "expected": {
+            "read": "新canonical输入被真实closure/computed读取，source样式不被带入",
+            "counts": "首次paste仍query1；后续编辑/刷新按原产品类别单独计数",
+            "identity": "不能用强制remount解决过期props"
+          },
+          "variants": [
+            "AXIS_EDIT",
+            "STYLE_EDIT",
+            "FILTER_EDIT",
+            "S2_PAGE_ACTION"
+          ]
+        },
+        {
+          "id": "MVP-UI-11-UNDOREDO",
+          "status": "DESIGN_NOT_RUN",
+          "real_entry": "snapshot真实历史/undo/redo→snapshotChangeToView→calcData",
+          "fixture": "component_C1",
+          "reset": "独立mount并重建session/old投影，不能沿用前案mutated state",
+          "event_sequence": [
+            "publish成功snapshot calcData targetID入cache；按现snapshot flush形成历史",
+            "undo→完成原重算；redo→完成原重算",
+            "比较完整old/new树、画面/dirty和真实事件计数"
+          ],
+          "expected": {
+            "undo": "恢复旧完整树及旧配置，按原流程对target calcData",
+            "redo": "恢复完整双条件及对应新画面",
+            "counts": "undo/redo各自重算计数单独记录，不能归为paste二次query；禁止普通changeFilter快照替代calcData分类"
+          }
+        }
+      ]
+    },
+    {
+      "id": "MVP-UI-12",
+      "title": "覆盖非空目标最小确认",
+      "level": "真实Editor对话框",
+      "status": "NOT_RUN",
+      "setup": [
+        "target非空且原配置已记录"
+      ],
+      "actions": [
+        "paste后取消确认",
+        "再次paste确认后在等待期间编辑target",
+        "再次用稳定target确认并成功"
+      ],
+      "expect": {
+        "cancel": "query/render/dirty=0，旧tree/data/画面不变",
+        "changed": "确认后重新捕获与最终复核；被编辑的旧operation不可publish",
+        "success": "完整替换目标树而非逐leaf合并；与source完整树一致"
+      },
+      "fixture": "persisted_source"
+    },
+    {
+      "id": "MVP-UI-13",
+      "title": "真实RowAuth序列化样本与持久边界分别验证",
+      "level": "真实FilterTree/RowAuth+request/save观察",
+      "status": "NOT_RUN",
+      "setup": [
+        "已有UI样本和DB样本均只读；允许在隔离开发资源操作两个真实条件；不从AX构造fixture"
+      ],
+      "actions": [
+        "从真实filter-data和view.customFilter捕获对象、own-key树与undefined paths",
+        "记录真实query JSON与显式save JSON",
+        "与DB fixture比较已识别产品版本差异，不把null/undefined/missing归并"
+      ],
+      "expect": {
+        "semantic_oracle": "根and，amount fieldId1715053944937/gt/字符串200；子or，shop fieldId1715053944934/enum/六值顺序完整；deType来自独立metadata",
+        "runtime_oracle": "clipboard/paste完整own-key保真；JSON省略undefined只按真实边界比较；DB样本不冒充前传输输出",
+        "fixture_control": "新增runtime捕获另存证据，保留本Cases identity；不得修改frozen expectations来迁就实现"
+      },
+      "fixture": "persisted_source_and_ui_runtime_capture"
+    },
+    {
+      "id": "MVP-UI-14",
+      "title": "真实配置复制粘贴刷新保存离开重开",
+      "level": "真实浏览器端到端",
+      "status": "NOT_RUN",
+      "setup": [
+        "隔离本地环境；DEV权限桩显式allow；固定真实两条件source及合法空target；UI serializer样本已捕获",
+        "预先独立记录该数据集应用amount>200且shop in六店后的参考行/聚合结果，不从产品待测结果倒填oracle",
+        "所有49 type按合法配置独立运行；首bar→line/table用已绑定独立SQL14行/6761及对应聚合；其他type须实际适配oracle，未具备保留未完成"
+      ],
+      "actions": [
+        "真实source配置/确认→copy→target paste→观察结果",
+        "手动刷新→显式DbToolbar保存→离开资源→重开/findById",
+        "大屏DvToolbar同保存链补充验证或明确NOT_RUN",
+        "按每type重复完整source/target/query/可见结果/save/leave/reopen并记录稳定type ID，12families不能作为画面覆盖替代"
+      ],
+      "expect": {
+        "tree": "两个leaf/所有group/logic/operator/value/enum完整；重开树按真实JSON持久边界一致",
+        "data": "真实query命中及聚合与独立参考一致，预览与当前条件对应；混合图left/right都检验",
+        "save": "使用真实canvasSaveWithParams/saveCanvas或updateCanvas；不改用/chart/save、不新增自动保存",
+        "evidence": "query/save/findById请求响应+完整树+可见结果，各阶段计数独立；地图/图片资产不可用明确BLOCKED，不以mock通过",
+        "claim": "仅权限测试桩下界面MVP；真实权限/跨会话/通用竞态/资源完整性仍未验收",
+        "type_completion": "49逐type真实source+target/query/画面/正常save-leave-reopen；C1只是先行见证，picture正向必须threshold开且真实dataset；no-query兼容不能替代"
+      },
+      "fixture": "persisted_source_and_ui_runtime_capture"
+    },
+    {
+      "id": "MVP-UI-15",
+      "title": "生产关闭与旧刷新路径兼容",
+      "level": "构建条件/实际组件回归",
+      "status": "NOT_RUN",
+      "setup": [
+        "分别DEV=false、DEV=true但flag缺失/false、DEV=true且flag=true"
+      ],
+      "actions": [
+        "尝试注册权限adapter/操作copy-paste",
+        "验证不传reportOutcome的既有getData调用、正常chart calcData/renderChart、snapshot undo/redo入口"
+      ],
+      "expect": {
+        "flag": "只有DEV且显式flag=true才允许开发adapter；其它组合port unknown且按钮隐藏或禁用，无测试allow默认",
+        "legacy": "未调用新paste入口时现有请求/渲染语义保持，不能静默全局改query/renderer错误策略",
+        "limits": "当前不执行build或测试，后续按实际命令证据记录；不把静态flag检查算生产验收"
+      }
+    }
+  ],
+  "execution_constraints": {
+    "this_lane": "design repair only：不实现/不运行测试；仅两r002输出",
+    "builder_frozen_exclusions": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r001.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionPersisted-r001.json"
+    ],
+    "red_required": "先实际Editor缺按钮组件断言；执行ok后预期assertion失败",
+    "runtime": "真实业务结果不mock，组件故障harness明确标注层级",
+    "independent_review_required": true,
+    "C_red": "成功加载真实SFC后行为断言失败；不存在新module/编译错误/测试替身缺方法属于execution_error，不算RED"
+  },
+  "supersedes": "r001对应C接口、picture-group入口/needsQuery及逐type终态计划；r001字节不变",
+  "per_type_execution": {
+    "authority": "AC-MVP-F01-12/TSP每eligible type义务",
+    "type_ids": [
+      "area",
+      "area-stack",
+      "bar",
+      "bar-group",
+      "bar-group-stack",
+      "bar-horizontal",
+      "bar-range",
+      "bar-stack",
+      "bar-stack-horizontal",
+      "bidirectional-bar",
+      "box-plot",
+      "bubble-map",
+      "bullet-graph",
+      "chart-mix",
+      "chart-mix-dual-line",
+      "chart-mix-group",
+      "chart-mix-stack",
+      "circle-packing",
+      "flow-map",
+      "funnel",
+      "gauge",
+      "heat-map",
+      "indicator",
+      "line",
+      "liquid",
+      "map",
+      "multi-scatter",
+      "percentage-bar-stack",
+      "percentage-bar-stack-horizontal",
+      "picture-group",
+      "pie",
+      "pie-donut",
+      "pie-donut-rose",
+      "pie-rose",
+      "progress-bar",
+      "quadrant",
+      "radar",
+      "rich-text",
+      "sankey",
+      "scatter",
+      "stock-line",
+      "symbolic-map",
+      "t-heatmap",
+      "table-info",
+      "table-normal",
+      "table-pivot",
+      "treemap",
+      "waterfall",
+      "word-cloud"
+    ],
+    "pairing": "轮转配对只是计划；按合法不同配置保每type至少一次source/target，不要求2401E2E",
+    "required_surfaces": [
+      "真实宿主source copy",
+      "真实宿主target paste",
+      "真实query请求/响应",
+      "可见画面与独立数据oracle",
+      "正常toolbar保存响应",
+      "离开资源",
+      "重开findById完整树/画面"
+    ],
+    "family_role": "12families仅顺序/故障复用，非替代分母",
+    "picture_positive": "threshold enable+真实dataset；static/noquery另列compat",
+    "status_policy": "每type每surface独立NOT_RUN/BLOCKED/PASS；不把C1首链或代表PASS回填其余"
+  },
+  "implementation_slices": {
+    "C1": "共同handle+G2/S2/indicator可经独立Review后先Builder，不等待地图/TinyMCE/49运行",
+    "C2": "五地图ready与基础设施预热",
+    "C3": "TinyMCE init/content/channel/appearance/paragraph timer隔离",
+    "C4": "图片组实际Attr与needsQuery分支",
+    "completion": "C2–C4仍是当前MVP义务，未迁出、不删49"
+  },
+  "subcase_count": 25
+}

@@ -1,0 +1,142 @@
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/picture-resource-ready-before-r001/Component.vue
++++ core/core-frontend/src/custom-component/picture-group/Component.vue
+@@ -28,6 +28,7 @@
+   onBeforeUnmount
+ } from 'vue'
+ import { imgUrlTrans } from '@/utils/imgUtils'
++import { waitForResourceImages } from '@/utils/resourceImageCache'
+ import eventBus from '@/utils/eventBus'
+ import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
+ import { getData } from '@/api/chart'
+@@ -349,12 +350,27 @@
+ const waitForPreparedImage = (isCurrent: () => boolean) =>
+   new Promise<boolean>(resolve => {
+     const image = pictureImage.value
+-    if (!image || !state.showUrl || typeof image.decode !== 'function') {
++    const root = pictureRoot.value
++    const sourceUrl = state.showUrl
++    if (!image || !root || !sourceUrl || typeof image.decode !== 'function') {
+       resolve(false)
+       return
+     }
+     let settled = false
+     let decoding = false
++    let resourceReady = false
++    let expectedSrc = ''
++    const deadline = performance.now() + 10000
++    const current = () =>
++      !settled &&
++      performance.now() < deadline &&
++      pictureAlive &&
++      isCurrent() &&
++      pictureImage.value === image &&
++      pictureRoot.value === root &&
++      state.showUrl === sourceUrl &&
++      image.isConnected &&
++      root.isConnected
+     const finish = (ok: boolean) => {
+       if (settled) return
+       settled = true
+@@ -365,41 +381,53 @@
+       resolve(ok)
+     }
+     const failed = () => finish(false)
++    const finalImageCurrent = () =>
++      current() &&
++      image.getAttribute('src') === expectedSrc &&
++      imgUrlTrans(sourceUrl) === expectedSrc &&
++      image.complete &&
++      image.naturalWidth > 0
+     const loaded = async () => {
+-      if (settled || decoding) return
+-      if (
+-        !pictureAlive ||
+-        !isCurrent() ||
+-        !image.isConnected ||
+-        !image.complete ||
+-        image.naturalWidth <= 0
+-      ) {
++      if (settled || decoding || !resourceReady) return
++      if (!finalImageCurrent()) {
+         finish(false)
+         return
+       }
+       decoding = true
+       try {
+         await image.decode()
+-        finish(
+-          pictureAlive &&
+-            isCurrent() &&
+-            image.isConnected &&
+-            image.complete &&
+-            image.naturalWidth > 0
+-        )
++        finish(finalImageCurrent())
+       } catch {
+         finish(false)
+       }
+     }
+-    // 必须先监听，再由 Vue patch 设置本候选 src；缓存命中也核实际 naturalWidth/decode。
+     image.addEventListener('load', loaded)
+     image.addEventListener('error', failed)
+     const timer = setTimeout(failed, 10000)
+     cancelImageWait = failed
+-    candidateImageSrc.value = imgUrlTrans(state.showUrl)
+-    nextTick(() => {
+-      if (!settled && image.complete && image.naturalWidth > 0) void loaded()
+-    })
++    // 缓存地址可能在 DOM patch 和资源扫描之间变化，稳定前不能解码占位图。
++    const prepareResource = async () => {
++      try {
++        while (current()) {
++          expectedSrc = imgUrlTrans(sourceUrl)
++          if (!current() || !expectedSrc) break
++          candidateImageSrc.value = expectedSrc
++          await nextTick()
++          if (!current()) break
++          await waitForResourceImages(root)
++          if (!current()) break
++          if (imgUrlTrans(sourceUrl) !== expectedSrc) continue
++          resourceReady = true
++          // 最终 load 可能已经在门关闭时到达，主动检查缓存命中图片。
++          if (image.complete && image.naturalWidth > 0) void loaded()
++          return
++        }
++        finish(false)
++      } catch {
++        finish(false)
++      }
++    }
++    void prepareResource()
+   })
+ const prepareFilterPaste = async (
+   input: PreparedQuery,
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/picture-resource-ready-before-r001/check.mjs
++++ core/core-frontend/tests/filter-copy-mvp-picture/check.mjs
+@@ -80,6 +80,8 @@
+ export const useI18n=()=>({t:key=>key})
+ export const useRoute=()=>({path:'/dashboard'})
+ export const ElMessageBox={confirm:()=>Promise.resolve()}
++// 此runner只用直接data URL；生产cache/helper由check-resource-ready.mjs覆盖。
++export const waitForResourceImages=async()=>undefined
+ export const imgUrlTrans=value=>value
+ export const parseJson=value=>typeof value==='string'?JSON.parse(value):value
+ export const deepCopy=value=>JSON.parse(JSON.stringify(value))
+@@ -87,6 +89,7 @@
+ `
+ const providers = new Set([
+   '@/utils/imgUtils',
++  '@/utils/resourceImageCache',
+   '@/store/modules/data-visualization/dvMain',
+   '@/api/chart',
+   '@/views/chart/components/js/util',
+@@ -185,6 +188,9 @@
+     this.decodeTask = deferred()
+     this.decodeCalls = 0
+     if (tag === 'img') images.push(this)
++  }
++  getAttribute(name) {
++    return this.props[name] ?? null
+   }
+   get isConnected() {
+     return this.tag === 'root' || !!this.parent?.isConnected

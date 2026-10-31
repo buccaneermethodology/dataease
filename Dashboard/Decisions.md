@@ -1,3 +1,23 @@
+## 当前MVP独立验收与最终收尾结果
+
+当前22项（10治理＋12基本产品）已独立有界通过；当前DEV49内建指定基本配置已接纳。完整diff遗漏C22V001已独立闭合，本收尾累计2/3轮。原16项批准延期仍未验不计通过；真实权限BLOCKED/NOT_RUN、installed总数unknown；不声明原全量或生产就绪。
+
+[最终独立核对](</Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/Current22RepairPostCloseout-r002.md>)、[逐项裁决](</Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/MvpGoalFinalPackage-r002/Current22AcDecisions-r002.json>)、[最新终态Gate](</Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/stop-gate/receipt-r327.json>)。最后状态依据该Gate实际结果，只有GOAL_COMPLETE且final_allowed=true才准宣告当前S02_DEV_STUB_UI_MVP_COMPLETE；以下候选/首轮文字为其各自历史时点。
+
+## 当前22终态首轮结果吸收
+
+20项有界通过；治理09/10因C22V001完整diff打包遗漏5路径/23hunk阻断。原失败包保留，r002已按Git NUL真实路径修复候选；产品与Goal要求不变。下一步合并修复复核和post-closeout累计第二轮，最多3轮；未宣告Goal完成。
+
+## S02范围时间线更正决策吸收
+
+2026-10-31：独立回查宿主原消息确认10-27 MVP授权晚于10-26 Full指示。恢复已批准MVP22当前/16原产品approved_deferred、8差异/六后续；不新增范围许可。旧Full解释、报告和回执保留原字节，不能再将38均当前前置作为最新authority。12产品事实按等价原文桥接，当前DEV49分母有界通过、installed仍unknown；最终治理对账/Gate尚待，不提前done。
+
+## S02当前状态（2026-10-31，范围时间线已更正）
+
+当前按较晚已核实人类MVP范围执行：**22项当前验收，16项原产品义务批准延期且未验不记通过**。12条基本产品AC/当前DEV49内建指定基本配置已有独立有界接纳；当前治理10及最终收尾对账中，Goal仍doing。真实权限BLOCKED/NOT_RUN、installed总数unknown；没有声明完整产品/生产就绪。旧Full38当前前置解释是时间线误序，以下旧增量只保留历史。
+
+当前权威/证据以[S02唯一索引](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/README.md>)为入口；原26去向、8项ScopeDelta和六followups保留。
+
 # Decisions
 
 | ID | 决策 | 状态 | 依据 / 影响 |
@@ -43,3 +63,81 @@
 ## S01 后续清理暂停与来源绑定
 
 用户明确先完成依赖合并/独立复核，暂停第二批清理及新增F05归档，再完成协议、Dashboard、Gate；不是暂停整个Goal。残留及恢复责任见[ScopeDelta-r002](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/ScopeDelta-r002.md>)。独立r002核实原始消息、关闭F-01/F-02。采用现有Stop Gate范围差异绑定，不改原root，不把程序PASS替代语义授权。
+
+## S02 F01 分阶段推进与权限阻塞（2026-10-15）
+
+本次用户授权review定稿并实施S02，先并行推进不干扰S01的准备。S01随后按其批准范围有条件收尾，其F02真设备和F05清理延期不自动成为F01阻塞。S02保留14条F01及Q066/Q067两项复制兼容约束、原10条Goal AC。用户授权自主增设账号；随后确认暂无可提供的真实权限模块来源，明确先标外部阻塞并继续设计及开发准备。只读查看/复制/粘贴限制与权限撤销保持未验证，不能用standalone替代，账号授权不重复请求。见[用户补充](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent-supplement-r002.md>)和[权限准备](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md>)。这不免除原验收分母、不授权发布。
+
+
+## S02 有界纯子合同及准入边界（2026-10-16）
+
+独立设计增量复核r003允许冻结17个纯比较/计数case identity，仅限同类别比较、dataset ID/元数据谓词、显式时间差、UTF-8字节计数、抽象叶子计数与枚举数量无独立限制。合同明确排除权限、时钟可信度、共享生命周期、最终envelope serializer/parser、查询字段白名单/ID重绑定、UI提交与持久化；它只用于后续case实现，不是产品Builder准入、RED/GREEN或完整S02合同。产品Builder须先形成实际执行入口、可信RED并通过匹配action/target的execution admission。权限来源未提供时继续保留真实权限验收阻塞，不使用standalone替代。证据见[S02有限纯子合同](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r001.json>)和[独立复核r003](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DesignDeltaReview-r003.md>)。
+
+
+2026-10-16：有限纯子合同BCR-r001发现Q006三项元数据状态绑定缺口与过度成熟度表述；已通过Cases design-r003、PureSubcontracts-r002及投影文件修复。BCR-r002独立复核结论`ACCEPTED_WITH_BOUNDS`，BCR-01/02关闭；17个有限纯case可继续准备实际测试包，不代表可信RED/GREEN或产品准入。BCR-r002的BCR-03 P3 README旧链接已修复并记录于S02-F01/planning/BCR-03-disposition-r001.md。完整S02范围、真实权限未验证与产品Builder NOT_ADMITTED保持不变。当前合同：[PureSubcontracts-r002](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json>)；审查：[BCR-r002](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md>)。
+
+
+## S02执行证据与查询设计更新（2026-10-16）
+
+当前纯规则17向量候选的独立Validation为部分通过，不接受历史RED/Builder角色/准入时序为完整合规证据；追加对账，不改写r006/r007历史记录。查询适配器r004独立复审仅部分接受，QAR3-01载体/粘贴/保存版本同步、QAR3-02完整参数/树/日期oracle、QAR3-03确定提交点/watch门控继续开放。已授权继续不依赖真实权限环境的设计准备；产品Builder需独立指派和新鲜target-bound admission。真实多用户权限义务仍NOT_RUN，完整Goal分母不减。[状态](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r003.md>)、[Validation](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/PureGuardValidation-r001.md>)、[查询设计审查](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignReview-r003.md>)。
+
+
+### S02 查询适配器增量（2026-10-16）
+
+QAR r004独立审查保持设计未就绪：r005候选明确保存时最新根局部覆盖、carrier同步和undo/redo行为，独立审查待定；形态补证独立审查接受参数DTO/类型及条件UTC日期oracle的源码推导范围，但发现两层树ID未穿过useFilter完整保留第二字段。已另开精确树消费设计lane。没有因此授权产品Builder或减少原Goal分母；真实权限仍NOT_RUN。详见[当前状态](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r004.md>)和[形态复核](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterShapeReview-r001.md>)。
+
+
+### S02 查询设计增量 r007 / 树形态 r002（2026-10-16）
+
+作者已补充保存时在最新文档根上局部叠加查询设计配置、并发样式/非查询编辑和undo/redo候选合同；独立审查尚未出结论。树形态r002已追到复合node ID解码及`useFilter`最终双字段过滤对象，保留旧`node-city`失效反例；独立复核待结论。两项仅源码派生设计/合成fixture，不升级成产品运行或权限证据。详见[当前状态](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r005.md>)及[最新拓扑](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r012.json>)。
+
+
+### S02 查询设计窄审查r005/r002（2026-10-16）
+
+QAR4-01/02的保存局部overlay和undo/redo合同、QAS-01/02的参数/日期源码推导及双层树最终过滤对象均获得有界独立接受。整套查询设计仍需整合复审；候选fixture不是产品运行证据，真实权限与Goal验收继续未完成。17向量切片的历史RED/角色/准入缺证也仍保留。证据见[当前状态](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r006.md>)、[QAR复核](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignReview-r005.md>)和[形态复核](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterShapeReview-r002.md>)。
+
+
+### S02 QPREP-001有界实现候选（2026-10-16）
+
+整合设计复核只对typed查询引用闭包纯准备器给出有界实现入口。独立Builder在两文件精确范围内实现候选；8项身份和定向lint经独立复跑通过，但原RED完整合并输出及RED时点快照未耐久保存，故package Validation为`PARTIAL_PASS / BLOCKED_FOR_PACKAGE_ACCEPTANCE`。保留这一证据限制，不倒填日志或把候选说成产品完成；下一步推进真实query schema接入的最小产品切片。真实多用户权限继续`BLOCKED / NOT_RUN`，原Goal分母不减。证据：[设计审查](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md>)、[Validation](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPREP-001-Validation-r001.md>)、[执行证据](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/QPREP-001-ExecutionEvidence-r001.md>)。
+
+
+### S02 QPROJ-001 实现与独立验证（2026-10-16）
+
+独立设计审查接受普通查询引用窄投影QPROJ-001。Builder候选六个固定identity的RED/GREEN证据齐全；首次独立Validation发现测试runner两处Prettier诊断，后经格式-only rebaseline、同identity GREEN与runner lint复验通过，独立Validation r002给出PASS_WITH_BOUNDS。生产模块和QPREP未变；没有copy/UI/Store/权限调用，不能声明产品链路或Goal完成。真实多用户权限仍BLOCKED/NOT_RUN，原10项Goal AC与16项产品义务保持完整。详见[设计复核](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySchemaProjectionDesignReview-r001.md>)、[独立验证](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPROJ-001-Validation-r002.md>)及[当前状态](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus-r008.md>)。
+
+
+## S02 QMAP-001 纯目标映射候选（2026-10-16）
+
+QMAP-001设计经独立复核为`VALID_WITH_BOUNDS_FOR_QMAP_001`；旧设计Context残留QPROJ实现写范围，已新建专属QMAP Context并经卡片、准入校验后才实施。可信RED在实现源缺失时由真实runner执行，六项同identity GREEN与定向ESLint经独立Validation为`PASS_WITH_BOUNDS`。该候选只在显式源/目标目录上按精确dataset/field覆盖生成componentMap，不证明目录可信、授权、产品可承载或UI/copy入口。S01终态允许S02以CONDITIONAL_DESIGN_ONLY进入，不代表S01延期权限已通过。原10项Goal AC、16项产品义务及真实权限`BLOCKED / NOT_RUN`继续保留。详见[设计复核](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTargetComponentMapDesignReview-r001.md>)、[执行证据](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/QMAP-001-ExecutionEvidence-r001.md>)与[独立Validation](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QMAP-001-Validation-r001.md>)。
+
+
+## S02-QPIPE-001 纯查询引用流程组合（2026-10-16）
+
+独立设计复核及独立Validation分别给出`PASS_WITH_BOUNDS`与`PASS_WITH_BOUNDS_FOR_QPIPE_001`。真实QPROJ/QMAP/QPREP模块按固定顺序组合；可信RED六项、同identity GREEN 6/6及定向ESLint通过，spy仅包装并记录真实函数调用。该结果不接产品copy/UI/Store/权限/保存入口，不追认QPREP历史package证据。完整Goal分母和真实权限`BLOCKED / NOT_RUN`不变。证据见[S02 QPIPE Validation](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPIPE-001-Validation-r001.md>)与[执行证据](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-ExecutionEvidence-r001.md>)。
+
+## 2026-10-20：S02 Select 异步枚举竞态局部增量验证有界通过
+
+Select.vue 当前异步枚举切片的 PA-001..009 组件runner、纯模型9/9、定向ESLint与diff-check通过；独立 Delta Validation r004 为 `PASS_WITH_BOUNDS`，仅适用于隔离 API/Element/Store stub 下的异步状态交错，并关闭了此前 options 快照、queryId 与 loading 前置断言的测试发现。未验证真实浏览器、后端、保存历史或权限，任何 S02 Goal AC 和16项产品义务均不因此关闭。10项AC/26项must-have/16项义务及 `Scope Delta: none` 保持；只读限制、撤权/恢复仍 `BLOCKED / NOT_RUN`，S01 F01 前置仍 `CONDITIONAL`。全量 TypeScript 检查 TS6504 基线归因未解决。依据：[独立 Delta Validation r004](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ProductValidation-QOBS-ASYNC-01-ClearMap-Delta-r004.md>)、[窄验证 r005](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/S02-CURRENT-LOCAL-VALIDATION-r005.md>)。
+
+## 2026-10-21：TCO任务推进与能力状态分层
+
+用户同意在稳定M1下呈现可验收推进项。本次r004保留原Target分母与阈值，单独记录S00/S01前后状态、证据、owner及下一步；项目进展账本不冒充CLI保留Coverage状态，不将任务完成率等同功能完成率。事实截止S01有条件收尾，S02进行中不计入。持续使用已授权普通CLI，不声明external-run宿主管线通过。详见[本次合同](Artifacts/S00-S01-TCO-Update/TaskContract.md)。
+
+## S02 新人类范围重定界（2026-10-27）
+
+当前按已核实的人类范围调整执行**权限测试桩下界面MVP**：全部受支持图表、同页同编辑会话、基本多条件整树、真实查询、准备成功再采用、显式保存离开重开。当前22项必须验收；旧26条原文/原16产品义务完整保全，迁出项未验证且不作当前完成前置。六后续Session负责真实权限、跨context、通用异步、通用资源、查询组件复制和复杂过滤。旧范围/Scope Delta none/权限前置等历史状态由本节替代，历史审查、失败和预算不改判。
+
+新权威平台用户消息01a17b46-fa6c-7713-8511-a16644a2f999已由独立Reviewer复验；[来源](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/../planning/MvpScopeAuthority-20261027.json>)，[独立审查](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/GoalTspReview-r001.md>)。相同字节Goal吸收，r005仅重放，不声称protected resolve成功、不造token。S036–040与S041–046已手工登记；旧root/predicate为历史，不用于新完成判定。GTR-001/002按Session跟踪，无真实权限/全量功能通过或Coverage提升。
+
+## S02 局部失败窗口与证据更正（2026-10-27）
+
+保留原评审历史和每交付物三轮预算。C2V001/002属于当前paste准备及其同组件刷新卸载，精确修复而不扩通用框架；C3V001/002/003继续修。C3V004撤销：独立probe在active后将isCurrent设false，但真实wrapper传入回调在binding.phase=active时检查!pasteUnmounted且pasteActiveKey===node.key，不再依赖已结清operation，故probe前提不成立。已立即通知Builder撤除专为V004新增的改动，旧报告SHA冻结，本更正不代表旧报告整体通过；第二轮须独立复核。真实权限仍未验，当前复杂责任迁后Session不改判通过。[证据](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ProgressReconciliation-r001.md>)。
+
+## S02 P1独立结果吸收与P2延续（2026-10-30）
+
+这是执行事实吸收，不是新增范围批准：独立实际首轮接纳P1 12AC/49指定基本配置。Goal.final、authority-root与38分母不改，原26项仍需完成；P1只形成非终态里程碑，完整产品类型0/49、真实权限未验及插件unknown保留。原C2整包历史BLOCKED不翻写，有限协议由新独立delta证明修复。准备3/3预算已耗尽，不再复审本准备包；实际验收与里程碑收尾对账按其自身交付物计轮次。证据：[里程碑](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1MilestoneCloseout-r001.md>)。
+
+## S040收尾结果与P2入口（2026-10-30）
+
+P1里程碑收尾独立首轮1/3有界通过，blocking0。按报告预声明槽位补根Sessions旧22/非前置历史标签，原文和受审快照不改。P1 12满足、P2原26待完成；S046开始原生动态日期源事实设计，未准入产品Builder。真实权限仍BLOCKED/NOT_RUN、插件unknown，完整Goal继续。[对账](<Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/P1MilestoneReconciliation-r001.md>)。

@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-ui-slice-b-api-builder-r001-card.json
+Card SHA-256: 7d2bf60b23ce04ce753518f1cffa278fc81f5a8576d404ac0f3900ef8aea391d
+Verify: python3 .codex/skills/sge-governed-checkpoints-sp010/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-ui-slice-b-api-builder-r001-card.json --repo . --expected-card-sha256 7d2bf60b23ce04ce753518f1cffa278fc81f5a8576d404ac0f3900ef8aea391d
+Lane: builder | Session: DE-S02-F01 | Role: builder
+Mode: full_baseline
+Working directory: .
+Execute: 复验Card/Context和每target admission，独立Review已允许B query/outcome准备。只改src/api/chart.ts当前getData：添加可选{reportOutcome:true}的类型化分支/重载，真实res.code===0且所有现有decode完返回{ok:true,value:原DTO}，非0返回{ok:false,error:明确原错误信息/envelope}；网络异常保持reject。默认不传第二参数所有既有返回/解码/stock-line/签名/axios/hmac/权限语义不变，不新增axios，不扩大any，不修改其他API。新分支取入参clone，不能污染调用者data或xAxis sort；legacy已有delete语义如需兼容保留原默认，不能借此大重构。先在新增focused runner里执行实际现getData带第二参数，当前应因ok undefined等业务断言失败（不是缺模块/编译错）形成MVP-UI-08有界RED，再实现同case GREEN。可用现已装compiler/esbuild真实API源码装载并stub网络envelope，清晰证明是模块适配不是后端/权限/真实query验收，不复制被测函数实现。覆正常成功/非0fulfilled/网络reject、解码真实函数调用、stock-line和入参非变异、默认接口兼容。不要在Api实现侧自己发真实业务请求，后续root会真实UI验收。所有runner/log/binding仅写授权test目录或唯一evidence文件（若需新日志路径先root补scope；优先MD内嵌小摘要）。冻结Design/Cases/golden不改。A Builder正改Editor/session/user/cache/locales，C Reviewer只读renderer和API前字节snapshot；写域互不冲突。尽快落稳定严格API签名并消息root，focused ESLint不fix/必要类型验证区分基线。只写4个授权文件，保全源API写前已有字节（主控manifest已存），不安装、不改全局错误处理、不启动服务、不提交推送。

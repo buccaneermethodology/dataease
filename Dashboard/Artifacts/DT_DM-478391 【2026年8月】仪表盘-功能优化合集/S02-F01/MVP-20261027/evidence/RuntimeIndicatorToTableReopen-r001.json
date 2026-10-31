@@ -1,0 +1,55 @@
+{
+  "scenario": "navigate away after explicit save, reopen isolated dashboard by known editor URL, and inspect persisted tree/results",
+  "dashboardId": "1312476889213964288",
+  "targetId": "7520741153101058048",
+  "selectedChartType": "明细表",
+  "queryType": "table-info",
+  "datasetId": "1312472054565572608",
+  "savedFilterTree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reopenAssertions": {
+    "saveMessage": "保存成功",
+    "filterTreeMatchesCopiedTree": true,
+    "filterTreeHasAmountGreaterThan200": true,
+    "filterTreeHasNestedOrShopEnum": true,
+    "clipboardAfterReload": null,
+    "newEditSessionObserved": true,
+    "visibleTableColumn": "shop",
+    "visibleTableRowsObserved": true,
+    "permissionStubAfterReopen": "unknown; actions disabled until explicitly switched for read-only diagnostic inspection"
+  },
+  "authorizationLimitations": "Permission behavior was observed only through the explicit DEV stub. No real user or revoke/restore behavior was tested.",
+  "routeLimitations": "Dashboard list entry is disabled; leave/reopen used the previously observed editor URL.",
+  "evidenceRecordedAt": "2026-10-28T15:38:08Z"
+}

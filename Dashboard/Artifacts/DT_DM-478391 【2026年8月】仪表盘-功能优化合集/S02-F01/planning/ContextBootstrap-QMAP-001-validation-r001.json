@@ -1,0 +1,175 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QMAP-001-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立复核QMAP-001已实现候选与用户原Goal边界；不实施修复，不扩大到产品/权限验收。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "验证六项QMAP纯映射合同的RED/GREEN连续性、实现、运行与lint证据及声明边界。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QMAP-001-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改生产源码、测试runner、冻结设计/fixture或其他证据",
+      "将纯模块结果解释为目录可信、权限/产品行为或Goal完成",
+      "使用standalone/admin/mock补充权限验证"
+    ],
+    "maximum_claim": "最多对QMAP 6-case纯映射候选给出独立Validation verdict；不证明产品集成、权限或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "权威Goal",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapDesign-r001.md",
+      "revision": "d0f94bc26549452e1a8a76467e37592a57d20f85cf363deb9e8daa36494b5f49",
+      "applicability": "冻结设计",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapFixtures-r001.json",
+      "revision": "5fc940f9e1352fadbf1077799b1377269193156249c959f01cdc687c2ac97426",
+      "applicability": "冻结6-case合同",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTargetComponentMapDesignReview-r001.md",
+      "revision": "8f26df52abb655a9479d7b6bba5181d1cec7a5fd408085bb700147a2c451052d",
+      "applicability": "独立设计评审",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/QMAP-001-ExecutionEvidence-r001.md",
+      "revision": "c0ab605a383a9046a722a0149154a0f21e97ea210d0197b532070700962d424f",
+      "applicability": "Builder执行证据",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QMAP-001-red.snapshot.json",
+      "revision": "80eb03359e6bc0b8b9e79c9d667f2d733b06cc5a8722d447faf040fd496b0ea4",
+      "applicability": "可信RED快照",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts",
+      "revision": "c234fc3ca42cecdc59aa5c9a5414eb7904837e6bd23da8a64fa178a999386b1a",
+      "applicability": "生产纯模块",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-target-component-map/query-target-component-map.test.ts",
+      "revision": "3abfe5010ff07267f62011ac6699537b975e8360589d3d099a8e61db6d5bc776",
+      "applicability": "同identity runner",
+      "reason": "独立验证输入与证据",
+      "domains": [
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "evidence-mismatch",
+      "condition": "引用摘要或RED/GREEN runner/fixture/实现摘要冲突",
+      "action": "报告绑定差异，禁止validation pass",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "validator-runtime-unavailable",
+      "condition": "Node/esbuild或定向ESLint不可执行",
+      "action": "保留证据并报告阻断，不改实现或安装依赖",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "QMAP是一个有界纯模块；Goal完整分母与产品权限义务继续保留。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_validation",
+    "reason": "设计通过且Builder候选已有耐久RED/GREEN与lint，需独立复核"
+  },
+  "skipped_reads": [
+    {
+      "domain": "完整产品UI/Store/权限/数据库路径：不属于QMAP纯映射验证合同，不作相关声明"
+    }
+  ],
+  "validation_evidence_surfaces": [
+    "红绿原始stdout/stderr/exit",
+    "RED源码/runner/fixture摘要快照",
+    "同6 identity最终GREEN源码/runner/fixture摘要",
+    "定向ESLint原始结果",
+    "Goal与权限声明上限",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

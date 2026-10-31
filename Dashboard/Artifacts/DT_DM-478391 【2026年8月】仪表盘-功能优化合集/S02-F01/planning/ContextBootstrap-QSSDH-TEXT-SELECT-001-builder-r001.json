@@ -1,0 +1,523 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "根据Design Freeze PASS与READY_WITH_BOUNDS复审结论，实现普通手工文本单选 value-state 纯helper；只消费VerifiedDesignValueSnapshot/VerifiedDesignBinding，不创建认证producer或产品接线。以冻结r006 16项fixtures在同一runner产生可信断言级RED/GREEN，补充编译期plain JSON拒绝、深冻结/无副作用检查和定向lint。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "实现r006批准的普通文本单选value-state离线纯helper，仅helper/type declarations/同身份runner及typecheck测试/执行证据；不接UI、Store、查询、保存、网络、权限。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-text-single-select-value-state.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-text-single-select-value-state.test.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-text-single-select-value-state.typecheck.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-ExecutionEvidence-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red-r002.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red-r002.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-red-r002.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green-r002.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green-r002.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-green-r002.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint-r002.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint-r002.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-lint-r002.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck-r002.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck-r002.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-typecheck-r002.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QSSDH-TEXT-SELECT-001-ExecutionEvidence-r002-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改Goal、r006 Design/Fixtures或独立review",
+      "修改现有optionValueSource=1 helper或其既有调用方",
+      "创建VerifiedDesignValueSnapshot/VerifiedDesignBinding认证工厂或生产者",
+      "接入UI、Store、查询执行、保存/重开、网络或权限路径",
+      "使用standalone/admin/mock替代真实权限验收",
+      "安装依赖、启动产品或写数据库",
+      "缩减原Goal及产品义务分母"
+    ],
+    "maximum_claim": "仅r006普通手工文本单选value-state纯helper候选及冻结16 cases/类型边界/定向lint；不证明producer、产品接线、权限、保存或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionDesign-r006.md",
+      "revision": "b098ecc7241fe809ffbb2407c78befb91583d54b6c35b2118fab05d17e8bd2f2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r006.json",
+      "revision": "8beecc66105cd9075c25f396156f26ba13ea12eae242af7d9b9c26d86647b10c",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectExtractionDesignReview-r005.md",
+      "revision": "f68aefa3f656fc468e3ed56fd01ca008b8dda95aabc7f16ee8313f805df63dcb",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionDesign-r005.md",
+      "revision": "b27de64b08d2c51b5290b421a7c7b366f9af546feaba055ee98bd9a3bfa19b00",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r005.json",
+      "revision": "8d9c47e4660ce90d410bc0686d91a28d81d3ba27217d4dfbe70ba28854c9add1",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-value-state.ts",
+      "revision": "22d00e9c23257b316b0b64e0a52c04e6f969a480f5c6ba06bfadf2b5c89252d9",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "0ea0fa58d4c92246d9157cfe24d5868064072d9d344af01703a05e4698dd26f1",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r158.json",
+      "revision": "fd24806ad9c0dfe3c6e86d574eba192868dae1f343e32972fd9527c1c2143162",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "contract-drift",
+      "condition": "实现/runner与冻结oracle或accepted design不一致",
+      "mode": "deterministic",
+      "action": "停止并报告，不改冻结资产",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "admission-drift",
+      "condition": "action/target/context/topology摘要不一致",
+      "mode": "deterministic",
+      "action": "fail closed，不写实现",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "test-runner-unavailable",
+      "condition": "Node/esbuild或现有执行能力不可用",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "不安装依赖；记录缺失并检查现有可用测试入口，无法执行则保留阻塞证据",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "Goal原10 AC、26 must-have、16产品义务不变；只实现r006 bounded helper。真实权限BLOCKED/NOT_RUN，产品接线因producer未发现继续BLOCKED，S01不变。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "高语义风险pure helper，Review PASS；本次限定值态合同实现，产品producer与权限明确排除。",
+    "route": "bounded_builder_after_semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "r006冻结16 fixtures与case identity",
+    "同一runner可信断言级RED/GREEN",
+    "type declarations拒绝plain JSON调用",
+    "opaque test adapters仅在测试边界构造已验证类型",
+    "输入不可变、无partial output与零副作用",
+    "定向ESLint与fixture JSON完整性"
+  ],
+  "output_refs": null,
+  "read_manifest": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionDesign-r006.md",
+      "revision": "b098ecc7241fe809ffbb2407c78befb91583d54b6c35b2118fab05d17e8bd2f2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r006.json",
+      "revision": "8beecc66105cd9075c25f396156f26ba13ea12eae242af7d9b9c26d86647b10c",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectExtractionDesignReview-r005.md",
+      "revision": "f68aefa3f656fc468e3ed56fd01ca008b8dda95aabc7f16ee8313f805df63dcb",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionDesign-r005.md",
+      "revision": "b27de64b08d2c51b5290b421a7c7b366f9af546feaba055ee98bd9a3bfa19b00",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectExtractionFixtures-r005.json",
+      "revision": "8d9c47e4660ce90d410bc0686d91a28d81d3ba27217d4dfbe70ba28854c9add1",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-value-state.ts",
+      "revision": "22d00e9c23257b316b0b64e0a52c04e6f969a480f5c6ba06bfadf2b5c89252d9",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-carrier.ts",
+      "revision": "5b625f68bf56393a39d3d5a721a20e7ac35d4598f8938d34a90064c3ed72d59d",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "0ea0fa58d4c92246d9157cfe24d5868064072d9d344af01703a05e4698dd26f1",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r158.json",
+      "revision": "fd24806ad9c0dfe3c6e86d574eba192868dae1f343e32972fd9527c1c2143162",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+      "reason": "冻结value-state字段生命周期、已审合同、实现边界或当前状态",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ]
+    }
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QSSDH-TEXT-SELECT-001-builder-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r158.json"
+  }
+}

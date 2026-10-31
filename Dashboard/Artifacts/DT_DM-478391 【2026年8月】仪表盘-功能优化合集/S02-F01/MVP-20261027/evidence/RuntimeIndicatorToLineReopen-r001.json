@@ -1,0 +1,63 @@
+{
+  "scenario": "explicit save, navigate away to dashboard list, reopen via previously observed editor URL; inspect persisted filter tree in filter dialog",
+  "dashboardId": "1312476889213964288",
+  "targetId": "7520741153101058048",
+  "chartType": "line",
+  "datasetId": "1312472054565572608",
+  "savedFilterTree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reopenAssertions": {
+    "saveMessage": "保存成功",
+    "filterDialogShowsAmountGreaterThan200": true,
+    "filterDialogShowsNestedOrShopEnum": true,
+    "filterTreeMatchesCopiedTree": true,
+    "clipboardAfterReload": null,
+    "sessionChanged": true,
+    "lineChartRenderedVisible": true,
+    "visibleValues": [
+      3218,
+      1284,
+      563,
+      1141,
+      555
+    ]
+  },
+  "routeLimitations": "Dashboard list entry is disabled; leave/reopen used the previously observed editor URL, so list-based reopen is not established.",
+  "authorizationLimitations": "Reloaded permission stub defaulted to unknown. It was explicitly switched back to DEV allow for read-only filter-dialog inspection; this is not evidence of real authorization.",
+  "observedSession": {
+    "beforeReloadEditSessionId": 7,
+    "afterReloadEditSessionId": "new page session (session id not surfaced in observed DOM)"
+  },
+  "evidenceRecordedAt": "2026-10-28T14:56:50Z"
+}

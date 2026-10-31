@@ -1,0 +1,392 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-query-single-select-default-rebuild-design-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "用户要求加快S02 Goal执行；用户明确真实权限环境暂缺但不依赖该环境的设计和实现可继续，并要求设计审查后立即开始实现。QPAD普通多选离线候选已独立PASS_WITH_BOUNDS，本任务只研究相邻的单选普通Query配置纯重建切片，不接产品入口。 用户指示在设计审查后立即实施，并继续推进Goal；本任务只设计单选有默认值配置的离线重建，权限不替代。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "从当前已验证无默认普通VARCHAR单选窄域向前，源追踪一个可实现的单选默认值配置形态；冻结完整支持域/JSON语义/负例并通过独立审查后再准入实现。不得猜默认值映射，若无源码/验收依据则标记缺口。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDefaultRebuildDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDefaultRebuildFixtures-r001.json"
+    ],
+    "forbidden_actions": [
+      "修改已通过的QSINGLE-REBUILD-001源码、测试、设计、fixtures、review、执行证据",
+      "改写Goal、原始AC/16项产品义务、S01或权限状态",
+      "推断默认值或映射值语义；证据不足时不得臆造",
+      "实施源码、调用UI/Store/网络/权限/保存/数据库",
+      "使用standalone/admin/mock替代权限验收"
+    ],
+    "maximum_claim": "仅提供单选默认值形态离线重建设计与fixture候选；未独立审查前不冻结、不实施，不代表产品/权限/Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "QSINGLE-default候选设计当前源码及先前有界基线",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/LoopGoal_Final_r001.md",
+      "revision": "92d8a4ed6d6686ba401351bd9544800cec799c0ac754a3c612cf4cb98d6c63a9",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/F01SliceContract.md",
+      "revision": "b7935b1c15f60c59c4d19ec487b787e445307f192f4cad5acad6f15aee264b2f",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "17dbf0cbc6fb9f6f4c7fcce958bd5e80a532844fe2aef684ac6de634584747c1",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r003.md",
+      "revision": "4c21dbcc99a9add2aecff52f847fbb708df17ccf8eea21c3e4a1c7adb67cd4e5",
+      "applicability": "QSINGLE-default候选设计当前源码及先前有界基线",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFixtures-r003.json",
+      "revision": "0b0bc78a268f057356ae4354698949541a450f8ff18ec7b62614fe8474e5edbf",
+      "applicability": "QSINGLE-default候选设计当前源码及先前有界基线",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r003.md",
+      "revision": "eaf64f971b9a0e685484c18e072ac796ba5a439933f69419a58a9b9b1c14560b",
+      "applicability": "QSINGLE-default候选设计当前源码及先前有界基线",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPAD-REBUILD-001-DeltaValidation-r001.md",
+      "revision": "12d9d52ee60efc775c28fb7f0d84cb79681c7c1ccddebaf56d139c087586efcd",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPREP-002-Validation-r001.md",
+      "revision": "211f18014897f363020f8967414a66813ebc92b45ddf1b4ed307b8d24d379c6e",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeMatrix-r002.md",
+      "revision": "04656b366beffab8f99826efcf2a835d24c7a6ee1f53ea911896b9702a046804",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterShapeReview-r002.md",
+      "revision": "5a5569efafd9b8a4a5ce912b54c22d33842995c7e40b76c55b6d35f4ae9e6124",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaDiscovery-r002.md",
+      "revision": "f3cdef883e90eea8750f97c511a6a1960868296d7dc28355c0e471c89045afb9",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-ordinary-select-rebuild.ts",
+      "revision": "fb1da352181a36858fe1eeaaca80d2883063f7d8600dcafd5bc45bfd1bf91a7e",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-ordinary-select-rebuild.ts",
+      "revision": "fb1da352181a36858fe1eeaaca80d2883063f7d8600dcafd5bc45bfd1bf91a7e",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r055.json",
+      "revision": "deb65d2380fe19415dff012d0147edfd950ac2e50037d61213d1e75f38c12276",
+      "applicability": "bounded shape design input",
+      "reason": "确认原始Goal、已冻结多选域、相邻实现与单选实际字段/值语义",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-rebuild.ts",
+      "revision": "6927e86476fd457e1e2a0dadc2299aeccef6b4945d53df230788f05adc1f8e3f",
+      "applicability": "QSINGLE-default候选设计当前证据",
+      "reason": "避免重开或误称既有无默认候选的边界，确认当前用户要求及Session后续方向",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-rebuild.test.ts",
+      "revision": "ce7bd18063134e60533780fc2c7c43023a9ad1e127f6ab6957874ccf0b127f71",
+      "applicability": "QSINGLE-default候选设计当前证据",
+      "reason": "避免重开或误称既有无默认候选的边界，确认当前用户要求及Session后续方向",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QSINGLE-REBUILD-001-Validation-r002.md",
+      "revision": "e96f4cc00c718af19c7954f7d150a59ec72db163a279eef68ddd5bb6148c7db0",
+      "applicability": "QSINGLE-default候选设计当前证据",
+      "reason": "避免重开或误称既有无默认候选的边界，确认当前用户要求及Session后续方向",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "786c3c3f7736e1dbb2c5d314354578f085596d6e08f9db8ef8908f2bee5fad0f",
+      "applicability": "QSINGLE-default候选设计当前证据",
+      "reason": "避免重开或误称既有无默认候选的边界，确认当前用户要求及Session后续方向",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r062.json",
+      "revision": "05709f2c3353d99783a66753a96cdf83a111cfdf36c2b07203afb77ab6b7cdb8",
+      "applicability": "QSINGLE-default候选设计当前证据",
+      "reason": "避免重开或误称既有无默认候选的边界，确认当前用户要求及Session后续方向",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-semantics-unknown",
+      "condition": "单选值/默认值/字段生命周期不能从源码确定",
+      "mode": "deterministic",
+      "action": "记录具体证据缺口并标记NOT_READY，不猜测",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "design-surface-incomplete",
+      "condition": "发现需扩读的现有入口、影响或field consumer",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "扩展读取并将引用加入设计/fixtures",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "仅研究单选普通Query候选，不减少Goal任何AC或16项产品义务；权限/产品接入/保存重开仍未验证。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "design_then_independent_semantic_review_then_bounded_implementation_if_ready",
+    "reason": "默认值可能是持久配置/查询语义，需source-grounded oracle及独立审查后才能继续实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始用户目标及Goal完整义务分母",
+    "已验证QSINGLE无默认普通VARCHAR基线与边界",
+    "Select/options/Component配置与运行字段源码证据",
+    "单选defaultValue/defaultMapValue具体写入和重置路径",
+    "完整成功/失败input及JSON输出fixtures",
+    "真实权限与产品集成claim ceiling",
+    "原始用户目标",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

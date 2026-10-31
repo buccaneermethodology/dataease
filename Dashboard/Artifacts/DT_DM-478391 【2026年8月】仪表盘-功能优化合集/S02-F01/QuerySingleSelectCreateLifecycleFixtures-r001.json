@@ -1,0 +1,2972 @@
+{
+  "schema_version": "qssdh_create_lifecycle_candidate_v1",
+  "task_id": "S02-QSSDH-CREATE-003-design-r001",
+  "status": "NOT_READY_FOR_PRODUCT_BUILDER",
+  "card_digest": "8617eceef97102e64c8e10f508aae97dfc3b81995c28f9e6f956d06dcebf2763",
+  "fixture_boundaries": "root是本合同完整投影，未列VQuery外层属性KEEP且不参加协调状态；condition为完整既有QCARRIER形态。snapshots仅列本任务root/carrier/epoch/phase投影，其他画布字段按现有snapshot原样恢复；不是替代真实快照schema。",
+  "cases": [
+    {
+      "id": "TC-QCREATE-001",
+      "name": "新建空文档初始化：无carrier，不调用QCARRIER",
+      "input": {
+        "state": null,
+        "events": [
+          {
+            "type": "fresh_non_template_dashboard_createInit"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "empty",
+          "revision": 0,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-002",
+      "name": "DeCanvas新增空控件只登记pending，保留原缓存标记",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "empty",
+          "revision": 0,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "handleNewFromCanvasMain",
+            "component": {
+              "id": "query-new",
+              "component": "VQuery",
+              "innerType": "VQuery",
+              "canvasId": "canvas-main",
+              "propValue": "",
+              "style": {
+                "width": 400,
+                "height": 100
+              },
+              "x": 1,
+              "sizeX": 72,
+              "sizeY": 4
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-003",
+      "name": "新增前取消/构造失败无发布",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "empty",
+          "revision": 0,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "cancel_or_fail_before_addComponent"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "empty",
+          "revision": 0,
+          "root": {
+            "$object": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-004",
+      "name": "空控件配置校验失败不发布，不额外快照或预览",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "confirm",
+            "validation": "failed",
+            "candidate": {
+              "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-005",
+      "name": "空控件草稿取消保留空控件，非删除控件",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "draft",
+            "candidate": {
+              "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+            }
+          },
+          {
+            "type": "cancel"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-006",
+      "name": "先实际记录空控件快照，完整确认A首次创建carrier且同次替换root",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 0,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": -1,
+          "snapshots": [],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 0,
+            "snapshotAppend": 0,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "recordSnapshot",
+            "eligible": true
+          },
+          {
+            "type": "confirm",
+            "candidate": {
+              "$object": "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117"
+            },
+            "expectedRevision": 0
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 0,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 1,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-007",
+      "name": "定时实际快照绑定同次完整root/carrier，revision不变",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 0,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 1,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "recordSnapshot",
+            "eligible": true
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-008",
+      "name": "外参X只改独立runtime，首次查询读X，design仍A",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "accepted_outer_runtime_write",
+            "value": "X",
+            "matchingMode": "value"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-009",
+      "name": "运行C只改select/map，默认X留在runtime但design仍A",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "accepted_runtime_select",
+            "value": "C",
+            "mapValue": [
+              "C"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-010",
+      "name": "从受管design打开草稿，明确确认A→D，不能用外参X草稿冒充A",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "open_managed_draft",
+            "source": "carrier"
+          },
+          {
+            "type": "confirm",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            },
+            "expectedRevision": 1
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 2,
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 2,
+            "commitId": "new-doc-1:2",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 1,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-011",
+      "name": "受管设计D草稿失败或取消保持runtime C/design A与历史",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "draft",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            }
+          },
+          {
+            "type": "cancel_or_validation_failed"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-012",
+      "name": "确认D实际记录后undo恢复A快照全根，分配revision3，无追加",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 2,
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 2,
+            "commitId": "new-doc-1:2",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 2,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 1
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 3,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 3,
+            "commitId": "new-doc-1:3",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 1,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-013",
+      "name": "redo恢复D快照全根，分配revision4，无追加",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 3,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 3,
+            "commitId": "new-doc-1:3",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 1,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "redo",
+            "selectedIndex": 2
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 4,
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 4,
+            "commitId": "new-doc-1:4",
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "snapshotIndex": 2,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 2,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-014",
+      "name": "undo回首次确认前空控件：carrier失活，pending provenance随已知快照恢复",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 3,
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 3,
+            "commitId": "new-doc-1:3",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 1,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "undo",
+            "selectedIndex": 0
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 4,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": 0,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 2,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-015",
+      "name": "历史边界undo不移动/不增revision/不追加/不预览",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 4,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": 0,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 2,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "events": [
+          {
+            "type": "undo_at_first_snapshot"
+          }
+        ]
+      },
+      "expected": {
+        "status": "MODEL_ORACLE_ONLY",
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "pending",
+          "revision": 4,
+          "root": {
+            "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+          },
+          "carrier": null,
+          "snapshotIndex": 0,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 2,
+                "commitId": "new-doc-1:2",
+                "design": {
+                  "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 2,
+            "snapshotAppend": 3,
+            "historyPublish": 2,
+            "network": 0
+          },
+          "newCapabilityEligible": false
+        },
+        "open_id": null
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-016",
+      "name": "缺元数据历史仍走原恢复；精确发布结果未裁定，不能套过期carrier",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "restore_snapshot_without_in_memory_binding",
+            "componentData": {
+              "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "NOT_READY",
+        "state": null,
+        "open_id": "QCREATE-OBS-02"
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    },
+    {
+      "id": "TC-QCREATE-017",
+      "name": "未受管原地设计写入的失效时点与识别尚未冻结",
+      "input": {
+        "state": {
+          "documentEpoch": "new-doc-1",
+          "phase": "managed",
+          "revision": 1,
+          "root": {
+            "$object": "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "documentEpoch": "new-doc-1",
+            "revision": 1,
+            "commitId": "new-doc-1:1",
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "snapshotIndex": 1,
+          "snapshots": [
+            {
+              "componentData": {
+                "$object": "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72"
+              },
+              "carrier": null,
+              "phase": "pending",
+              "documentEpoch": "new-doc-1"
+            },
+            {
+              "componentData": {
+                "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+              },
+              "carrier": {
+                "componentId": "query-new",
+                "documentEpoch": "new-doc-1",
+                "revision": 1,
+                "commitId": "new-doc-1:1",
+                "design": {
+                  "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+                }
+              },
+              "phase": "managed",
+              "documentEpoch": "new-doc-1"
+            }
+          ],
+          "pendingSnapshotMarks": 0,
+          "effects": {
+            "confirmPreviewEmits": 1,
+            "snapshotAppend": 2,
+            "historyPublish": 0,
+            "network": 0
+          },
+          "newCapabilityEligible": true
+        },
+        "events": [
+          {
+            "type": "uncovered_in_place_mutation",
+            "candidate": {
+              "$object": "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "NOT_READY",
+        "state": null,
+        "open_id": "QCREATE-OBS-01"
+      },
+      "evidence_kind": "candidate_isolated_state_model_not_product_execution"
+    }
+  ],
+  "consumer_oracles": [
+    {
+      "input": {
+        "queryComponentList": [
+          {
+            "id": "query-new",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "canvasId": "canvas-main",
+            "propValue": [
+              {
+                "id": "q1",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "X"
+                ],
+                "mapValue": [
+                  "X"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "X",
+                "selectValue": "X",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-A"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-A": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "style": {
+              "width": 400,
+              "height": 100
+            },
+            "x": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "cascade": []
+          }
+        ],
+        "filter": [],
+        "curComponentId": "chart-A",
+        "firstLoad": true
+      },
+      "expected_appended_filter": [
+        {
+          "filterId": "q1",
+          "componentId": "query-new",
+          "fieldId": "province",
+          "operator": "in",
+          "value": [
+            "X"
+          ],
+          "parameters": [],
+          "isTree": false
+        }
+      ],
+      "expected_filter_after_call": [
+        {
+          "filterId": "q1",
+          "componentId": "query-new",
+          "fieldId": "province",
+          "operator": "in",
+          "value": [
+            "X"
+          ],
+          "parameters": [],
+          "isTree": false
+        }
+      ],
+      "evidence_kind": "static_searchQuery_derivation_not_executed"
+    },
+    {
+      "input": {
+        "queryComponentList": [
+          {
+            "id": "query-new",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "canvasId": "canvas-main",
+            "propValue": [
+              {
+                "id": "q1",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "X"
+                ],
+                "mapValue": [
+                  "C"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "X",
+                "selectValue": "C",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-A"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-A": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "style": {
+              "width": 400,
+              "height": 100
+            },
+            "x": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "cascade": []
+          }
+        ],
+        "filter": [],
+        "curComponentId": "chart-A",
+        "firstLoad": false
+      },
+      "expected_appended_filter": [
+        {
+          "filterId": "q1",
+          "componentId": "query-new",
+          "fieldId": "province",
+          "operator": "in",
+          "value": [
+            "C"
+          ],
+          "parameters": [],
+          "isTree": false
+        }
+      ],
+      "expected_filter_after_call": [
+        {
+          "filterId": "q1",
+          "componentId": "query-new",
+          "fieldId": "province",
+          "operator": "in",
+          "value": [
+            "C"
+          ],
+          "parameters": [],
+          "isTree": false
+        }
+      ],
+      "evidence_kind": "static_searchQuery_derivation_not_executed"
+    }
+  ],
+  "existing_fixture_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectCarrierFixtures-r001.json",
+      "sha256": "03613abf4395405162baa736a7592dcaa1bc5be706b7b56960cd96860d93e371",
+      "purpose": "复用既有边界，只引用不重制"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectEndToEndFixtures-r003.json",
+      "sha256": "d7ed90a5e43e631dc58d603098a7ef77d9e0c34274b3328f6a523444e27da5d8",
+      "purpose": "复用既有边界，只引用不重制"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectDesignCarrierLifecycleFixtures-r001.json",
+      "sha256": "56b8c0525c4c35df2512db37fab0a77c47470896234ea1b1198880f7f19ec790",
+      "purpose": "复用既有边界，只引用不重制"
+    }
+  ],
+  "open": [
+    "QCREATE-OBS-01",
+    "QCREATE-OBS-02"
+  ],
+  "claims": "仅候选状态模型；17案例中15项完整候选oracle，2项明确未决；不证明实际Vue观察原子性、快照恢复、权限或产品运行。",
+  "objects": {
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945": [],
+    "12c82f4568ef1e306ada935d1ad79cdfa0161609528379c3d8f0d57b83276b72": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": "",
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4
+      }
+    ],
+    "b8ec103ea71bcc6ac2888cc22eca0b4979bedc721061755fa32c62cee4f79117": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "mapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "selectValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "X"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "X",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "4ea67ab6b60701fb6ce8160936ebb515c92718472147487eb93811f617cb590d": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "cb6b4f0d4e937cac97d7db8c0e6cb74bc12aabb88ff239c69d44fdc385666d1c": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "mapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "selectValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    }
+  },
+  "reference_resolution": "仅{$object:sha256}对象替换为本文件objects对应完整JSON，递归解引用；sha是完整解引用值的UTF-8 canonical JSON SHA256（sort_keys=true, ensure_ascii=false,separators=逗号/冒号）。无外部补值、无patch合成；为消除各快照/状态重复而去重。"
+}

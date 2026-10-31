@@ -1,6 +1,21 @@
 <script setup lang="ts">
 import { getData } from '@/api/chart'
-import { ref, reactive, shallowRef, computed, CSSProperties, toRefs, PropType } from 'vue'
+import type {
+  PasteBinding,
+  PasteReady,
+  PreparedQuery
+} from '@/custom-component/filter-copy/mvp-chart-filter-paste'
+import {
+  ref,
+  reactive,
+  shallowRef,
+  computed,
+  CSSProperties,
+  toRefs,
+  PropType,
+  nextTick,
+  onBeforeUnmount
+} from 'vue'
 import { dvMainStoreWithOut } from '@/store/modules/data-visualization/dvMain'
 import { customAttrTrans, customStyleTrans, recursionTransObj } from '@/utils/canvasStyle'
 import { deepCopy, isMobile } from '@/utils/utils'
@@ -19,6 +34,7 @@ import { hasNextDrillLevel } from '@/views/chart/components/views/util/drill'
 import { ElMessage } from 'element-plus-secondary'
 
 const props = defineProps({
+  pasteBinding: { type: Object as PropType<PasteBinding>, required: false },
   // 公共参数集
   commonParams: {
     type: Object,
@@ -67,7 +83,12 @@ const props = defineProps({
   }
 })
 
-const { view, scale, terminal, showPosition, commonParams } = toRefs(props)
+const { scale, terminal, showPosition, commonParams } = toRefs(props)
+const filterPasteBinding = shallowRef<PasteBinding | undefined>(props.pasteBinding)
+const view = computed(() => filterPasteBinding.value?.current.value.view ?? props.view)
+const element = computed(() => filterPasteBinding.value?.current.value.element ?? props.element)
+const isPasteActive = () =>
+  !filterPasteBinding.value || filterPasteBinding.value.current.value.phase === 'active'
 
 const dvMainStore = dvMainStoreWithOut()
 const dataVMobile = !isDashboard() && isMobile()
@@ -76,7 +97,7 @@ const { embeddedCallBack, nowPanelTrackInfo, nowPanelJumpInfo, mobileInPc, inMob
 // 防溢出样式仅作用于仪表板的移动 Tab，PC 和移动主画布沿用原显示规则
 const mobileResponsive = computed(
   () =>
-    isDashboard() && (mobileInPc.value || inMobile.value) && isTabCanvas(props.element?.canvasId)
+    isDashboard() && (mobileInPc.value || inMobile.value) && isTabCanvas(element.value?.canvasId)
 )
 const viewTrack = ref(null)
 const indicatorRef = ref(null)
@@ -393,6 +414,10 @@ const renderChart = async view => {
 }
 
 const calcData = (view, callback) => {
+  if (!isPasteActive()) {
+    callback?.()
+    return
+  }
   if (view.tableId || view['dataFrom'] === 'template') {
     state.loading = true
     isError.value = false
@@ -420,6 +445,7 @@ const calcData = (view, callback) => {
 }
 
 const trackClick = trackAction => {
+  if (!isPasteActive()) return
   const param = state.pointParam
   if (!param?.data?.dimensionList && !param?.data?.quotaList) {
     return
@@ -508,11 +534,11 @@ const trackMenu = computed(() => {
   linkageCount && view.value?.linkageActive && trackMenuInfo.push('linkage')
   view.value.drillFields.length && trackMenuInfo.push('drill')
   // 如果同时配置jump linkage drill 切配置联动时同时下钻 在实际只显示两个 '跳转' '联动和下钻'
-  if (trackMenuInfo.length === 3 && props.element.actionSelection.linkageActive === 'auto') {
+  if (trackMenuInfo.length === 3 && element.value.actionSelection.linkageActive === 'auto') {
     trackMenuInfo = ['jump', 'linkageAndDrill']
   } else if (
     trackMenuInfo.length === 2 &&
-    props.element.actionSelection.linkageActive === 'auto' &&
+    element.value.actionSelection.linkageActive === 'auto' &&
     !trackMenuInfo.includes('jump')
   ) {
     trackMenuInfo = ['linkageAndDrill']
@@ -534,6 +560,7 @@ const pointClickTrans = () => {
 }
 
 const action = param => {
+  if (!isPasteActive()) return
   state.pointParam = param
   // 点击
   pointClickTrans()
@@ -551,7 +578,7 @@ const action = param => {
         left: param.x - 50,
         top: param.y + 10
       }
-      trackBarStyleCheck(props.element, barStyleTemp, props.scale, trackMenu.value.length)
+      trackBarStyleCheck(element.value, barStyleTemp, props.scale, trackMenu.value.length)
       if (dataVMobile) {
         state.trackBarStyle.left = barStyleTemp.left + 40 + 'px'
         state.trackBarStyle.top = barStyleTemp.top + 70 + 'px'
@@ -565,6 +592,7 @@ const action = param => {
 }
 
 const onPointClick = event => {
+  if (!isPasteActive()) return
   if (view.value?.yAxis?.length) {
     const axis = view.value.yAxis[0]
     // 获取鼠标的全局坐标
@@ -594,7 +622,59 @@ const onPointClick = event => {
   }
 }
 
+let indicatorUnmounted = false
+onBeforeUnmount(() => {
+  indicatorUnmounted = true
+})
+const prepareFilterPaste = async (
+  input: PreparedQuery,
+  binding: PasteBinding,
+  isCurrent: () => boolean
+): Promise<PasteReady> => {
+  if (input.kind !== 'queried') return { ok: false, reason: 'preparation_unavailable' }
+  filterPasteBinding.value = binding
+  let alive = true
+  const dispose = () => {
+    alive = false
+  }
+  try {
+    if (!isCurrent() || indicatorUnmounted) throw new Error('paste_cancelled')
+    const response = cloneDeep(input.response)
+    chartData.value = response.data as Partial<Chart['data']>
+    isError.value = false
+    await renderChart(response)
+    await nextTick()
+    const node = indicatorRef.value as HTMLElement | null
+    const valueNode = node?.querySelector('.indicator-value')
+    if (
+      !alive ||
+      !isCurrent() ||
+      indicatorUnmounted ||
+      !node?.isConnected ||
+      node.getBoundingClientRect().width <= 1 ||
+      node.getBoundingClientRect().height <= 1 ||
+      !valueNode ||
+      valueNode.textContent !== String(formattedResult.value)
+    ) {
+      throw new Error('paste_indicator_not_ready')
+    }
+    return {
+      ok: true,
+      handle: {
+        key: props.suffixId,
+        binding,
+        instance: null,
+        metadata: { kind: 'indicator', drillFilters: cloneDeep(response.drillFilters || []) },
+        dispose
+      }
+    }
+  } catch {
+    dispose()
+    return { ok: false, reason: 'paste_render_failed' }
+  }
+}
 defineExpose({
+  prepareFilterPaste,
   calcData,
   renderChart,
   // 暴露给父级标题层展示联动/跳转标识

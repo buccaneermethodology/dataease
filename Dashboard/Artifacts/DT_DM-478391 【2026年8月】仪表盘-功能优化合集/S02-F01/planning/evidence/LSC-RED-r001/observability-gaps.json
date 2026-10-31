@@ -1,0 +1,61 @@
+{
+  "partial_pre_constructor_private_state": [
+    {
+      "id": "LSC-039",
+      "label": "owner-conflict-before-guard",
+      "owner": "C",
+      "fields": [
+        "constructed",
+        "start_entered",
+        "paused",
+        "destroyed",
+        "cache_key",
+        "cache_identity",
+        "chartIsVisible",
+        "isExecuting",
+        "timers",
+        "column_frame_ids",
+        "cancel_scroll_ref",
+        "retained_background_ref",
+        "isFirstColumnFrameReady"
+      ]
+    },
+    {
+      "id": "LSC-052",
+      "label": "before-real-predecessor-destroy",
+      "owner": "C",
+      "fields": [
+        "constructed",
+        "start_entered",
+        "paused",
+        "destroyed",
+        "cache_key",
+        "cache_identity",
+        "chartIsVisible",
+        "isExecuting",
+        "timers",
+        "column_frame_ids",
+        "cancel_scroll_ref",
+        "retained_background_ref",
+        "isFirstColumnFrameReady"
+      ]
+    }
+  ],
+  "contract_discrepancies": [
+    {
+      "id": "LSC-046",
+      "code": "LSC046_FROZEN_WRAPPER_IDENTITY_CONFLICT",
+      "field": "arrange.startup_plan.owners_before_subject[C].tooltip_wrapper_target",
+      "startup_expected": "W",
+      "arrange_wrapper": "W_old",
+      "cleanup_expected": [
+        "listener.remove:W_old:hoverLeave"
+      ],
+      "disposition": "frozen_assets_unchanged; no_alias_or_skipped_assertion; independent_validator_decision_required"
+    }
+  ],
+  "primary_fault_not_reached": [
+    "LSC-052"
+  ],
+  "evidence_limit": "Partial this inaccessible before throwing constructor returns under the permitted three spies; acquisition registry is direct observation, private fields not inferred. Missing expected first cleanup is a failed assertion, never a fabricated pass."
+}

@@ -1,0 +1,107 @@
+{
+  "recorded_at": "2026-10-29T13:32:26.392907+00:00",
+  "authority": "用户直接批准：允许准备并配置本地测试底图",
+  "design": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/LocalTestBasemapPlan-r002.md",
+    "sha256": "c1ff2276cfecd71a8be5ff4ef9c5bfcd22133533bf9692b8431734c71360ca16"
+  },
+  "independent_design_review": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LocalTestBasemapReview-r002.md",
+    "sha256": "4c47c7928d1751d81d92d491ba0f48e99670051dad65c61aed2408aab9e5ba6f"
+  },
+  "tool": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/local-basemap-tools/config_guard-r001.py",
+    "sha256": "79610a4257eb412bd2a6a7bd85e6af53ed316bf97f16afcde263c8cd84dc1c0e"
+  },
+  "fixture": {
+    "path": "core/core-frontend/public/s02-test-basemap/style-r001.json",
+    "sha256": "00d1393ba45e7af468cb882b134c664209df9ba14b788b94a904bd1f4037cdcd"
+  },
+  "preservation": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemapPreservation-r001.json",
+    "sha256": "fbf87b6e9646cbe4d2c5fb65acf42ae9edbdef0289057e8d226d61353fbdaa65"
+  },
+  "environment": {
+    "frontend": "127.0.0.1:7070",
+    "backend": "127.0.0.1:8100",
+    "database": "dataeasev3",
+    "port": 3307,
+    "engine": "InnoDB",
+    "auth": "standalone admin，仅功能测试，非真实权限验收"
+  },
+  "operation_window": {
+    "lock": "/private/tmp/dataeasev3-s02-online-map-lock/writer.lock",
+    "acquired_at": "2026-10-29T13:29:10.275004+00:00",
+    "released_at": "2026-10-29T13:30:00.557771+00:00",
+    "known_writers": [
+      "/root"
+    ],
+    "other_current_lanes": "review/validation只读且无配置写权",
+    "fresh_before_check": true,
+    "scope_ceiling": "只协调已知本机协作写者，不能阻止未知非协作客户端；后端无CAS"
+  },
+  "private_backup": {
+    "dir": "/private/tmp/s02-basemap-private-9uy_xrro",
+    "before_sha256": "db11bfc1698b617089c2611b2a5d3c665a2df9d0073c2f6cafd2d41e8699f70c",
+    "after_sha256": "21641e65d7014f57eceb8c52419756b0a6099a192195822af8a103669abcdaa2",
+    "before_present_count": 0,
+    "after_present_count": 14,
+    "mode": "0700/0600",
+    "retention": "本机临时目录，可被系统清理；缺失或摘要不符拒绝恢复，不宣称永久备份"
+  },
+  "normal_ui_save": {
+    "at": "2026-10-29T13:29:32.380Z",
+    "endpoint": "POST /sysParameter/saveOnlineMap",
+    "status": 200,
+    "response_code": 0,
+    "success_message_observed": true,
+    "payload": {
+      "mapType": "customTile",
+      "serviceType": "vector",
+      "styleUrl": "/s02-test-basemap/style-r001.json",
+      "tileMinZoom": "0",
+      "tileMaxZoom": "18",
+      "styleAttribution": "S02 本地测试网格，仅用于功能验证"
+    },
+    "payload_matches_raw_after_14_keys": true,
+    "other_provider_credentials": "未读未改"
+  },
+  "preview": {
+    "http_status": 200,
+    "http_matches_bytes": true,
+    "actual_grid_observed": true,
+    "map_canvas_count": 2,
+    "page_errors": [],
+    "screenshots": [
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemap-preview-r001.png",
+        "sha256": "88ce1f0aad4342312b89a8bdfa8e2144a1bf2413dcbddc1ebcaa8731dfee7f35"
+      },
+      {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemap-reopened-r001.png",
+        "sha256": "ed5f4e9dad55872bd97abe1691126d6aab3b41d8367f26ca82443eb5bbd899ee"
+      }
+    ]
+  },
+  "reopen": {
+    "left_to_basic_then_return_map_online": true,
+    "provider": "自定义地图",
+    "service": "矢量地图 Style JSON",
+    "style_url_matches": true,
+    "canvases": 2,
+    "page_errors": []
+  },
+  "restoration_dry_run": {
+    "executed": true,
+    "action": "dry-run",
+    "guard_matches": true,
+    "transaction_restore_matches_before": true,
+    "committed": false,
+    "independent_readback_matches_after": true,
+    "fixed_row_scope": 14,
+    "note": "仅事务内撤销新增14键并校验后ROLLBACK；实际配置仍为可用本地网格；未来restore提交后须完整重载各测试客户端"
+  },
+  "claim_ceiling": "本地测试底图已配置且观察网格/正常保存重开/精确恢复回滚演练；不是flow/heat/symbolic运行通过，不是生产地图/权限/MVP/Goal验收",
+  "full_goal_obligations": 38,
+  "builtin_type_denominator": 49
+}

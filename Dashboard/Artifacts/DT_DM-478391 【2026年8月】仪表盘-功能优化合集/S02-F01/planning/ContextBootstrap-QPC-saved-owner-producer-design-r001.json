@@ -1,0 +1,546 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "沿用QPC r006独立审查准入，只根据Store Producer Trace r001和绑定源码设计 saved-canvas owner 的加载发布、缓存/模板/copy分类与失效边界；保留真实权限和产品UI/Store/source-read/target-commit阻塞。不得实现产品代码或测试。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "形成可供独立语义复核的产品入口设计候选，澄清哪些加载分支可成为saved owner及尚缺的真实授权主体来源。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerDesign-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、测试或QPC r005 cases",
+      "读取/暴露来源过滤配置或提交目标资源",
+      "调用真实应用、数据库、权限API或创建账号",
+      "将detached helper或静态Trace表述为运行时/身份/授权证据",
+      "改变Goal分母、Scope Delta或S01状态",
+      "发放产品UI/Store/权限/来源读取/目标提交Builder准入"
+    ],
+    "maximum_claim": "仅产品入口设计候选；不批准UI/Store接线、来源读取、提交或权限验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r005.md",
+      "revision": "ddef9ea1e00dcd1cffee040b51e3632cca85d7166fd9782c9ff4246b2ccd3d69",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r005.json",
+      "revision": "388f0719d018b7cd444b6232d8601e0825513f99d0dee98ca68cf89dd3240728",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesignDelta-r006.md",
+      "revision": "026983613a8feec703be574888e48695b344bc9260db08ef42284fcaab0a8cfc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignDeltaReview-r006.md",
+      "revision": "407c08a7d623f68fd7dd8d18a89543618a93e7675318bcccf4804eafbe3e7b79",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitStoreProducerTrace-r001.md",
+      "revision": "c48e9c04dce9e663ea36b1b0f312b45e06ff9927b15f691173704f9a5c37542b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-source-Validation-r002.md",
+      "revision": "83a2c649d3d2281616116da5387fa9e2303418140f67ffa6ccf4dfa7848b2070",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "75afa6dbcbbd9f76fdb1731af1592c78b923b205bbe280b1fa5be3d38774a1d8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r217.json",
+      "revision": "5384158836c7577f06efa67527043fa19cd76a56ad958e41145ec9c67398209f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "revision": "75c0550afc403cf06ab0ce62cf459dc22d1676842293f73e575bc351b333dddd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "revision": "6f512a5d714efe5a64746fb8f7d3d78b8e3f7bcc46d74fb362ef5948704db72e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/components/visualization/CanvasCacheDialog.vue",
+      "revision": "6f6d4c1db4448606ca3c8d04470f5d8bb695e1db7a4eca5b826f836e985be7a3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+      "revision": "f475e94fd51c70a6d634ff80caf0cc35d5430556bedf5e5312b8d09f1dd94130",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-created-lifecycle.ts",
+      "revision": "34628b936fccd746e949e29bc28c201e66a86a98ef7ba265cc34428c6cadd990",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "为 saved-canvas producer 设计绑定目标、当前源码加载流程、身份轴及权限前置边界。",
+      "applicability": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "auth-provider-unavailable",
+      "condition": "真实权限provider/隔离用户身份无法追溯到公开契约与当前产品实现",
+      "action": "将source-read与target-commit标记为NOT_READY并保留完整测试义务。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "load-branch-gap",
+      "condition": "saved/copy/template/cache路径对象身份、发布顺序或主体切换行为未由源码证明",
+      "action": "分别标记unknown并要求独立源证据，不合并成一个支持声明。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "frozen-input-drift",
+      "condition": "Goal、review准入、source trace或冻结源码摘要变化",
+      "action": "停止生成设计，重新建立Context/Card并核对本轮Delta。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10项Goal AC、26项must-have、16项产品义务、Scope Delta none；S01独立；真实权限BLOCKED/NOT_RUN；产品入口NOT_READY。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_design_then_independent_semantic_review",
+    "reason": "读取独立Trace形成产品入口候选，但权限/API和Store producer待独立裁定；不进入Builder。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "QPC r006 review准入范围",
+    "Store Producer Trace r001及源映射",
+    "dashboard/canvasUtils/dvMain/snapshot实际源码",
+    "saved owner helper边界",
+    "权限环境与Goal完整原义"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QPC-SAVED-OWNER-PRODUCER-DESIGN-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r217.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q009"
+  ],
+  "maximum_claim": "产品入口设计候选；不证明接线、权限、复制/粘贴、保存回显或Goal验收。",
+  "design_objective": "为已保存Dashboard资源的owner producer定义加载发布点、分支能力边界、身份失效和后续精确准入输入。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitSavedOwnerProducerDesign-r001.md"
+}

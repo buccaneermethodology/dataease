@@ -1,0 +1,127 @@
+{
+  "schema_version": "query_schema_lifecycle_fixtures_v1",
+  "artifact_id": "S02-QUERY-ADAPTER-FIELD-LIFECYCLE-DESIGN-r001",
+  "status": "candidate_not_frozen",
+  "claim_ceiling": "源码派生的字段生命周期及事务边界候选；不是完整产品schema、实现或运行验收。",
+  "goal_denominator": {
+    "goal_acceptance_criteria": 10,
+    "must_haves": 26,
+    "product_obligations": 16,
+    "permissions": "BLOCKED / NOT_RUN"
+  },
+  "identity_domains": [
+    {"kind": "canvas_component", "example": "component-src -> component-target", "mapping": "authority-provided unique component id map"},
+    {"kind": "query_condition", "example": "condition-src -> condition-target", "mapping": "fresh unique target condition id"},
+    {"kind": "dataset_query_field", "example": ["dataset-src", "query-src", "field-src"], "mapping": "three independent authority-provided id maps"},
+    {"kind": "cascade_node", "example": "cascade-src -> cascade-target", "mapping": "fresh unique target node id"},
+    {"kind": "component_key", "example": "checkedFieldsMap[component-src]", "mapping": "target component id map; never a display name"}
+  ],
+  "cases": [
+    {
+      "id": "QSL-001",
+      "purpose": "rebind the minimal supported select configuration while discarding source runtime selection",
+      "status": "candidate_oracle",
+      "input": {
+        "condition": {"id": "condition-src", "name": "Region", "dataset": {"id": "dataset-src"}, "field": {"id": "field-src", "name": "Region"}, "displayId": "field-src", "displayType": "0", "multiple": false, "defaultValueCheck": true, "defaultValue": "north", "selectValue": "south", "mapValue": ["source-mapped"], "checkedFields": ["component-src"], "checkedFieldsMap": {"component-src": "field-src"}},
+        "identity_map": {"condition-src": "condition-target", "dataset-src": "dataset-target", "field-src": "field-target", "component-src": "component-target"},
+        "target_enum": ["north", "east"]
+      },
+      "expected": {
+        "condition": {"id": "condition-target", "defaultValueCheck": true, "defaultValue": "north", "selectValue": "<target-initialized>", "mapValue": "<recomputed-from-target-enum>", "dataset.id": "dataset-target", "field.id": "field-target", "displayId": "field-target", "checkedFields": ["component-target"], "checkedFieldsMap": {"component-target": "field-target"}},
+        "source_runtime_values_copied": false,
+        "status_limit": "仅源码候选；对本设计不运行产品适配器"
+      }
+    },
+    {
+      "id": "QSL-002",
+      "purpose": "preserve a dynamic time rule without freezing a computed absolute date",
+      "status": "partial_oracle",
+      "input": {"condition": {"displayType": "7", "timeType": "dynamic", "relativeToCurrentRange": "last-7-days", "timeNum": 7, "relativeToCurrentType": "day", "arbitraryTime": "<source-runtime-date>", "selectValue": ["<source-start>", "<source-end>"]}},
+      "expected": {"rule_fields": "KEEP when the target supports the same time shape", "computed_selectValue": "RESET", "unsupported_target": "REJECT", "full_nested_timeRange_schema": "unknown"}
+    },
+    {
+      "id": "QSL-003",
+      "purpose": "rebind a composite cascade reference and assign an independent node identity",
+      "status": "candidate_oracle",
+      "input": {"cascade": [[{"id": "node-src", "datasetId": "dataset-src--condition-src--field-src", "fieldId": "field-src", "name": "Region", "selectValue": ["south"], "currentSelectValue": ["south"]}]], "identity_map": {"dataset-src": "dataset-target", "condition-src": "condition-target", "field-src": "field-target"}},
+      "expected": {"cascade": [[{"id": "<fresh-node-id>", "datasetId": "dataset-target--condition-target--field-target", "fieldId": "field-target", "name": "<target-authority-label>", "selectValue": "<target-initialized>", "currentSelectValue": "<target-runtime-initialized>"}]], "whole_json_string_replacement_allowed": false}
+    },
+    {
+      "id": "QSL-004",
+      "purpose": "reject a missing field mapping",
+      "status": "candidate_oracle",
+      "input": {"condition": {"id": "condition-src", "field": {"id": "field-src"}}, "identity_map": {"condition-src": "condition-target"}},
+      "expected": {"result": "REJECT", "reason": "MISSING_FIELD_MAPPING", "target_mutation": false, "history_append": false, "preview_or_query": false}
+    },
+    {
+      "id": "QSL-005",
+      "purpose": "reject ambiguous duplicate identity mapping",
+      "status": "candidate_oracle",
+      "input": {"condition": {"id": "condition-src", "field": {"id": "field-src"}}, "identity_map": {"field-src": ["field-target-a", "field-target-b"]}},
+      "expected": {"result": "REJECT", "reason": "AMBIGUOUS_IDENTITY", "target_mutation": false}
+    },
+    {
+      "id": "QSL-006",
+      "purpose": "reject a malformed composite reference rather than guessing by label",
+      "status": "candidate_oracle",
+      "input": {"cascade": [[{"datasetId": "dataset-src--condition-src", "fieldId": "field-src", "name": "Region"}]]},
+      "expected": {"result": "REJECT", "reason": "MALFORMED_OR_AMBIGUOUS_COMPOSITE_ID", "name_based_fallback": false, "target_mutation": false}
+    },
+    {
+      "id": "QSL-007",
+      "purpose": "preserve default intent but surface a default missing from target enum",
+      "status": "policy_pending",
+      "input": {"condition": {"defaultValueCheck": true, "defaultValue": "south", "selectValue": "south"}, "target_enum": ["north", "east"]},
+      "expected": {"default_rule": "KEEP_AS_INTENT", "runtime_select": "RESET", "target_display": "invalid", "confirmation": "reject until user resolves or target contract defines an explicit resolution", "maintenance_policy": "needs independent review"}
+    },
+    {
+      "id": "QSL-008",
+      "purpose": "reject unknown persisted or historical keys until a versioned policy exists",
+      "status": "candidate_boundary",
+      "input": {"condition": {"id": "condition-src", "field": {"id": "field-src"}, "legacyExtensionV": {"opaque": true}}, "schema_revision": "unknown"},
+      "expected": {"result": "REJECT_OR_UNKNOWN_BEFORE_WRITE", "silent_drop": false, "silent_passthrough": false, "compatibility_policy": "unknown"}
+    },
+    {
+      "id": "QSL-009",
+      "purpose": "parameters remain supported by parent scope and are not silently modeled as ordinary text select",
+      "status": "unknown_requires_source_schema",
+      "input": {"condition": {"displayType": "8", "parameters": [{"opaque": "<real-parameter-shape>"}], "parametersCheck": true, "parametersList": ["<unknown-versioned-shape>"]}},
+      "expected": {"parameter_schema": "unknown", "permanent_rejection_of_parameter_shapes": false, "product_builder_admission": "not granted by this fixture"}
+    },
+    {
+      "id": "QSL-010",
+      "purpose": "cycles or broken cascade closure reject as a whole",
+      "status": "candidate_oracle",
+      "input": {"cascade": [["condition-A -> condition-B", "condition-B -> condition-A"]]},
+      "expected": {"result": "REJECT", "reason": "CYCLE_OR_BROKEN_REFERENCE_CLOSURE", "partial_candidate_published": false}
+    },
+    {
+      "id": "QSL-011",
+      "purpose": "revalidate target revision before atomic commit",
+      "status": "candidate_oracle",
+      "input": {"prepared_target_revision": 41, "current_target_revision": 42, "prepared_candidate": {"propValue": "<candidate>", "cascade": "<candidate>"}},
+      "expected": {"result": "REJECT_AND_REPREPARE", "target_propValue_unchanged": true, "target_cascade_unchanged": true, "history_append": false, "preview_or_query": false}
+    },
+    {
+      "id": "QSL-012",
+      "purpose": "successful commit publishes both query roots once, then requests one preview",
+      "status": "design_candidate_requires_runtime_validation",
+      "input": {"prepared_revision": 41, "current_revision": 41, "authorized": "<actual-auth-check-required>", "candidate": {"propValue": "<complete-value>", "cascade": "<complete-cascade>"}},
+      "expected": {"publication": "single synchronous state action", "revision": 42, "history_append_count": 1, "preview_or_query_count": 1, "repeat_callback_effect": 0, "vue_runtime_atomicity": "not proven"}
+    },
+    {
+      "id": "QSL-013",
+      "purpose": "permission denial blocks candidate preparation/commit without substituting a mock",
+      "status": "acceptance_blocked_not_run",
+      "input": {"actor": "readonly-user", "permission_evidence": "unavailable-real-multiuser-environment"},
+      "expected": {"result": "NOT_RUN", "standalone_admin_or_mock_substitution": false, "goal_permission_claim": "BLOCKED / NOT_RUN"}
+    },
+    {
+      "id": "QSL-014",
+      "purpose": "unknown options and checked-field extensions must be discovered before freezing a whitelist",
+      "status": "unknown_requires_expanded_source_read",
+      "input": {"condition": {"optionFilter": "<versioned-rule>", "checkedFieldsMapArrCustom": "<dynamic-field>"}},
+      "expected": {"matrix_status": "unknown", "arbitrary_drop": false, "arbitrary_passthrough": false, "next_action": "complete producer/consumer/version inventory"}
+    }
+  ]
+}

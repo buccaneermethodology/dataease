@@ -35,7 +35,12 @@ import {
 } from '@/utils/componentUtils'
 import { formatterItem } from '@/views/chart/components/js/formatter'
 import { checkFilterRemove } from '@/custom-component/v-query/QueryUtils'
+import { toRaw } from 'vue'
+import { createQuerySingleSelectLifecycleOwner } from '@/custom-component/filter-copy/query-single-select-session'
 const { t } = useI18n()
+
+// This capability intentionally stays outside serializable Pinia state and canvas JSON.
+const querySingleSelectLifecycle = createQuerySingleSelectLifecycleOwner()
 
 const BATCH_MISC_EXCLUDE_PROPS: Record<string, string[]> = {
   gauge: ['gaugeMinType', 'gaugeMinField', 'gaugeMin', 'gaugeMaxType', 'gaugeMaxField', 'gaugeMax'],
@@ -520,6 +525,61 @@ export const dvMainStore = defineStore('dataVisualization', {
 
     setComponentData(componentData = []) {
       this.componentData = componentData
+    },
+
+    beginQuerySingleSelectSession(context) {
+      return querySingleSelectLifecycle.beginSession(context)
+    },
+    registerPendingQuerySingleSelect(component) {
+      const queryCount = this.componentData.filter(
+        item => item?.component === 'VQuery' && item?.innerType === 'VQuery'
+      ).length
+      return querySingleSelectLifecycle.registerPending(toRaw(component), queryCount)
+    },
+    querySingleSelectLifecycleState() {
+      return querySingleSelectLifecycle.getState()
+    },
+    querySingleSelectAllows(component) {
+      return querySingleSelectLifecycle.allowsQuery(toRaw(component))
+    },
+    prepareQuerySingleSelectConfirmation(input) {
+      return querySingleSelectLifecycle.prepareConfirmation({
+        ...input,
+        component: toRaw(input?.component)
+      })
+    },
+    commitQuerySingleSelectConfirmation(prepared, expectedRevision, callbacks) {
+      return querySingleSelectLifecycle.commitConfirmation(prepared, expectedRevision, callbacks)
+    },
+    readQuerySingleSelectDesign(component) {
+      return querySingleSelectLifecycle.readDesign(toRaw(component))
+    },
+    markQuerySingleSelectDocumentEdited() {
+      return querySingleSelectLifecycle.markDocumentEdited()
+    },
+    captureQuerySingleSelectSave(input) {
+      return querySingleSelectLifecycle.captureSaveIntent(input)
+    },
+    validateQuerySingleSelectSaveTarget(token, dvInfo) {
+      return querySingleSelectLifecycle.validateSaveTarget(token, dvInfo)
+    },
+    markQuerySingleSelectSaveSent(token) {
+      return querySingleSelectLifecycle.markSaveSent(token)
+    },
+    settleQuerySingleSelectSave(token, result, currentIntentDigest) {
+      return querySingleSelectLifecycle.settleSave(token, result, currentIntentDigest)
+    },
+    recordQuerySingleSelectManifest(snapshot, actuallyAppended) {
+      return querySingleSelectLifecycle.recordManifest(snapshot, actuallyAppended)
+    },
+    prepareQuerySingleSelectHistory(snapshot, currentDvInfo) {
+      return querySingleSelectLifecycle.prepareHistory(snapshot, currentDvInfo)
+    },
+    commitQuerySingleSelectHistory(prepared, callbacks) {
+      return querySingleSelectLifecycle.commitHistory(prepared, callbacks)
+    },
+    invalidateQuerySingleSelectSession() {
+      return querySingleSelectLifecycle.invalidate()
     },
 
     setCanvasMultiply(componentDataMultiply = [], canvasViewInfoMultiply = {}) {

@@ -36,6 +36,7 @@ import { guid } from '@/views/visualized/data/dataset/form/util'
 import { ShorthandMode } from '@/components/visualization/component-background/Types'
 import { formatterItem } from '@/views/chart/components/js/formatter'
 import { changeRefComponentsSizeWithScalePointCircle } from '@/utils/changeComponentsSizeWithScale'
+import { captureSave } from '@/custom-component/filter-copy/query-single-select-session'
 const dvMainStore = dvMainStoreWithOut()
 const {
   inMobile,
@@ -841,6 +842,98 @@ export async function canvasSave(callBack) {
 }
 
 export async function canvasSaveWithParams(params, callBack) {
+  const lifecycle = dvMainStore.querySingleSelectLifecycleState()
+  if (lifecycle.blocksCreate && !curDvInfo.value.id && curDvInfo.value.optType !== 'copy') {
+    ElMessage.error(t('commons.save_failed'))
+    return
+  }
+  if (lifecycle.phase === 'open') {
+    const newContentId = guid()
+    const buildCaptureInput = () => {
+      const state = dvMainStore.querySingleSelectLifecycleState()
+      const query = componentData.value.find(
+        item => item?.component === 'VQuery' && item?.innerType === 'VQuery'
+      )
+      const design = query ? dvMainStore.readQuerySingleSelectDesign(query) : null
+      const designQuery = design?.ok ? design.value.find(item => item.id === query.id) : null
+      const jsonRoundTrip = value => JSON.parse(JSON.stringify(value))
+      const capturedComponents = jsonRoundTrip(componentData.value)
+      dvMainStore.removeGroupArea(capturedComponents)
+      return {
+        componentData: capturedComponents,
+        canvasStyleData: jsonRoundTrip(canvasStyleData.value),
+        canvasViewInfo: jsonRoundTrip(canvasViewInfo.value),
+        appData: appData.value == null ? null : jsonRoundTrip(appData.value),
+        queryDesignOverlay:
+          designQuery && state.phase === 'open'
+            ? {
+                componentId: query.id,
+                commitId: state.commitId,
+                propValue: jsonRoundTrip(designQuery.propValue),
+                cascade: jsonRoundTrip(designQuery.cascade)
+              }
+            : null,
+        dvInfo: jsonRoundTrip(curDvInfo.value),
+        checkVersion: wsCache.get('x-de-execute-version') ?? null,
+        contentId: newContentId
+      }
+    }
+    const saveIntent = dvMainStore.captureQuerySingleSelectSave(buildCaptureInput())
+    if (!saveIntent.ok) {
+      if (saveIntent.reason === 'INVALID_NAME') {
+        ElMessage.error(t('components.length_1_64_characters'))
+      } else if (['BUSY_CREATE', 'BUSY_CREATE_OUTCOME_UNKNOWN'].includes(saveIntent.reason)) {
+        ElMessage.error(t('commons.save_failed'))
+      }
+      return
+    }
+    const { token, capture } = saveIntent
+    let requestStarted = false
+    try {
+      if (capture.appCanvasNameCheck) {
+        const response = await appCanvasNameCheck(capture.appCanvasNameCheck)
+        if (response.data === 'repeat') {
+          dvMainStore.settleQuerySingleSelectSave(token, { status: 'definitely_not_written' })
+          ElMessage.error('数据集分组名称已存在')
+          return
+        }
+      }
+      if (capture.dvNameCheck) await dvNameCheck(capture.dvNameCheck)
+      if (!dvMainStore.validateQuerySingleSelectSaveTarget(token, curDvInfo.value)) {
+        dvMainStore.settleQuerySingleSelectSave(token, { status: 'definitely_not_written' })
+        return
+      }
+      if (!dvMainStore.markQuerySingleSelectSaveSent(token)) return
+      const method = capture.method === 'updateCanvas' ? updateCanvas : saveCanvas
+      requestStarted = true
+      const response = await method(capture.payload)
+      const currentCapture = captureSave(buildCaptureInput())
+      const settled = dvMainStore.settleQuerySingleSelectSave(
+        token,
+        {
+          status: 'success',
+          resourceId: capture.method === 'saveCanvas' ? response.data?.id : undefined
+        },
+        currentCapture.ok ? currentCapture.value.intentDigest : undefined
+      )
+      if (!settled.ok) return
+      const contentIdToApply = settled.dirty ? undefined : capture.payload.contentId
+      if (capture.method === 'updateCanvas') {
+        const status = params?.status ? params.status : response.data?.status
+        dvMainStore.updateDvInfoCall(status, null, contentIdToApply)
+      } else {
+        dvMainStore.updateDvInfoCall(0, response.data, contentIdToApply)
+      }
+      if (!settled.dirty) snapshotStore.resetStyleChangeTimes()
+      callBack(response)
+      return response
+    } catch (error) {
+      dvMainStore.settleQuerySingleSelectSave(token, {
+        status: requestStarted ? 'unknown' : 'definitely_not_written'
+      })
+      throw error
+    }
+  }
   dvMainStore.removeGroupArea()
   const componentDataToSave = cloneDeep(componentData.value)
   componentDataToSave.forEach(item => {

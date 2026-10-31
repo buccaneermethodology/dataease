@@ -1,0 +1,171 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续完成S02，在不依赖真实权限环境的范围内验证单选枚举迟到响应后C的真实Element Plus SelectV2标签、禁用状态与键盘交互；不得替代真实权限验收或声称完整F01/S02通过。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "按既有adapter r004审查提出的后续入口，增加可在浏览器运行的真实ElSelectV2窄呈现核对页，覆盖无效/未核实禁用选项的选中标签与键盘行为。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/tests/filter-copy-query-observation-component/element-rendering.html"
+    ],
+    "forbidden_actions": [
+      "修改Select.vue或其他产品源码",
+      "修改冻结Goal、adapter设计或fixtures",
+      "安装依赖、变更package manifest/lockfile",
+      "声称真实权限、撤权、保存、完整F01或S02已验证"
+    ],
+    "maximum_claim": "仅为真实浏览器中element-plus-secondary ElSelectV2对既定selected invalid/unverified options的呈现与有限键盘行为证据；不证明完整屏幕阅读器兼容或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterDesign-r004.md",
+      "revision": "f6a670229f79ac4a0e3c1443a787a8e52039e10c17451e25e01e3ca91509c709",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "冻结单选产品adapter支持域与用户裁定语义。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterFixtures-r004.json",
+      "revision": "c6d226e2428d1529e72cbbe799187a54cba10a1883619e266ff51c1e2911a1b4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复用invalid/unverified标签、disabled及model保留契约。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationProductAdapterDesignReview-r004.md",
+      "revision": "4418e1749050228faa40f3d5c590e131dde485e24c60f66296b2f87b935c950b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "界定此项真实Element呈现/a11y检查为后续独立验证门槛。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001"
+    },
+    {
+      "path": "core/core-frontend/node_modules/element-plus-secondary/package.json",
+      "revision": "local-installed-dependency",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "确认使用已安装依赖且不新增包。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectElementRenderingFixtures-r001.json",
+      "revision": "7ed327f6b2ae0931c280d5b4debe15b11351c64a3611668465054df196804845",
+      "domains": [
+        "scope",
+        "acceptance",
+        "validation"
+      ],
+      "reason": "冻结本次真实ElSelectV2窄呈现与交互oracle。",
+      "applicability": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "component_behavior_disagrees_with_existing_contract",
+      "mode": "deterministic",
+      "condition": "浏览器中的真实ElSelectV2结果与PA-003/004冻结预期不一致",
+      "action": "停止扩大范围，记录精确DOM/交互差异并回到Design/Review lane。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "accessibility_contract_appears_wider_than_fixture",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "发现超出EL-001/002冻结范围的屏幕阅读器或跨浏览器断言需求",
+      "action": "记录为后续Accessibility验证范围，不在本lane扩大通过声明。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10项AC、26项must-have与16项产品义务保持；此测试不关闭产品/权限义务。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_browser_test_harness",
+    "reason": "用户要求继续实施；此入口仅建立真实ElSelectV2呈现核对，不改产品逻辑。",
+    "snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r137.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "浏览器运行中的真实ElSelectV2 DOM与键盘事件",
+    "EL-001/EL-002固定fixture",
+    "原QOBS PA-003/PA-004边界",
+    "实际差异和Goal claim ceiling"
+  ],
+  "acceptance_criteria_ids": [
+    "EL-001-invalid-selected-value",
+    "EL-002-unverified-selected-value"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-QOBS-ASYNC-ELEMENT-RENDER-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r137.json"
+  },
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterDesign-r004.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationProductAdapterFixtures-r004.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectObservationProductAdapterDesignReview-r004.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectElementRenderingFixtures-r001.json",
+    "core/core-frontend/tests/filter-copy-query-observation-component/element-rendering.html"
+  ]
+}

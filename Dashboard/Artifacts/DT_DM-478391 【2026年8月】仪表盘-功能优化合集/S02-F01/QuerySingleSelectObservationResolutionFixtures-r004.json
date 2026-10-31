@@ -1,0 +1,2977 @@
+{
+  "task_id": "S02-QSSDH-OBS-01-02-resolution-design-r004",
+  "status": "DESIGN_CANDIDATE_WITH_FROZEN_QOBS_ASYNC_ORACLE",
+  "card_digest": "427d25954b243852a4d708e5c106a3ee921ee3bf7c087096e5f521b957a070e7",
+  "scope": "仅新建普通文本单选观察与恢复，合成调度oracle非运行事实；raw标签代表对象身份，不是可伪造来源字符串；state是本观察合同完整投影。",
+  "source_refs": [
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "sha256": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "sha256": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "sha256": "49f3d636af50e900cbdd23f250470da455b3392117a0d934255fd19680df09de"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryUtils.ts",
+      "sha256": "7704b3b606c7a3ae27e72e8ca4fdd3cbb8ff3e366f51e4028b56f90afc37db8f"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "sha256": "86fddf5dc5a44dcdce0e0895b10ee22265490174fe3018e05ccca614cf35c1db"
+    },
+    {
+      "path": "core/core-frontend/src/views/dashboard/index.vue",
+      "sha256": "d232d71fe920282a3cea72ed4e516cb1d5bcf06b128c24a584c30fc939de9559"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "sha256": "c2f225df687f0aa606419684a73dd03a9b9e19b04f4ed532dbfb9c6261f78157"
+    },
+    {
+      "path": "core/core-frontend/src/views/canvas/DeCanvas.vue",
+      "sha256": "f189476f0e47234188e959a1219ff52aedbfe84367b7d841a6189b29911b3dd2"
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC-QOBS-001",
+      "name": "当前身份的同步用户选择C：runtime变而design不变",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "guarded_select",
+          "captured": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-1",
+            "currentConditionRaw": "raw-1-q1",
+            "requestId": 2
+          },
+          "value": "C"
+        }
+      },
+      "expected": {
+        "decision": "candidate_contract",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 1,
+            "queryEmits": 1,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-002",
+      "name": "首次/后续发布后旧nextTick确认回调到达",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-2",
+          "currentConditionRaw": "raw-2-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 2,
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "queued_confirm_preview",
+          "captured": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-1",
+            "currentConditionRaw": "raw-1-q1",
+            "requestId": 2
+          }
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_NO_EFFECT",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-2",
+          "currentConditionRaw": "raw-2-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 2,
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-003",
+      "name": "同组件ID仍不等于同raw身份",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-replaced",
+          "currentConditionRaw": "raw-replaced-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "enum_then",
+          "captured": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-old-same-id",
+            "currentConditionRaw": "raw-old-same-id-q1",
+            "requestId": 2
+          },
+          "response": [
+            "X"
+          ]
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_NO_EFFECT",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-replaced",
+          "currentConditionRaw": "raw-replaced-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-004",
+      "name": "旧请求finally不能关闭新请求loading或回填map",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "enum_finally",
+          "captured": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-1",
+            "currentConditionRaw": "raw-1-q1",
+            "requestId": 1
+          }
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_NO_EFFECT",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-005",
+      "name": "离开/重新新建文档后旧事件丢弃",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "queued_query",
+          "captured": {
+            "documentEpoch": "epoch-previous",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-1",
+            "currentConditionRaw": "raw-1-q1",
+            "requestId": 2
+          }
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_NO_EFFECT",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-006",
+      "name": "受控外参X允许改变runtime默认但不改变design",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "guarded_outer_value",
+          "captured": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 1,
+            "currentRaw": "raw-1",
+            "currentConditionRaw": "raw-1-q1",
+            "requestId": 2
+          },
+          "value": "X"
+        }
+      },
+      "expected": {
+        "decision": "candidate_contract",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 1,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-007",
+      "name": "未登记原地写入：reader比对最近已接受runtime全投影，失活而不撤销用户编辑",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "read_managed_carrier",
+          "lastAcceptedRuntime": {
+            "$object": "f2081b079c4eb43948b9be97039e3f1b8c94cbcf735fca2be395b772f4dce946"
+          },
+          "currentRuntime": {
+            "$object": "5343ae036da47131b0d071706cc0079af5df0cb3ec5c98747f8de9ab82e7a215"
+          }
+        }
+      },
+      "expected": {
+        "decision": "INVALIDATE_NEW_CAPABILITY_ONLY",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 2,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "invalidated",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": null,
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "unavailable",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-008",
+      "name": "缺失/不合法sidecar先失活，再保留原全根恢复与事件",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-2",
+          "currentConditionRaw": "raw-2-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 2,
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "undo",
+          "selectedIndex": 0,
+          "sidecar": "missing",
+          "selectedRoot": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "legacyCacheViewIds": [
+            "chart-A"
+          ],
+          "observerReads": [
+            "before_pointer_move",
+            "after_root_set",
+            "before_emit"
+          ]
+        }
+      },
+      "expected": {
+        "decision": "LEGACY_RESTORE_WITHOUT_MANAGED_CARRIER",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 2,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-history",
+          "currentConditionRaw": "raw-history-q1",
+          "phase": "invalidated",
+          "gate": "open",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": null,
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 0,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 1,
+            "snapshotChangeToView": 1,
+            "snapshotAppend": 0
+          },
+          "reader": "unavailable",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "observation_trace": [
+          {
+            "at": "before_pointer_move",
+            "reader": "unavailable"
+          },
+          {
+            "at": "after_root_set",
+            "reader": "unavailable"
+          },
+          {
+            "at": "before_emit",
+            "reader": "unavailable"
+          }
+        ]
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-009",
+      "name": "缺失/不合法sidecar先失活，再保留原全根恢复与事件",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-2",
+          "currentConditionRaw": "raw-2-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 2,
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "undo",
+          "selectedIndex": 0,
+          "sidecar": "invalid",
+          "selectedRoot": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "legacyCacheViewIds": [
+            "chart-A"
+          ],
+          "observerReads": [
+            "before_pointer_move",
+            "after_root_set",
+            "before_emit"
+          ]
+        }
+      },
+      "expected": {
+        "decision": "LEGACY_RESTORE_WITHOUT_MANAGED_CARRIER",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 2,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-history",
+          "currentConditionRaw": "raw-history-q1",
+          "phase": "invalidated",
+          "gate": "open",
+          "root": {
+            "$object": "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c"
+          },
+          "carrier": null,
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 0,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 1,
+            "snapshotChangeToView": 1,
+            "snapshotAppend": 0
+          },
+          "reader": "unavailable",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "observation_trace": [
+          {
+            "at": "before_pointer_move",
+            "reader": "unavailable"
+          },
+          {
+            "at": "after_root_set",
+            "reader": "unavailable"
+          },
+          {
+            "at": "before_emit",
+            "reader": "unavailable"
+          }
+        ]
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-010",
+      "name": "有效sidecar恢复：发布期间reader不可用，完毕新root/carrier同属rev3",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 2,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-2",
+          "currentConditionRaw": "raw-2-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 2,
+            "design": {
+              "$object": "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "undo",
+          "selectedIndex": 0,
+          "sidecar": {
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            },
+            "documentEpoch": "epoch-1",
+            "sourceRevision": 1
+          },
+          "selectedRoot": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "legacyCacheViewIds": [
+            "chart-A"
+          ]
+        }
+      },
+      "expected": {
+        "decision": "candidate_contract",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 3,
+          "tokenGeneration": 2,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-history",
+          "currentConditionRaw": "raw-history-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 3,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 0,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 1,
+            "snapshotChangeToView": 1,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "observation_trace": [
+          {
+            "at": "prepare",
+            "reader": "old_matching_carrier",
+            "pointer": 1
+          },
+          {
+            "at": "before_pointer_move",
+            "reader": "unavailable",
+            "pointer": 1
+          },
+          {
+            "at": "after_root_set",
+            "reader": "unavailable",
+            "pointer": 0
+          },
+          {
+            "at": "after_selection_rebind_before_emit",
+            "reader": "new_matching_carrier",
+            "pointer": 0
+          }
+        ]
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-011",
+      "name": "无效undo边界不失活/不移动/不增revision",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 0,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        },
+        "event": {
+          "type": "undo_boundary"
+        }
+      },
+      "expected": {
+        "decision": "NO_OP",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 1,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 0,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path"
+        }
+      },
+      "kind": "proposed_observation_oracle_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-012A",
+      "name": "首次成功响应缺C：保留C并只发起一次核对请求",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 2,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 1,
+            "enumResponsesSettled": 0,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "options": [
+            "A",
+            "B"
+          ],
+          "selection": {
+            "value": "C",
+            "validity": "pending",
+            "display": "C"
+          }
+        },
+        "event": {
+          "type": "first_enum_response_missing_selected_value",
+          "responseValues": [
+            "A",
+            "X"
+          ],
+          "responseContainsSelected": false,
+          "latestRequestStillMatches": true,
+          "identityStillMatches": true,
+          "requestId": 2,
+          "capturedRuntimeGeneration": 1
+        }
+      },
+      "expected": {
+        "decision": "issue_exactly_one_verification_enum_request",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "pending",
+            "display": "C"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": [
+          "design carrier A unchanged",
+          "selected runtime value C unchanged",
+          "zero filter query/refresh emissions",
+          "no automatic retries beyond the single verification request",
+          "latestRequest递增至核对请求ID 3"
+        ]
+      },
+      "kind": "frozen_scheduling_contract_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-012B",
+      "name": "核对成功包含C：更新options并以有效值显示C",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "pending",
+            "display": "C"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "event": {
+          "type": "verification_enum_settled",
+          "latestRequestStillMatches": true,
+          "identityStillMatches": true,
+          "error": null,
+          "requestId": 3,
+          "responseValues": [
+            "A",
+            "C",
+            "X"
+          ],
+          "responseContainsSelected": true,
+          "capturedIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        }
+      },
+      "expected": {
+        "decision": "verification_success_contains_selected",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": false,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 2,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "valid",
+            "display": "C"
+          },
+          "options": [
+            "A",
+            "C",
+            "X"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": [
+          "design carrier A unchanged",
+          "selected runtime value C unchanged",
+          "zero filter query/refresh emissions",
+          "no automatic retries beyond the single verification request"
+        ]
+      },
+      "kind": "frozen_scheduling_contract_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-012C",
+      "name": "核对成功仍缺C：保留C并显示无效",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "pending",
+            "display": "C"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "event": {
+          "type": "verification_enum_settled",
+          "latestRequestStillMatches": true,
+          "identityStillMatches": true,
+          "error": null,
+          "requestId": 3,
+          "responseValues": [
+            "A",
+            "X"
+          ],
+          "responseContainsSelected": false,
+          "capturedIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        }
+      },
+      "expected": {
+        "decision": "verification_success_missing_selected",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": false,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 2,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "invalid",
+            "display": "C（无效）"
+          },
+          "options": [
+            "A",
+            "X"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": [
+          "design carrier A unchanged",
+          "selected runtime value C unchanged",
+          "zero filter query/refresh emissions",
+          "no automatic retries beyond the single verification request"
+        ]
+      },
+      "kind": "frozen_scheduling_contract_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-012D",
+      "name": "核对请求失败：保留C并显示未核实，结束loading",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "pending",
+            "display": "C"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "event": {
+          "type": "verification_enum_settled",
+          "latestRequestStillMatches": true,
+          "identityStillMatches": true,
+          "error": "network_or_api_error",
+          "requestId": 3,
+          "responseValues": null,
+          "capturedIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        }
+      },
+      "expected": {
+        "decision": "verification_failed_preserve_unverified",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 2,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": false,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 2,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "C",
+            "validity": "unverified",
+            "display": "C（未核实）"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": [
+          "design carrier A unchanged",
+          "selected runtime value C unchanged",
+          "zero filter query/refresh emissions",
+          "no automatic retries beyond the single verification request"
+        ]
+      },
+      "kind": "frozen_scheduling_contract_not_product_execution"
+    },
+    {
+      "id": "TC-QOBS-013",
+      "name": "核对期间改选D后旧核对响应及finally不写入、不关闭新loading",
+      "kind": "frozen_scheduling_contract_not_product_execution",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 3,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "4386f1c82026fcc7914a16a1a78866f8b0387f4c465d46f64d776657b6f171a0"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "D",
+            "validity": "pending",
+            "display": "D"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "event": {
+          "type": "stale_verification_then_after_user_selection",
+          "capturedIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          },
+          "requestId": 3,
+          "latestRequestStillMatches": true,
+          "identityStillMatches": false,
+          "mismatchAxes": [
+            "runtimeGeneration"
+          ],
+          "error": null,
+          "responseValues": [
+            "A",
+            "C",
+            "X"
+          ],
+          "responseContainsSelected": true,
+          "currentSelection": "D",
+          "currentRuntimeGeneration": 3,
+          "currentLatestRequest": 3,
+          "callbackPhase": "then_only"
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_THEN_RUNTIME_GENERATION_MISMATCH",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 3,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "4386f1c82026fcc7914a16a1a78866f8b0387f4c465d46f64d776657b6f171a0"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 3,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 2,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "D",
+            "validity": "pending",
+            "display": "D"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": {
+          "rootContainsSelectedValueD": true,
+          "rootMapValue": [
+            "D"
+          ],
+          "carrierAndDesignUnchanged": true,
+          "selectedValue": "D",
+          "optionsRemain": [
+            "A",
+            "B"
+          ],
+          "loadingRemains": true,
+          "requestIdUnchanged": true,
+          "enumRequestsStarted": 2,
+          "enumResponsesSettled": 1,
+          "queryRefreshes": 0,
+          "runtimeWrites": 0,
+          "staleThenWrites": 0,
+          "validityWrites": 0,
+          "designRevisionUnchanged": true
+        }
+      }
+    },
+    {
+      "id": "TC-QOBS-014",
+      "name": "用户改选D并发起新枚举后旧核对then与finally不关闭新loading",
+      "kind": "frozen_scheduling_contract_not_product_execution",
+      "input": {
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 3,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "4386f1c82026fcc7914a16a1a78866f8b0387f4c465d46f64d776657b6f171a0"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 4,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 3,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "D",
+            "validity": "pending",
+            "display": "D"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "event": {
+          "type": "old_verification_settles_after_new_request_started",
+          "capturedIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          },
+          "requestId": 3,
+          "latestRequestStillMatches": false,
+          "identityStillMatches": false,
+          "mismatchAxes": [
+            "runtimeGeneration",
+            "requestId"
+          ],
+          "error": null,
+          "responseValues": [
+            "A",
+            "C",
+            "X"
+          ],
+          "responseContainsSelected": true,
+          "thenAndFinallyMustBeNoOps": true,
+          "currentSelection": "D",
+          "currentRuntimeGeneration": 3,
+          "currentRequestId": 4
+        }
+      },
+      "expected": {
+        "decision": "DROP_STALE_RESPONSE_AND_FINALLY_PRESERVE_NEW_LOADING",
+        "state": {
+          "documentEpoch": "epoch-1",
+          "designRevision": 1,
+          "tokenGeneration": 1,
+          "runtimeGeneration": 3,
+          "currentRaw": "raw-1",
+          "currentConditionRaw": "raw-1-q1",
+          "phase": "active",
+          "gate": "open",
+          "root": {
+            "$object": "4386f1c82026fcc7914a16a1a78866f8b0387f4c465d46f64d776657b6f171a0"
+          },
+          "carrier": {
+            "componentId": "query-new",
+            "designRevision": 1,
+            "design": {
+              "$object": "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885"
+            }
+          },
+          "latestRequest": 4,
+          "loading": true,
+          "snapshotIndex": 1,
+          "effects": {
+            "runtimeWrites": 0,
+            "queryEmits": 0,
+            "snapshotChange": 0,
+            "snapshotChangeToView": 0,
+            "snapshotAppend": 0,
+            "enumRequestsStarted": 3,
+            "enumResponsesSettled": 1,
+            "queryRefreshes": 0
+          },
+          "reader": "matching_carrier",
+          "ordinarySave": "unchanged_original_path",
+          "selection": {
+            "value": "D",
+            "validity": "pending",
+            "display": "D"
+          },
+          "options": [
+            "A",
+            "B"
+          ],
+          "verificationRequestIdentity": {
+            "documentEpoch": "epoch-1",
+            "designRevision": 1,
+            "tokenGeneration": 1,
+            "runtimeGeneration": 2,
+            "requestId": 3,
+            "selectedValue": "C",
+            "componentRaw": "raw-1",
+            "conditionRaw": "raw-1-q1"
+          }
+        },
+        "constraints": {
+          "rootContainsSelectedValueD": true,
+          "rootMapValue": [
+            "D"
+          ],
+          "carrierAndDesignUnchanged": true,
+          "selectedValue": "D",
+          "optionsRemain": [
+            "A",
+            "B"
+          ],
+          "loadingRemains": true,
+          "requestIdRemains": 4,
+          "enumRequestsStarted": 3,
+          "enumResponsesSettled": 1,
+          "queryRefreshes": 0,
+          "runtimeWrites": 0,
+          "staleThenWrites": 0,
+          "staleFinallyWrites": 0,
+          "validityWrites": 0,
+          "designRevisionUnchanged": true
+        }
+      }
+    }
+  ],
+  "objects": {
+    "b485a7a1ea2029c109535f492942a00c80b61afebfa87d7cba13655f61c928bc": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "A"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "A",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "b5af0c056f49f9c4e67f1d7f7f28cf1421437be9fa27f0d0b8902e66b2d6f885": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "A"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "A",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "7ac1794b951d7905c54f26c518940c488d2af8d40bc47329fcb6858660c7e935": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "C"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "C",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "b4d530f4d412639a13121d361b963e6da07d61b73112c2727f094db1242288fd": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "D"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "D",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "ae460c95e6ba719f34152232befb287e6a5d02ee18d8b25251306cf251e529c9": {
+      "propValue": [
+        {
+          "id": "q1",
+          "name": "省",
+          "showError": true,
+          "timeGranularity": "date",
+          "timeGranularityMultiple": "datetimerange",
+          "field": {
+            "id": "province",
+            "type": "VARCHAR",
+            "name": "省",
+            "deType": 0
+          },
+          "displayId": "province",
+          "sortId": "",
+          "sort": "asc",
+          "defaultMapValue": [
+            "D"
+          ],
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": "",
+          "defaultConditionValueOperatorF": "eq",
+          "defaultConditionValueF": "",
+          "defaultConditionValueOperatorS": "like",
+          "defaultConditionValueS": "",
+          "timeType": "fixed",
+          "relativeToCurrent": "custom",
+          "required": false,
+          "timeNum": 0,
+          "relativeToCurrentType": "date",
+          "around": "f",
+          "parametersStart": null,
+          "parametersEnd": null,
+          "arbitraryTime": "2026-10-16T00:00:00.000Z",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "date",
+          "aroundRange": "f",
+          "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+          "auto": false,
+          "defaultValue": "D",
+          "optionValueSource": 1,
+          "valueSource": [],
+          "dataset": {
+            "id": "201",
+            "name": "销售",
+            "fields": []
+          },
+          "visible": true,
+          "defaultValueCheck": true,
+          "multiple": false,
+          "displayType": "0",
+          "checkedFields": [
+            "chart-A"
+          ],
+          "parameters": [],
+          "parametersCheck": false,
+          "parametersList": [],
+          "checkedFieldsMap": {
+            "chart-A": "province"
+          },
+          "hideConditionSwitching": false,
+          "resultMode": 0,
+          "relativeToCurrentRange": "custom",
+          "treeDatasetId": "201",
+          "setTimeRange": false,
+          "showEmpty": false,
+          "defaultNumValueStart": null,
+          "defaultNumValueEnd": null,
+          "numValueEnd": null,
+          "numValueStart": null,
+          "displayFormat": 0,
+          "timeRange": {
+            "intervalType": "none",
+            "dynamicWindow": false,
+            "maximumSingleQuery": 0,
+            "regularOrTrends": "fixed",
+            "regularOrTrendsValue": "",
+            "relativeToCurrent": "custom",
+            "timeNum": 0,
+            "relativeToCurrentType": "year",
+            "around": "f",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "year",
+            "aroundRange": "f",
+            "relativeToCurrentRange": "custom"
+          },
+          "oldTreeLoad": false,
+          "treeCheckedList": [],
+          "defaultValueFirstItem": false,
+          "treeFieldList": [],
+          "checkedFieldsMapArr": {},
+          "checkedFieldsMapArrNum": {},
+          "checkedFieldsMapStart": {},
+          "checkedFieldsMapStartNum": {},
+          "checkedFieldsMapEnd": {},
+          "checkedFieldsMapEndNum": {},
+          "parametersArr": {}
+        }
+      ],
+      "cascade": []
+    },
+    "925208800c639cc23ceecd3d92295eb9e1adb2caf9d698c90d21de97ff36944c": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "X"
+            ],
+            "mapValue": [
+              "X"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "X",
+            "selectValue": "X",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ],
+    "f2081b079c4eb43948b9be97039e3f1b8c94cbcf735fca2be395b772f4dce946": [
+      {
+        "id": "q1",
+        "name": "省",
+        "showError": true,
+        "timeGranularity": "date",
+        "timeGranularityMultiple": "datetimerange",
+        "field": {
+          "id": "province",
+          "type": "VARCHAR",
+          "name": "省",
+          "deType": 0
+        },
+        "displayId": "province",
+        "sortId": "",
+        "sort": "asc",
+        "defaultMapValue": [
+          "A"
+        ],
+        "mapValue": [
+          "A"
+        ],
+        "conditionType": 0,
+        "conditionValueOperatorF": "eq",
+        "conditionValueF": "",
+        "conditionValueOperatorS": "like",
+        "conditionValueS": "",
+        "defaultConditionValueOperatorF": "eq",
+        "defaultConditionValueF": "",
+        "defaultConditionValueOperatorS": "like",
+        "defaultConditionValueS": "",
+        "timeType": "fixed",
+        "relativeToCurrent": "custom",
+        "required": false,
+        "timeNum": 0,
+        "relativeToCurrentType": "date",
+        "around": "f",
+        "parametersStart": null,
+        "parametersEnd": null,
+        "arbitraryTime": "2026-10-16T00:00:00.000Z",
+        "timeNumRange": 0,
+        "relativeToCurrentTypeRange": "date",
+        "aroundRange": "f",
+        "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+        "auto": false,
+        "defaultValue": "A",
+        "selectValue": "A",
+        "optionValueSource": 1,
+        "valueSource": [],
+        "dataset": {
+          "id": "201",
+          "name": "销售",
+          "fields": []
+        },
+        "visible": true,
+        "defaultValueCheck": true,
+        "multiple": false,
+        "displayType": "0",
+        "checkedFields": [
+          "chart-A"
+        ],
+        "parameters": [],
+        "parametersCheck": false,
+        "parametersList": [],
+        "checkedFieldsMap": {
+          "chart-A": "province"
+        },
+        "hideConditionSwitching": false,
+        "resultMode": 0,
+        "relativeToCurrentRange": "custom",
+        "treeDatasetId": "201",
+        "setTimeRange": false,
+        "showEmpty": false,
+        "defaultNumValueStart": null,
+        "defaultNumValueEnd": null,
+        "numValueEnd": null,
+        "numValueStart": null,
+        "displayFormat": 0,
+        "timeRange": {
+          "intervalType": "none",
+          "dynamicWindow": false,
+          "maximumSingleQuery": 0,
+          "regularOrTrends": "fixed",
+          "regularOrTrendsValue": "",
+          "relativeToCurrent": "custom",
+          "timeNum": 0,
+          "relativeToCurrentType": "year",
+          "around": "f",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "year",
+          "aroundRange": "f",
+          "relativeToCurrentRange": "custom"
+        },
+        "oldTreeLoad": false,
+        "treeCheckedList": [],
+        "defaultValueFirstItem": false,
+        "treeFieldList": [],
+        "checkedFieldsMapArr": {},
+        "checkedFieldsMapArrNum": {},
+        "checkedFieldsMapStart": {},
+        "checkedFieldsMapStartNum": {},
+        "checkedFieldsMapEnd": {},
+        "checkedFieldsMapEndNum": {},
+        "parametersArr": {}
+      }
+    ],
+    "5343ae036da47131b0d071706cc0079af5df0cb3ec5c98747f8de9ab82e7a215": [
+      {
+        "id": "q1",
+        "name": "省",
+        "showError": true,
+        "timeGranularity": "date",
+        "timeGranularityMultiple": "datetimerange",
+        "field": {
+          "id": "province",
+          "type": "VARCHAR",
+          "name": "省",
+          "deType": 0
+        },
+        "displayId": "province",
+        "sortId": "",
+        "sort": "asc",
+        "defaultMapValue": [
+          "D"
+        ],
+        "mapValue": [
+          "D"
+        ],
+        "conditionType": 0,
+        "conditionValueOperatorF": "eq",
+        "conditionValueF": "",
+        "conditionValueOperatorS": "like",
+        "conditionValueS": "",
+        "defaultConditionValueOperatorF": "eq",
+        "defaultConditionValueF": "",
+        "defaultConditionValueOperatorS": "like",
+        "defaultConditionValueS": "",
+        "timeType": "fixed",
+        "relativeToCurrent": "custom",
+        "required": false,
+        "timeNum": 0,
+        "relativeToCurrentType": "date",
+        "around": "f",
+        "parametersStart": null,
+        "parametersEnd": null,
+        "arbitraryTime": "2026-10-16T00:00:00.000Z",
+        "timeNumRange": 0,
+        "relativeToCurrentTypeRange": "date",
+        "aroundRange": "f",
+        "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+        "auto": false,
+        "defaultValue": "D",
+        "selectValue": "D",
+        "optionValueSource": 1,
+        "valueSource": [],
+        "dataset": {
+          "id": "201",
+          "name": "销售",
+          "fields": []
+        },
+        "visible": true,
+        "defaultValueCheck": true,
+        "multiple": false,
+        "displayType": "0",
+        "checkedFields": [
+          "chart-A"
+        ],
+        "parameters": [],
+        "parametersCheck": false,
+        "parametersList": [],
+        "checkedFieldsMap": {
+          "chart-A": "province"
+        },
+        "hideConditionSwitching": false,
+        "resultMode": 0,
+        "relativeToCurrentRange": "custom",
+        "treeDatasetId": "201",
+        "setTimeRange": false,
+        "showEmpty": false,
+        "defaultNumValueStart": null,
+        "defaultNumValueEnd": null,
+        "numValueEnd": null,
+        "numValueStart": null,
+        "displayFormat": 0,
+        "timeRange": {
+          "intervalType": "none",
+          "dynamicWindow": false,
+          "maximumSingleQuery": 0,
+          "regularOrTrends": "fixed",
+          "regularOrTrendsValue": "",
+          "relativeToCurrent": "custom",
+          "timeNum": 0,
+          "relativeToCurrentType": "year",
+          "around": "f",
+          "timeNumRange": 0,
+          "relativeToCurrentTypeRange": "year",
+          "aroundRange": "f",
+          "relativeToCurrentRange": "custom"
+        },
+        "oldTreeLoad": false,
+        "treeCheckedList": [],
+        "defaultValueFirstItem": false,
+        "treeFieldList": [],
+        "checkedFieldsMapArr": {},
+        "checkedFieldsMapArrNum": {},
+        "checkedFieldsMapStart": {},
+        "checkedFieldsMapStartNum": {},
+        "checkedFieldsMapEnd": {},
+        "checkedFieldsMapEndNum": {},
+        "parametersArr": {}
+      }
+    ],
+    "4386f1c82026fcc7914a16a1a78866f8b0387f4c465d46f64d776657b6f171a0": [
+      {
+        "id": "query-new",
+        "component": "VQuery",
+        "innerType": "VQuery",
+        "canvasId": "canvas-main",
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A"
+            ],
+            "mapValue": [
+              "D"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "D",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "style": {
+          "width": 400,
+          "height": 100
+        },
+        "x": 1,
+        "sizeX": 72,
+        "sizeY": 4,
+        "cascade": []
+      }
+    ]
+  },
+  "resolution": "递归替换{$object:sha}为本文件objects完整值；SHA为展开后canonical JSON的UTF-8 SHA256。",
+  "remaining_open": "无待维护者裁定项；待独立增量复核确认完整冻结oracle。",
+  "claims": "17条完整候选调度oracle；未执行Vue/网络/权限；Goal完整分母保留。",
+  "decision_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MaintainerDecision-QOBS-ASYNC-01-r001.md",
+  "oracle_notes": {
+    "request_count": "case 012A 首响后累计启动两次枚举请求（原请求+一次核对）；不得再自动重试。",
+    "loading": "首次响应缺C后保持 true；核对成功/失败的 settle/finally 完成后置 false。",
+    "selection": "任何分支都不得清除/覆盖用户值 C 或回写设计配置。",
+    "options": "首次响应触发核对时暂不接受其 options；只有核对成功才提交 options。核对失败保留此前已接受列表。",
+    "query_refreshes": "枚举核对不调用 queryDataForId、不发过滤条件刷新。",
+    "failure": "核对失败只可标为未核实，不得伪称“不存在”或标成无效。",
+    "bounds": "冻结的是经维护者裁定的单次迟到响应竞态；异步任务仍须遵守既有对象/raw/revision/token/request 身份门控。",
+    "response_identity": "响应和finally均绑定发请求时身份，包括真实raw对象身份、documentEpoch、designRevision、tokenGeneration、runtimeGeneration、requestId及捕获时选值。013仅改变runtimeGeneration且保持requestId不变，单独见证运行身份门控；014在新请求启动后见证旧then/finally不会关闭新loading。"
+  }
+}

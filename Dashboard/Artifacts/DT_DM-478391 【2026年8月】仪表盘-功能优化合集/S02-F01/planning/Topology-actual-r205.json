@@ -1,0 +1,93 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "Topology-actual-r205",
+  "recorded_at": "2026-10-20T13:30:44Z",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r204.json",
+  "phase": "runner RED r004 independently confirmed; source-only helper admission prepared",
+  "task_id": "S02-SAVED-CANVAS-OWNER-helper-source-builder-r001",
+  "timestamp_note": "Earlier topology chain includes inconsistent recorded_at ordering, documented in RED Validation r004. This snapshot follows file references and does not infer event chronology from timestamp order.",
+  "execution": [
+    {
+      "lane": "saved_canvas_owner_source_builder",
+      "identity": "/root",
+      "state": "admission_prepared",
+      "scope": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts only; GREEN r001 evidence is also listed in lane card outputs"
+    },
+    {
+      "lane": "independent_validation",
+      "identity": "/root/s02_design",
+      "state": "pending_source_candidate",
+      "scope": "read-only source/GREEN delta validation after builder"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerImplementationContract-r003.json",
+      "sha256": "268225f040bc1062e9e62dc071bcd43fa75542c6943300e5f49fd07fc0926d82"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "sha256": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+      "sha256": "f209c9552d2807e628c8334d5e2164114837ec9af2a4592b1332d89715d9a822"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerImplementationContractReview-r003.md",
+      "sha256": "5f434be1128fa5215b2bba8c5fa22bd00b5e37438836a5ecc4331b961bc00425"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r004.md",
+      "sha256": "5d288a57afeba8cfa0710676901b8fb5aee36a6f3d1693c0b8ba830ac429009c"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+      "sha256": "5539326540d67c8c352e91bee1611d7783e6f02bd961b7030510f877b600dfc4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r204.json",
+      "sha256": "611dd33d37c90aed41390b35f3ad59124a14dedf321fa80fd99e7854da0286f2"
+    }
+  ],
+  "planned_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.stdout.txt",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.stderr.txt",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.exitcode.txt",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-GREEN-r001.identity.json"
+  ],
+  "write_boundary": {
+    "source_target": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+    "forbidden": [
+      "Vue/Store adapter",
+      "QPC product wiring",
+      "permission/auth substitute",
+      "contract/fixture/runner change",
+      "existing create-owner source changes"
+    ]
+  },
+  "green_identity_scope": {
+    "runner_sha256": "5539326540d67c8c352e91bee1611d7783e6f02bd961b7030510f877b600dfc4",
+    "fixture_sha256": "f209c9552d2807e628c8334d5e2164114837ec9af2a4592b1332d89715d9a822",
+    "contract_sha256": "268225f040bc1062e9e62dc071bcd43fa75542c6943300e5f49fd07fc0926d82",
+    "required": "run explicit --mode green, all 40 frozen case ids, same runner/fixture/contract identity as RED, and normal existing create-owner regression with force-unimplemented environment vars unset"
+  },
+  "claim_ceiling": "Detached saved-canvas owner helper only plus identical runner GREEN and existing create-lifecycle regression. No product entry/UI/Store, saved producer, auth, permissions, AC completion or Goal completion.",
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "blockers": [
+    "真实权限验收 BLOCKED / NOT_RUN",
+    "QPC 产品 UI/Store NOT_READY_FOR_PRODUCT_UI_STORE",
+    "完整 S02 Goal remains incomplete"
+  ],
+  "next_action": "implement exact helper module under source admission; run same-identity GREEN, lint and creation regression; independent source validation; then proceed to product adapter design/authorization."
+}

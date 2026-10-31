@@ -1,0 +1,324 @@
+{
+  "status": "待独立复核的最终整合输入",
+  "card_sha256": "74b273a003c8516afa6fb5569d65ddcd8c68bb49e5e88689e2d7e94133a81a0f",
+  "claim_ceiling": "纯准备逻辑候选；不准入UI/持久化/权限",
+  "source_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesign-r007.md",
+      "sha256": "bf67232e7a54d7a92e7eff866182298fe0b151f01edec5293286add96aeee47f"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterFixtures-r007.json",
+      "sha256": "4a677d83b7bd59c3bd4b744346926a910617da98e5040d87b60f0df995dc0303"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeMatrix-r001.md",
+      "sha256": "5e307afd225d09ca512f5d9443a8e171400aa66b02d844e5682fabdb010c9a17"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeFixtures-r001.json",
+      "sha256": "6b5cdaa318e7e60850b602311bcc45687cde15356293c97a34de171cc18be052"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeMatrix-r002.md",
+      "sha256": "04656b366beffab8f99826efcf2a835d24c7a6ee1f53ea911896b9702a046804"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterShapeFixtures-r002.json",
+      "sha256": "ad96b36cfa22b95ebf2f19dddd42286f09c61943548fb79a6ea7813da9890c56"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignReview-r005.md",
+      "sha256": "551fafabfeb597790800f673f1b9402a0457a4e7675073deb1aafa27e6b86564"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterShapeReview-r002.md",
+      "sha256": "5a5569efafd9b8a4a5ce912b54c22d33842995c7e40b76c55b6d35f4ae9e6124"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+      "sha256": "eeec347d7f07fe4a2de1cc12e7ac96411679f399594b934f7ce5a85703eb29ea"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ExecutionEvidenceReconciliation-r001.md",
+      "sha256": "c088d7c20652bca9e290a589c9f4d6521bc1c0942916c20821f9fde857b890da"
+    }
+  ],
+  "first_slice": {
+    "id": "S02-QPREP-001",
+    "name": "typed查询引用闭包纯准备器",
+    "candidate_write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-reference-plan.test.ts"
+    ],
+    "function": "prepareQueryReferences(input): {ok:true,value}|{ok:false,reason}",
+    "domain": "只接受本JSON显式typed模型，不直接解析propValue/cascade原对象；所有id非空字符串，不含--；映射由调用者显式提供，不产生UUID或权限判断",
+    "checks_order": [
+      "输入结构/非空ID与局部ID唯一",
+      "条件/node映射完整及各自单射",
+      "级联条件闭包存在",
+      "节点dataset/field与所引条件严格相等",
+      "component映射恰一个非空目标ID",
+      "级联相邻条件有向图无环",
+      "全量构造独立输出，保留dataset/field和数组顺序"
+    ],
+    "error_reasons": [
+      "INVALID_INPUT",
+      "DUPLICATE_ID",
+      "MISSING_ID_MAP",
+      "NON_INJECTIVE_ID_MAP",
+      "MISSING_CONDITION",
+      "REFERENCE_IDENTITY_MISMATCH",
+      "MISSING_COMPONENT",
+      "AMBIGUOUS_COMPONENT",
+      "CYCLE"
+    ],
+    "validation_entry": "现有TypeScript执行能力只读预检；缺失则报告，不安装；确定runner后执行真实RED/GREEN，保存原始stdout/stderr及源码摘要",
+    "admission": "独立复核接受本切片合同/cases后冻结本8项identity；新独立Builder card与target-bound admission；不追认旧17case历史RED",
+    "excluded": [
+      "当前真实query schema提取",
+      "字段/数据权限",
+      "任意跨仪表盘自动映射",
+      "时钟/共享存储",
+      "UI/Store/save/undo",
+      "完整树/参数/日期转换"
+    ]
+  },
+  "cases": [
+    {
+      "id": "TC-QPREP-001",
+      "input": {
+        "conditions": [
+          {
+            "id": "a",
+            "datasetId": "201",
+            "fieldId": "province",
+            "targetRefs": [
+              {
+                "componentId": "chart-A",
+                "datasetId": "201",
+                "fieldId": "province"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "datasetId": "201",
+            "fieldId": "city",
+            "targetRefs": [
+              {
+                "componentId": "chart-A",
+                "datasetId": "201",
+                "fieldId": "city"
+              }
+            ]
+          }
+        ],
+        "chains": [
+          [
+            {
+              "nodeId": "n1",
+              "conditionId": "a",
+              "datasetId": "201",
+              "fieldId": "province"
+            },
+            {
+              "nodeId": "n2",
+              "conditionId": "b",
+              "datasetId": "201",
+              "fieldId": "city"
+            }
+          ]
+        ],
+        "conditionMap": {
+          "a": "a2",
+          "b": "b2"
+        },
+        "nodeMap": {
+          "n1": "n12",
+          "n2": "n22"
+        },
+        "componentMap": {
+          "chart-A": [
+            "chart-B"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "conditions": [
+            {
+              "id": "a2",
+              "datasetId": "201",
+              "fieldId": "province",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "province"
+                }
+              ]
+            },
+            {
+              "id": "b2",
+              "datasetId": "201",
+              "fieldId": "city",
+              "targetRefs": [
+                {
+                  "componentId": "chart-B",
+                  "datasetId": "201",
+                  "fieldId": "city"
+                }
+              ]
+            }
+          ],
+          "chains": [
+            [
+              {
+                "nodeId": "n12",
+                "conditionId": "a2",
+                "datasetId": "201",
+                "fieldId": "province"
+              },
+              {
+                "nodeId": "n22",
+                "conditionId": "b2",
+                "datasetId": "201",
+                "fieldId": "city"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "TC-QPREP-002",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "remove_condition": "b"
+      },
+      "expected": {
+        "ok": false,
+        "reason": "MISSING_CONDITION"
+      }
+    },
+    {
+      "id": "TC-QPREP-003",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "componentMap": {
+          "chart-A": [
+            "chart-B",
+            "chart-C"
+          ]
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "AMBIGUOUS_COMPONENT"
+      }
+    },
+    {
+      "id": "TC-QPREP-004",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "append_chain": [
+          {
+            "nodeId": "n3",
+            "conditionId": "b",
+            "datasetId": "201",
+            "fieldId": "city"
+          },
+          {
+            "nodeId": "n4",
+            "conditionId": "a",
+            "datasetId": "201",
+            "fieldId": "province"
+          }
+        ],
+        "extend_nodeMap": {
+          "n3": "n32",
+          "n4": "n42"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "CYCLE"
+      }
+    },
+    {
+      "id": "TC-QPREP-005",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "conditionMap": {
+          "a": "same",
+          "b": "same"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "reason": "NON_INJECTIVE_ID_MAP"
+      }
+    },
+    {
+      "id": "TC-QPREP-006",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "componentMap": {}
+      },
+      "expected": {
+        "ok": false,
+        "reason": "MISSING_COMPONENT"
+      }
+    },
+    {
+      "id": "TC-QPREP-007",
+      "base": "TC-QPREP-001",
+      "patch": {
+        "chain_node_b_datasetId": "202"
+      },
+      "expected": {
+        "ok": false,
+        "reason": "REFERENCE_IDENTITY_MISMATCH"
+      }
+    },
+    {
+      "id": "TC-QPREP-008",
+      "base": "TC-QPREP-001",
+      "post_action": "修改output.conditions[0].targetRefs[0].fieldId为changed",
+      "expected": "输入仍province；输入对象深冻结也可执行；无Store/事件/请求调用"
+    }
+  ],
+  "product_denominator": [
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "goal_denominator": [
+    "AC-S02-01",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04",
+    "AC-S02-05",
+    "AC-S02-06",
+    "AC-S02-07",
+    "AC-S02-08",
+    "AC-S02-09",
+    "AC-S02-10"
+  ],
+  "verification": "JSON/来源摘要/case身份自检；产品NOT_RUN"
+}

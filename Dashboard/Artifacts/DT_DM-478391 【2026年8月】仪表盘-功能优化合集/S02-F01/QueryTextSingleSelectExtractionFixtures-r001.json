@@ -1,0 +1,265 @@
+{
+  "schema_version": "query_text_single_select_extraction_fixtures_v1",
+  "design_id": "S02-QSSDH-R4-01-02-TEXT-SELECT-EXTRACTION-r001",
+  "scope": {
+    "displayType": "0",
+    "multiple": false,
+    "optionValueSource": 0,
+    "parameterized": false,
+    "remote": false,
+    "tree": false,
+    "cascade": false
+  },
+  "case_count": 6,
+  "cases": [
+    {
+      "case_id": "TC-QTEXT-EXTRACT-001",
+      "intent": "明确设计默认A，源运行值为B；只保留A作为设计意图",
+      "input": {
+        "sourceStage": "design-config",
+        "sourceRevision": 8,
+        "componentId": "q1",
+        "component": {
+          "id": "q1",
+          "name": "区域",
+          "field": {
+            "id": "region",
+            "type": "VARCHAR",
+            "name": "区域",
+            "deType": 0
+          },
+          "displayId": "region",
+          "dataset": {
+            "id": "ds-1",
+            "name": "销售",
+            "fields": []
+          },
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValue": "A",
+          "defaultValueFirstItem": false,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "required": false,
+          "visible": true,
+          "conditionType": 0,
+          "conditionValueOperatorF": "eq",
+          "conditionValueF": "",
+          "conditionValueOperatorS": "like",
+          "conditionValueS": ""
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "sourceStage": "design-config",
+          "sourceRevision": 8,
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValue": "A",
+            "defaultValueFirstItem": false
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": true,
+          "defaultValue": "A",
+          "selectValue": "A"
+        },
+        "firstLoadFilterValue": "A",
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-HYDRATE-002",
+      "intent": "无默认配置时，旧运行值B不能穿透到新运行对象",
+      "input": {
+        "sourceStage": "design-config",
+        "sourceRevision": 9,
+        "componentId": "q1",
+        "component": {
+          "id": "q1",
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": false,
+          "defaultValueFirstItem": false,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "field": {
+            "id": "region",
+            "type": "VARCHAR",
+            "name": "区域",
+            "deType": 0
+          },
+          "dataset": {
+            "id": "ds-1",
+            "name": "销售",
+            "fields": []
+          }
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "sourceStage": "design-config",
+          "sourceRevision": 9,
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": false,
+            "defaultValueFirstItem": false
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": false,
+          "selectValue": {
+            "jsType": "undefined"
+          }
+        },
+        "firstLoadFilterValue": "",
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-003",
+      "intent": "普通JSON无法证明设计配置来源",
+      "input": {
+        "sourceStage": "unknown",
+        "sourceRevision": null,
+        "componentId": "q1",
+        "component": {
+          "id": "q1",
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValue": "A"
+        }
+      },
+      "expected": {
+        "status": "SOURCE_STAGE_UNVERIFIED",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-004",
+      "intent": "启用默认值但值为空",
+      "input": {
+        "sourceStage": "design-config",
+        "sourceRevision": 10,
+        "componentId": "q1",
+        "component": {
+          "id": "q1",
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValue": ""
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-005",
+      "intent": "字段选项来源不属于本shape子合同",
+      "input": {
+        "sourceStage": "design-config",
+        "sourceRevision": 11,
+        "componentId": "q1",
+        "component": {
+          "id": "q1",
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 1,
+          "defaultValueCheck": true,
+          "defaultValue": "A",
+          "displayId": "region"
+        }
+      },
+      "expected": {
+        "status": "UNSUPPORTED_SHAPE",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-ROUNDTRIP-006",
+      "intent": "JSON往返不序列化运行选中值，水合后仍从默认A开始",
+      "input": {
+        "carrier": {
+          "schemaVersion": 1,
+          "sourceStage": "design-config",
+          "sourceRevision": 8,
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValue": "A",
+            "defaultValueFirstItem": false
+          }
+        },
+        "jsonRoundTrip": true
+      },
+      "expected": {
+        "status": "OK",
+        "carrierHasRuntimeFields": false,
+        "runtime": {
+          "defaultValue": "A",
+          "selectValue": "A"
+        },
+        "firstLoadFilterValue": "A",
+        "queryCount": 0,
+        "storeWriteCount": 0
+      }
+    }
+  ],
+  "verification": {
+    "json_parse": "PASS",
+    "design_semantic_review": "PENDING",
+    "implementation": "NOT_STARTED",
+    "product_validation": "NOT_RUN",
+    "permission_validation": "BLOCKED_NOT_RUN"
+  }
+}

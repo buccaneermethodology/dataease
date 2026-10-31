@@ -1,0 +1,425 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QTR-001-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "用户要求设计审核后立即进行S02实现并加快Goal；独立验证本轮QTR有限实现，对原Goal和claim ceiling做对账。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读验证QTR六项冻结identity真实实现、可信RED/GREEN、输入不变、source/target ID防御检查及claim ceiling。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QTR-001-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改Builder产品文件、测试、冻结Design/Fixtures或Builder证据",
+      "把QTR候选扩张为产品接入或权限验收",
+      "将QPREP历史RED缺口追认为已解决"
+    ],
+    "maximum_claim": "只能判断QTR八项冻结identity及三项防御检查的离线纯关系重绑候选；不能宣称产品验收或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTreeRelationRebindingDesign-r001.md",
+      "revision": "1b41b4e4902bc51d120be54794514a03fade61f4157b56fa2713d641f2823b64",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTreeRelationRebindingFixtures-r001.json",
+      "revision": "d6543b526c522497e0d738f8f2d1481e49676577b22d65d970debffedd8f93b0",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTreeRelationRebindingDesignReview-r001.md",
+      "revision": "deec148467799296d4be4589ee0f95c014fd531bfc47603ab1678aed5f27877a",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/query-tree-relation-rebinding-builder-card-r001.json",
+      "revision": "d3855e0c72ffe902f4358c786c9bf75e7d5c3980211835c5bc489aa78734420c",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-query-tree-relation-rebinding-builder-r001.json",
+      "revision": "505e9e4e3d565936daa783544b5e45db0574e1523694e4fefce5b701a377c19f",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QueryTreeRelationRebindingBuilder-r001.json",
+      "revision": "245754bc9da0034340dc1099a0baf35e66bf2df52fb9c4f9581b5134f01af4a6",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-ExecutionEvidence-r001.md",
+      "revision": "c41ef931c9811b45bb9297227b9d3769610a3180a262cfbf9146c2895a241acf",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-red.stdout.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-red.stderr.txt",
+      "revision": "f275c7e825ddcf1293114109ac680d84ba3aba9912623e62e098ce396a18b56b",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-red.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-green.stdout.txt",
+      "revision": "909fc18a0a2d2679f8e5a56d7b651690a0944b504284cb57e86a96375dbde23a",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-green.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-green.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-lint.stdout.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-lint.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-lint.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-tree-relation-rebinding.ts",
+      "revision": "3d8e096a92bb72c6e1f6625e04ed9a3260c15a76f34531da584550e8f055faf8",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-tree-relation-rebinding/rebind.test.mjs",
+      "revision": "179a81c086d1f10a89afa462ed1387772f1fdbaef08bc76d382b065e192422a6",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "independent validation input",
+      "reason": "复算冻结合同、实现、验证证据及声明边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTreeRelationRebindingDesign-r001.md",
+      "revision": "1b41b4e4902bc51d120be54794514a03fade61f4157b56fa2713d641f2823b64",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTreeRelationRebindingFixtures-r001.json",
+      "revision": "d6543b526c522497e0d738f8f2d1481e49676577b22d65d970debffedd8f93b0",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTreeRelationRebindingDesignReview-r001.md",
+      "revision": "deec148467799296d4be4589ee0f95c014fd531bfc47603ab1678aed5f27877a",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QTR-001-ExecutionEvidence-r001.md",
+      "revision": "c41ef931c9811b45bb9297227b9d3769610a3180a262cfbf9146c2895a241acf",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-tree-relation-rebinding.ts",
+      "revision": "3d8e096a92bb72c6e1f6625e04ed9a3260c15a76f34531da584550e8f055faf8",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-tree-relation-rebinding/rebind.test.mjs",
+      "revision": "179a81c086d1f10a89afa462ed1387772f1fdbaef08bc76d382b065e192422a6",
+      "applicability": "independent validation input",
+      "reason": "核查QTR冻结合同、实际实现及本轮证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "digest-drift",
+      "condition": "任何冻结输入或Builder产物摘要不匹配",
+      "action": "登记blocking finding并停止通过判断",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim-boundary-review",
+      "condition": "产品级或权限级结论无法由纯变换证据支持",
+      "action": "收窄verdict并明确未验证义务及后续依赖",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "Goal保留10项AC与16项产品义务；真实权限验收仍BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_validation",
+    "reason": "独立检查QTR Builder candidate，复算合同与范围边界。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal和完整AC/义务分母",
+    "冻结Design/fixtures和独立设计review",
+    "Builder卡/admission/Context及其摘要",
+    "实现、runner、完整限定diff",
+    "RED/GREEN/lint stdout/stderr/exit及RED snapshot",
+    "QPREP历史package限制、真实权限阻塞、产品入口未接入",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

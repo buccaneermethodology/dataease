@@ -1,0 +1,67 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "CHART-PREVIEW-STATE-ISOLATION-TRACE-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "design",
+  "role": "design",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-CHART-PREVIEW-STATE-ISOLATION-TRACE-r001.json",
+      "sha256": "355e7e40684fbe04d622460bf458e1a2a88fdf5a4b076104b24e4d639871690a"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "CHART-PREVIEW-STATE-ISOLATION-TRACE-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅当前源码静态调用/状态/事件映射及未确定项；不是新产品合同、实现、冻结或验收。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "CHART-PREVIEW-STATE-ISOLATION-TRACE-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r400.json",
+  "working_directory": ".",
+  "execution_command": "先复验Card/Context，对真实SFC.calcData/renderChart、getData API、Editor.changeFilterData/刷新保存触发、dvMain details/origin方法与调用方做精确state-isolation trace。JSON每条事实保存source path/sha/可复算行号范围/精确symbol、写入前后/外部副作用/同步async关系/所有者/现有读者/能否staging及证据，未知写Unknown；MD为reader projection。特别确认calcData async本身未await getData.then链，逐项列chartData/isError/errMsg/drill/dynamicArea/country/scope/gadmName/curView/Store details/origin/emitter、callback及Promise契约，参数clone与axios拦截器副作用不能漏。找出实际可以复用的共享renderer hook/双host绑定点和最小stage API接入点，建议仅候选不扩大public contract。旧产品r003的23字段和query ledger只作对照，不当真源；不改它们。SFC/Line helper与Store若sha漂移应停止并报告重基线，不修改别人S01改动。追到真实主应用/panel/lib/移动端调用方精确列已查/未查及不确定，不做全仓泛读。一次完整返回facts/读清单/缺口/下一Design输入，控制篇幅但不省真正副作用。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstAuthority-20261025.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipCloseoutReconciliation-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationDesign-r003.md",
+    "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "core/core-frontend/src/views/chart/components/editor/index.vue",
+    "core/core-frontend/src/api/chart.ts",
+    "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+    "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+    "core/core-frontend/src/views/canvas/DeCanvas.vue",
+    "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts"
+  ]
+}

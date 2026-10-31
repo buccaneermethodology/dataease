@@ -1,0 +1,3 @@
+# 测试宿主时序修正
+
+GREEN-r001为17/18。PIC-RR-15原宿主在生产helper内部decode时清缓存，尚未进入最终candidate decode。此时实现重新加载并实际解码后成功是合法结果，旧测试没有控制到标称调度点。修正仅该宿主调度：helper首次decode立即完成，最终decode保持deferred，确认调用两次后再clear，断言仍为拒绝。保留case ID、输入及期望；新runner摘要另冻r002，并以旧SFC重跑RED及当前SFC重跑GREEN。旧RED/GREEN和runner冻结r001保留，不倒填。此为测试准备角色修正，不声称已通过独立Validation。

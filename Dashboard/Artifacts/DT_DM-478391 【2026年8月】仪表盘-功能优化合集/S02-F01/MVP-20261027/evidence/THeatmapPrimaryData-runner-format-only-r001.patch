@@ -1,0 +1,15 @@
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/THeatmapPrimaryData-runner-before-format-r001.mjs
++++ Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/THeatmapPrimaryData-runner-formatted-candidate-r001.mjs
+@@ -579,7 +579,11 @@
+       s.view.data = lodash.cloneDeep(test.response_data)
+       const result = await s.prepare()
+       assert.equal(result.ok, test.expect_ready, 'PRIMARY_ROWS_READY:' + test.id)
+-      assert.equal(s.trace.includes('draw'), test.expect_draw_attempt, 'PRIMARY_ROWS_DRAW:' + test.id)
++      assert.equal(
++        s.trace.includes('draw'),
++        test.expect_draw_attempt,
++        'PRIMARY_ROWS_DRAW:' + test.id
++      )
+       assert.equal(s.effects.length, 0)
+       if (result.ok) result.handle.dispose()
+     })

@@ -1,0 +1,322 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-RUNTIME-UI-CROSS-PAIR-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续 S02 P1 界面MVP真实UI运行覆盖；在已保存且隔离的本机测试仪表板上完成 bar→indicator 粘贴、真实查询/可见结果、显式保存离开重开；完整验收分母仍为 P1 12 + P2 26 = 38，不以standalone或测试桩证明真实权限。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "在专用隔离仪表板完成第二方向 chart↔indicator runtime 配对，并验证真实查询、保存和重开；MVP-first只改变顺序，38项保持完整。",
+    "objective": "用现有已审查 UI Integration 合同运行 bar source→indicator target，保留现有测试数据与过滤条件，不改产品源码；记录真实getData逻辑调用、结果、保存/重开及限制。",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "仅本机隔离仪表板 S02_MVP_Runtime_20261027 的测试用过滤树与显式保存状态",
+      "本次专属运行证据、Topology和Dashboard状态记录"
+    ],
+    "forbidden_actions": [
+      "触碰S01或其他仪表板/业务资源",
+      "更改真实权限、账号授权或OS剪贴板",
+      "把standalone/admin/DEV桩结果写成真实鉴权证据",
+      "修改产品源码或area冻结Design/Cases",
+      "减少、豁免或提前关闭38项Goal义务"
+    ],
+    "maximum_claim": "仅本机测试桩允许下bar→indicator一条真实UI流程；不代表49类型、真实多用户权限、P1整体完成或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "revision": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md",
+      "revision": "5d4c26ebda1ba9847e19ea1d04caa82d26a54cee01685a167d8313aa3114f4b2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeFixturePlan-r001.md",
+      "revision": "827abf86b4297004ecdbcd01dd97af6cb94125f0eba275f8ec91fbf816e3d5f4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeOracle-r001.json",
+      "revision": "4caa318b01266011c27eedefdf6df7c597fde6f5ad7879668fdbbc00016c9fb8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeUiProgress-r001.json",
+      "revision": "7d776a5714e50feddf3555a1eb486bb0224dded0b8c2caafe4e78c8441244a06",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBarPaste-r002.json",
+      "revision": "b8cd5036ff6e7b74906905ea5f487fedb28ed388ca1945d1667a2a10e4c025bb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBarReopen-r002.json",
+      "revision": "ac10827468f5d7c6ee98c6f3c9d457f2b90905d7a98c41fd5c31563c557abe23",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/TestCanvasRecovery-r001.md",
+      "revision": "3be1001bbd5e6b4f85b0246056ce0a0aeec08e240753c560fe73f2cff9b0a5c5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前用户目标、冻结界面合同、专用数据/oracle 与可见运行资源状态。",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r473.json",
+      "revision": "5340a274e7fa98e57238778ace696a81ae7c203e846591892368de913845be40",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "latest current actual topology after indicator→bar evidence",
+      "applicability": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeIndicatorToBarPaste-r001.json",
+      "revision": "64810d7f917a6e9b96225f65e8136dcd76e25650d61b8cde225ba96bf401b24e",
+      "applicability": "cross-pair P1 runtime",
+      "reason": "indicator→bar runtime result just completed",
+      "domains": [
+        "authority",
+        "acceptance",
+        "runtime"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeIndicatorToBarReopen-r001.json",
+      "revision": "3c472d4dfb341d8acfe4822f891a50f4c84cc8168951bafe03f1d3db42c1b9a9",
+      "applicability": "cross-pair P1 runtime",
+      "reason": "indicator→bar saved/reopened result",
+      "domains": [
+        "authority",
+        "acceptance",
+        "runtime"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "当前仅使用单个 IAB 会话在授权的 S02 隔离测试仪表板进行产品 UI 验收，不委派；若需要写入产品状态，仅允许该明确资源。",
+    "task_id": "S02-MVP-RUNTIME-UI-CROSS-PAIR-r001",
+    "recorded_at": "2026-10-28T10:43:00Z",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r471.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r473.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-RUNTIME-UI-FIXTURE-RECOVERY-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r471.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "maximum_claim": "此隔离环境中本次真实 UI 测试记录；不夸大成完整 P1 或 Goal 通过。",
+  "design_objective": "使用现有已审查界面合同在专用 S02 测试资源继续基本图表过滤复制粘贴；实际产品查询/预览/保存/重开须独立观察并逐项记录。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/TestCanvasRecovery-r001.md"
+}

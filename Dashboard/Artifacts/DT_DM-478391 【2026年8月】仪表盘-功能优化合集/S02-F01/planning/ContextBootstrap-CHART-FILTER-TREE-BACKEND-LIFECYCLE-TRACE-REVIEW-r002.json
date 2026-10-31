@@ -1,0 +1,584 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r002",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "独立审查 Chart customFilter 编辑、取数、SQL 转换与保存读取静态来源追踪 r002。全量检查 Review r001 的 F-CFT-001/F-CFT-002 是否关闭，并尽量列出全部剩余来源准确性/范围/声明问题；只写 Review r002。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "审查 r002 对 filterType=3 自定义 linkage 树覆盖及 Snapshot 保存适用范围的修订，并核验完整来源调用链、claim ceiling 和当前摘要。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterTreeBackendLifecycleTraceReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改源码、测试、Goal、Contract/Cases 或被审来源追踪",
+      "将静态路径写成产品运行、即时预览、持久化、权限或 Goal 验收通过",
+      "改变原始Goal分母或Scope Delta"
+    ],
+    "maximum_claim": "仅评判有界静态来源映射与声明边界；不证明产品运行、SQL结果、durable persistence、preview、权限或Goal AC。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "a9163d63db57224860c5224a3aaa8b838c72d4ec2a6a3d0c5988d444ec9b7144",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterPayloadDesign-r003.md",
+      "revision": "5ad93fdd9147fbfa2385f5c05ed302825b6926f89efb663f43cb62f7f6bc7006",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterPayloadDesignReview-r003.md",
+      "revision": "b87fd41ac4eb6c2c5a898be898e9b08347f21f6db417a52f08100bc1e9d8d55a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md",
+      "revision": "b64f0917b1951b07f7469e943955f1478ee73040af3bc9f642587f8b75069e94",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsPostReviewCorrection-r002.md",
+      "revision": "692854a5c1f26a2b969ec38c91bfd0b22db717df335faf17f946e7f3fa4980fd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "revision": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "revision": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "revision": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/api/api-base/src/main/java/io/dataease/api/chart/ChartDataApi.java",
+      "revision": "e422b3c5c89892f37d6a16ed79bda3c01e268e36f2975a4e4460c6d4dadcd4d1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartViewDTO.java",
+      "revision": "8fbeb5cbf095d19710f87964b931afc2e4fe67755533847b8dac2eb7eff6f533",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartViewBaseDTO.java",
+      "revision": "272bdfa254850e4a4a64ab8ba16c2a36bb7db0438a09047b6d8dd66476c465a4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartExtRequest.java",
+      "revision": "a55dfe82160a4c9d81a489455f30add063bd7b2c93b88ba1098168cca9ce839f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/dto/ChartExtFilterDTO.java",
+      "revision": "f0a537639f05c3e7bab0f5fe0bc0113daf6c0c6ac64a4e01db4e06bac83ca3f6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "sdk/extensions/extensions-view/src/main/java/io/dataease/extensions/view/filter/FilterTreeObj.java",
+      "revision": "711ef0420ab24387e839cd148e987beea7b23e4822cc99c3ee598c96d8bf7fca",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/chart/server/ChartDataServer.java",
+      "revision": "7737e2ce30c4f37324ac025b50347c2aaa8f2890ec2f5f98b41bfab19ed685fd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+      "revision": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartViewManege.java",
+      "revision": "82e680456f5490e2ffb6a3cb858fd2debe635f500d61242205443b83d931598c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/engine/trans/CustomWhere2Str.java",
+      "revision": "9543197543bee34418427f77c94758f23065770feecf1ef9113076370e2ca80e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r001",
+      "reason": "独立核对来源追踪中的 authority、字段通道、调用链、持久化映射与声明上限。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterTreeBackendLifecycleTrace-r001.md",
+      "revision": "1aec8b4d6811ec21e04bc0b963e78a934c2da0e059dba7169232eff7b644dd76",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r002",
+      "reason": "复核本交付物修订来源、前轮 findings、当时拓扑和本轮实际输入。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterTreeBackendLifecycleTraceReview-r001.md",
+      "revision": "f735e6332711ae61cd3c76a67fd8cdb333689d2051e771f05d668e5351cf341a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r002",
+      "reason": "复核本交付物修订来源、前轮 findings、当时拓扑和本轮实际输入。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterTreeBackendLifecycleTrace-r002.md",
+      "revision": "9525e081e5977703a8b7e6c3069db9e33f2ec02a08fa2a67c726c477b2fa8bdb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r002",
+      "reason": "复核本交付物修订来源、前轮 findings、当时拓扑和本轮实际输入。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r359.json",
+      "revision": "552d8663671c0026a3d041c559b7b279de651954887d97cda6b63280873064a9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-CHART-FILTER-TREE-BACKEND-LIFECYCLE-TRACE-REVIEW-r002",
+      "reason": "复核本交付物修订来源、前轮 findings、当时拓扑和本轮实际输入。"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "unbound-code-reference",
+      "condition": "报告路径或代码断言无法由本required read set 复核。",
+      "action": "扩大只读检查并将新增源文件摘要纳入报告；否则记为open evidence gap。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim-ceiling-ambiguity",
+      "condition": "发现静态表述可能被理解为运行或验收结论。",
+      "action": "列明准确措辞和潜在误读，不替候选作者修改。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整复核候选中所有 consumer 与持久化陈述，并检查引用调用链及 Goal/权限边界；缺证据时扩展只读域或明确报告Unknown。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_static_review_with_independent_semantic_reviewer",
+    "reason": "第2/3轮增量语义审查；修复两项非阻断来源精度问题后复核候选，不触及产品实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "静态来源追踪 r001/r002",
+    "Review r001 findings",
+    "当前 Context Bootstrap 与 Review Card",
+    "绑定代码 required-read set",
+    "Topology actual r359"
+  ],
+  "optional_reads": [],
+  "created_at": "2026-10-21T16:18:30Z"
+}

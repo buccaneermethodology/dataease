@@ -1,0 +1,265 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPP-PREPARATION-repair-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续执行 S02 Goal；对 QPP-PREPARATION-001 的可信 RED 缺口建立可重放、同 runner 的修复证据。保持 frozen fixtures、helper 与产品边界不变。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只修复 RED 证据可重放性：runner 支持同目录 source override；新增确定性 mutant replay 脚本与新 Builder evidence。不伪称 detached helper 验证了产品 effects 计数。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RED-replay-r002.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RepairEvidence-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改 Goal、Contract、Design、Fixtures、旧 Validation/Builder evidence",
+      "修改产品 helper 或其依赖",
+      "连接 UI/Store/权限/网络/查询/预览/保存",
+      "把 fixture expected.effects 字段一致性说成运行时副作用观察",
+      "重写或覆盖其它工作区改动"
+    ],
+    "maximum_claim": "仅补充可复放的 QPP RED 证据；独立 Validation 与产品验收仍未完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationContract-r001.json",
+      "revision": "28e7caa0f4e0e4f2ccd54717cfc7b2fd761e252548ec1ddbf03ad2fad01053ea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r006.md",
+      "revision": "e95436c10ce9ad6bf1a3540fdcb908a87e94649a42b86d4407cb12fb75dd23af",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r006.json",
+      "revision": "26e89c627d996fa54597e9b1ef969100adb46868e3221a4dc1648d3effcedd7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r006.md",
+      "revision": "f8b3625a4f601ba7e5e5896ea2732cb48836bf224b609f92c3c63e1ad859ceaa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPP-PREPARATION-001-Validation-r001.md",
+      "revision": "c1be4db106a1ef0ab67ededee1a0f3c612df471a8b18a49778b05d8d97d28f05",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-BuilderEvidence-r001.md",
+      "revision": "84252cd9302b17fbc2fada56b74dcd033051cf2bafdbc9a6a48e0bb450db1d03",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+      "revision": "5adbb83d363b260a6996709696df322e6a77d851e4bb86a391f22bb32a1093d3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+      "revision": "a704b4f21053e8d26e8d0d3bbe8f053e1ee0a755870d490f2246b299e650ce70",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r174.json",
+      "revision": "50460d4546a86c282ea3503587e803426e928403a10a70243a99bad4a5c64768",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "复核 QPP-PREPARATION-001 的独立 Validation finding，并限定修复证据范围。",
+      "applicability": "S02-QPP-PREPARATION-repair-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen_input_drift",
+      "mode": "deterministic",
+      "condition": "Goal、Contract、Design、Fixtures、helper或QPP Validation report摘要变化",
+      "action": "停止并重建上下文与准入",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "RED修复仍不能在相同runner/冻结输入上失败，或effects被误读为产品运行时证据",
+      "action": "记录证据缺口并维持PARTIAL/NOT_RUN，不越界修复",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "验证 finding 指向可信 RED 持久证据，涉及 runner 与可重复执行资产。",
+    "route": "contract_first_builder_with_validation"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "frozen QPP-001..031 identities",
+    "exact helper baseline SHA",
+    "same runner RED/GREEN",
+    "RED mutant replay artifact and output",
+    "effects claim boundary",
+    "Goal denominator and real permission blocker"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "保持10项Goal AC、26项must-have、16项产品义务、Scope Delta none、S01隔离与权限BLOCKED/NOT_RUN。"
+  },
+  "write_scope": [
+    "core/core-frontend/tests/filter-copy-query-reference/query-product-paste-preparation.test.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RED-replay-r002.mjs",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPP-PREPARATION-RepairEvidence-r002.md"
+  ],
+  "provenance": null
+}

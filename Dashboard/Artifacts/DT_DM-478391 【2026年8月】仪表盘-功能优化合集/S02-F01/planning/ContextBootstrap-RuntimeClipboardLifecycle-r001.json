@@ -1,0 +1,640 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-RUNTIME-CLIPBOARD-LIFECYCLE-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "已批准MVP次序下，核验地图fixture保存身份，正常UI配置五类地图、复制/粘贴/查询与保存重开。",
+    "objective": "按MVP-UI-03既有合同观察普通刷新clip不变/正常工具栏退出清空/硬刷新清空；不伪造30分钟",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "临时浏览器内copy/普通刷新/正常返回/重开本S02fixture",
+      "本轮证据"
+    ],
+    "forbidden_actions": [
+      "数据库直接写/保存图表配置/修改源码",
+      "访问其它任务资源或XPack",
+      "输出登录或凭据",
+      "改全局计时器或以虚拟时钟冒充真实30分钟",
+      "未等待实际路由和DOM离开就称退出"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "revision": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md",
+      "revision": "5d4c26ebda1ba9847e19ea1d04caa82d26a54cee01685a167d8313aa3114f4b2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeFixturePlan-r001.md",
+      "revision": "827abf86b4297004ecdbcd01dd97af6cb94125f0eba275f8ec91fbf816e3d5f4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/RuntimeOracle-r001.json",
+      "revision": "4caa318b01266011c27eedefdf6df7c597fde6f5ad7879668fdbbc00016c9fb8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前Goal与批次运行的合同、独立oracle、范围和实时拓扑。",
+      "applicability": "P1真实UI类型批次"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/MapFixtureExecutionPlan-r001.json",
+      "revision": "4b539ebbac7ba53cb9ad7bf869f39a3c099c699a27b004dc3eea508110507dab",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前已保存fixture和地图实际观察边界",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MapFixtureExecutionReview-r001.md",
+      "revision": "5270f5a3392e391d0320be7477ce2ddbc7c01cf3928095a6621a9e512a0b5256",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前已保存fixture和地图实际观察边界",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapIndependentOracle-r001.json",
+      "revision": "241d821d5d97fcfe5f62acbf97ef31cbcf375d6f1e469ef7c0a0828914a13e07",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前已保存fixture和地图实际观察边界",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r507.json",
+      "revision": "03aad7d6976ab57a2814ca846419d1695025f71e6bf39b9199940790e3b5af60",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前地理类型准备后实际运行",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/stop-gate/state-r227.json",
+      "revision": "01585b4854815af844cccdeffde5cb382ba02dac1925cd9744808723d7419210",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前地理类型准备后实际运行",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/MapFixtureExecutionPlan-r002.json",
+      "revision": "418f7895a07bb0072741e3a3b658649bad629518acca85445178bc467e6d6feb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前地理类型准备后实际运行",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/MapFixtureExecutionErrata-r002.json",
+      "revision": "8285d7062858b84c79f712a1dbd7585ccee5dc9fa342b8b6ec40d0e96eed3343",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前地理类型准备后实际运行",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MapFixtureExecutionReview-r002.md",
+      "revision": "c741cc142c55a7b3484452c189f91a39adc074117a904f2748de08cae65d59db",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前地理类型准备后实际运行",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/BubbleMapReadyRepairDesign-r003.md",
+      "revision": "56777f0a67f48261c6efe133994aa0723ecee65e9dc715a2390cf806f2387ac6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "气泡最小修复后的真实UI自测",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/BubbleMapReadyRepairReview-r003.md",
+      "revision": "db0dcfc66c34fd204bdf232a5966a71b6225191f36a67df479f3159d60111965",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "气泡最小修复后的真实UI自测",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/BubbleReady-GREEN-r001.json",
+      "revision": "23d1d1565acf687f591d7377272ca26f5a0b935610c0433e392b881c70bd5951",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "气泡最小修复后的真实UI自测",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapThreshold500Oracle-r001.json",
+      "revision": "8f7553f5c382ef2a9d1b25cb9f3868ec7890c9c90f467a3abfb47d544cb94a56",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "气泡最小修复后的真实UI自测",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r510.json",
+      "revision": "1417307a85b053fd4a54687023f35001b566f3a6c0db262fdb343be9fcf32840",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "气泡最小修复后的真实UI自测",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r514.json",
+      "revision": "c059d9690b671f803059c1b691a9decca1acaf27fbe3b32707861fad099f4672",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/LocalTestBasemapPlan-r002.md",
+      "revision": "c1ff2276cfecd71a8be5ff4ef9c5bfcd22133533bf9692b8431734c71360ca16",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LocalTestBasemapReview-r002.md",
+      "revision": "4c47c7928d1751d81d92d491ba0f48e99670051dad65c61aed2408aab9e5ba6f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LocalBasemapValidation-r002.md",
+      "revision": "4eff96449e0e612dae7c94b05877a43ec2d7fa039c7e320ad7ee682a706e8862",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemapRuntime-r001.json",
+      "revision": "e56b920802ad4bf95e6d990ee3df720ea4e2ae18b20967347d95919e64670402",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalMapCoordinateOracle-r001.json",
+      "revision": "3866d7c9d28e863952ff3889872bd8490682fa2668aa61ec26f3770ac9144801",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "真实坐标地图环境/独立CSV预期与本轮拓扑",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeCoordinateMap-r003.json",
+      "revision": "9cd07dd4a39bd8404eabaec76323ab7ae31f49ccc4bc25677d02aa8cec38cf47",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前运行状态和已观察限制",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeMapTeardownDiagnostic-r001.json",
+      "revision": "862342f572411e39c61df8a5dc152997740c5ce9e75fbfa94ec69a48a39c18e5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前运行状态和已观察限制",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r516.json",
+      "revision": "e23ceadd3169bbd8a358548487b6b2f977c65389aba72e2cfce6fc24f366ce50",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前运行状态和已观察限制",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r535.json",
+      "revision": "8c5864ae434cb7dd0a925bb8f9884be15f89fa660d0fa373f3d6de8482abf7cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "既有MVP-UI-03真实生命周期观察",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "既有MVP-UI-03真实生命周期观察",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "revision": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "既有MVP-UI-03真实生命周期观察",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "按已独立审查冻结UI-04/08/09/12执行负向故障观察",
+    "task_id": "S02-RUNTIME-CLIPBOARD-LIFECYCLE-r001",
+    "recorded_at": "2026-10-30T05:35:41.301527+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r535.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-RUNTIME-CLIPBOARD-LIFECYCLE-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "按MVP-UI-03既有合同观察普通刷新clip不变/正常工具栏退出清空/硬刷新清空；不伪造30分钟",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeClipboardLifecycle-r001.json"
+}

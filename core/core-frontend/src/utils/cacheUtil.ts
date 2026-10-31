@@ -1,7 +1,9 @@
 import { clearResourceImages } from '@/utils/resourceImageCache'
 import { useCache } from '@/hooks/web/useCache'
+import { invalidateMvpFilterSession } from '@/custom-component/filter-copy/mvp-chart-filter-copy'
 const { wsCache } = useCache()
 export const clearCache = () => {
+  invalidateMvpFilterSession()
   const keys = [
     'DataEaseKey',
     'TreeSort-backend',

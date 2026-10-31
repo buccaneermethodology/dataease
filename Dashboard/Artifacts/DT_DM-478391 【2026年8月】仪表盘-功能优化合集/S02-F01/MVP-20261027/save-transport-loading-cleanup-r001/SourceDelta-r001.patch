@@ -1,0 +1,10 @@
+--- service.ts.before
++++ core/core-frontend/src/config/axios/service.ts
+@@ -243,6 +243,7 @@
+     }
+ 
+     if (!error?.response) {
++      error.config?.loading && tryHideLoading(permissionStore.getCurrentPath)
+       return Promise.reject(error)
+     }
+ 

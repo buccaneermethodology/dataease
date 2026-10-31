@@ -1,0 +1,289 @@
+{
+  "schema_version": "s02_saved_canvas_owner_cases_r001",
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "design_ref": "QuerySingleSelectSavedCanvasOwnerDesign-r001.md",
+  "scope": {
+    "goal_id": "DE-S02-F01",
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "只设计已加载、非模板、原地编辑资源的短生命周期 owner 身份绑定；不授权查看过滤配置、复制、粘贴、提交、查询或保存。",
+  "cases": [
+    {
+      "id": "SCPO-001",
+      "title": "ready loaded dashboard binds ephemeral owner to current resource",
+      "input": {
+        "operation": "edit",
+        "load_state": "ready",
+        "resource_id": "dash-9",
+        "route_resource_id": "dash-9",
+        "dv_info_id": "dash-9",
+        "is_template": false,
+        "copy_mode": false,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "owner": "open",
+        "bound_resource_id": "dash-9",
+        "epoch": "new_ephemeral_epoch",
+        "dirty": false,
+        "revision": 0,
+        "source_read": false,
+        "paste_commit": false,
+        "authorization_claim": "none"
+      }
+    },
+    {
+      "id": "SCPO-002",
+      "title": "route and loaded resource mismatch fails closed",
+      "input": {
+        "operation": "edit",
+        "load_state": "ready",
+        "resource_id": "dash-9",
+        "route_resource_id": "dash-10",
+        "dv_info_id": "dash-9",
+        "is_template": false,
+        "copy_mode": false,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "reason": "RESOURCE_ID_MISMATCH",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-003",
+      "title": "missing resource identity is not a persisted owner",
+      "input": {
+        "operation": "edit",
+        "load_state": "ready",
+        "resource_id": null,
+        "route_resource_id": null,
+        "dv_info_id": null,
+        "is_template": false,
+        "copy_mode": false,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "reason": "INVALID_RESOURCE_ID",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-004",
+      "title": "loading is not owner-ready",
+      "input": {
+        "operation": "edit",
+        "load_state": "loading",
+        "resource_id": "dash-9",
+        "route_resource_id": "dash-9",
+        "dv_info_id": "dash-9",
+        "is_template": false,
+        "copy_mode": false,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "reason": "CANVAS_NOT_READY",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-005",
+      "title": "template editing does not enter persisted-resource mode",
+      "input": {
+        "operation": "edit",
+        "load_state": "ready",
+        "resource_id": "template-9",
+        "route_resource_id": "template-9",
+        "dv_info_id": "template-9",
+        "is_template": true,
+        "copy_mode": false,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "reason": "TEMPLATE_NOT_SUPPORTED",
+        "existing_create_mode_unchanged": true,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-006",
+      "title": "copy-as-new stays on creation lifecycle",
+      "input": {
+        "operation": "copy",
+        "load_state": "ready",
+        "resource_id": "source-9",
+        "route_resource_id": "source-9",
+        "dv_info_id": "source-9",
+        "is_template": false,
+        "copy_mode": true,
+        "root_origin": "live_store_instance",
+        "root_identity": "live-root-1"
+      },
+      "expected": {
+        "persisted_owner": "unmanaged",
+        "reason": "COPY_IS_NEW_RESOURCE",
+        "existing_create_mode_unchanged": true,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-007",
+      "title": "serialized component JSON cannot recreate live canvas identity",
+      "input": {
+        "operation": "edit",
+        "load_state": "ready",
+        "resource_id": "dash-9",
+        "route_resource_id": "dash-9",
+        "dv_info_id": "dash-9",
+        "is_template": false,
+        "copy_mode": false,
+        "root_origin": "serialized_json_clone",
+        "root_identity": "clone-root-1"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "reason": "LIVE_CANVAS_IDENTITY_REQUIRED",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-008",
+      "title": "loaded dashboard with no top-level query target remains a valid owner but cannot register a target",
+      "input": {
+        "owner": "open",
+        "top_level_query_count": 0,
+        "target_id": "q-1",
+        "target_raw_member": false
+      },
+      "expected": {
+        "owner": "open",
+        "registration": "rejected",
+        "reason": "NO_QUERY_TARGET",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-009",
+      "title": "one selected raw query can register when other top-level queries exist",
+      "input": {
+        "owner": "open",
+        "top_level_query_count": 2,
+        "target_id": "q-2",
+        "target_raw_member": true,
+        "target_id_occurrences": 1,
+        "target_kind": "VQuery"
+      },
+      "expected": {
+        "owner": "open",
+        "registration": "accepted_for_identity_only",
+        "registered_target": "q-2",
+        "source_read": false,
+        "paste_commit": false,
+        "authorization_claim": "none"
+      }
+    },
+    {
+      "id": "SCPO-010",
+      "title": "foreign or replaced raw target cannot register",
+      "input": {
+        "owner": "open",
+        "top_level_query_count": 2,
+        "target_id": "q-2",
+        "target_raw_member": false,
+        "target_id_occurrences": 1,
+        "target_kind": "VQuery"
+      },
+      "expected": {
+        "registration": "rejected",
+        "reason": "STALE_COMPONENT_IDENTITY",
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-011",
+      "title": "resource navigation invalidates owner before another operation",
+      "input": {
+        "owner": "open",
+        "bound_resource_id": "dash-9",
+        "current_resource_id": "dash-10",
+        "event": "resource_changed"
+      },
+      "expected": {
+        "owner": "unmanaged",
+        "epoch_reusable": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-012",
+      "title": "auth subject or organization change invokes invalidation but is not verified by owner",
+      "input": {
+        "owner": "open",
+        "event": "auth_context_changed",
+        "owner_has_permission_provider": false
+      },
+      "expected": {
+        "owner": "unmanaged_after_external_invalidate_call",
+        "owner_claims_authorization": false,
+        "source_read": false,
+        "paste_commit": false,
+        "status": "BLOCKED_EXTERNAL_AUTH_INTEGRATION"
+      }
+    },
+    {
+      "id": "SCPO-013",
+      "title": "reload starts a fresh ephemeral owner and never restores old capsule",
+      "input": {
+        "old_epoch": "epoch-1",
+        "reload_event": true,
+        "serialized_owner_metadata_present": false,
+        "new_live_load_ready": true
+      },
+      "expected": {
+        "new_epoch": "epoch-2",
+        "old_epoch_usable": false,
+        "capsule_restored_from_json": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    },
+    {
+      "id": "SCPO-014",
+      "title": "new dashboard creation lifecycle remains byte-for-byte behaviorally unchanged",
+      "input": {
+        "operation": "create",
+        "resource_id": null,
+        "is_template": false,
+        "create_init_completed": true,
+        "root_empty": true
+      },
+      "expected": {
+        "existing_create_beginSession": "unchanged",
+        "persisted_mode_called": false,
+        "source_read": false,
+        "paste_commit": false
+      }
+    }
+  ]
+}

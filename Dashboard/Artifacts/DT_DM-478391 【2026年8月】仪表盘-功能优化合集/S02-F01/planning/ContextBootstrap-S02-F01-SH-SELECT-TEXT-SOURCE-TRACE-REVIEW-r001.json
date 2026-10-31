@@ -1,0 +1,225 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读复核 SH-SELECT-TEXT 来源阶段追踪候选 r001：核对每条源码路径和表述边界、ST-SRC-001..007 状态、对 R4FS-001/002/004 的处置及 S01/真实权限阻塞。判断候选是否证据准确、是否含有未经证明的合法组合/完整schema/保存恢复结论；提出有编号finding、severity、证据、影响与处置。只写指定Review报告，不修改候选、Goal、Cases、源码或其它Dashboard状态。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立复核一个有界源码阶段追踪候选的证据准确性和claim ceiling；不审定完整Goal设计或产品准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTraceReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改来源追踪候选、Goal、Cases、CoverageMatrix、AC来源或产品源码",
+      "将源码观察写成实际运行、完整schema或合法组合全集",
+      "缩减10/26/16分母或把NOT_READY改为永久unsupported",
+      "把S01及真实权限前置说成已解除，或用standalone/admin/mock代替真实权限"
+    ],
+    "maximum_claim": "仅独立复核候选文档与其来源链表述；不证明产品运行、完整F01设计、权限行为、Goal完成或Builder准入。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "项目边界及执行规则。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "topology"
+      ],
+      "reason": "治理审查与独立性要求。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "核对Goal原分母和主张上限。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "核对原始用户意图。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "design",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "核对源finding和指定最小下一切片。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r001.md",
+      "revision": "e545f799a49d30dc836f45ad8d5e01d1b7a03e8c477922557ebf2544778bbe20",
+      "domains": [
+        "design",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "审查对象。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核新建默认对象。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核配置/确认入口。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "eadbdba2b61aaeaf7abc58f83e75e82595c4a0812ceb1ac971f6739e4e4212a2",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核运行/异步消费。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/../SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "dependency",
+        "authority"
+      ],
+      "reason": "核对S01依赖状态。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对真实权限阻塞。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r265.json",
+      "revision": "0e8ca350c9aa7b89548362c596681a5c1cb490366ee2c75cf0303d8a35b998d7",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "绑定审查入口物化状态与实际执行边界。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-TRACE-REVIEW-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_path_or_behavior_disagreement",
+      "condition": "若来源定位与文档行为陈述不符",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "指出准确路径、修正边界并限制结论",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "scope_or_dependency_drift",
+      "condition": "若Gate/Session/权限或S01状态与候选不符",
+      "mode": "deterministic",
+      "action": "保留差异并限制可接受范围",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations完整保留；Scope Delta none；16项NOT_RUN；S01 F01 Packet NOT_AVAILABLE；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_design_review",
+    "reason": "该候选修补R4来源可追溯性且影响AC-S02-02/03的证据边界；需独立判断，但不授权产品准入。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "Goal and AC denominator",
+    "source paths and phase claims",
+    "S01 and permission dependencies",
+    "actual Topology",
+    "claim ceiling"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03"
+  ]
+}

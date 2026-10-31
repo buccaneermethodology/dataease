@@ -1,0 +1,437 @@
+{
+  "schema_version": "chart_filter_payload_cases_v2",
+  "artifact_id": "S02-F01-chart-filter-payload-cases",
+  "round": "2/3",
+  "contract_ref": "ChartFilterPayloadDesign-r002.md#候选纯函数合同",
+  "scope": "detached JSON-shaped chart customFilter copy and source-compatible leaf field handling only",
+  "fixture_protocol": {
+    "runtime_setup": "Execute listed operations in order using RFC 6901 JSON Pointers. set_undefined replaces the addressed value with JavaScript undefined. link_reference assigns the exact object/array at from_pointer to to_pointer, preserving reference identity. Setup is per-case and never serialized back to the fixture.",
+    "literal_values": "All JSON values are literal business data. Strings/objects named $fixture have no special meaning.",
+    "snapshot": "Capture a deep snapshot after runtime_setup and before invocation; input_deep_equal_snapshot compares against it.",
+    "mutation_probe": "For each detached assertion, run a fresh setup and invocation, mutate only the selected side at probe_pointer to sentinel, then verify the opposite side equals its pre-mutation value.",
+    "failure_shape": "Failure result must be an object with exactly keys [ok, reason], ok=false and expected reason; payload must be absent."
+  },
+  "cases": [
+    {
+      "id": "TC-CFP-001",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-1",
+            "field": {
+              "name": "Revenue"
+            },
+            "term": "gt",
+            "value": 10,
+            "type": "item",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-1",
+              "term": "gt",
+              "value": 10,
+              "type": "item",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached"
+      ],
+      "probe": {
+        "side": "output",
+        "pointer": "/items/0/value",
+        "sentinel": 11,
+        "opposite_pointer": "/items/0/value"
+      }
+    },
+    {
+      "id": "TC-CFP-002",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "field": "group-meta",
+            "subTree": {
+              "logic": "or",
+              "items": [
+                {
+                  "fieldId": "f-2",
+                  "field": false,
+                  "value": [
+                    {
+                      "x": 1
+                    }
+                  ],
+                  "subTree": null
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "field": "group-meta",
+              "subTree": {
+                "logic": "or",
+                "items": [
+                  {
+                    "fieldId": "f-2",
+                    "field": false,
+                    "value": [
+                      {
+                        "x": 1
+                      }
+                    ],
+                    "subTree": null
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached",
+        "input_to_output_detached"
+      ],
+      "probes": [
+        {
+          "side": "output",
+          "pointer": "/items/0/subTree/items/0/value/0/x",
+          "sentinel": 2,
+          "opposite_pointer": "/items/0/subTree/items/0/value/0/x"
+        },
+        {
+          "side": "input",
+          "pointer": "/items/0/subTree/items/0/value/0/x",
+          "sentinel": 3,
+          "opposite_pointer": "/items/0/subTree/items/0/value/0/x"
+        }
+      ]
+    },
+    {
+      "id": "TC-CFP-003",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-3",
+            "field": null,
+            "custom": {
+              "field": "business-data"
+            },
+            "subTree": {
+              "logic": "and",
+              "items": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": [
+            {
+              "fieldId": "f-3",
+              "field": null,
+              "custom": {
+                "field": "business-data"
+              },
+              "subTree": {
+                "logic": "and",
+                "items": []
+              }
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-004",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-4",
+            "field": 0,
+            "value": 0,
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "fieldId": "f-4",
+              "field": 0,
+              "value": 0,
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-005",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-5",
+            "field": "",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "fieldId": "f-5",
+              "field": "",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-006",
+      "input": {
+        "logic": "xor",
+        "items": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-007",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-7",
+            "subTree": {
+              "logic": "or",
+              "items": "not-an-array"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "INVALID_ROOT"
+      },
+      "assertions": [
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-008",
+      "input": {
+        "logic": "or",
+        "items": []
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "or",
+          "items": []
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload"
+      ]
+    },
+    {
+      "id": "TC-CFP-009",
+      "source_ref": "core/core-frontend/src/views/chart/components/editor/filter/auth-tree-chart/RowAuth.vue#dfsSubmit leaf fields",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "enumValue": [
+              "North",
+              "South"
+            ],
+            "field": "transient-field-object",
+            "fieldId": "region-id",
+            "timeValue": null,
+            "filterType": "enum",
+            "filterTypeTime": null,
+            "dynamicTimeSetting": {
+              "relativeToCurrent": "custom",
+              "timeNum": 2
+            },
+            "term": "in",
+            "timeType": null,
+            "value": [
+              "North"
+            ],
+            "type": "item",
+            "subTree": null
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "payload": {
+          "logic": "and",
+          "items": [
+            {
+              "enumValue": [
+                "North",
+                "South"
+              ],
+              "fieldId": "region-id",
+              "timeValue": null,
+              "filterType": "enum",
+              "filterTypeTime": null,
+              "dynamicTimeSetting": {
+                "relativeToCurrent": "custom",
+                "timeNum": 2
+              },
+              "term": "in",
+              "timeType": null,
+              "value": [
+                "North"
+              ],
+              "type": "item",
+              "subTree": null
+            }
+          ]
+        }
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "preserves_exact_payload",
+        "output_to_input_detached",
+        "input_to_output_detached"
+      ],
+      "probes": [
+        {
+          "side": "output",
+          "pointer": "/items/0/enumValue/0",
+          "sentinel": "changed-output",
+          "opposite_pointer": "/items/0/enumValue/0"
+        },
+        {
+          "side": "input",
+          "pointer": "/items/0/dynamicTimeSetting/timeNum",
+          "sentinel": 99,
+          "opposite_pointer": "/items/0/dynamicTimeSetting/timeNum"
+        }
+      ]
+    },
+    {
+      "id": "TC-CFP-010",
+      "input": {
+        "logic": "or",
+        "items": [
+          {
+            "fieldId": "f-10",
+            "subTree": null,
+            "runtime": {
+              "$fixture": "ordinary business object"
+            }
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "set_undefined",
+          "pointer": "/items/0/runtime"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    },
+    {
+      "id": "TC-CFP-011",
+      "input": {
+        "logic": "and",
+        "items": [
+          {
+            "fieldId": "f-11",
+            "subTree": null,
+            "nested": {
+              "marker": "ordinary data"
+            }
+          }
+        ]
+      },
+      "runtime_setup": [
+        {
+          "op": "link_reference",
+          "from_pointer": "",
+          "to_pointer": "/items/0/nested/self"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "UNSUPPORTED_VALUE"
+      },
+      "assertions": [
+        "input_deep_equal_snapshot",
+        "failure_has_exact_keys"
+      ]
+    }
+  ],
+  "design_sha256": "a4d63dedd8d7374ea41fb20de26bde82dcf980a46ca810b3068e7a466e4fb396",
+  "forbidden_claims": [
+    "product_chart_copy_paste_pass",
+    "permission_verified",
+    "source_read_authorized",
+    "target_commit_atomic",
+    "goal_ac_accepted"
+  ]
+}

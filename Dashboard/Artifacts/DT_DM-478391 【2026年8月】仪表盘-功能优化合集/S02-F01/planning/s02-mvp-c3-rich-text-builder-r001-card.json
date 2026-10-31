@@ -1,0 +1,77 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-C3-RICH-TEXT-BUILDER-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-C3-RICH-TEXT-BUILDER-r001.json",
+      "sha256": "7876278c1ac1d75c5a37561ac5dc4899c4c8b37592a2bd3c962bdd8fdf072f9e"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-C3-RICH-TEXT-BUILDER-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/custom-component/rich-text/DeRichTextView.vue",
+    "core/core-frontend/tests/filter-copy-mvp-richtext/check.mjs",
+    "core/core-frontend/tests/filter-copy-mvp-richtext/README.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC3RichText-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC3RichText-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "C3真实SFC prepared实现候选及Tiny协议double故障见证；不是实际TinyMCE资产/后端/保存验收",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-C3-RICH-TEXT-BUILDER-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r445.json",
+  "working_directory": ".",
+  "execution_command": "复验卡和精确admission后实施C3。你是fixture设计作者，本轮为Builder，不得自报独立Validation；root已对C234具体输入作同UI设计第3/3轮独立审查准入。只写DeRichTextView.vue和专用tests/报告，C4 Builder已稳定shared rich metadata：kind:rich-text,drillFilters:unknown[],fields:ChartViewField[],innerType:string,render:string；公用PreparedQuery/PasteBinding/PasteReady/handle.key=suffixId不变，consume snapshot接口并扩读当前类型若声明漂移消息root。薄包装从创建即传pasteBinding，父error boundary已具备。\n真实TinyMCE Editor init+本次SetContent/LoadContent和实际body/getContent就绪，不用nextTick代替init；监听先于同步SetContent，10s timeout/错误/dispose/迟到全部settle失败，候选tinymceId加唯一suffix。computed有效view/element读binding.current.value，prepare local DTO fields/首行/格式化/assignment且不写Store或canonical curFields/element；metadata供wrapper一次publish，后续同实例绑canonical不第二次setContent。\n重点修实际越界：candidate viewInit/watch/assignment不appearanceStore.setCurrentFont；jumpTargetAdaptor只当前editor.getBody/根节点p，保留局部1s timer并alive/isCurrent检查、卸载/丢弃clear，旧p/无关p和font sentinel不变。candidate不注册公开同id fieldSelect/initCurFields业务channel，只private或局部；active后只注册轻量当前业务handler，不重走必要初始化。两个mitt总线不要混，wrapper将成功后eventBus发initCurFields；candidate公共useEmitt注册别误污染active。保持现sanitize/placeholder/href/format原语义，非本任务重写富文本编辑器。\n使用具体tiny-normal/tiny-compare fixture，先真正装载旧完整SFC且实际init/assignment副作用语义RED（不能新方法不存在/编译错RED），再同稳定子IDGREEN。Editor/tinymce协议double仅库边界，真实SFC/assignment/ready控制流不替换；查init未到/sync+async content、content error/timeout/late、公开事件隔离、old/globalp/font不变、canonical后续编辑。真实browser资产与后端另由root验证。先落方法代码供C4接线，再聚焦lint/style/类型/SFC compile，生产如未格式会令7070全部导入500，请每个可用小里程碑局部format+lint并通知rootfreeze窗口以便真实UI导入。完成查全报告未验边界。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiC1ExecutionClarifications-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiC234ConcreteFixtures-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c234-before-r001/manifest.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC1Integration-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC1Renderers-r001.md",
+    "core/core-frontend/src/custom-component/rich-text/DeRichTextView.vue",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c34-interface-snapshot-r001.ts",
+    "core/core-frontend/src/views/chart/components/js/formatter.ts",
+    "core/core-frontend/src/views/chart/components/js/panel/common/common_table.ts",
+    "core/core-frontend/src/utils/eventBus.ts",
+    "core/core-frontend/src/hooks/web/useEmitt.ts"
+  ]
+}

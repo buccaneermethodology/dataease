@@ -1,0 +1,249 @@
+# Final Goal: DE-S02-F01
+
+## Canonical Goal Payload
+
+```json
+{
+  "approval_authorities": [
+    {
+      "authority_id": "current-user",
+      "authority_kind": "human"
+    }
+  ],
+  "approval_registry": [],
+  "approved_scope_delta_registry": [],
+  "claim_policy": {
+    "allowed_claim_ids": [
+      "S02_COMPLETE",
+      "PLANNING_ONLY"
+    ],
+    "claim_definitions": [
+      {
+        "claim_id": "S02_COMPLETE",
+        "statement": "仅完整Completion Predicate与全部必须项、独立验收、最终Gate成立后可声明S02完成；不代表发布或F01–F08全量完成。"
+      },
+      {
+        "claim_id": "PLANNING_ONLY",
+        "statement": "可报告已完成的Goal/Session/Design工作，产品实现和验证仍未完成。"
+      },
+      {
+        "claim_id": "PRODUCTION_READY",
+        "statement": "生产/发布就绪"
+      }
+    ],
+    "claim_statements": [
+      {
+        "claim_id": "S02_COMPLETE",
+        "disposition": "allowed"
+      },
+      {
+        "claim_id": "PLANNING_ONLY",
+        "disposition": "allowed"
+      },
+      {
+        "claim_id": "PRODUCTION_READY",
+        "disposition": "forbidden"
+      }
+    ]
+  },
+  "completion_rule": {
+    "completion_claim_id": "S02_COMPLETE",
+    "required_status": "landed"
+  },
+  "goal_id": "DE-S02-F01",
+  "mission": "DE-S02-F01：以S00确认规则及S01代码证据为输入，实现图表→图表、查询组件→查询组件的完整过滤配置复制、同数据集兼容校验、整树粘贴、即时预览、正常保存与重开，完成权限/异常/兼容回归、独立验收与S10移交。先推进不干扰仍在收尾的S01的Goal、Session和Design；不以规划交付替代实现完成。",
+  "must_have_ledger": [
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-01",
+      "requirement": "Entry Packet、仓库 revision、权限及前置门槛均可复核。",
+      "requirement_id": "AC-S02-01",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-02",
+      "requirement": "所有冻结 F01 REQ/BR/DEC/AC 已映射到设计与测试，无关键未决项。",
+      "requirement_id": "AC-S02-02",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-03",
+      "requirement": "Design Freeze Review 有明确结论，代码实现不越界。",
+      "requirement_id": "AC-S02-03",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-04",
+      "requirement": "复制、兼容校验、粘贴、保存和回显完整链路符合契约。",
+      "requirement_id": "AC-S02-04",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-05",
+      "requirement": "非法目标、无权限、错误输入和保存失败按契约处理。",
+      "requirement_id": "AC-S02-05",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-06",
+      "requirement": "权限、安全与历史配置兼容均有验证证据。",
+      "requirement_id": "AC-S02-06",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-07",
+      "requirement": "冻结 F01 AC 测试覆盖 100%，必需测试通过；失败/跳过/未运行不得隐藏。",
+      "requirement_id": "AC-S02-07",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-08",
+      "requirement": "既有过滤器回归通过，变更与回滚方案可追溯。",
+      "requirement_id": "AC-S02-08",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-09",
+      "requirement": "独立审查 findings 有编号、severity、依据、影响、建议及 disposition；阻塞项关闭。",
+      "requirement_id": "AC-S02-09",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-10",
+      "requirement": "完成最终对账、双 verdict 和 Stop Gate，产出可验证终态凭证。",
+      "requirement_id": "AC-S02-10",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q004",
+      "requirement": "（可观察结果）：图表→图表及查询→查询允许；图表↔查询均拒绝且目标配置不变。",
+      "requirement_id": "AC-F01-Q004",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q005",
+      "requirement": "（可观察结果）：B获得同一配置；不要求跨设备/浏览器；刷新B不得制造新有效期。",
+      "requirement_id": "AC-F01-Q005",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q006",
+      "requirement": "（可观察结果）：仅D1通过；D2即使字段同名同类型仍拒绝；ID无法确认也拒绝。",
+      "requirement_id": "AC-F01-Q006",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q007",
+      "requirement": "（可观察结果）：确认后树完全等于T且旧条件消失；取消配置/预览不变；空目标直接应用。",
+      "requirement_id": "AC-F01-Q007",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q008",
+      "requirement": "（可观察结果）：未过期可重复使用且不消耗、不续期；超过30分钟拒绝并提示重新复制；新复制替换T并重计时；恰30分钟判定见ISS-AC-01。",
+      "requirement_id": "AC-F01-Q008",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q009",
+      "requirement": "（可观察结果）：旧内容不可恢复；每次粘贴重验身份、数据集访问及目标编辑权限，拒绝时不改目标。",
+      "requirement_id": "AC-F01-Q009",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q010",
+      "requirement": "（可观察结果）：DataEase共享内容可用，系统剪贴板不被覆盖；不要求操作系统粘贴快捷键。",
+      "requirement_id": "AC-F01-Q010",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q011",
+      "requirement": "（可观察结果）：复制按钮禁用，不通过空复制清空目标；原有删除/清空操作仍可用。",
+      "requirement_id": "AC-F01-Q011",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q012",
+      "requirement": "（可观察结果）：两者过滤命中记录ID相同；保存动态规则而非结果，样式/布局/查询结果不复制。；均校验失败并拒绝粘贴，提示“过滤条件不匹配，请重新复制”；目标旧树、已保存版本和当前预览ID{5}保持，零新过滤查询/刷新，不部分应用可解析片段；有效完整树仍命中{2,3,5}。不新增操作系统剪贴板入口",
+      "requirement_id": "AC-F01-Q012",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q013",
+      "requirement": "（可观察结果）：50且不超容量允许，51或超1MB拒绝且T保持；组合节点不计叶子，1001枚举未超两限应允许；字节口径见ISS-AC-02。",
+      "requirement_id": "AC-F01-Q013",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q014",
+      "requirement": "（可观察结果）：成功立即预览新条件，只有正常保存后重开保留；取消/失败不刷新、不修改；不新增自动保存。；成功显示“过滤条件已应用”并按T刷新预览；取消/失败不得显示该成功反馈，目标与预览保持原状",
+      "requirement_id": "AC-F01-Q014",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q015",
+      "requirement": "（可观察结果）：通用规则完整应用；维度/指标/排序/样式不带入；无法完整承载时整次拒绝。",
+      "requirement_id": "AC-F01-Q015",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-ORIG-01",
+      "requirement": "：U_editor按既有编辑权可操作；U_view不可查看过滤条件、复制或粘贴，目标不变；不能只隐藏按钮当鉴权通过。",
+      "requirement_id": "AC-F01-ORIG-01",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-ORIG-02",
+      "requirement": "：保留为历史方案线索，不据此替代F01专门过滤复制；S01检查原组件复制/改类型流程仍可用，当前不把该句升格新操作入口。",
+      "requirement_id": "AC-F01-ORIG-02",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F04-Q066",
+      "requirement": "（可观察结果）：完整目标全量独立复制，无查询结果/样式；缺字段/承载不全/成环则整次拒绝；有旧配置需确认。",
+      "requirement_id": "AC-F04-Q066",
+      "status": "pending"
+    },
+    {
+      "evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F04-Q067",
+      "requirement": "（可观察结果）：互不联动，两个独立副本，跨仪表盘同样成立，不新增共享模板引用。",
+      "requirement_id": "AC-F04-Q067",
+      "status": "pending"
+    }
+  ],
+  "resolution": {
+    "applied_patch_ids": [
+      "S02-GR-P001",
+      "S02-GR-P002",
+      "S02-GR-P003",
+      "S02-GR-P004"
+    ],
+    "base_digest": "bc968cc4d44787dd139b92b3af2a1baf464c56f092262afa110cacceeee92d24",
+    "base_revision": "review-r001"
+  },
+  "revision": "resolved-399df0d1d7ba7f39",
+  "schema_version": "goal_contract_v1",
+  "sections": {
+    "business_rules": "同用户同浏览器跨标签内部共享，不使用系统剪贴板；数据集ID相同且可验证；字段ID及目标完整承载、身份/数据权/编辑权每次重验。旧目标确认后整树覆盖，取消/失败不变且不触发查询。空源禁用；复制失败保留上次有效树。30分钟有效，不消耗、不续期，新复制重置，登出/换用户后旧树不可恢复。50叶子且不超1MB允许，51或超限拒绝；组合节点不计叶子，不增1000枚举限制。动态表达式保持规则而非计算结果；成功提示过滤条件已应用，格式/结构不符提示过滤条件不匹配，请重新复制。只读用户不可查看配置/复制/粘贴，不能以隐藏UI替代鉴权。",
+    "continuation": "规划设计可先行；S01进入资料稳定且相关阻塞解除后重新固定摘要、重核实际工作树和测试环境，生成产品Builder admission才执行代码。已有实施授权持续有效。依赖未满足不关闭原分母，不抢占S01环境、修改SP-005或伪造ready。",
+    "engineering_boundaries": "ISS-AC-01/02在Slice Design明确并独立审查；建议有效区间[0,1800000ms)，容量采用UTF-8完整版本化过滤配置载荷的未压缩序列化字节，1MB=1000000字节，等于上限允许。当前是工程提案，未作为最终冻结产品事实；若来源存在冲突须升级裁定。不得将此F01口径自动推广F03导出。",
+    "entry": "分阶段实施入口（仅实施顺序调整；Goal AC、must-have、产品义务、权限要求及完成谓词均不变）：先交付可从实际产品界面体验的 MVP，范围限同一数据集的普通柱状图→普通折线图、目标过滤树为空、双方采用双方均支持的有效静态过滤配置；必须覆盖界面配置来源条件、专用复制/粘贴、同数据集检查、目标预览实际返回预期结果、显式正常保存和重开回读。MVP Builder 可在 S01 F01 仍为 CONDITIONAL 时进入，但必须绑定当前 S01 Entry Packet 与本 Slice AC/Gap 映射，说明逐条不依赖项及其证据；不得修改或抢占 S01。AC-F01-ORIG-02 既有组件复制/改类型回归仍待 S01 证据；其他受 S01 条件影响的验收按原条件保持 pending。真实只读用户、撤权/恢复、来源读取权与目标编辑权行为不得以 standalone/admin/mock 代替，仍需真实权限模块及隔离环境并阻止完整 Goal 完成。MVP 仍需冻结 Slice Contract/Cases、可信 RED、独立 Design Review 和绑定当前 Goal/Design/Topology/action/canonical target 的 execution admission；现有访问控制、数据集检查、完整载荷拒绝、身份失效、30分钟/1MB 限制、失败不改目标、既有保存鉴权均不得绕过。非空目标覆盖确认、其他普通图表组合、表/透视表、查询组件、完整异常与权限矩阵进入后续 Slice；它们保留在最终原始 AC/义务分母，MVP 通过不代表完整 AC 或 Goal 通过。工作树及来源变化时重建上下文与 admission；未覆盖项继续 pending。",
+    "evidence": "完整14项F01 AC + F01关联Q066/Q067（16条产品义务），加原10项Goal AC；GLOBAL来源权威、范围不丢项作为过程不变量。逐条映射、冻结oracle、可信RED、同identity GREEN、真实入口端到端及独立验证；无权限/真实身份缺失则保留NOT_RUN。 原约30%收益目标及ISS-AC-11基线缺口保留，功能通过不等于收益达成；S02不自行关闭全局收益缺口，S10移交必须列出。",
+    "roles": "主代理控制面；独立Design；独立Semantic/Validation；产品Builder于准入后独立委派；Closure绑定最终证据。当前Builder未启动是依赖门槛，非单Agent替代。",
+    "scope": "F01通用过滤配置、查询组件自过滤及级联依赖的完整独立副本；不复制样式、布局、结果，跨类别拒绝。不开发F02–F08的新功能；Q066/Q067作为F01复制兼容约束保留，不借此扩建F04规则引擎。不自动新增撤销、批量粘贴、字段映射、共享模板或跨功能冲突分析；保留既有撤销与复制组件/改类型回归。 现有身份、数据/编辑权限与敏感配置保护必须保留并验证；新增复制审计、独立加密等建议保持COV-D01原未裁身份，不能自动变强制实现或宣称已解决。若实现确需扩大政策再单独提请裁定。",
+    "sessions_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+    "source_baseline": {
+      "acceptance": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md",
+        "sha256": "e07eba2e04340d2aecb97ab063bcbc4a9efe81d5026f30ea04fe1aee74f3cab0"
+      },
+      "draft": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md",
+        "sha256": "118986e578d3afd19548abf45836a6f4d03cd70323b6edd4625d2c3cd468e8b9"
+      },
+      "user_intent": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md"
+    },
+    "termination": "原草稿Completion Predicate所有项成立、10项Goal AC与产品义务有证据、独立审查/最终状态对账及Stop Gate均有效，才允许完整Goal完成。双结论分别为F01实现有效性及S10进入就绪性；规划定稿不改变这两项为已通过。",
+    "truth_placement": "稳定产品真源不在本轮规划阶段改写；本目录仅执行与设计候选。共享Dashboard四面待S01收尾稳定后增量登记；当前本地Session台账为完整计划入口，非已注册宣称。项目无registry validator。"
+  }
+}
+```

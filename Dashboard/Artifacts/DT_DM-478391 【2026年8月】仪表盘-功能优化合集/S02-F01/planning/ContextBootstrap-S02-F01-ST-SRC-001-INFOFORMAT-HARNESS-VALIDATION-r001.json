@@ -1,0 +1,268 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "对 ST-SRC-001/CREATE 的已落盘 infoFormat AST isolated harness 作独立只读 Validation：重算冻结输入、case identity、runner 提取/执行边界和完整返回快照；独立运行 GREEN、定向 ESLint、diff-check，并审查可重放的同 identity 负向控制。只新增本轮 Validation Context/Card 与指定报告，不改 runner、Contract、Goal、Session、Stop Gate，不伪造 validation admission。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立验证局部 ST-SRC-001/CREATE harness；结论限制于当前 AST initializer 与冻结 oracle。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceHarness-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改 runner、产品源码、Goal、Contract、Cases、Session 或 Stop Gate",
+      "运行真实网络/API/权限/Store/持久化行为",
+      "伪造或替代 validation admission",
+      "将局部 harness 结果宣称为产品验收、权限验收或 Goal 完成",
+      "修复 Builder 发现"
+    ],
+    "maximum_claim": "只说明当前 options.ts AST 提取的 infoFormat initializer 在冻结 ST-SRC-001/CREATE 输入下符合所声明的局部快照与计数 oracle；不证明产品接线、完整复制链路、真实权限、Goal AC 或 Goal 完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "原始 Goal、完整分母与禁止结论",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceHarnessContract-r001.json",
+      "revision": "40816f37e536876af968d3b2c561edb41116797d5c8db659d231ef835c5e2b62",
+      "domains": [
+        "contract",
+        "acceptance",
+        "scope"
+      ],
+      "reason": "ST-SRC-001/CREATE 冻结局部合同",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r003.json",
+      "revision": "64c2b0b03ef720de5c62353d183edf262a2db68f096d6ee1f1c0338c07eee960",
+      "domains": [
+        "acceptance",
+        "oracle",
+        "provenance"
+      ],
+      "reason": "冻结候选 identity、完整快照与 Date 计数窗口",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r003.md",
+      "revision": "32432d6647dde7728eb9bd655f9c5caca752d0e828bcf5c22210843152d8a379",
+      "domains": [
+        "design",
+        "independent_review"
+      ],
+      "reason": "独立设计准入与限定",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesign-DeltaValidation-r002.md",
+      "revision": "341f42515db991a81978ab26b393e7b960001faf35a398f18005b6723e69d771",
+      "domains": [
+        "validation",
+        "finding_history"
+      ],
+      "reason": "Date oracle 修正及上一轮复核结论",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/info-format-harness.mjs",
+      "revision": "e5ad9536160635ca287010eec42db161cd62ef11f3d5b02353fea144fe25323d",
+      "domains": [
+        "implementation",
+        "execution"
+      ],
+      "reason": "实际 Builder runner、提取边界与断言",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "source"
+      ],
+      "reason": "真实 infoFormat initializer 与模块顶层初始化",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/ST-SRC-001-INFOFORMAT-HARNESS-r001.md",
+      "revision": "3d1dfe857343d6956b6f11f7767ccf67e718f69fe80505a07e7278c7faabb2af",
+      "domains": [
+        "execution",
+        "evidence"
+      ],
+      "reason": "builder 本地执行/负向控制报告",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r289.json",
+      "revision": "cbb4eba1207784707f4d4bbcaf77011627e27030b66489ba8199d5b8b744e511",
+      "domains": [
+        "topology",
+        "prior"
+      ],
+      "reason": "Builder 前实际状态和输入摘要",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r290.json",
+      "revision": "ab9aa74115d0777b8efc89538303a73212276b0f715999c15dfb244c5b262c47",
+      "domains": [
+        "topology",
+        "admission"
+      ],
+      "reason": "Builder 准备状态、准入与声明边界",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r291.json",
+      "revision": "21e1e631951343382f2797701df8ba22717a7d8b331172b835246312d3894fc7",
+      "domains": [
+        "topology",
+        "execution"
+      ],
+      "reason": "Builder candidate 输出摘要与此前运行声明",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "permission"
+      ],
+      "reason": "真实多用户权限环境的阻塞状态",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "dependency",
+        "S01"
+      ],
+      "reason": "S01 F01 EntryPacket 状态与依赖边界",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/st-src-001-infoformat-harness-builder-card-r001.json",
+      "revision": "e4147775a5c0395213e3a0086e5493380931e28e87b71808a1396ed35fe6de51",
+      "domains": [
+        "builder",
+        "card",
+        "provenance"
+      ],
+      "reason": "Builder lane 目标、输出、摘要绑定和写范围",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-r001.json",
+      "revision": "6cff7756e814a46a0aac17c85a4f04eb454d7df622e99fdee511a89ba0370d86",
+      "domains": [
+        "builder",
+        "context",
+        "provenance"
+      ],
+      "reason": "Builder 的 Context、read set 与 claim ceiling",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-st-src-001-infoformat-harness-builder-r001.json",
+      "revision": "46c1db5e66d57a0d5fc6d7fc3ba93abaece22af3c04e94900b8708996ebb7e1b",
+      "domains": [
+        "builder",
+        "admission",
+        "provenance"
+      ],
+      "reason": "检查既有 builder admission；不作为 validation admission",
+      "applicability": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-VALIDATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen_input_drift",
+      "condition": "任何 authority/Contract/Case/Review 摘要不一致",
+      "mode": "deterministic",
+      "action": "停止执行并报告差异；触发 full rebaseline",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner_or_source_drift",
+      "condition": "当前 runner/source 与绑定摘要不一致或工作树包含相关源码变化",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "报告当前实现并扩大 Read Set；不得覆盖现状",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "skipped_reads": [],
+  "acceptance": {
+    "case_ids": [
+      "ST-SRC-001/CREATE"
+    ],
+    "required": "同一冻结 Case identity；仅 AST 提取 infoFormat initializer；绝不导入或执行 options.ts 模块；完整 return snapshot/输入不可变/Date=2/guid=1 与冻结 oracle 一致；负向控制若不可重放则记 unknown；不声称产品验收。"
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_validation",
+    "reason": "只读核验已完成的单 Case harness；仅新建 Validation Context/Card 和报告，不改 Builder 或产品代码。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10/26/16 分母与 Scope Delta none 不变；ST-SRC-006/007 保持 NOT_READY；S01 F01 CONDITIONAL；真实权限 BLOCKED / NOT_RUN。"
+  },
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "validation_evidence_surfaces": [
+    "冻结输入摘要与 Case identity",
+    "runner AST 解析/提取路径及当前源码边界",
+    "完整结果快照及调用窗口计数",
+    "GREEN 与负向控制证据",
+    "定向 ESLint 与 diff-check",
+    "10/26/16、Scope Delta、S01/权限依赖及 claim ceiling",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

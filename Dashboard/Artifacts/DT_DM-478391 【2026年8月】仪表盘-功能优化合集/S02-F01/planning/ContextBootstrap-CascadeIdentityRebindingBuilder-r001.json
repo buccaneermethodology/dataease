@@ -1,0 +1,243 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-query-cascade-identity-rebinding-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求在本轮独立设计审核后加速开始实现S02。授权当前仅覆盖已复核准入的纯级联身份重绑小切片，不代表完整产品适配或权限实现。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "在复核准入后实现纯QueryCascade身份重绑函数及隔离测试，执行可信RED/GREEN与定向lint。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-cascade-identity-rebinding.ts",
+      "core/core-frontend/tests/filter-copy-query-cascade-identity-rebinding/rebind.test.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-red.snapshot.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QCR-001-ExecutionEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改QueryCascade.vue、Select.vue、QPIPE/QPROJ/QMAP/QPREP或产品入口",
+      "把该纯函数称为完整适配器/产品功能/权限实现",
+      "修改冻结设计或六项fixtures",
+      "使用standalone/admin/mock替代真实权限测试"
+    ],
+    "maximum_claim": "仅QCR六项纯级联身份重绑Builder候选；非产品adapter、UI、权限或Goal完成"
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10项Goal AC、16项产品义务及真实权限BLOCKED/NOT_RUN全部保留。"
+  },
+  "conditional_read_set": [
+    {
+      "trigger_id": "fixture-or-source-drift",
+      "condition": "运行测试发现冻结六项oracle、当前QueryCascade/Select源码、模块导出或ID映射语义不一致",
+      "action": "暂停并rebaseline，不静默修改oracle或继续实现冲突路径",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "test-entry-unavailable",
+      "condition": "Node/esbuild runner不可用",
+      "action": "不安装依赖，记录缺失并仅查找现有可用测试入口",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CascadeIdentityRebindingDesign-r001.md",
+      "revision": "fbd39a595c1efba93029132e43c6ba36aa023253b2404267bd7498825221c081",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CascadeIdentityRebindingFixtures-r001.json",
+      "revision": "ef29e826d412810da0c1bf09703586cee7465dc93a7ee5ce15e93bf68eb5b277",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/CascadeIdentityRebindingDesignReview-r001.md",
+      "revision": "c2ae1d676de3978494f06f6c22e2a2fe6b15d65efa77b104af908f40c5e7638a",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r036.json",
+      "revision": "43d1b394f441d7f328403aace883588c56c01cfc4e0633cbdbb4c2cb2dd8e911",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "revision": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-pipeline.ts",
+      "revision": "7066211a16f981cbd05df0c5e41d97f2d01b445b397c948f9ce2344ae34b9d10",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-pure/check.mjs",
+      "revision": "0dad134261fde122ada800d44df65028d1b8f673ff9fc20d00dd13211ad8aaf8",
+      "applicability": "builder authority/design/source/test input",
+      "reason": "bind exact bounded implementation to current authority, frozen design, source and executable conventions",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "skipped_reads": [],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "独立审查已准入有界纯变换；按卡执行，未涉及产品接入或权限。",
+    "route": "bounded_builder"
+  },
+  "validation_evidence_surfaces": [
+    "frozen six case identities and exact oracle",
+    "QueryCascade and Select source behavior",
+    "trusted RED fingerprint",
+    "same-identity GREEN",
+    "targeted ESLint",
+    "full S02 claim ceiling",
+    "actual topology and admission target binding"
+  ]
+}

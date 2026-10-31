@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/reused-11-type-columns-validation-r001-card.json
+Card SHA-256: eb00147ecadfd365de6e7711aa5a30f7055ab5ef0796169d1d783722000fa455
+Verify: python3 .codex/skills/sge-governed-checkpoints/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/reused-11-type-columns-validation-r001-card.json --repo . --expected-card-sha256 eb00147ecadfd365de6e7711aa5a30f7055ab5ef0796169d1d783722000fa455
+Lane: validation | Session: DE-EXEC-S038 | Role: validation
+Mode: full_baseline
+Working directory: .
+Execute: 只读独立核剩11类既有原件，产报告和11行matrix：gauge/liquid/picture-group/symbolic-map复用已释放新包不重跑；indicator/rich-text优先RuntimePictureSaveWire-r004整画布updateCanvas/find/reopen原件，指针+完整树+各自query oracle，源copy/target互补可用既有native精确非认证任务窗口（仅有必要按refs定位，不导出login/headers/凭据）；map/bubble-map/flow-map/heat-map/table-info先扩原包原始事件/已独立报告/native，不预设重跑。逐列保留source_role/target_role/full_source_clip_target/customFilter/save_find/reopened_data/actual_navigation/physical_vs_logical_query证据等级、配置/type/时点/source-generation、可复用列/缺列最小动作。图片query DTO table-info不得计为真实table-info图类型；表信息旧合法仅shop14条，不强制amount/ID。原地图descriptor默认补值/ownundefined持久化差异不能归一化掩盖；flow/heat旧视觉边界、symbolic新8110真实JAR与旧8100不可混，图片真实120×80只旧指定时点/缓存层，后续冷资源恢复未验。rawHTTP未知保留，不把新观测格式反向强制为新增必跑AC；旧normal数据集页确visible的导航可验证执行，不降成只hash。新matrix不复写任何旧行/原证据，逐CSV独立复算，全部发现/无问题/未查原因/残余/真正最小后续一次返回。当前Scope完整38/49不变、不升整型/P1/Goal，不UI/DB/源码。若无法找到某列记录unknown，给一个具体最小采样或read-set，不造candidate循环。

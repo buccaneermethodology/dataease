@@ -1,0 +1,221 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "基于来源阶段追踪候选r002与已独立复核的源码证据，为ST-SRC-001..006设计精确输入、完整目标状态快照和单一可复核oracle；异步枚举项必须绑定受控Promise/时钟。继续把ST-SRC-007保存/重开/history标为NOT_READY，直到定位owner。保留合法组合全集未知、10/26/16分母及S01/真实权限阻塞。只写指定Design与Cases候选，不改源码、不实施、不接产品。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "静态来源驱动的候选用例设计；只覆盖已观察路径，不将其等同完整合法组合或产品验收。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceOracleDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r001.json"
+    ],
+    "forbidden_actions": [
+      "修改产品源码/测试或接入UI/Store/API/权限/保存",
+      "把ST-SRC-001..006写成完整合法配置分母",
+      "把候选oracle或源码观察标成行为运行/验证通过",
+      "将ST-SRC-007或R4FS findings关闭",
+      "缩小Goal分母或解除S01/权限阻塞"
+    ],
+    "maximum_claim": "仅提出基于当前可见源码阶段的ST-SRC-001..006 fixture/oracle候选；不证明合法组合全集、产品行为、权限、保存历史或Goal通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "原始Goal与10/26/16分母",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r002.md",
+      "revision": "f0c62881696554ced04ce9c1587edac899258f24abb14e5b88360a2a2cf13151",
+      "domains": [
+        "design",
+        "implementation",
+        "claim_ceiling"
+      ],
+      "reason": "复核后的来源阶段候选",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTraceReview-r002.md",
+      "revision": "fb9bf729306b8bce54e32579048ea81678ca2dfe886f31aba3b57aabdad60ae1",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "来源追踪独立审查",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSource-DeltaValidation-r001.md",
+      "revision": "2bf9e2a8681a5abd0b9ea90f5b468eebe8ceb3afd0355d3bdd957c2aa0335261",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "局部P2修复验证",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r001.md",
+      "revision": "55151a44c4d8ff2eed5893bda071e2c6e3d1ee69d8f0547ad2777e35d75fdc67",
+      "domains": [
+        "design",
+        "acceptance"
+      ],
+      "reason": "完整组合边界与尚未冻结项",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "全形态设计审查边界",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "创建对象与扩展属性来源",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "配置、校验、取消/确认状态路径",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "运行值、异步枚举与默认值路径",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "dependency",
+        "authority"
+      ],
+      "reason": "S01入口条件",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "真实权限阻塞",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r277.json",
+      "revision": "09f885d367359817d2eec02159ac674fc710063acc17fa223709a30a70c76ad2",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "当前工作树、finding处置与Goal边界",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-ORACLE-DESIGN-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_revision_or_authority_drift",
+      "condition": "若代码、Goal或Blocker revision与Context不符",
+      "mode": "deterministic",
+      "action": "停止并重基线，不沿用旧来源结论",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "oracle_not_source_determinable",
+      "condition": "当前源码不足以确定唯一输入/状态快照/oracle",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "将该ST-SRC标为NOT_READY并记录精确缺口，不臆造预期",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations完整保留；Scope Delta none；S01 F01 Packet仍CONDITIONAL；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_design_review",
+    "reason": "复核入口因当前工作树和r001卡片摘要漂移重建；只读独立复核，不授权实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "source paths",
+    "case identity and oracle",
+    "claim ceiling",
+    "S01 and permission blockers"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03"
+  ]
+}

@@ -1,3 +1,4 @@
+import { preparedMapKey } from './filter-paste-ready'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   L7ChartView,
@@ -61,12 +62,16 @@ export class HeatMap extends L7ChartView<Scene, L7Config> {
 
   async drawChart(drawOption: L7DrawConfig<L7Config>) {
     const { chart, container } = drawOption
+    if (drawOption.filterPaste && (!chart.xAxis || chart.xAxis.length < 2 || !chart.yAxis?.length))
+      throw new Error('paste_map_axes_missing')
     const containerDom = document.getElementById(container)
     if (!containerDom) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_missing')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const rect = containerDom.getBoundingClientRect()
-    if (rect.height <= 0) {
+    if (rect.height <= 0 || (drawOption.filterPaste && rect.width <= 1)) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_empty')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const xAxis = deepCopy(chart.xAxis)
@@ -77,7 +82,7 @@ export class HeatMap extends L7ChartView<Scene, L7Config> {
       basicStyle = parseJson(chart.customAttr).basicStyle
       miscStyle = parseJson(chart.customAttr).misc
     }
-    const mapKey = await this.getMapKey()
+    const mapKey = drawOption.filterPaste ? preparedMapKey() : await this.getMapKey()
     const mapStyle = getMapStyle(mapKey, basicStyle)
     // 底层
     const chartObj = drawOption.chartObj as unknown as L7Wrapper<L7Config, Scene>
@@ -93,7 +98,11 @@ export class HeatMap extends L7ChartView<Scene, L7Config> {
       mapStyle,
       center
     )
-    this.configZoomButton(chart, scene, mapKey)
+    if (drawOption.filterPaste) {
+      drawOption.filterPaste.addCleanup(() => scene.destroy())
+      if (!drawOption.filterPaste.check()) throw new Error('paste_map_cancelled')
+    }
+    if (!drawOption.filterPaste) this.configZoomButton(chart, scene, mapKey)
     if (xAxis?.length < 2 || yAxis?.length < 1) {
       return new L7Wrapper(scene, undefined)
     }
@@ -122,14 +131,20 @@ export class HeatMap extends L7ChartView<Scene, L7Config> {
       }
     })
 
-    config.once('inited', () => {
-      mapRendered(container)
-    })
-    config.on('inited', () => {
-      qqMapRendered(scene)
-    })
+    config.once(
+      'inited',
+      drawOption.filterPaste
+        ? drawOption.filterPaste.callback(() => mapRendered(container))
+        : () => mapRendered(container)
+    )
+    config.on(
+      'inited',
+      drawOption.filterPaste
+        ? drawOption.filterPaste.callback(() => qqMapRendered(scene))
+        : () => qqMapRendered(scene)
+    )
 
-    return new L7Wrapper(scene, config)
+    return new L7Wrapper(scene, config, drawOption.filterPaste)
   }
 
   protected setupOptions(chart: Chart, config: L7Config): L7Config {

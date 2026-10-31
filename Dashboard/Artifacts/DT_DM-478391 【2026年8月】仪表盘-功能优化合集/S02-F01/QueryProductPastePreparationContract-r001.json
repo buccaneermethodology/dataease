@@ -1,0 +1,133 @@
+{
+  "schema_version": "s02.query_product_paste_preparation_contract/1",
+  "contract_id": "QPP-PREPARATION-001",
+  "goal_id": "DE-S02-F01",
+  "revision": "r001",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "design_ref": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r006.md",
+    "sha256": "e95436c10ce9ad6bf1a3540fdcb908a87e94649a42b86d4407cb12fb75dd23af"
+  },
+  "independent_design_review_ref": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductPastePreparationDesignReview-r006.md",
+    "sha256": "f8b3625a4f601ba7e5e5896ea2732cb48836bf224b609f92c3c63e1ad859ceaa"
+  },
+  "frozen_cases_ref": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r006.json",
+    "sha256": "26e89c627d996fa54597e9b1ef969100adb46868e3221a4dc1648d3effcedd7c",
+    "case_ids": [
+      "QPP-001",
+      "QPP-002",
+      "QPP-003",
+      "QPP-004",
+      "QPP-005",
+      "QPP-006",
+      "QPP-007",
+      "QPP-008",
+      "QPP-009",
+      "QPP-010",
+      "QPP-011",
+      "QPP-012",
+      "QPP-013",
+      "QPP-014",
+      "QPP-015",
+      "QPP-016",
+      "QPP-017",
+      "QPP-018",
+      "QPP-019",
+      "QPP-020",
+      "QPP-021",
+      "QPP-022",
+      "QPP-023",
+      "QPP-024",
+      "QPP-025",
+      "QPP-026",
+      "QPP-027",
+      "QPP-028",
+      "QPP-029",
+      "QPP-030",
+      "QPP-031"
+    ],
+    "case_count": 31
+  },
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "scope": {
+    "allowed": [
+      "新增detached纯函数模块query-product-paste-preparation.ts",
+      "新增同身份fixture runner/test query-product-paste-preparation.test.ts",
+      "实现prepareQueryProductPaste与revalidateQueryProductPaste",
+      "真实调用query-single-select-target-rebuild依赖",
+      "私有WeakMap句柄绑定及独立副本",
+      "按冻结QPP r006 cases实现确定性成功/失败oracle"
+    ],
+    "forbidden": [
+      "修改Goal、Design、Fixtures、既有QTARGET/QCARRIER源码或测试",
+      "连接UI、Pinia/Store、生命周期owner、snapshot、preview、query、save",
+      "实现或推断权限、来源认证、endpoint完整性或用户身份",
+      "写入共享缓存/网络/数据库",
+      "扩大普通文本单选之外的支持域"
+    ]
+  },
+  "api": {
+    "prepare": "prepareQueryProductPaste(input)",
+    "revalidate": "revalidateQueryProductPaste(handle,current)",
+    "prepare_success": {
+      "ok": true,
+      "handle": "opaque module-issued WeakMap handle",
+      "candidate": {
+        "designComponentData": "complete cloned target root",
+        "runtimeTargetRoot": "complete cloned runtime target root"
+      }
+    },
+    "revalidate_success": {
+      "ok": true,
+      "candidate": "fresh independent copy of frozen candidate"
+    },
+    "failure": {
+      "ok": false,
+      "stage": "one frozen stage",
+      "reason": "one frozen reason"
+    }
+  },
+  "acceptance": [
+    {
+      "id": "QPP-CASE-001",
+      "predicate": "同一输入逐值匹配冻结expected；准备和复验失败不得返回局部候选。"
+    },
+    {
+      "id": "QPP-CASE-002",
+      "predicate": "31个fixture case身份全部保留；runner按标准JSON Pointer执行add/remove/replace，自定义候选污染与再次复验按fixture_resolution解释。"
+    },
+    {
+      "id": "QPP-CASE-003",
+      "predicate": "所有调用不修改任何输入；成功输出与输入、design/runtime根彼此无共享可变引用。"
+    },
+    {
+      "id": "QPP-CASE-004",
+      "predicate": "句柄仅由当前模块实例签发且私有绑定摘要；伪造句柄拒绝，输入污染后复验仍返回干净深副本。"
+    },
+    {
+      "id": "QPP-CASE-005",
+      "predicate": "目标签名、QTARGET阶段、枚举完整度/配对/requestKey/身份摘要严格依冻结阶段顺序失败关闭。"
+    },
+    {
+      "id": "QPP-CASE-006",
+      "predicate": "不会触达产品状态、UI、查询、预览、保存、权限或网络。"
+    }
+  ],
+  "trusted_red_green": {
+    "same_runner_required": true,
+    "same_frozen_fixture_identity_required": true,
+    "red": "实现stub应在31个冻结case上产生确定性oracle mismatch；记录退出码、stdout/stderr及source digest。",
+    "green": "实现后同runner全case通过且额外输入/对象隔离断言通过。"
+  },
+  "claim_ceiling": "仅可声明detached纯准备/复验helper对QPP r006冻结case的实现候选及独立验证结果；不能声明产品接线、权限、完整Goal AC或S02完成。"
+}

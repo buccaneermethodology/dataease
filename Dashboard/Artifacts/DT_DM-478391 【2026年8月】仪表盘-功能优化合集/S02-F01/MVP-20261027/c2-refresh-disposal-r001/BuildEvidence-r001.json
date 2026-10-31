@@ -1,0 +1,425 @@
+{
+  "schema_version": "c2_finite_disposal_build_evidence_v1",
+  "at": "2026-10-30T23:08:21.158424+00:00",
+  "snapshot_id": "S02-C2-FINITE-DISPOSAL-BUILD-r001",
+  "kind": "Builder候选交付与自检；不是独立Validation或Goal完成",
+  "original_ac": [
+    "AC-MVP-F01-11",
+    "AC-MVP-F01-12"
+  ],
+  "card_canonical_sha256": "9030977936a86f398441007daa0d4efd3ea95ce137c06e7370bdcffc0b7c3682",
+  "authorization": "正式Builder卡/BuildPlan与admission安排；原设计review NOT_ADMITTED是此前静态时点，后续本次正式准入不是用设计review替代授权",
+  "source_before": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/ChartComponentG2Plot.vue.before",
+    "sha256": "cbe650ca9424b73c6ec25e618289ffef5346f6f3ecd7edcdd4d374b09aaa47f5"
+  },
+  "source_after": {
+    "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+    "sha256": "9d2f6852f1d419064f9d9b434ddefb72dce6919f24f14fe0f1f858fb775bd71a"
+  },
+  "source_delta": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/SourceDelta-r001.patch",
+    "sha256": "ee479926384e240058c427717c88a37d062e687e5d7d3fbe5dce081ae3aadfee"
+  },
+  "after_snapshot": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/SourceDelta-ChartComponentG2Plot.after",
+    "sha256": "9d2f6852f1d419064f9d9b434ddefb72dce6919f24f14fe0f1f858fb775bd71a"
+  },
+  "minimal_scope": "仅单SFC：新增取当前/置null/再destroy helper；两个非active释放入口调用它；map同实例先null后cancel；active scope、普通renderG2其它destroy、异步晚到处理未改",
+  "contract": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/C2RefreshDisposalCases-r003.json",
+    "sha256": "47c22e3cf68d2f26fd4902c781adf52d95a24f6cc118041f54fc7a23900811fa"
+  },
+  "design": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/C2RefreshDisposalDesign-r003.md",
+    "sha256": "6a338055474f5b027910399b860d1d0a33db8f95641ed8512610b9e7604ea42c"
+  },
+  "runner_freeze": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/RunnerFreeze-r001.json",
+    "sha256": "0a08944cb9c28a22fff11d45236b475c3d6a34544f3192e4ac3f4b481a4bd6de"
+  },
+  "harness_repair_log": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/HarnessRepairLog-r001.json",
+    "sha256": "4ee2658defd4a8621d6acae0c899df1018b66ad3b21f3f11cbe6fc592565238b"
+  },
+  "RED": {
+    "exit": 1,
+    "executed": 50,
+    "passed": 4,
+    "semantic_failures": 46,
+    "execution_errors": 0,
+    "original_7_count_counterexamples": [
+      {
+        "case_id": "C2-RD-001",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-002",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-003",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-004",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-005",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-006",
+        "count_failed": true
+      },
+      {
+        "case_id": "C2-RD-007",
+        "count_failed": true
+      }
+    ],
+    "stdout": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/RED-r001.stdout.json",
+      "sha256": "6a972c8506ae69d4ca6f667b79d8238cd92af7de6565304ff4e382f534b090ea"
+    },
+    "stderr": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/RED-r001.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fingerprints": [
+      "SFC_REFERENCE_NULL_BEFORE_EACH_DESTROY",
+      "SECOND_ENTRY_AND_REPEATS_NO_RETRY",
+      "ORIGINAL_PRIMARY_SDK_COUNTS",
+      "throw后引用未清/其它入口重复错误通道"
+    ]
+  },
+  "GREEN": {
+    "exit": 0,
+    "executed": 50,
+    "passed": 50,
+    "semantic_failures": 0,
+    "execution_errors": 0,
+    "stdout": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/GREEN-r001.stdout.json",
+      "sha256": "cb06990187ca302307c55875038a81d66f7dbb6e7d2f67cd7a95d134b98e625a"
+    },
+    "stderr": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/GREEN-r001.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "same_runner_harness_case_identity": true
+  },
+  "regression_summary": {
+    "maps_total": 317,
+    "maps_before": {
+      "passed": 308,
+      "failed": 9,
+      "execution": 0
+    },
+    "maps_after": {
+      "passed": 308,
+      "failed": 9,
+      "execution": 0
+    },
+    "maps_records_exact_equal": true,
+    "maps_baseline_failures": [
+      {
+        "id": "bubble-map-polygon",
+        "fault": "normal",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "bubble-map-polygon",
+        "fault": "callback",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "bubble-map-polygon",
+        "fault": "scene-wait",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "map-point",
+        "fault": "normal",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "map-point",
+        "fault": "callback",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "map-point",
+        "fault": "scene-wait",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "bubble-map-point",
+        "fault": "normal",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "bubble-map-point",
+        "fault": "callback",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      },
+      {
+        "id": "bubble-map-point",
+        "fault": "scene-wait",
+        "verdict": "SEMANTIC_FAIL",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "layers": 0,
+        "plots": 1
+      }
+    ],
+    "g2_component_before_after": "相同旧runner均6案+R013共7执行错误；缺显式module double map/filter-paste-ready；未改旧runner，不称通过",
+    "g2_helper_passed": 23,
+    "g2_reentrant_passed": 10,
+    "renderers_passed": 31,
+    "tooltip_passed": 10,
+    "paste_passed": 21,
+    "type_diagnostics_before": 11,
+    "type_diagnostics_after": 11,
+    "type_added": [],
+    "lint_exit": 0,
+    "git_diff_check_exit": 0
+  },
+  "regression_logs": [
+    {
+      "id": "maps-regression-r001",
+      "command": "node tests/filter-copy-mvp-maps/check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 1,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/maps-regression-r001.stdout.json",
+        "sha256": "2eaf19b417e55a988cb51129c872ade23df1e356b90ef40c731a5bbe52bc1b13"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/maps-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "maps-before-regression-r001",
+      "command": "node tests/filter-copy-mvp-maps/check.mjs --repair-before --repair-manifest=<TypeBaseline-manifest-r001.json绝对路径>",
+      "cwd": "core/core-frontend",
+      "exit": 1,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/maps-before-regression-r001.stdout.json",
+        "sha256": "2eaf19b417e55a988cb51129c872ade23df1e356b90ef40c731a5bbe52bc1b13"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/maps-before-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "g2-component-regression-r001",
+      "command": "node tests/g2-render-ownership/component-check.mjs --mode green",
+      "cwd": "core/core-frontend",
+      "exit": 2,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-component-regression-r001.stdout.json",
+        "sha256": "ff594925e18ae7dbe3655868dd5dd2f1b12c8dadca4d7e5ea96e9197b6a7757b"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-component-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "g2-component-before-regression-r001",
+      "command": "临时shadow：相同旧component runner+当前helper+SFC.before+依赖软链；原workspace源码未替换",
+      "cwd": "core/core-frontend",
+      "exit": 2,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-component-before-regression-r001.stdout.json",
+        "sha256": "30acd08b9f567ecb8252f13739b5efa8a5aec4e69853823d897b782e994fc126"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-component-before-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "g2-helper-regression-r001",
+      "command": "node tests/g2-render-ownership/check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-helper-regression-r001.stdout.json",
+        "sha256": "21f1da69ee135beaa728bf50cd6ae5a99366cd026e9b8662ed61d98c15b924f2"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-helper-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "g2-reentrant-regression-r001",
+      "command": "node tests/g2-render-ownership/reentrant-replace-check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-reentrant-regression-r001.stdout.json",
+        "sha256": "afda9c4808bd40f67b9ed0e029571552eda9d6cd9e7138190ad357e4b5aaf72c"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/g2-reentrant-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "renderers-regression-r001",
+      "command": "node tests/filter-copy-mvp-renderers/check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/renderers-regression-r001.stdout.json",
+        "sha256": "d4ccc199af5fde8239b78b7a47cb3709dde6ee604945525afcf4e3a6b9ca9bd4"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/renderers-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "tooltip-regression-r001",
+      "command": "node tests/filter-copy-mvp-tooltip/check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/tooltip-regression-r001.stdout.json",
+        "sha256": "063f3d9aff51a1982bb18170220a43c3c09e4f39df4464f1a6db1a0bff696adf"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/tooltip-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "paste-regression-r001",
+      "command": "node tests/filter-copy-mvp-paste/check.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/paste-regression-r001.stdout.json",
+        "sha256": "5796ce8aa1f953b0a06db0f9e5850fb3420e1e3844594304cb3ee09d84f150c0"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/paste-regression-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "types-delta-r001",
+      "command": "node tests/filter-copy-mvp-maps/check.mjs --repair-types --repair-manifest=<TypeBaseline-manifest-r001.json绝对路径>",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/types-delta-r001.stdout.json",
+        "sha256": "4c67d6b7801c3b0ddfaad019b843811ae779d9300944c96edb4d488c8742f923"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/types-delta-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    },
+    {
+      "id": "lint-r001",
+      "command": "./node_modules/.bin/eslint src/views/chart/components/views/components/ChartComponentG2Plot.vue tests/c2-refresh-disposal/check.mjs tests/c2-refresh-disposal/harness.mjs",
+      "cwd": "core/core-frontend",
+      "exit": 0,
+      "stdout": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/lint-r001.stdout.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-refresh-disposal-r001/lint-r001.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "format_note": "stdout扩展名仅日志槽位；G2helper/reentrant是JSONL，renderer/paste是文本+末尾JSON，不冒充整个文件为单JSON"
+    }
+  ],
+  "landed_files": [
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "sha256": "9d2f6852f1d419064f9d9b434ddefb72dce6919f24f14fe0f1f858fb775bd71a"
+    },
+    {
+      "path": "core/core-frontend/tests/c2-refresh-disposal/README.md",
+      "sha256": "83f67b924ad80edb7a5dfeffd31d961c6eaf7dd1ad2e3549bcb8dedcd6a6f2bc"
+    },
+    {
+      "path": "core/core-frontend/tests/c2-refresh-disposal/check.mjs",
+      "sha256": "1f4f0663d4a5a4028a25068fcf9bed4ad2609ccf5aa4e480f0af0b9dd2edfb44"
+    },
+    {
+      "path": "core/core-frontend/tests/c2-refresh-disposal/harness.mjs",
+      "sha256": "0f4871ba291d9e624472f102366cb228f65e0485e57bfd393af13a809b930d81"
+    },
+    {
+      "path": "tests/bdd/readable_cards/s02-c2-refresh-disposal.md",
+      "sha256": "a72eb45374a66fb1edb4254007451460337582c03f3f39ffc11672bfcbda64bf"
+    }
+  ],
+  "source_module_contract_boundaries": [
+    "真实SFC compiler script/template；仅AST expose对象插入只读getter，另import.meta.env.DEV=false为编译环境选择",
+    "map类/ready桥/L7 wrapper/g2-render-attempt按磁盘源真实模块调度；Vue renderer响应式真实；SDK/DOM/API/Store/provider有界double",
+    "Error构造器在每fixture VM realm共享；current throw不delegate，body0不能称SDK资源成功释放",
+    "G2 bar/line须读回实际owner；scope.dispose外层观察返回Error[]，不改真实控制流",
+    "query/Store publish/canonical view+element修改0仅本50固定fixture"
+  ],
+  "preserved_history": {
+    "original_C2_implementation": "3/3 BLOCKED原报告保持；本单元非整包第四轮",
+    "new_design": "r003冻结50案且新设计3/3耗尽，不改冻结期望",
+    "all_38_obligations": 38,
+    "builtin_type_denominator": 49,
+    "complete_type_acceptance": "0/49",
+    "real_permissions": "NOT_RUN/BLOCKED"
+  },
+  "not_observed": [
+    "真实浏览器/SDK/GPU资源成功释放",
+    "旧ubo根因与真实child独立卸载可达性",
+    "async draw resolve after unmount重新赋值",
+    "strict桥主SDK同步throw",
+    "普通非paste全生命周期/全renderer/所有入口",
+    "真实权限/DB保存重开/49型/P1/Goal验收"
+  ],
+  "validation_status": "AWAITING_INDEPENDENT_VALIDATION",
+  "pre_closeout": "Builder不写Goal/Session/StopGate/旧独立报告，收尾由Orchestrator后续绑定独立证据"
+}

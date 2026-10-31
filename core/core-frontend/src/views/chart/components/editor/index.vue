@@ -37,6 +37,7 @@ import { fieldType } from '@/utils/attr'
 import QuotaItem from '@/views/chart/components/editor/drag-item/QuotaItem.vue'
 import DragPlaceholder from '@/views/chart/components/editor/drag-item/DragPlaceholder.vue'
 import FilterTree from './filter/FilterTree.vue'
+import { useChartFilterCopyMvp } from './filter/useChartFilterCopyMvp'
 import QuotaFilterEditor from '@/views/chart/components/editor/filter/QuotaFilterEditor.vue'
 import ResultFilterEditor from '@/views/chart/components/editor/filter/ResultFilterEditor.vue'
 import { ElIcon } from 'element-plus-secondary'
@@ -202,6 +203,18 @@ const templateStatusShow = computed(() => {
 })
 
 const { view } = toRefs(props)
+const filterCopyMvp = useChartFilterCopyMvp(view)
+const {
+  visible: filterCopyVisible,
+  enabled: filterCopyEnabled,
+  permission: filterCopyPermission,
+  permissions: filterCopyPermissions,
+  permissionRoles: filterCopyPermissionRoles,
+  copyReason: filterCopyReason,
+  pasteReason: filterPasteReason,
+  status: filterCopyStatus,
+  diagnostic: filterCopyDiagnostic
+} = filterCopyMvp
 
 const normalizeRichTextTitle = () => {
   if (view.value?.type !== 'rich-text') {
@@ -3412,6 +3425,90 @@ const chartStyleScroll = (val: any) => {
                             </template>
                             <span>{{ $t('chart.filter') }}</span>
                           </el-button>
+                          <div
+                            v-if="filterCopyVisible"
+                            class="filter-copy-mvp"
+                            style="width: 100%; margin-top: 8px"
+                          >
+                            <el-button
+                              data-testid="chart-filter-copy"
+                              :aria-label="t('chart.filter_copy_mvp.copy')"
+                              :disabled="!!filterCopyReason"
+                              @click="filterCopyMvp.copy"
+                              >{{ t('chart.filter_copy_mvp.copy') }}</el-button
+                            >
+                            <el-button
+                              data-testid="chart-filter-paste"
+                              :aria-label="t('chart.filter_copy_mvp.paste')"
+                              :disabled="!!filterPasteReason"
+                              @click="filterCopyMvp.paste"
+                              >{{ t('chart.filter_copy_mvp.paste') }}</el-button
+                            >
+                            <p v-if="filterCopyReason" data-testid="chart-filter-copy-reason">
+                              {{ t('chart.filter_copy_mvp.' + filterCopyReason) }}
+                            </p>
+                            <p v-if="filterPasteReason" data-testid="chart-filter-paste-reason">
+                              {{ t('chart.filter_copy_mvp.' + filterPasteReason) }}
+                            </p>
+                            <label v-if="filterCopyEnabled" style="display: block">
+                              {{ t('chart.filter_copy_mvp.permission_stub') }}
+                              <select
+                                v-model="filterCopyPermission"
+                                data-testid="chart-filter-permission"
+                              >
+                                <option value="unknown">
+                                  {{ t('chart.filter_copy_mvp.permission_unknown') }}
+                                </option>
+                                <option value="allow">
+                                  {{ t('chart.filter_copy_mvp.allow') }}
+                                </option>
+                                <option value="deny">
+                                  {{ t('chart.filter_copy_mvp.permission_denied') }}
+                                </option>
+                              </select>
+                            </label>
+                            <template v-if="filterCopyEnabled">
+                              <label
+                                v-for="role in filterCopyPermissionRoles"
+                                :key="role"
+                                style="display: block"
+                              >
+                                {{
+                                  t('chart.filter_copy_mvp.permission_' + role.split('-').join('_'))
+                                }}
+                                <select
+                                  v-model="filterCopyPermissions[role]"
+                                  :data-testid="'chart-filter-permission-' + role"
+                                >
+                                  <option value="unknown">
+                                    {{ t('chart.filter_copy_mvp.permission_unknown') }}
+                                  </option>
+                                  <option value="allow">
+                                    {{ t('chart.filter_copy_mvp.allow') }}
+                                  </option>
+                                  <option value="deny">
+                                    {{ t('chart.filter_copy_mvp.permission_denied') }}
+                                  </option>
+                                </select>
+                              </label>
+                            </template>
+                            <p
+                              v-if="filterCopyStatus"
+                              role="status"
+                              data-testid="chart-filter-copy-status"
+                            >
+                              {{ t('chart.filter_copy_mvp.' + filterCopyStatus) }}
+                            </p>
+                            <details
+                              v-if="filterCopyEnabled"
+                              data-testid="chart-filter-copy-diagnostic"
+                            >
+                              <summary>{{ t('chart.filter_copy_mvp.diagnostic') }}</summary>
+                              <pre style="white-space: pre-wrap; overflow-wrap: anywhere">{{
+                                filterCopyDiagnostic
+                              }}</pre>
+                            </details>
+                          </div>
                         </el-row>
 
                         <el-row v-if="showAggregate" class="refresh-area">

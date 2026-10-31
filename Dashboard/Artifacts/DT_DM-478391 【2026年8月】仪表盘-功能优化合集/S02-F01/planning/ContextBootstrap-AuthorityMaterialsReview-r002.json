@@ -1,0 +1,381 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-authority-materials-review-r002",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "评审权威材料包r002；每个交付物独立最多3轮；继续S02设计与build。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立评审AuthorityMaterialsRequest-r002及intake模板r002的全量修订，完整读取权威、DG-02遗留、场景合同和当前工作树；仅输出本轮报告。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r002.md"
+    ],
+    "forbidden_actions": [
+      "修改r002目标包及intake模板",
+      "修改产品源码、Goal、原始需求或S01材料",
+      "把未知authority填成已知",
+      "将评审上限套用整个S02",
+      "超过本权威材料包的3轮评审上限"
+    ],
+    "maximum_claim": "本交付物第2/3轮完整独立审查；不证明权威材料已取得、设计冻结、Builder准入、产品验收或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "Project requirements and language.",
+      "applicability": "project rules"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "governance",
+        "scope"
+      ],
+      "reason": "Required route and delegation rules.",
+      "applicability": "governance"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md",
+      "revision": "118986e578d3afd19548abf45836a6f4d03cd70323b6edd4625d2c3cd468e8b9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "Original S02 source and full denominator.",
+      "applicability": "original authority"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance"
+      ],
+      "reason": "Current final Goal and completion boundary.",
+      "applicability": "goal"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "Authority and prior user-approved boundaries.",
+      "applicability": "authority"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsRequest-r002.md",
+      "revision": "e9079a018755f75c75f13e3042a2fe657214aeac8a899b17d1a452201b5ac404",
+      "domains": [
+        "authority",
+        "scope",
+        "implementation",
+        "validation"
+      ],
+      "reason": "r002 review target",
+      "applicability": "artifact"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/AuthorityMaterialIntakeTemplate-r002.json",
+      "revision": "b5e15a68ea03deca34cb52717b57fe08ac29f4d76bdc546fdfbdf920cdca9b41",
+      "domains": [
+        "authority",
+        "scope",
+        "implementation",
+        "validation"
+      ],
+      "reason": "r002 review target",
+      "applicability": "artifact"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r004.md",
+      "revision": "e3eafb37c88a1c4d92bbdb815da35d5ea8602cd54ed252ec472ab6361cf25ae6",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Candidate and oracle source.",
+      "applicability": "design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r001.md",
+      "revision": "7ced2c1db1df264da65f2eebd2dae76199db39125ac57139708df093c74eeba5",
+      "domains": [
+        "authority",
+        "dependency"
+      ],
+      "reason": "Prior DG-02 review history.",
+      "applicability": "prior review"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r002.md",
+      "revision": "b8d967916e6d24e9539f3781e4b182e52a3028847b27dd8b847db90b98668a18",
+      "domains": [
+        "authority",
+        "dependency"
+      ],
+      "reason": "Prior DG-02 review history.",
+      "applicability": "prior review"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r003.md",
+      "revision": "d1e8578f22d6958cd3ddde03bdf7dfd621658318a4a7e47f39e4efa769476050",
+      "domains": [
+        "authority",
+        "dependency"
+      ],
+      "reason": "Latest unresolved finding inventory.",
+      "applicability": "prior review"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "validation",
+        "dependency"
+      ],
+      "reason": "Current environment availability and boundary.",
+      "applicability": "environment"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "S01 F01 entry conditions.",
+      "applicability": "S01"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "0b2c0ab23029bdb83455630ab36b9928ab8d5691606c6967999e7b16005e0af9",
+      "domains": [
+        "scope",
+        "dependency"
+      ],
+      "reason": "Current execution record.",
+      "applicability": "dashboard"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/AuthApi.java",
+      "revision": "f51dd4cdd76b28c4e9618eb06aba08a42c2b1db916568aa6d343098aabd5d06d",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Permission contract source cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/InteractiveAuthApi.java",
+      "revision": "4689e9ec1eaf1c9573462de71e4290a2b0e0ce464094fff21f2da36cf01fe63d",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Permission contract source cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/ResourceAuthApi.java",
+      "revision": "4555a5fcd67e83f7f27fcc4cc6b1fc512c039cfdf41d71de4a68ea666dfec06c",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Permission contract source cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/user/SubstituteUserServer.java",
+      "revision": "d1ad0833e7b8e1c8604cc8f26bb9fb9fff80c22836441513f89ed60d04b49d1a",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Standalone fallback boundary cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/login/SubstituleLoginServer.java",
+      "revision": "88bc3cd9e72697e72726f25dfde3adaae9d2331ffc8902356a316fd08c383ad4",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Standalone fallback boundary cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Frontend identity cache behavior cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-frontend/src/utils/logout.ts",
+      "revision": "878cb98f412c6c9263d615aaa59a1b7eb6aeaa18c41259f09861a517897d3434",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Logout path cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/datasource/manage/DatabaseTimeManage.java",
+      "revision": "87cc563d477754329cc530e948a3cf491a7812698c8bcf0fd6f915bfd99ecdd8",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "DB time source boundary cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/datasource/server/DatasourceServer.java",
+      "revision": "3138ce6d1ba7cc7a103cda25aa98b45f9510b00a0835d8bb255541a2c3dd5a3c",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "DB time call site cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+      "revision": "579bfaf261b3d9a2325554f2e21f6ac44c7bd3a66f611661d97bcd05188de844",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Working-tree-only helper boundary cited by package.",
+      "applicability": "source"
+    },
+    {
+      "path": ".gitmodules",
+      "revision": "720091481e34953421f42c136418c8c59852e77a4225cbab6974678554e63ca4",
+      "domains": [
+        "implementation",
+        "dependency"
+      ],
+      "reason": "Submodule declaration; access not assumed.",
+      "applicability": "source"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r001.md",
+      "revision": "e05392a506d3b44b967c305206785e6fe1a7030071c0b2ba4244d9e3ca1e5bf2",
+      "domains": [
+        "acceptance",
+        "scope"
+      ],
+      "reason": "Full finding inventory to verify dispositions",
+      "applicability": "prior review"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r004.md",
+      "revision": "e3eafb37c88a1c4d92bbdb815da35d5ea8602cd54ed252ec472ab6361cf25ae6",
+      "domains": [
+        "scenario",
+        "authority"
+      ],
+      "reason": "Scenario ID/oracle source",
+      "applicability": "candidate design"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "Frozen product predicates",
+      "applicability": "goal authority"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "SOURCE_MISMATCH_FOUND",
+      "condition": "引用行或源码摘要与当前文件不匹配",
+      "action": "报告确切位置和影响；不得扩大为源码修复",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "CHANGED_USER_OR_AUTHORITY_INPUT",
+      "condition": "用户澄清、Goal、authority 来源或接收材料发生变化",
+      "action": "刷新 objective/authority/claim ceiling/critical dependencies 并扩展完整读集",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "preservation_statement": "保持10项Goal AC、26项must-have、16项产品义务及Scope Delta none；区分来源事实、maintainer authority、静态源码、运行证据和未知。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": true
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_semantic_review",
+    "reason": "用户请求评审权威材料包；本交付物独立 review，round 2/3，read-mostly，仅产出报告。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "artifact_review_budget": {
+    "artifact_id": "S02-F01-authority-materials-package",
+    "max_rounds": 3,
+    "round": 2,
+    "scope": "AuthorityMaterialsRequest-r002.md + AuthorityMaterialIntakeTemplate-r002.json"
+  }
+}

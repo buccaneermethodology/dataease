@@ -1,0 +1,615 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立审查 Query Shape 生命周期源码证据矩阵 r001，一次性找全所有实质性问题：逐行校验 shape、源码定位、生命周期覆盖、未知边界、Authority 状态、完整Goal分母与 claim ceiling。只写一份review报告，不修改被审矩阵或源码。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "对单独设计交付物做全量基线语义审查；本 review 不重判 Authority 主包历史结论。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterShapeLifecycleEvidenceMatrixReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改被审矩阵、源码、Goal、Cases或CoverageMatrix",
+      "将静态来源提升为产品运行/权限/持久化证据",
+      "从shape轴推导合法支持分母",
+      "重开任何已达3/3轮的其他交付物"
+    ],
+    "maximum_claim": "只判断矩阵 r001 当前字节是否存在遗漏、过度推论或引用错误；不证明产品设计冻结或Goal完成。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "7eb13046bfbb0602bc364ff1277a556704cba39a484ab610836dff4c7ab75771",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md",
+      "revision": "b64f0917b1951b07f7469e943955f1478ee73040af3bc9f642587f8b75069e94",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsPostReviewCorrection-r002.md",
+      "revision": "692854a5c1f26a2b969ec38c91bfd0b22db717df335faf17f946e7f3fa4980fd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsPostReviewCorrectionReview-r002.md",
+      "revision": "bda036af3c7cf1c1e0251d9fee877b5794f31a0675800bf38cf64a0397522a33",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r003.md",
+      "revision": "84d697c4b241f9d94b6f664d8284da72223dc674e3df5b47cce64901175eef38",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r003.md",
+      "revision": "00d7d87cf07db196296e2fe2979c75d184b847d62d14598fff2d16a661c2b0ae",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r003.md",
+      "revision": "192a09534d6a72e3c2e348cc48d3539641bbe7ce56afa3d4fd623d47ac9e7f64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumSourceTraceReview-r003.md",
+      "revision": "2221fcece1eb12b91edeacdab7e38e212dfe23ae10a7065c639cf51c8d41f08f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumConsumerPersistenceTrace-r002.md",
+      "revision": "891bdaa1629ed48a1999f40e19e15e50b81c4d21d21d053682efa7f54d7e9bcb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumConsumerPersistenceTraceReview-r003.md",
+      "revision": "ef60e125a10d927554b27a5dfe4c2ea282da61a0fb470ad38b5f7b2c573026ad",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "/Users/xiaomei/Documents/projects/dataease/Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterShapeLifecycleEvidenceMatrix-r001.md",
+      "revision": "2a8670072445707a38b4d30ff381b10baf5ca747f3c09f4d30172bdfa05b75c2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryCascade.vue",
+      "revision": "7c4139e8980c38420b5106e493524c8ff72e2571777d2c9a0b539af228433010",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/FilterTime.vue",
+      "revision": "dc851c71bcf31ca10bac43aa190e244b213e0c65a79829720ff744e163e70ad0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/DynamicTimeRange.vue",
+      "revision": "1104804c93a4098d0e0a95503121bc23ce0e140adcfa3269dac0e36c63bf502d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/TextSearch.vue",
+      "revision": "f0f2f24c0b72e5824d6094db2ffdda77e88106d7bce88fd6ac355b59134381e2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Tree.vue",
+      "revision": "effedc2f348a87c225054fd7609188ae15654a9af22e7b9cc6d28d242b23f651",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "revision": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/utils/canvasUtils.ts",
+      "revision": "f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/api/visualization/dataVisualization.ts",
+      "revision": "dc0a75b7a4abf308a41473de710c7d137b294c8b4915fe94f859744541cd4082",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "完整复核矩阵声明、原始Goal/authority和每行当前源码证据。",
+      "applicability": "S02-F01-R4-SHAPE-LIFECYCLE-EVIDENCE-MATRIX-REVIEW-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "deterministic_scope_or_hash_mismatch",
+      "condition": "若发现摘要、分母或明确源码定位不符",
+      "mode": "deterministic",
+      "action": "记录具体证据并判定相应结论不可接受",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic_or_lifecycle_gap",
+      "condition": "若发现未覆盖shape生命周期或把静态事实过度推论",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "列出全部finding及最小修复建议",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal 10/26/16，Scope Delta none；S01 CONDITIONAL；真实权限 BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_validation",
+    "reason": "对独立矩阵交付物执行一次完整只读基线验证，不重审其他已封顶artifact。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "raw Goal and user intent",
+    "authority package current main review and correction review",
+    "FullShape r003 and final review",
+    "Select-Num source and consumer/persistence traces",
+    "current source files named by matrix",
+    "all shape rows and explicit UNKNOWN boundaries",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-04",
+    "AC-S02-05",
+    "AC-S02-06",
+    "AC-S02-07",
+    "AC-S02-08",
+    "AC-S02-09"
+  ]
+}

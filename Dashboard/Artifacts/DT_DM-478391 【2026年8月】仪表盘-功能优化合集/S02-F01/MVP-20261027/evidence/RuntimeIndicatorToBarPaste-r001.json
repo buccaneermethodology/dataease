@@ -1,0 +1,94 @@
+{
+  "scenario": "indicator-to-bar, same dataset, confirmed atomic overwrite, real query response",
+  "environment": {
+    "url": "http://127.0.0.1:7070",
+    "mode": "local standalone session",
+    "permission": "explicit DEV test stub allow; not real authorization"
+  },
+  "dashboardId": "1312476889213964288",
+  "sourceId": "7520752064427724800",
+  "targetId": "7520741153101058048",
+  "datasetId": "1312472054565572608",
+  "tree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "result": {
+    "outcome": "success",
+    "reason": null,
+    "operationId": 1,
+    "logicalGetDataCalls": 1,
+    "counterScope": "logical getData calls, not physical HTTP",
+    "queryType": "bar",
+    "queryDatasetId": "1312472054565572608",
+    "rowCount": 5,
+    "rows": [
+      {
+        "shop": "果元店",
+        "amount": 3218
+      },
+      {
+        "shop": "南都店",
+        "amount": 1284
+      },
+      {
+        "shop": "乐园店",
+        "amount": 563
+      },
+      {
+        "shop": "水围店",
+        "amount": 1141
+      },
+      {
+        "shop": "香橙店",
+        "amount": 555
+      }
+    ],
+    "amountSum": 6761
+  },
+  "assertions": {
+    "sourceTreeEqualsClipboardTree": true,
+    "undefinedPaths": [],
+    "datasetIdentityMatches": true,
+    "realQueryCompleted": true,
+    "amountSumMatchesIndependentDatasetOracle": true,
+    "successMessage": "过滤条件已粘贴",
+    "queryObservationOutcome": "success"
+  },
+  "oracle": "RuntimeDatasetOracleCheck-r001.json (amount_sum=6761; underlying dataset matched 570/570 CSV values)",
+  "limitations": [
+    "indicator→bar only; does not establish other types",
+    "local standalone admin plus explicit DEV permission stub; not real multi-user authorization",
+    "not full S02 acceptance"
+  ],
+  "evidenceRecordedAt": "2026-10-28T10:37:10Z"
+}

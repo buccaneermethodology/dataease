@@ -1,0 +1,320 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QUERY-PRODUCT-COMMIT-design-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "继续执行 S02 Goal；修订 QueryProductCommit r001 设计合同与案例，响应独立审查 QPCR-01..06，优先使用当前源码已有 lifecycle owner；不改产品代码。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只写设计与fixtures r002。精确化当前单顶层查询组件的 owner-bound commit、history cache/append区别、preview event与query fanout、target default enum gate、candidate identity；公开真实权限契约仍BLOCKED则不签发产品Builder准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r002.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r002.json"
+    ],
+    "forbidden_actions": [
+      "修改源码/测试/Goal/旧r001设计、fixtures或review",
+      "调用保存API探测权限",
+      "创建mock权限或声明standalone为鉴权证据",
+      "删减其他合法形态或Goal分母",
+      "将设计候选冒充产品准入或验收"
+    ],
+    "maximum_claim": "仅形成QPC r002设计/案例修订候选；须由独立Semantic Review决定冻结与准入。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r001.md",
+      "revision": "5bdf606bd906a5cf39a2807bf018225499ff59512aa0c420591d696f89e46b04",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r001.json",
+      "revision": "1f39af8fda9123e4e20ee7b923d662b1de98550a2092169933ca7c3c6a9594aa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductCommitDesignReview-r001.md",
+      "revision": "41a5181dfb5413b51e2389552b1535d2c54b134066891a9af774c1636de548b0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationContract-r001.json",
+      "revision": "28e7caa0f4e0e4f2ccd54717cfc7b2fd761e252548ec1ddbf03ad2fad01053ea",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationDesign-r006.md",
+      "revision": "e95436c10ce9ad6bf1a3540fdcb908a87e94649a42b86d4407cb12fb75dd23af",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductPastePreparationFixtures-r006.json",
+      "revision": "26e89c627d996fa54597e9b1ef969100adb46868e3221a4dc1648d3effcedd7c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-product-paste-preparation.ts",
+      "revision": "5adbb83d363b260a6996709696df322e6a77d851e4bb86a391f22bb32a1093d3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+      "revision": "ebda5b9ac14425e9ed3a08ff489150197222f1900949b62209493341c6948189",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r177.json",
+      "revision": "679b39aef2ffdf6d44301233f629d637d9e319760d436ebfac6f87954b85ac20",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "修订 QPC r001 独立审查的具体finding，核对当前 owner、提交、历史、预览和枚举入口。",
+      "applicability": "S02-QUERY-PRODUCT-COMMIT-design-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_or_frozen_contract_drift",
+      "mode": "deterministic",
+      "condition": "Goal、QPP契约/fixture、owner、snapshot或QPC r001 finding绑定文件摘要变化",
+      "action": "停止并重新基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "unresolved_public_auth_contract",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "现有公开服务不能证明源查看/数据集访问/目标编辑权限",
+      "action": "保留BLOCKED，不签发产品UI/Store Builder admission",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "修订高语义风险事务合同与可执行用例，避免引用失真或副作用口径混淆。",
+    "route": "design_then_independent_semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "QPCR-01..06 exact dispositions",
+    "current owner APIs",
+    "snapshot cache vs actual append",
+    "query preview event path",
+    "default enum evidence path and late-C decision",
+    "public authorization blocker",
+    "complete original denominator"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "10 Goal AC、26 must-have、16产品义务、Scope Delta none；S01独立；真实权限验收BLOCKED/NOT_RUN。"
+  },
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitDesign-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductCommitCases-r002.json"
+  ],
+  "provenance": null
+}

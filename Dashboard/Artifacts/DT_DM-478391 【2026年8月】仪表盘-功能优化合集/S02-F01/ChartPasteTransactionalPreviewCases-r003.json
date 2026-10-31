@@ -1,0 +1,864 @@
+{
+  "schema_version": "s02_chart_paste_transactional_preview_cases_v1",
+  "delivery_id": "S02-F01-chart-paste-transactional-preview-contract",
+  "revision": "r003",
+  "supersedes_candidate": "ChartPasteTransactionalPreviewCases-r002.json",
+  "design_ref": "ChartPasteTransactionalPreviewDesign-r003.md",
+  "frozen_for_builder": false,
+  "scope_delta": "none",
+  "execution_boundary": "pure transaction decision model only; not product UI, HTTP, permissions, component state mutation, or rendering",
+  "binding_fields": [
+    "request_id",
+    "target_chart_id",
+    "uid",
+    "oid",
+    "content_id",
+    "target_revision",
+    "prior_tree_digest",
+    "chart_ext_request_digest",
+    "component_error_revision",
+    "chart_data_store_revision",
+    "render_output_revision"
+  ],
+  "full_observable_state_fields": [
+    "target_tree_digest",
+    "target_revision",
+    "chart_ext_request_digest",
+    "component_error",
+    "chart_data_store_revision",
+    "render_output_revision"
+  ],
+  "cases": [
+    {
+      "id": "CTPT-001",
+      "title": "授权与兼容通过后进入事务私有stage，不改活动图表状态",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(read=Success,manage=Success,datasetSame=true,clipboardValid=true)",
+        "prepare(valid=true)",
+        "queryPending(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "stage",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "transaction_pending": true
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-002",
+      "title": "Gate任一拒绝均保持完整P0",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(variant)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "abort",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "query_count": 0
+      },
+      "variants": [
+        "read=Denied",
+        "manage=Repeat",
+        "manage=Denied",
+        "datasetSame=false",
+        "identityMissing",
+        "endpointTimeout",
+        "malformedResponse"
+      ],
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-003",
+      "title": "Prepare不支持结构拒绝且不发query",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=false,reason=unsupportedShape)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "abort",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "query_count": 0
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-004",
+      "title": "query和隔离render成功且响应绑定后原子提交",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})",
+        "stageRenderSuccess(request=1,target=LINE-1,outputRevision=T-render)",
+        "commit(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "T-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "T-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "T-error"
+        },
+        "chart_data_store_revision": "T-store",
+        "render_output_revision": "T-render",
+        "decision": "commit",
+        "snapshot_count": 5,
+        "success_notice_count": 1,
+        "save_count": 0,
+        "chart_query_state": "T"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-005",
+      "title": "dataset READ实际query拒绝时活动完整P0不变",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "queryPending(request=1)",
+        "queryDenied(request=1,permission=datasetRead)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "abort",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "clipboard_id": "T-valid"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-006",
+      "title": "query或隔离render失败均不污染完整P0",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "stageEvent(variant)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "abort",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0"
+      },
+      "variants": [
+        "transportReject",
+        "businessError(code!=0)",
+        "timeout",
+        "stageRenderFailure(afterQuerySuccess)",
+        "publishPreparationFailure(afterStageRenderSuccess)"
+      ],
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-007",
+      "title": "新请求成功后旧请求迟到只忽略旧响应",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "queryPending(request=1)",
+        "begin(request=2,binding=captured,tree=T2)",
+        "queryPending(request=2)",
+        "querySuccess(response={\"request_id\":2,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})",
+        "stageRenderSuccess(request=2,target=LINE-1,outputRevision=T2-render)",
+        "commit(request=2)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})"
+      ],
+      "expected": {
+        "active_target": "LINE-1",
+        "target_chart_id": "LINE-1",
+        "uid": "user-A",
+        "oid": "org-A",
+        "dashboard_id": "dashboard-A",
+        "content_id": "content-v1",
+        "target_tree_digest": "T2-tree",
+        "committed_tree_digest": "T2-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "T2-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "T2-error"
+        },
+        "chart_data_store_revision": "T2-store",
+        "render_output_revision": "T2-render",
+        "decision": "commit_then_ignore_late",
+        "snapshot_count": 5,
+        "success_notice_count": 1,
+        "save_count": 0,
+        "query_count": 2,
+        "chart_query_state": "T2",
+        "transaction_pending": false,
+        "late_request_decision": "ignore_late",
+        "durable_save_state": "unchanged"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-008",
+      "title": "active target切换后旧响应不得改变新目标",
+      "events": [
+        "begin(request=1,target=LINE-1,binding=captured)",
+        "queryPending(request=1)",
+        "activeTargetChanged(LINE-2)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "decision": "ignore_late",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "line1_tree_digest": "P0-tree",
+        "line2_tree_digest": "LINE-2-tree",
+        "active_target": "LINE-2",
+        "preview_revision": "LINE-2-render"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-009",
+      "title": "身份或contentId改变时当前页面现态保持且旧响应忽略",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "queryPending(request=1)",
+        "currentBindingChanged(variant,currentState=P1)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})"
+      ],
+      "expected": {
+        "target_tree_digest": "P1-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "P1-request",
+        "component_error": {
+          "is_error": true,
+          "err_msg": "CURRENT-ERROR",
+          "revision": "P1-error"
+        },
+        "chart_data_store_revision": "P1-store",
+        "render_output_revision": "P1-render",
+        "decision": "ignore_late",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "variants": [
+          "uid=user-B",
+          "oid=org-B",
+          "contentId=content-v2"
+        ]
+      },
+      "current_observation": {
+        "uid": "user-B",
+        "oid": "org-B",
+        "content_id": "content-v2",
+        "target_tree_digest": "P1-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "P1-request",
+        "component_error": {
+          "is_error": true,
+          "err_msg": "CURRENT-ERROR",
+          "revision": "P1-error"
+        },
+        "chart_data_store_revision": "P1-store",
+        "render_output_revision": "P1-render"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-010",
+      "title": "同一目标被外部写为P1后陈旧请求不回滚也不覆盖P1",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "queryPending(request=1)",
+        "externalTargetWrite(tree=P1-tree,revision=8,chartExtRequest=P1-request,store=P1-store,render=P1-render,snapshotCount=5)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})"
+      ],
+      "expected": {
+        "target_tree_digest": "P1-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "P1-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P1-store",
+        "render_output_revision": "P1-render",
+        "decision": "ignore_late",
+        "snapshot_count": 5,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P1"
+      },
+      "external_write_observation": {
+        "target_tree_digest": "P1-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "P1-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P1-store",
+        "render_output_revision": "P1-render",
+        "snapshot_count": 5
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-013",
+      "title": "CTPT-004完整提交状态上显式保存失败，不改变已提交tuple",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})",
+        "stageRenderSuccess(request=1,target=LINE-1,outputRevision=T-render)",
+        "commit(request=1)",
+        "saveAttempt",
+        "saveFailure"
+      ],
+      "expected": {
+        "active_target": "LINE-1",
+        "target_chart_id": "LINE-1",
+        "uid": "user-A",
+        "oid": "org-A",
+        "dashboard_id": "dashboard-A",
+        "content_id": "content-v1",
+        "target_tree_digest": "T-tree",
+        "target_revision": 8,
+        "chart_ext_request_digest": "T-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "T-error"
+        },
+        "chart_data_store_revision": "T-store",
+        "render_output_revision": "T-render",
+        "decision": "save_failed_after_commit",
+        "snapshot_count": 5,
+        "success_notice_count": 1,
+        "durable_save_success": false,
+        "save_count": 1,
+        "query_count": 1,
+        "chart_query_state": "T",
+        "transaction_pending": false,
+        "durable_save_state": "failed"
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-01",
+      "title": "beforeGate 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-02",
+      "title": "afterGate 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-03",
+      "title": "afterPrepare 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-04",
+      "title": "queryPending 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "queryPending(request=1)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-05",
+      "title": "afterStageQueryBeforeRender 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "querySuccess(response=matchingTuple)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-06",
+      "title": "afterStageRenderBeforeCommit 阶段取消后完整P0保持，事务终止",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "gate(allPass)",
+        "prepare(valid=true)",
+        "querySuccess(response=matchingTuple)",
+        "stageRenderSuccess(request=1)",
+        "cancel(request=1)"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "abort",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-011-07",
+      "title": "取消后该事务成功响应迟到不得复活或提交",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "queryPending(request=1)",
+        "cancel(request=1)",
+        "querySuccess(response={\"request_id\":1,\"target_chart_id\":\"LINE-1\",\"uid\":\"user-A\",\"oid\":\"org-A\",\"content_id\":\"content-v1\",\"target_revision\":7,\"prior_tree_digest\":\"P0-tree\",\"chart_ext_request_digest\":\"P0-request\",\"component_error_revision\":\"P0-error\",\"chart_data_store_revision\":\"P0-store\",\"render_output_revision\":\"P0-render\"})"
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "ignore_late",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    },
+    {
+      "id": "CTPT-012",
+      "title": "response tuple逐字段比较；任一错配忽略响应",
+      "events": [
+        "begin(request=1,binding=captured)",
+        "queryPending(request=1)",
+        "querySuccess(response=fullVariantTuple)"
+      ],
+      "response_binding_variants": [
+        {
+          "mismatched_field": "request_id",
+          "response_binding": {
+            "request_id": 2,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "target_chart_id",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-2",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "uid",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-B",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "oid",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-B",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "content_id",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v2",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "target_revision",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 8,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "prior_tree_digest",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "OTHER-TREE",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "chart_ext_request_digest",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "OTHER-REQUEST",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "component_error_revision",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "OTHER-ERROR",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "chart_data_store_revision",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "OTHER-STORE",
+            "render_output_revision": "P0-render"
+          }
+        },
+        {
+          "mismatched_field": "render_output_revision",
+          "response_binding": {
+            "request_id": 1,
+            "target_chart_id": "LINE-1",
+            "uid": "user-A",
+            "oid": "org-A",
+            "content_id": "content-v1",
+            "target_revision": 7,
+            "prior_tree_digest": "P0-tree",
+            "chart_ext_request_digest": "P0-request",
+            "component_error_revision": "P0-error",
+            "chart_data_store_revision": "P0-store",
+            "render_output_revision": "OTHER-RENDER"
+          }
+        }
+      ],
+      "expected": {
+        "target_tree_digest": "P0-tree",
+        "target_revision": 7,
+        "chart_ext_request_digest": "P0-request",
+        "component_error": {
+          "is_error": false,
+          "err_msg": null,
+          "revision": "P0-error"
+        },
+        "chart_data_store_revision": "P0-store",
+        "render_output_revision": "P0-render",
+        "snapshot_count": 4,
+        "success_notice_count": 0,
+        "save_count": 0,
+        "chart_query_state": "P0",
+        "decision": "ignore_late",
+        "transaction_pending": false
+      },
+      "initial_state_overrides": {}
+    }
+  ],
+  "initial_state": {
+    "active_target": "LINE-1",
+    "uid": "user-A",
+    "oid": "org-A",
+    "dashboard_id": "dashboard-A",
+    "content_id": "content-v1",
+    "target_chart_id": "LINE-1",
+    "target_revision": 7,
+    "target_tree_digest": "P0-tree",
+    "chart_ext_request_digest": "P0-request",
+    "component_error": {
+      "is_error": false,
+      "err_msg": null,
+      "revision": "P0-error"
+    },
+    "chart_data_store_revision": "P0-store",
+    "render_output_revision": "P0-render",
+    "snapshot_count": 4,
+    "clipboard_id": "T-valid",
+    "success_notice_count": 0,
+    "save_count": 0,
+    "query_count": 0,
+    "chart_query_state": "P0",
+    "transaction_pending": false,
+    "durable_save_state": "unchanged"
+  },
+  "case_state_rule": "Each case starts from initial_state, applies events in order, then compares the complete observable state. Omitted expected fields equal their post-event value; initial_state_overrides, when present, explicitly replace baseline fields before events."
+}

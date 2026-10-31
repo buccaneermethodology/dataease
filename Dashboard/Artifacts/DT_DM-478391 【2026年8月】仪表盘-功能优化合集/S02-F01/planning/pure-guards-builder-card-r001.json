@@ -1,0 +1,81 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-pure-guards-builder-r001",
+  "session_id": "S02.2",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+      "sha256": "eeec347d7f07fe4a2de1cc12e7ac96411679f399594b934f7ce5a85703eb29ea"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Cases.candidate.json",
+      "sha256": "484eaa5f834a2512e3d7eaf2fa41d7dbd9fa4ce43f970ec1292ddd4fe4fcd2da"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md",
+      "sha256": "e409424999af0473836ab9d3f08a3589d1edb098128d70990a4e874f26c347f1"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DesignDeltaReview-r003.md",
+      "sha256": "16a59291caa138f501eaeb1cf13a08b9ec39659aa1f26eb82f6ab0b071859f7c"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-builder-pure-r001.json",
+      "sha256": "7012ee5952ffa45cdd917a1b9f1a5710fae93c6d760d103fab84bb63e227214b"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DevelopmentHandoff.md",
+      "sha256": "836d6237ef623b81daef11ae2e733dde5f43260b8649ab366de74a65537790d1"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/TestEntryDiscovery-r002.md",
+      "sha256": "3da042fea31a5a9ec08710568b154896f13fffe64bae799025a0be5300eebefc"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-pure-builder-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Cases.candidate.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DesignDeltaReview-r003.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-builder-pure-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/TestEntryDiscovery-r002.md"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-07"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+    "core/core-frontend/tests/filter-copy-pure/check.mjs"
+  ],
+  "required_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+    "core/core-frontend/tests/filter-copy-pure/check.mjs"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅17个冻结纯比较/计数case的可信RED/GREEN候选；无完整产品或真实权限验收结论",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Intake.md"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Intake.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "DE-S02-F01-pure-guards-builder-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md",
+  "working_directory": ".",
+  "execution_command": "实现只承载PURE-KIND-001、PURE-DATASET-001、PURE-TTL-001、PURE-UTF8-LIMIT-001、PURE-LEAF-COUNT-001、PURE-ENUM-NO-EXTRA-LIMIT-001的纯函数模块；Node+esbuild测试必须直接bundle该生产模块并按Frozen Case ID遍历Cases.candidate.json的输入/oracle。先以断言型预期fingerprint产生可信RED，再实现同identity GREEN。不得接入UI/权限/存储/serializer/时钟服务，不修改冻结合同/Cases/Goal，不将本切片冒充完整F01实现或权限验证。"
+}

@@ -1,0 +1,373 @@
+// 仅首型 area；作为 AsyncFunction(page, browser, fs, runtimeErrors) 的函数体执行。
+// author 阶段不运行；root 应先冻结本文件并在调用前核验摘要。
+const crypto = await import('node:crypto')
+const evidenceRoot = String(globalThis.lifeArtifact || '').replace(/\/+$/, '') + '/'
+if (!evidenceRoot.includes('/MVP-20261027/evidence/')) throw Error('EVIDENCE_ROOT_REFUSED')
+const driverPath = evidenceRoot.replace(/evidence\/$/, 'runtime-state-tools/') + 'observe-s2-canonical-pagination-r001.js'
+const outputPath = evidenceRoot + 'S2CanonicalPagination-events-r001.json'
+const shots = Object.fromEntries(['before', 'after', 'reopened'].map(name => [name, evidenceRoot + 'S2CanonicalPagination-' + name + '-r001.png']))
+for (const file of [outputPath, ...Object.values(shots)]) if (fs.existsSync(file)) throw Error('SLOT_USED:' + file.split('/').pop())
+const hash = value => crypto.createHash('sha256').update(value).digest('hex')
+const startedHash = hash(fs.readFileSync(driverPath))
+const outputFd = fs.openSync(outputPath, 'wx')
+const ids = { source500: '7520741153101058048', source200: '7521402539875504128', target: '7520752064427724800', dataset: '1312472054565572608', resource: '1312476889213964288' }
+const r = {
+  schema_version: 's02_area_missing_columns_observation_v1',
+  case_id: 'S02-S2-CANONICAL-PAGINATION-r001', kind: 'Builder实际观察；非独立验收',
+  startedAt: new Date().toISOString(), driverPath, driverSha256Start: startedHash,
+  ids, type: 'table-info', declaredWriteScope: '专用target临时table-info/分页10/paste200/下一页/编辑300；save0，恢复原saved bubble200；不写源码/DB/Store',
+  api: [], wire: [], directories: [], stages: [], pageErrors: [],
+  clipboardProjectionScope: '仅真实诊断导出的tree/ownKeys/undefinedPaths与tableId/createdAt/revision；不声称已导出内部fields全集',
+  limits: ['只共享S2分页与canonical编辑，分页与编辑独立于paste计数；不升完整49/38', 'DEV允许测试桩非真实权限', '无新route/fault/Store注入', '成功后保留area200供下一批，未最终恢复liquid', 'pageerror监听不替代console/resource或旧ubo/C2裁决'],
+  preexistingRuntimeErrorsCount: Array.isArray(runtimeErrors) ? runtimeErrors.length : null
+}
+const pending = []
+const requestMeta = new WeakMap()
+let phase = 'initial'
+let requestSequence = 0
+let finalized = false
+let uiMutationStarted = false
+const cleanError = error => ({ name: String(error?.name || 'Error'), message: String(error?.message || error).replace(/([?&](?:token|access_token|authorization|password)=)[^&#\s]*/gi, '$1[REDACTED]').replace(/Bearer\s+[^\s]+/gi, 'Bearer [REDACTED]') })
+const requireThat = (condition, message) => { if (!condition) throw Error(message) }
+const parse = text => JSON.parse(text)
+const pathname = request => new URL(request.url()).pathname
+const businessPath = path => /\/(chartData\/getData|dataVisualization\/(updateCanvas|findById))$/.test(path)
+const nonAuthPath = path => path.startsWith('/api/') && !/\/(login|logout|auth|token|captcha|license)(\/|$)/i.test(path)
+const onRequest = request => {
+  const path = pathname(request)
+  if (!nonAuthPath(path)) return
+  const meta = { sequence: requestSequence++, phase, path, method: request.method(), at: new Date().toISOString(), apiIndex: r.api.length }
+  if (businessPath(path)) {
+    try {
+      const q = parse(request.postData() || '{}')
+      meta.id = q.id == null ? null : String(q.id)
+      meta.type = q.type ?? null
+    } catch (error) { meta.requestShapeError = cleanError(error) }
+  }
+  requestMeta.set(request, meta)
+  r.api.push(meta)
+}
+const onResponse = response => {
+  const request = response.request(), path = pathname(request)
+  if (!nonAuthPath(path)) return
+  const meta = requestMeta.get(request)
+  if (businessPath(path)) {
+    const wire = { sequence: meta?.sequence ?? null, phase: meta?.phase ?? phase, requestAt: meta?.at ?? null, at: new Date().toISOString(), path, method: request.method(), status: response.status(), request: request.postData(), body: null }
+    r.wire.push(wire)
+    pending.push((async () => {
+      try { wire.body = await response.text() } catch (error) { wire.captureFailure = cleanError(error) }
+    })())
+  } else if (/\/chart\/listByDQ\/[^/]+\/[^/]+$/.test(path)) {
+    const item = { sequence: meta?.sequence ?? null, phase: meta?.phase ?? phase, at: new Date().toISOString(), path, status: response.status() }
+    r.directories.push(item)
+    pending.push((async () => {
+      try {
+        const body = await response.json(), value = body?.data ?? body
+        item.businessCode = body?.code ?? null
+        item.fields = ['dimensionList', 'quotaList'].flatMap(key => Array.isArray(value?.[key]) ? value[key].map(field => ({ id: String(field.id), deType: field.deType })) : [])
+      } catch (error) { item.captureFailure = cleanError(error) }
+    })())
+  }
+}
+const onPageError = error => r.pageErrors.push({ phase, at: new Date().toISOString(), ...cleanError(error) })
+const diag = async () => parse(await page.getByTestId('chart-filter-copy-diagnostic').locator('pre').textContent())
+const descriptor = value => ({ tree: value.tree, ownKeys: value.ownKeys, undefinedPaths: value.undefinedPaths })
+const sameDescriptor = (a, b) => JSON.stringify(descriptor(a)) === JSON.stringify(descriptor(b))
+const threshold = value => value?.source?.tree?.items?.[0]?.value
+const stage = async (name, selectedRequestedId) => {
+  const d = await diag()
+  const item = { name, at: new Date().toISOString(), selectedRequestedId, diagnostic: d }
+  const control = page.locator('.chart-type-select:visible')
+  item.typeControlText = await control.count() === 1 ? await control.textContent() : null
+  r.stages.push(item)
+  return d
+}
+const select = async id => {
+  const tile = page.locator('#enlarge-inner-shape-' + id)
+  await tile.waitFor({ state: 'visible', timeout: 15000 })
+  const overlay = tile.locator('..').locator('.de-drag-top')
+  if (await overlay.count() === 1 && await overlay.isVisible()) await overlay.click()
+  else await tile.click({ position: { x: id === ids.source200 ? 8 : 100, y: id === ids.source200 ? 8 : 20 } })
+  await page.getByRole('combobox', { name: '权限测试桩', exact: true }).selectOption({ label: '允许（测试）' })
+  await page.waitForFunction(() => {
+    const element = document.querySelector('[data-testid="chart-filter-copy-diagnostic"] pre')
+    return element && JSON.parse(element.textContent).fieldsReady === true
+  }, undefined, { timeout: 20000 })
+}
+const assertTree = (d, expected) => {
+  requireThat(threshold(d) === expected && d.source.tree.logic === 'and' && d.source.tree.items.length === 2 && d.source.tree.items[1].subTree?.logic === 'or', 'UNEXPECTED_TREE_' + expected)
+  requireThat(d.source.tree.items[0].fieldId === '1793083721146' && d.source.tree.items[0].term === 'gt', 'AMOUNT_LEAF_MISMATCH')
+  const shop = d.source.tree.items[1].subTree.items
+  requireThat(shop.length === 1 && shop[0].fieldId === '1793083721149' && JSON.stringify(shop[0].enumValue) === JSON.stringify(['果元店', '南都店', '香橙店', '乐园店', '红叶店', '水围店']), 'SHOP_GROUP_MISMATCH')
+}
+const rowFor = label => page.locator('#pane-data .ed-row.drag-data').filter({ has: page.getByText(label, { exact: true }) })
+const clearAxis = async (label, required = false) => {
+  const row = rowFor(label), count = await row.count()
+  if (!count && !required) return
+  requireThat(count === 1, 'AXIS_ROW_COUNT:' + label + ':' + count)
+  const button = row.locator('.form-draggable-title .remove-icon')
+  requireThat(await button.count() === 1, 'AXIS_CLEAR_UNAVAILABLE:' + label)
+  await button.scrollIntoViewIfNeeded()
+  await button.click()
+  r.stages.push({ name: 'axis_cleared', phase, at: new Date().toISOString(), label })
+}
+const dragField = async (name, label) => {
+  const field = page.locator('.right-dimension .field-name[title="' + name + '"]')
+  requireThat(await field.count() === 1, 'FIELD_LOCATOR_COUNT:' + name)
+  const source = field.locator('xpath=ancestor::*[@draggable="true"][1]')
+  const row = rowFor(label)
+  requireThat(await row.count() === 1 && await source.count() === 1, 'DRAG_ENDPOINT_UNAVAILABLE:' + name)
+  const destination = row.locator('.drag-placeholder-style')
+  requireThat(await destination.count() === 1, 'DRAG_DESTINATION_COUNT:' + label)
+  await source.scrollIntoViewIfNeeded()
+  await source.click()
+  await destination.scrollIntoViewIfNeeded()
+  const from = await source.boundingBox(), to = await destination.boundingBox()
+  requireThat(from && to && from.width > 5 && to.width > 5, 'DRAG_RECT_UNAVAILABLE:' + name)
+  r.stages.push({ name: 'normal_html_drag', at: new Date().toISOString(), fieldName: name, axisLabel: label, sourceRect: from, destinationRect: to })
+  await source.dragTo(destination, { sourcePosition: { x: Math.min(20, from.width / 2), y: Math.min(10, from.height / 2) }, targetPosition: { x: Math.min(100, to.width / 2), y: Math.min(16, to.height / 2) }, timeout: 15000 })
+  requireThat((await row.innerText()).includes(name), 'DRAG_FIELD_NOT_VISIBLE:' + name)
+}
+const matchingQuery = expected => page.waitForResponse(response => {
+  if (!pathname(response.request()).endsWith('/chartData/getData')) return false
+  try {
+    const q = parse(response.request().postData() || '{}')
+    return String(q.id) === ids.target && q.type === 'table-info' && q.customFilter?.items?.[0]?.value === expected
+  } catch { return false }
+}, { timeout: 35000 })
+const responseOk = async response => {
+  const body = await response.json()
+  requireThat(response.status() === 200 && body.code === 0, 'HTTP_OR_BUSINESS_FAILURE')
+  return body
+}
+const areaRequestValid = request => {
+  const q = parse(request.postData() || '{}')
+  requireThat(String(q.id) === ids.target && String(q.tableId) === ids.dataset && q.type === 'table-info', 'AREA_QUERY_IDENTITY_MISMATCH')
+  requireThat(q.xAxis?.length === 1 && String(q.xAxis[0].id) === '1793083721149', 'AREA_SHOP_AXIS_MISMATCH')
+  requireThat(!q.yAxis?.length, 'AREA_AMOUNT_SUM_AXIS_MISMATCH')
+  for (const key of ['xAxisExt', 'extStack', 'yAxisExt', 'drillFields']) requireThat(!q[key]?.length, 'AREA_OPTIONAL_AXIS_REMAINS:' + key)
+  return q
+}
+const visibleCanvas = async () => {
+  const root = page.locator('#enlarge-inner-shape-' + ids.target)
+  await root.locator('canvas').first().waitFor({ state: 'visible', timeout: 20000 })
+  await root.locator('.ed-loading-mask').waitFor({ state: 'hidden', timeout: 20000 })
+  // 短暂稳定等待只用于截图采样，不替代query/prepare成功屏障。
+  await page.waitForTimeout(400)
+  return root
+}
+const screenshot = async name => {
+  const buffer = await (await visibleCanvas()).screenshot()
+  fs.writeFileSync(shots[name], buffer, { flag: 'wx' })
+  r.stages.push({ name: 'png_' + name, at: new Date().toISOString(), path: shots[name], sha256: hash(buffer) })
+}
+const leavePanel = async () => {
+  await page.goto('http://127.0.0.1:7070/#/panel/index', { waitUntil: 'networkidle' })
+  await page.waitForTimeout(200)
+  const dialog = page.getByRole('dialog')
+  if (await dialog.count()) {
+    r.stages.push({ name: 'exit_prompt', at: new Date().toISOString(), text: await dialog.innerText() })
+    await dialog.getByRole('button', { name: '确定', exact: true }).click()
+  }
+  await page.waitForURL(url => url.hash.startsWith('#/panel/index'), { timeout: 20000 })
+  await page.getByTestId('chart-filter-copy-diagnostic').waitFor({ state: 'hidden' })
+  await page.locator('.back-icon').waitFor({ state: 'hidden' })
+  return { at: new Date().toISOString(), url: page.url(), editorCount: await page.getByTestId('chart-filter-copy-diagnostic').count() }
+}
+const openSaved = async () => {
+  const found = page.waitForResponse(response => {
+    if (!pathname(response.request()).endsWith('/dataVisualization/findById')) return false
+    try { return String(parse(response.request().postData() || '{}').id) === ids.resource } catch { return false }
+  }, { timeout: 30000 })
+  const reopenedQuery = matchingQuery('200')
+  // 提前附加拒绝handler，避免goto期间失败造成未处理Promise；await时仍抛原错误。
+  found.catch(() => {})
+  reopenedQuery.catch(() => {})
+  await page.goto('http://127.0.0.1:7070/#/dashboard?resourceId=' + ids.resource, { waitUntil: 'networkidle' })
+  const dialog = page.getByRole('dialog')
+  if (await dialog.count()) {
+    const text = await dialog.innerText()
+    requireThat(text.includes('未保存'), 'UNEXPECTED_REOPEN_DIALOG')
+    r.stages.push({ name: 'draft_prompt', at: new Date().toISOString(), text, action: '否，读取服务器保存状态' })
+    await dialog.getByRole('button', { name: '否', exact: true }).click()
+    await dialog.waitFor({ state: 'hidden' })
+  }
+  const findResponse = await found, queryResponse = await reopenedQuery
+  const body = await responseOk(findResponse)
+  await responseOk(queryResponse)
+  areaRequestValid(queryResponse.request())
+  let views = body.data.canvasViewInfo
+  if (typeof views === 'string') views = parse(views)
+  requireThat(views[ids.target].type === 'table-info', 'REOPEN_TYPE_NOT_AREA')
+  requireThat(JSON.stringify(views[ids.target].customFilter) === JSON.stringify(r.after.source.tree), 'REOPEN_PERSISTED_TREE_MISMATCH')
+  return { findAt: new Date().toISOString(), targetType: views[ids.target].type, canvasViewInfoTarget: views[ids.target] }
+}
+page.on('request', onRequest)
+page.on('response', onResponse)
+page.on('pageerror', onPageError)
+try {
+  requireThat(new URL(page.url()).origin === 'http://127.0.0.1:7070', 'UNEXPECTED_PAGE_ORIGIN')
+  requireThat(new URL(page.url()).hash.includes('/dashboard') && new URL(page.url()).hash.includes(ids.resource), 'UNEXPECTED_RESOURCE_PAGE')
+  await select(ids.source500)
+  r.initialSource500 = await stage('initial_source500', ids.source500)
+  assertTree(r.initialSource500, '500')
+  await select(ids.source200)
+  r.initialSource200 = await stage('initial_richtext200', ids.source200)
+  assertTree(r.initialSource200, '200')
+  await select(ids.target)
+  r.initialTarget = await stage('initial_target_liquid500_reported', ids.target)
+  assertTree(r.initialTarget, '200')
+  await page.getByText('过滤',{exact:true}).click()
+  await page.getByRole('dialog').getByRole('textbox').nth(1).fill('500')
+  await page.getByRole('dialog').getByRole('button',{name:'确认',exact:true}).click()
+  await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-testid="chart-filter-copy-diagnostic"] pre').textContent).source.tree.items[0].value==='500')
+  r.setupThreshold500=await diag()
+
+  phase = 'configuration'
+  uiMutationStarted = true
+  for (const label of ['类别轴 / 维度','值轴 / 指标','子类别 / 维度','堆叠项 / 维度','钻取 / 维度','地区 / 维度','气泡大小 / 指标','数据列 / 维度或指标']) await clearAxis(label)
+  await page.locator('.chart-type-select').click()
+  await page.locator('[data-id="UserView&table-info"]').click()
+  if (await page.locator('.chart-type-style-light:visible').count() === 1) await page.locator('.chart-type-select').click()
+  await page.locator('.chart-type-style-light:visible').waitFor({ state: 'hidden', timeout: 10000 })
+  await page.getByText('字段', { exact: true }).click()
+  await clearAxis('数据列 / 维度或指标', true)
+  for (const label of ['子类别 / 维度', '堆叠项 / 维度', '钻取 / 维度', '气泡大小 / 指标']) await clearAxis(label)
+  await dragField('shop', '数据列 / 维度或指标')
+  phase = 'pagination_style_setup'
+  await page.getByRole('tab',{name:'样式',exact:true}).click()
+  const paging=page.getByRole('radio',{name:'翻页',exact:true})
+  if(!(await paging.isVisible()))await page.getByRole('button',{name:'基础样式',exact:true}).click()
+  await paging.check()
+  await page.getByRole('radio',{name:'精简',exact:true}).check()
+  const sizeRow=page.locator('.ed-form-item').filter({has:page.locator('.ed-form-item__label').filter({hasText:/^分页$/})})
+  await sizeRow.locator('.ed-select').click()
+  await page.getByRole('option',{name:'10条/页',exact:true}).click()
+  await page.getByRole('tab',{name:'数据',exact:true}).click()
+  phase = 'baseline'
+
+  const baselineResponse = matchingQuery('500')
+  baselineResponse.catch(() => {})
+  await page.getByRole('button', { name: '更新图表数据', exact: true }).click()
+  const baseline = await baselineResponse
+  await responseOk(baseline)
+  r.baselineRequest = areaRequestValid(baseline.request())
+  r.baseline = await stage('table_info500_applied_baseline', ids.target)
+  assertTree(r.baseline, '500')
+  await screenshot('before')
+  phase = 'copy_source200'
+  await select(ids.source200)
+  r.sourceBeforeCopy = await stage('richtext200_before_copy', ids.source200)
+  assertTree(r.sourceBeforeCopy, '200')
+  await page.getByRole('button', { name: '复制过滤条件', exact: true }).click()
+  r.copied = await stage('richtext200_copied', ids.source200)
+  requireThat(r.copied.clipboard && sameDescriptor(r.sourceBeforeCopy.source, r.copied.clipboard), 'SOURCE_CLIPBOARD_DESCRIPTOR_MISMATCH')
+  requireThat(String(r.copied.clipboard.tableId) === ids.dataset, 'COPIED_DATASET_MISMATCH')
+  await select(ids.target)
+  r.before = await stage('table_info500_before_candidate', ids.target)
+  assertTree(r.before, '500')
+  phase = 'candidate'
+  r.candidateWindow = { requestStart: r.api.length, startedAt: new Date().toISOString(), previousOperationId: r.before.queryObservation?.operationId ?? null }
+  const candidateResponse = matchingQuery('200')
+  candidateResponse.catch(() => {})
+  await page.getByRole('button', { name: '粘贴过滤条件', exact: true }).click()
+  const confirm = page.getByRole('dialog')
+  await confirm.waitFor({ state: 'visible', timeout: 10000 })
+  requireThat((await confirm.innerText()).includes('替换全部过滤条件'), 'EXPECTED_OVERWRITE_DIALOG_MISSING')
+  await confirm.getByRole('button', { name: '确定', exact: true }).click()
+  await confirm.waitFor({ state: 'hidden' })
+  await page.waitForFunction(({ target, previous }) => {
+    const d = JSON.parse(document.querySelector('[data-testid="chart-filter-copy-diagnostic"] pre').textContent), q = d.queryObservation
+    return q && q.targetId === target && q.operationId !== previous && ['success', 'failure'].includes(q.outcome)
+  }, { target: ids.target, previous: r.candidateWindow.previousOperationId }, { timeout: 40000 })
+  r.after = await stage('table_info200_after_candidate', ids.target)
+  requireThat(r.after.queryObservation.outcome === 'success', 'CANDIDATE_PREPARE_OR_ADOPTION_FAILED')
+  const candidate = await candidateResponse
+  await responseOk(candidate)
+  areaRequestValid(candidate.request())
+  requireThat(sameDescriptor(r.copied.clipboard, r.after.source), 'CLIPBOARD_ADOPTED_TARGET_MISMATCH')
+  requireThat(sameDescriptor(r.copied.clipboard, r.after.clipboard), 'PASTE_CHANGED_CLIPBOARD_DESCRIPTOR')
+  requireThat(JSON.stringify(parse(candidate.request().postData()).customFilter) === JSON.stringify(r.copied.clipboard.tree), 'CANDIDATE_TRANSPORT_TREE_MISMATCH')
+  r.candidateWindow.requestEnd = r.api.length
+  r.candidateWindow.endedAt = new Date().toISOString()
+  r.candidateWindow.targetQueryRequests = r.api.slice(r.candidateWindow.requestStart, r.candidateWindow.requestEnd).filter(item => item.path.endsWith('/chartData/getData') && item.id === ids.target)
+  requireThat(r.candidateWindow.targetQueryRequests.length === 1, 'CANDIDATE_QUERY_COUNT_NOT_ONE')
+  await screenshot('after')
+  phase = 'active_page2'
+  const tile=page.locator('#enlarge-inner-shape-'+ids.target)
+  r.page1={at:new Date().toISOString(),diagnostic:await diag(),pager:await tile.locator('.table-page-info').innerText()}
+  const page2Response=page.waitForResponse(response=>{try{const b=JSON.parse(response.request().postData()||'{}');return pathname(response.request()).endsWith('/chartData/getData')&&String(b.id)===ids.target&&b.type==='table-info'&&String(b.chartExtRequest?.goPage)==='2'}catch{return false}},{timeout:20000})
+  page2Response.catch(()=>{})
+  r.page2ClickAt=new Date().toISOString()
+  await tile.locator('.table-page-content .btn-next').click()
+  const p2=await page2Response;await responseOk(p2)
+  r.page2={at:new Date().toISOString(),request:parse(p2.request().postData()),diagnostic:await diag()}
+  const p2png=await tile.screenshot();fs.writeFileSync(evidenceRoot+'S2CanonicalPagination-page2-r001.png',p2png,{flag:'wx'});r.page2.pngSha=hash(p2png)
+  phase='canonical_filter_edit'
+  await page.getByText('过滤',{exact:true}).click()
+  await page.getByRole('dialog').getByRole('textbox').nth(1).fill('300')
+  await page.getByRole('dialog').getByRole('button',{name:'确认',exact:true}).click()
+  await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-testid="chart-filter-copy-diagnostic"] pre').textContent).source.tree.items[0].value==='300')
+  r.canonicalEditedBeforeQuery=await diag()
+  const editedResponse=matchingQuery('300');editedResponse.catch(()=>{})
+  await page.getByRole('button',{name:'更新图表数据',exact:true}).click()
+  const edited=await editedResponse;await responseOk(edited)
+  r.canonicalEdited={at:new Date().toISOString(),request:parse(edited.request().postData()),diagnostic:await diag()}
+  const editedPng=await tile.screenshot();fs.writeFileSync(evidenceRoot+'S2CanonicalPagination-edited300-r001.png',editedPng,{flag:'wx'});r.canonicalEdited.pngSha=hash(editedPng)
+  requireThat(r.api.filter(x=>x.path.endsWith('/dataVisualization/updateCanvas')).length===0,'UNEXPECTED_SAVE')
+  phase='restore_saved_fixture'
+  r.exit=await leavePanel()
+  await page.goto('http://127.0.0.1:7070/#/dashboard?resourceId='+ids.resource,{waitUntil:'networkidle'})
+  const draft=page.getByRole('dialog'),savedTile=page.locator('#enlarge-inner-shape-'+ids.target)
+  const firstReady=await Promise.race([draft.waitFor({state:'visible',timeout:25000}).then(()=> 'dialog'),savedTile.waitFor({state:'visible',timeout:25000}).then(()=> 'tile')])
+  if(firstReady==='dialog'||await draft.isVisible()){
+    requireThat((await draft.innerText()).includes('未保存'),'UNEXPECTED_DRAFT')
+    r.draftRestore={visibleAt:new Date().toISOString(),text:await draft.innerText()}
+    await draft.getByRole('button',{name:'否',exact:true}).click();await draft.waitFor({state:'hidden'});r.draftRestore.hiddenAt=new Date().toISOString()
+  }
+  await savedTile.waitFor({state:'visible'});await select(ids.target);r.restored=await diag()
+  requireThat(r.restored.source.tree.items[0].value==='200'&&r.restored.clipboard===null,'RESTORE_NOT_SAVED200_EMPTY_CLIP')
+  r.restored.typeControlText=await page.locator('.chart-type-select').innerText()
+  requireThat(r.restored.typeControlText.includes('气泡'),'RESTORE_NOT_BUBBLE')
+  await page.getByTestId('chart-filter-permission').selectOption('unknown');r.finalDiagnostic=await diag()
+  r.finalState={targetType:'bubble-map',threshold:'200',explicitlySaved:false,note:'恢复既有已保存bubble-map200，临时table-info/分页/300不保存'}
+  r.status = 'LOCAL_OBSERVATION_RECORDED_NOT_INDEPENDENT_ACCEPTANCE'
+} catch (error) {
+  r.executionFailure = { phase, at: new Date().toISOString(), ...cleanError(error) }
+  phase = 'recovery_without_save'
+  r.recovery = { attempted: uiMutationStarted, saveDispatchedBeforeFailure: r.api.some(item => item.path.endsWith('/dataVisualization/updateCanvas')), note: '不重试save；正常退出并重开last saved，已save或结果未知时不能保证恢复原liquid500' }
+  if (!uiMutationStarted) r.recovery.skipped = '配置动作尚未开始；不离开或重导航未确认的页面'
+  if (uiMutationStarted) try {
+    const cancel = page.getByRole('dialog').getByRole('button', { name: '取消', exact: true })
+    if (await cancel.count() === 1 && await cancel.isVisible()) await cancel.click()
+    if (await page.locator('.back-icon').count() === 1 && await page.locator('.back-icon').isVisible()) r.recovery.exit = await leavePanel()
+    await page.goto('http://127.0.0.1:7070/#/dashboard?resourceId=' + ids.resource, { waitUntil: 'networkidle' })
+    const dialog = page.getByRole('dialog')
+    if (await dialog.count()) {
+      requireThat((await dialog.innerText()).includes('未保存'), 'RECOVERY_UNEXPECTED_DIALOG')
+      await dialog.getByRole('button', { name: '否', exact: true }).click()
+      await dialog.waitFor({ state: 'hidden' })
+    }
+    await select(ids.target)
+    r.recovery.diagnostic = await stage('last_saved_reopened_after_failure', ids.target)
+    r.recovery.completed = true
+  } catch (recoveryError) { r.recovery.failure = cleanError(recoveryError) }
+  r.status = 'FAILED_OBSERVATION_PRESERVED'
+} finally {
+  page.off('request', onRequest)
+  page.off('response', onResponse)
+  page.off('pageerror', onPageError)
+  await Promise.allSettled(pending)
+  r.wire.sort((a, b) => (a.sequence ?? Number.MAX_SAFE_INTEGER) - (b.sequence ?? Number.MAX_SAFE_INTEGER))
+  r.saveRequestCount = r.api.filter(item => item.path.endsWith('/dataVisualization/updateCanvas')).length
+  r.endRuntimeErrorsCount = Array.isArray(runtimeErrors) ? runtimeErrors.length : null
+  try { r.driverSha256End = hash(fs.readFileSync(driverPath)); r.driverUnchanged = r.driverSha256End === r.driverSha256Start } catch (error) { r.hashReadbackFailure = cleanError(error) }
+  r.wireCaptureFailures = r.wire.filter(item => item.captureFailure || item.body === null).map(item => ({ sequence: item.sequence, path: item.path }))
+  if (r.driverUnchanged !== true || r.wireCaptureFailures.length > 0 || (r.status === 'LOCAL_OBSERVATION_RECORDED_NOT_INDEPENDENT_ACCEPTANCE' && r.saveRequestCount !== 0)) {
+    r.finalizationFailure = { driverUnchanged: r.driverUnchanged ?? null, saveRequestCount: r.saveRequestCount, wireCaptureFailures: r.wireCaptureFailures }
+    r.status = 'FAILED_OBSERVATION_PRESERVED'
+  }
+  r.finishedAt = new Date().toISOString()
+  try { fs.writeFileSync(outputFd, JSON.stringify(r, null, 2) + '\n'); finalized = true } finally { fs.closeSync(outputFd) }
+}
+return { outputPath, finalized, status: r.status, executionFailure: r.executionFailure ?? null, finalizationFailure: r.finalizationFailure ?? null, candidateQueryCount: r.candidateWindow?.targetQueryRequests?.length ?? null, saveRequestCount: r.saveRequestCount, exit: r.exit ?? null, reopenedClipboard: r.reopened?.clipboard, driverSha256Start: r.driverSha256Start, driverSha256End: r.driverSha256End, pageErrorCount: r.pageErrors.length, finalState: r.finalState ?? null }

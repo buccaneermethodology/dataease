@@ -1,0 +1,374 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "基于当前 V3 工作树，沿 displayType 2/5 的单选数值字段追踪 Component/select 配置值到 query consumer 与 Dashboard/Canvas 保存/加载路径。只记录可定位的静态来源事实、转换、owner 与未覆盖点；不裁定 numeric schema/合法 shape，不修改产品源码、测试、Goal、Contract 或权限配置。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "建立与已完成 SH-SELECT-NUM 来源图分离的消费者/持久化来源追踪；关注 selectValue/mapValue/defaultValue/defaultMapValue 在组件 query consumer、序列化或保存加载中的流向及静态证据限界。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumConsumerPersistenceTrace-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改源码、测试、Goal、Cases、历史 Review 或执行权限/数据库操作",
+      "推断 type 2/5 数值语义等价、合法组合全集、API payload schema 或持久化行为已通过",
+      "把静态调用路径描述为运行时/产品验收；不能从 snapshot 或配置赋值推出 durable save/reload",
+      "缩减10项AC、26项must-have、16项产品义务或改变 Scope Delta none",
+      "进入真实权限验收或使用 standalone/admin/mock 替代"
+    ],
+    "maximum_claim": "仅为当前工作树中静态引用/调用路径候选；不证明numeric合法域、数据类型契约、保存成功、重载/撤销行为、权限或Goal AC。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "37afff9cf62564f5143e03e3f88839e1cde04606a51e5dc9e456b81afe762a72",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r003.md",
+      "revision": "192a09534d6a72e3c2e348cc48d3539641bbe7ce56afa3d4fd623d47ac9e7f64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectNumSourceTraceReview-r003.md",
+      "revision": "2221fcece1eb12b91edeacdab7e38e212dfe23ae10a7065c639cf51c8d41f08f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/com-info.ts",
+      "revision": "4921ad2aed3618cbe1b4f1eeb42e5f425b4035953b923b508f090bdbfebd58ee",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "core/core-frontend/src/api/dataset.ts",
+      "revision": "8d5be0a3e1b0c9fe7ef46c59007e8ed6cf39993b54008a52db54619350d370d4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r351.json",
+      "revision": "56c8932b148f2dde7f1394e411507bbfa06525b2e8a1e8da2ff56300f7428729",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "applicability": "S02-F01-SH-SELECT-NUM-CONSUMER-PERSISTENCE-TRACE-r001",
+      "reason": "核对 select number 的值消费者与持久化路径边界；记录源事实和缺口，不推断产品语义或验收。"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "consumer-outside-readset",
+      "condition": "目标字段的直接 consumer 或 durable save/load owner 不在本 Context required read set 中。",
+      "action": "扩展只读来源集并重算摘要；否则明确报告 evidence gap。",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "semantic-owner-unclear",
+      "condition": "静态引用无法区分配置值与运行值 owner 或变换。",
+      "action": "记录 Unknown 并继续定位 source，不推断等价。",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "保留本次来源问题的完整消费者与持久化检索空间；权限和 Goal 分母继续作为约束域，未知不得推断为不存在。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "medium",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single-agent read-only source trace with independent review before downstream design/build",
+    "reason": "本单元只生成静态映射；读取域跨配置、query consumer 与 canvas 保存/加载，需独立来源复核，禁止产品写入。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": []
+}

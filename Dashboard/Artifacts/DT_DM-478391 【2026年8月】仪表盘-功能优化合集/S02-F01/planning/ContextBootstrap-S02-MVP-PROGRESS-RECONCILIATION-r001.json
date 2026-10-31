@@ -1,0 +1,373 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-PROGRESS-RECONCILIATION-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "保全后吸收本轮C1-C4阶段证据、独立发现与真实dataset成果到Dashboard，刷新非终态Gate；不把候选计完成",
+    "objective": "保全后吸收本轮C1-C4阶段证据、独立发现与真实dataset成果到Dashboard，刷新非终态Gate；不把候选计完成",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/README.md",
+      "Dashboard/Big_Ideas.md",
+      "Dashboard/Sessions.md",
+      "Dashboard/Decisions.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/progress-before-r001",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c2-local-before-r001",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ProgressReconciliation-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/state-r003.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/receipt-r003.json"
+    ],
+    "forbidden_actions": [
+      "不改Goal/authority-root/旧证据，不关闭仍未验AC或49分母",
+      "不写产品KB/Coverage或S01，不提交发布"
+    ],
+    "maximum_claim": "执行台账阶段对账与CONTINUE，非Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/TSP.md",
+      "revision": "d72c7ca492195faed71590f38cebe87cc1de3119d86cc3e8ebaeb2a7bafafbe6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/state-r002.json",
+      "revision": "cd269a064709906049075a8fe3e6bdaeb0b355c0d63aae49e178c39edd326675",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C1TooltipDeltaValidation-r002.md",
+      "revision": "9855e9235caa362ae7cd951c9a546f3d23e8f530a9acefedb3dcc383d548537d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC2Validation-r001.md",
+      "revision": "21e275bde342ef9aabf8e7c9d29795029566fcac77f10eb3b464e406a24b2a84",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/C2LocalRepair-r001.md",
+      "revision": "6e38630e61b7f01b131f76c13a28ec303ae708716b3ba1b31e8aa69a601be561",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceC3RichText-r001.md",
+      "revision": "d30f75f7851ba78484e53775d72be2e677168da8b2efa7a623186b703536d52b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC4Validation-r001.md",
+      "revision": "9669d41f3a7ebadaf592a4ee8d2e1dad205f5831acf4036d1e510e64501f2c3c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeDatasetOracleCheck-r001.json",
+      "revision": "c1b6e0c48ebee5576e63ae68442acdc9a999200fc4efa93f4948600260f425c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/README.md",
+      "revision": "9d12726a6cbca30ca8db53e9cf60e428534f5f0d807ca1e324d4c567e782e1b0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Big_Ideas.md",
+      "revision": "460dc05807c942abb356246a091e3ecd8e7603fe06edda327863e0096b618292",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Sessions.md",
+      "revision": "33ef43d207cf0db91df75c8a5037e7bb523b9fdb4490b7170701c6c752d3e9ca",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Decisions.md",
+      "revision": "70ae40de4718ee5e2187b4ee551ccf066e79747a507c8cfd8e3e56a502126eae",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "fffb64091fd77244d2fa21f36777f2a6dd405663ee8d05d0d4754f5d21ca2166",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-PROGRESS-RECONCILIATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "新授权当前MVP22项；原26逐项保全、六复杂主题迁后。A只实现真实UI/copy/guard，不宣称paste/full MVP；不等待通用框架。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "builder",
+    "reason": "保全后吸收本轮C1-C4阶段证据、独立发现与真实dataset成果到Dashboard，刷新非终态Gate；不把候选计完成",
+    "task_id": "S02-MVP-PROGRESS-RECONCILIATION-r001",
+    "recorded_at": "2026-10-27T07:07:58.817863+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r456.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r457.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-PROGRESS-RECONCILIATION-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "maximum_claim": "执行台账阶段对账与CONTINUE，非Goal完成",
+  "design_objective": "保全后吸收本轮C1-C4阶段证据、独立发现与真实dataset成果到Dashboard，刷新非终态Gate；不把候选计完成",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ProgressReconciliation-r001.md"
+}

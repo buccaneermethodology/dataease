@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-30T16:20:57.899769+00:00",
+  "scope": "仅S02专用indicator fixture正常UI临时改gauge/liquid；固定最大10000、gauge最小0，使两条件amount过滤sum不饱和；不改源码/Store/DB",
+  "requirement_ids": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09"
+  ],
+  "oracle": {
+    "threshold200_sum": 6761,
+    "threshold500_sum": 5093,
+    "maximum": 10000,
+    "ratio200": 0.6761,
+    "ratio500": 0.5093,
+    "source": "冻结30行CSV独立sum；具体标签按现有formatter读回，不猜位数"
+  },
+  "actions": [
+    "正常UI选择图表/配置固定量程并更新数据",
+    "保存前确认完整轴/过滤和字段ready",
+    "单candidate paste和raw query对CSV、画面",
+    "必要正常save/panel退出DOM0/find重开",
+    "完成后正常UI恢复indicator500或明确保留新的专用numeric fixture，不写其它资源"
+  ],
+  "evidence_policy": "初始UI定位探索只作诊断；正式case driver先冻结再执行；未成功/未保存分别记账",
+  "forbidden": [
+    "真实权限替代",
+    "直接写Store或配置JSON",
+    "改源码",
+    "扩展共享渲染生命周期",
+    "抹掉旧饱和记录"
+  ]
+}

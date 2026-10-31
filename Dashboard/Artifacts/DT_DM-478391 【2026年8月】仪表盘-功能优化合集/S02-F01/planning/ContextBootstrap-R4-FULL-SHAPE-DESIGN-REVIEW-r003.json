@@ -1,0 +1,559 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r003",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立完成全形态设计候选第3/3轮最终复核。检查r002报告所有findings、r003版本标题/历史manifest摘要隔离、R4FS-001..005、完整Goal分母、Cases及实施/权限准入。尽可能一次列全问题；只写指定review报告，不修复设计/Cases/源码/Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "全形态设计r003最终独立语义审查：确认修订是否准确解决r002 findings，并给出该交付物最终边界。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r003.md"
+    ],
+    "forbidden_actions": [
+      "修改Design、Cases、Goal、CoverageMatrix、源码或其他Review",
+      "将局部source trace/harness升级为完整产品合法性、持久化或验收证据",
+      "缩减10/26/16分母或改Scope Delta",
+      "将S01 CONDITIONAL或真实权限BLOCKED改成已满足",
+      "以standalone/admin/mock替代真实权限"
+    ],
+    "maximum_claim": "本交付物第3/3轮最终设计审查；不证明产品实现、权限行为、Goal完成或Builder准入。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "ffa662a1b204691dc3ffc2dcdff7bef79ec46e6744741b1d287f2f65f5a6f7d5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsRequest-r003.md",
+      "revision": "d935b17e5d092f03deed5509a8890de1f050abfc33f069a9ce770f5d172467dc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md",
+      "revision": "b64f0917b1951b07f7469e943955f1478ee73040af3bc9f642587f8b75069e94",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/AuthorityMaterialsPostReviewCorrection-r002.md",
+      "revision": "692854a5c1f26a2b969ec38c91bfd0b22db717df335faf17f946e7f3fa4980fd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsPostReviewCorrectionReview-r002.md",
+      "revision": "bda036af3c7cf1c1e0251d9fee877b5794f31a0675800bf38cf64a0397522a33",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r001.md",
+      "revision": "55151a44c4d8ff2eed5893bda071e2c6e3d1ee69d8f0547ad2777e35d75fdc67",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r003.md",
+      "revision": "4bb9f9a64a06693ba151ea3370b5b7d7dfaf2882d36f284c14edfc2fe2231ca2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeCases-r001.json",
+      "revision": "a68a4bf534b3986d354005d78a3cfa92c824bb52d94b17f76e4f83cb8549c226",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeEvidenceReconciliation-r002.md",
+      "revision": "ab193b6c03828c4fb6bca0d677c16e3747eee7b3c76e040727b7e3e18d7e0bde",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeEvidenceReconciliationReview-r002.md",
+      "revision": "85c04bd31f5ab27800403c6efc8730765ea96ad88cab73d5617120ac9a9af057",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r003.md",
+      "revision": "76d9771d661400131a07693bad2dd528085b9ae8a6cfffc382e75649ed654be4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceLegalCombinations-r001.md",
+      "revision": "374ecb5b0572817951bb8e917d779066270c71e8e9ec6054e6fe8e86aee9b121",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceLegalCombinationsCases-r001.json",
+      "revision": "b60785379fcc649634677de1548ac4a8ea25f348dadc1931f31fd720cc0d42b5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumSourceTrace-r003.md",
+      "revision": "192a09534d6a72e3c2e348cc48d3539641bbe7ce56afa3d4fd623d47ac9e7f64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectNumConsumerPersistenceTrace-r002.md",
+      "revision": "891bdaa1629ed48a1999f40e19e15e50b81c4d21d21d053682efa7f54d7e9bcb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "复核r002声明、来源身份、Goal分母和准入边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r002.md",
+      "revision": "6d4b9814f5d0b588adcdf3cfce3cc12acd91c61f884f7905ae2afcf197125f0d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "最终复核历史finding、当前来源摘要和完整设计/Cases边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterFullShapeDesign-r002.md",
+      "revision": "4bb9f9a64a06693ba151ea3370b5b7d7dfaf2882d36f284c14edfc2fe2231ca2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "最终复核历史finding、当前来源摘要和完整设计/Cases边界。",
+      "applicability": "S02-F01-R4-FULL-SHAPE-DESIGN-REVIEW-r003"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_mapping_disagreement",
+      "condition": "若AcceptanceMapping/AC/DecisionLedger中的来源ID或关系与Crosswalk冲突",
+      "mode": "deterministic",
+      "action": "保留差异并限制通过范围",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "unresolved_design_or_acceptance_gap",
+      "condition": "若任一义务缺设计/测试入口、关键语义未决或设计不覆盖完整来源",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "报告编号finding并说明AC/Slice影响",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations完整保留；Scope Delta none；16项NOT_RUN；S01 F01 CONDITIONAL；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_final_delta_semantic_review",
+    "reason": "设计交付物到第3/3轮，对r002全量问题及r003修订/证据摘要边界做最终复核；禁止越过产品准入。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "FullShape Design/Cases候选及source manifest",
+    "Review r003的DCX-003..005",
+    "S00冻结来源与CoverageMatrix 16项",
+    "S01状态、真实权限环境、工作树与准入边界",
+    "Scope Delta和claim ceiling",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "original objective",
+    "原始用户意图/Goal/10项AC/26项must-have",
+    "当前V3源码实际调用链"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ]
+}

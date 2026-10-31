@@ -1,0 +1,231 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "在 SH-SELECT-TEXT 合法组合候选独立设计审查通过后，为 22 个 LOCAL_VALIDATOR_ACCEPTS/REJECTS 局部用例建立 AST 提取的离线 harness；保持其余 19 个来源观察/NOT_READY case 与 Goal 分母不变。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "仅实现局部validator harness与执行证据；不做产品接线或权限验收。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextLocalValidatorHarnessContract-r001.json",
+      "core/core-frontend/tests/filter-copy-query-select-text-source/validator-harness.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、原始候选Cases、Goal或完整产品合同",
+      "导入或执行整个Vue模块、mount UI、发起网络/API/Store操作",
+      "模拟真实权限、保存或历史恢复行为",
+      "将局部validator结果表述为产品合法性、Goal AC通过或Goal完成"
+    ],
+    "maximum_claim": "Only the 22 listed local validator inputs against the extracted current source functions; product legality, full component behavior, permissions, and Goal AC acceptance remain unproven."
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "工程范围与验证规范",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "治理路由与准入边界",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "原始Goal、分母、完成谓词",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceLegalCombinationsCases-r001.json",
+      "revision": "b60785379fcc649634677de1548ac4a8ea25f348dadc1931f31fd720cc0d42b5",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "被局部执行的组合候选与case身份",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextLegalCombinationsDesignReview-r001.md",
+      "revision": "074bb5cc8db2d327f1a760906d35d5ed889c7a7376cf3f40814ce25f21f4faa0",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "独立设计审查",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "被提取的源码函数",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "权限限制与claim ceiling",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "S01前置状态",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r294.json",
+      "revision": "d2bbea0ed2944c291b5bade5d4b3900d9a21a468a6234862a614386b03542ee4",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency",
+        "topology",
+        "authority",
+        "contract"
+      ],
+      "reason": "实际工作拓扑与上轮验证结果",
+      "applicability": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "authority_drift",
+      "condition": "Goal分母、原始意图、S01或真实权限状态发生变化",
+      "action": "停止并保留原分母/claim ceiling，扩充读集后重建入口",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "source_gap",
+      "condition": "必需owner或源码行为无法由required-read证明",
+      "action": "扩读或保留NOT_READY，不填造局部oracle",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "preservation_statement": "Goal 10/26/16与Scope Delta none不变；本地合同只含22个validator case；19个来源阶段候选、6个NOT_READY及真实权限阻塞保持原状态。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single-agent bounded local harness builder",
+    "reason": "只生成局部测试合同、AST runner和证据，不修改产品源码或状态入口。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal与分母",
+    "冻结局部case identity与完整快照",
+    "实际diff",
+    "隔离runner与定向静态检查"
+  ]
+}

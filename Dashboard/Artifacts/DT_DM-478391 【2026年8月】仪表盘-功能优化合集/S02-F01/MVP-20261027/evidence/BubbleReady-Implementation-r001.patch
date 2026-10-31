@@ -1,0 +1,41 @@
+--- before/bubble-map.ts
++++ after/bubble-map.ts
+@@ -272,11 +272,13 @@
+         })()
+       }
+       if (drawOption.filterPaste) {
+-        drawOption.filterPaste.errors(dotLayer)
+-        drawOption.filterPaste.wait(dotLayer, 'add', () => mapRendered(container))
+-        drawOption.filterPaste.wait(dotLayer, 'loaded')
++        drawOption.filterPaste.listen(dotLayer, 'error', error =>
++          drawOption.filterPaste.fail(error || new Error('paste_map_error'))
++        )
++        drawOption.filterPaste.wait(dotLayer, 'loaded', () => mapRendered(container))
+       }
+       dotLayer.addToScene(view.scene)
++      if (drawOption.filterPaste && !drawOption.filterPaste.check()) return
+       if (!drawOption.filterPaste)
+         dotLayer.once('add', () => {
+           mapRendered(container)
+--- before/point-fallback.ts
++++ after/point-fallback.ts
+@@ -318,13 +318,15 @@
+ 
+   mapRendering(container)
+   const afterLoaded = () => {
+-    mapRendered(container)
++    if (!drawOption.filterPaste) mapRendered(container)
+     if (drawOption.filterPaste) {
+-      drawOption.filterPaste.errors(dotLayer)
+-      drawOption.filterPaste.wait(dotLayer, 'add')
+-      drawOption.filterPaste.wait(dotLayer, 'loaded')
++      drawOption.filterPaste.listen(dotLayer, 'error', error =>
++        drawOption.filterPaste.fail(error || new Error('paste_map_error'))
++      )
++      drawOption.filterPaste.wait(dotLayer, 'loaded', () => mapRendered(container))
+     }
+     dotLayer.addToScene(view.scene)
++    if (drawOption.filterPaste && !drawOption.filterPaste.check()) return
+     if (label.show) {
+       ;(() => {
+         const cleanup = attachMapLabels(view.scene, labelData, {

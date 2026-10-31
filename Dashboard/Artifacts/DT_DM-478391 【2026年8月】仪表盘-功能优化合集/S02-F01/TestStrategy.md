@@ -18,4 +18,4 @@
 
 ## 当前缺口
 
-真实权限fixture与隔离环境未绑定；既有S01局部运行不等于F01已实现。工程容量/时间精确口径待Design预审；完整BDD reader card仅在引入maintained non-unit gate时落tests/bdd/readable_cards，当前没有虚构RED/GREEN。
+真实权限fixture与隔离环境未绑定；既有S01局部运行不等于F01已实现。TTL比较、UTF-8计数阈值及50/51计数case的有限边界已由独立复核确认，见PureSubcontracts-r002.json；旧r001仅为历史修订。可信时钟、完整envelope serializer/parser、实际查询配置schema/原子提交仍未冻结。完整BDD reader card仅在引入maintained non-unit gate时落tests/bdd/readable_cards，当前没有虚构RED/GREEN。

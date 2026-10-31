@@ -1,0 +1,471 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读验证manual2纯helper实现相对冻结合同/28 cases、用户原Goal和精确admission；重算runner RED/GREEN、补充P2、隔离行为、lint/TS与实际diff。严格区分纯helper通过和产品/权限/完整Goal未验收。只写指定Validation报告。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "验证已落盘的纯helper与runner是否符合有界合同，评估实现质量和实际验证证据，不重写/修复。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/Manual2PureHelperImplementationValidation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改源码、runner、合同、Cases、freeze、admission、Goal或CoverageMatrix",
+      "以helper测试通过替代产品source/auth/权限/保存/历史验证",
+      "把测试warning或静态证据隐藏或扩大声明",
+      "缩减10/26/16或Scope Delta"
+    ],
+    "maximum_claim": "仅独立判断纯helper代码及其runner是否符合冻结窄合同；不代表产品接线、权限或Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/CoverageMatrix.json",
+      "revision": "3e9b7f6683506596e6ca857020a9700a431dc98b8c0c8007c5744f3692c7f0cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "05589c0a29b7353f2442c060091031603399e12ab9244f9c981e1555705022b2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PreparationStatus.md",
+      "revision": "6aba879e6c3a8aaef3308b1f1aa5384a037f2a65d02b9a43eed75757e0f42b03",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectManual2PureContract-r001.md",
+      "revision": "4b930a4461fa5e91de1d57bf77b21d496705f1d909a4c22991c293976b214863",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectManual2PureCases-r001.json",
+      "revision": "5497a5b8fff2761b52b0035ba7a4f9c531cfdceb3e23be622f89294c89e729a1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectManual2PureContractReview-r001.md",
+      "revision": "0669e2ea110af3f1570fbf0a46b5716743e0b9c4a74630b9b716f6c894697a83",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Manual2PureHelperFreeze-r001.json",
+      "revision": "400f20850310a2d8a7a22a5fe8de913a8841564341a0011126035d669652d152",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/manual2-pure-helper-builder-card-r001.json",
+      "revision": "98643e3afc95e7308dc80f7c01df848a55d0f85fde81efa8bfd616bcdaace900",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-MANUAL2-PURE-HELPER-BUILDER-r001.json",
+      "revision": "a35ea2a0c82bcfdc67b94211985b246703cbb26f0cd63555336a38524402d42a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-manual2-pure-helper-test-r001.json",
+      "revision": "d59c0c1e82e94714f6a975eecbd817df44f47fb308b08c4115645aa7af8b4da0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-manual2-pure-helper-source-r001.json",
+      "revision": "1afc9509f768a223c56f24977b76b570dab9ebf7fd90d1fea208b6725678d5fd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r256.json",
+      "revision": "4bf608c0a98e90fc5b8299ec2ffe0b90209c7ca733ab1a062003e059b9ad0c25",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r257.json",
+      "revision": "70ed991f025b4ae57dbb555be8a6b617faab62eb74e5649c668aedd0d23f83a0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-manual2-pure.ts",
+      "revision": "8b2b892de636e59e0ca0ba3c7e7e752cb9edb1027244d28bfb4597fa25bcef23",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-manual2-pure.test.ts",
+      "revision": "ed61301c2a932437a4cf426f639323d96b5f11c05c5dcdb4334b2c8083b1a151",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "design",
+        "implementation",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立验证manual2纯helper与runner、冻结合同及原Goal/权限边界。",
+      "applicability": "S02-F01-MANUAL2-PURE-HELPER-IMPLEMENTATION-VALIDATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "implementation_contract_mismatch",
+      "condition": "任一实现行为、RED/GREEN摘要或冻结合同不匹配",
+      "action": "记录blocking finding并保持candidate/partial，不自行修复",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "required_revision_drift",
+      "condition": "任一required-read摘要与当前文件不一致",
+      "action": "停止并重建read set及验证快照",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "原Goal分母10 AC /26 must-have /16产品义务保持完整，Scope Delta none；纯helper仅局部候选，产品义务NOT_RUN；权限BLOCKED/NOT_RUN。"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "实施候选需独立检查合同保真、真实执行证据、完整Goal与权限claim ceiling。",
+    "route": "independent_validation"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state",
+    "28 frozen case identities and fixture codec",
+    "RED validity and GREEN result",
+    "P2 cases and mutation isolation",
+    "target-bound admissions and source/runner hashes",
+    "ESLint and strict TypeScript result"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ]
+}

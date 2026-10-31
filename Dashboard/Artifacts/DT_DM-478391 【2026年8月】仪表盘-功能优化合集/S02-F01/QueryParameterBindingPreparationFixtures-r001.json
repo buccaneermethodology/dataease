@@ -1,0 +1,74 @@
+{
+  "schema_version": "s02_parameter_binding_preparation_fixtures_v1",
+  "status": "candidate_not_frozen",
+  "design_ref": "QueryParameterBindingPreparationDesign-r001.md",
+  "scope": {
+    "source_authority": "caller_supplied_exact_id_map_only",
+    "target_authority": "caller_supplied_parameter_catalog_only",
+    "product_integration": "NOT_READY",
+    "goal_denominator": {
+      "goal_ac": 10,
+      "must_have": 26,
+      "product_obligations": 16,
+      "scope_delta": "none"
+    }
+  },
+  "fields": [
+    "variableName", "alias", "type", "deType", "details", "defaultValue",
+    "defaultValueScope", "id", "datasetTableId", "datasetGroupId", "required",
+    "operator", "value", "datasetFullName"
+  ],
+  "cases": [
+    {
+      "id": "PBP-001-scalar",
+      "input": {"targetComponentId":"new-c1","sourceParameterIds":["src-p1"],"targetIdBySourceId":{"src-p1":"dst-p1"},"targetParameterCatalog":[{"id":"dst-p1","variableName":"region","type":["VARCHAR"],"value":["west"]}]},
+      "expected": {"ok":true,"targetComponentId":"new-c1","parameters":[{"id":"dst-p1","variableName":"region","type":["VARCHAR"],"value":["west"]}]}
+    },
+    {
+      "id": "PBP-002-time-range-order",
+      "input": {"targetComponentId":"new-c2","sourceParameterIds":["src-start","src-end"],"targetIdBySourceId":{"src-start":"dst-start","src-end":"dst-end"},"targetParameterCatalog":[{"id":"dst-end","variableName":"end_at","type":["DATE"]},{"id":"dst-start","variableName":"start_at","type":["DATE"]}]},
+      "expected": {"ok":true,"targetComponentId":"new-c2","parameters":[{"id":"dst-start","variableName":"start_at","type":["DATE"]},{"id":"dst-end","variableName":"end_at","type":["DATE"]}]}
+    },
+    {
+      "id": "PBP-003-numeric-range",
+      "input": {"targetComponentId":"new-c3","sourceParameterIds":["src-low","src-high"],"targetIdBySourceId":{"src-low":"dst-low","src-high":"dst-high"},"targetParameterCatalog":[{"id":"dst-low","deType":2},{"id":"dst-high","deType":2}]},
+      "expected": {"ok":true,"targetComponentId":"new-c3","parameters":[{"id":"dst-low","deType":2},{"id":"dst-high","deType":2}]}
+    },
+    {
+      "id": "PBP-004-duplicate-source-dedupes-first",
+      "input": {"targetComponentId":"new-c4","sourceParameterIds":["src-p1","src-p1"],"targetIdBySourceId":{"src-p1":"dst-p1"},"targetParameterCatalog":[{"id":"dst-p1","variableName":"region"}]},
+      "expected": {"ok":true,"targetComponentId":"new-c4","parameters":[{"id":"dst-p1","variableName":"region"}]}
+    },
+    {
+      "id": "PBP-005-missing-map",
+      "input": {"targetComponentId":"new-c5","sourceParameterIds":["src-p1"],"targetIdBySourceId":{},"targetParameterCatalog":[{"id":"dst-p1"}]},
+      "expected": {"ok":false,"reason":"parameter_mapping_missing"}
+    },
+    {
+      "id": "PBP-006-target-not-found",
+      "input": {"targetComponentId":"new-c6","sourceParameterIds":["src-p1"],"targetIdBySourceId":{"src-p1":"dst-missing"},"targetParameterCatalog":[]},
+      "expected": {"ok":false,"reason":"target_parameter_missing"}
+    },
+    {
+      "id": "PBP-007-duplicate-target-catalog-id",
+      "input": {"targetComponentId":"new-c7","sourceParameterIds":["src-p1"],"targetIdBySourceId":{"src-p1":"dst-p1"},"targetParameterCatalog":[{"id":"dst-p1"},{"id":"dst-p1"}]},
+      "expected": {"ok":false,"reason":"target_parameter_ambiguous"}
+    },
+    {
+      "id": "PBP-008-non-injective-map",
+      "input": {"targetComponentId":"new-c8","sourceParameterIds":["src-a","src-b"],"targetIdBySourceId":{"src-a":"dst-one","src-b":"dst-one"},"targetParameterCatalog":[{"id":"dst-one"}]},
+      "expected": {"ok":false,"reason":"target_parameter_collision"}
+    },
+    {
+      "id": "PBP-009-no-partial-result",
+      "input": {"targetComponentId":"new-c9","sourceParameterIds":["src-a","src-b"],"targetIdBySourceId":{"src-a":"dst-a","src-b":"dst-missing"},"targetParameterCatalog":[{"id":"dst-a"}]},
+      "expected": {"ok":false,"reason":"target_parameter_missing"}
+    },
+    {
+      "id": "PBP-010-encoded-id-remains-opaque-string",
+      "input": {"targetComponentId":"new-c10","sourceParameterIds":["|DE|7|DE|13|DE|p"],"targetIdBySourceId":{"|DE|7|DE|13|DE|p":"|DE|9|DE|17|DE|q"},"targetParameterCatalog":[{"id":"|DE|9|DE|17|DE|q","datasetTableId":"9","datasetGroupId":"17","type":["DATE","DATE"]}]},
+      "expected": {"ok":true,"targetComponentId":"new-c10","parameters":[{"id":"|DE|9|DE|17|DE|q","datasetTableId":"9","datasetGroupId":"17","type":["DATE","DATE"]}]}
+    }
+  ],
+  "forbidden_claims": ["source_to_target_mapping_is_authorized", "query_or_sql_is_correct", "product_integration_passed", "permission_behavior_passed", "goal_ac_closed"]
+}

@@ -1,0 +1,297 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-DG-02-identity-time-candidate-revision-r004",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按 DG-02 Review r002 补充身份/可信时间候选的反例场景、顺序和查询/状态 oracle，并澄清 permission version 变化与 session generation 失效的边界；不伪造缺失 authority，不冻结或改产品代码。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只追加 DG-02 候选 r004，覆盖 Review r002 指定的剩余文档场景缺口。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r004.md"
+    ],
+    "forbidden_actions": [
+      "修改产品源码、Goal、DesignGaps、冻结合同或 Cases",
+      "推断身份/撤权/可信时间 authority 已存在",
+      "将候选声明为 freeze 或准入产品 Builder",
+      "声称多用户权限、产品行为或 Goal AC 验收"
+    ],
+    "maximum_claim": "仅形成对 r002 review findings 的候选文档补充；authority 缺失仍 BLOCKED，完整协议 NOT_READY。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DesignGaps.json",
+      "revision": "0a6e1718b0cad911c479ed7faef73664d0bf9d565383d36e226df23f93ec410c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/DG-02-IdentityGeneration-TrustedTime-Design-candidate-r003.md",
+      "revision": "f5b1caa5843b04fe2056cf5463a860dbcdad76268ff4be51cb023feef1cf0a79",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r001.md",
+      "revision": "7ced2c1db1df264da65f2eebd2dae76199db39125ac57139708df093c74eeba5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DG-02-IdentityGeneration-TrustedTime-DesignReview-r002.md",
+      "revision": "b8d967916e6d24e9539f3781e4b182e52a3028847b27dd8b847db90b98668a18",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "6c7f5344446bc640a334cd986e9a1a1276c39be2823433e505cd8ae1943dc117",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useCache.ts",
+      "revision": "cea005dca69db55d3e2661a3115acce2e83d2e368e3b61c73131aca94a55f647",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "core/core-frontend/src/utils/logout.ts",
+      "revision": "878cb98f412c6c9263d615aaa59a1b7eb6aeaa18c41259f09861a517897d3434",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "core/core-frontend/src/utils/resourceImages.ts",
+      "revision": "6de8490685e96d70a3f6036a52d13d978e7435ad6cbd22c2ab1a4e882a0097fa",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r312.json",
+      "revision": "5f7e9e123b1c36bc227e3eb97ba795c69b451654ad739fd5d6d8452ec88861dc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "DG-02 r004 scenario and lifecycle delta source",
+      "applicability": "DG-02 candidate refinement r004"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "authority-source-arrives",
+      "mode": "deterministic",
+      "condition": "真实权限模块或隔离实例证据出现",
+      "action": "停止沿用候选，按新 authority 重基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim_or_semantic_widening",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选拟关闭 authority blocker、冻结或声明实现准入",
+      "action": "不得在本轮作此判断；转独立审查并要求新证据",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10/26/16，Scope Delta none；S01 Conditional；真实权限 Blocked/Not Run；session/fencing/time authority Unknown。"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "bounded_builder",
+    "reason": "仅追加候选设计版本；需独立语义复核。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "Goal acceptance and denominator",
+    "Review r001 and r002 findings",
+    "current candidate and source observations",
+    "remaining authority blockers"
+  ]
+}

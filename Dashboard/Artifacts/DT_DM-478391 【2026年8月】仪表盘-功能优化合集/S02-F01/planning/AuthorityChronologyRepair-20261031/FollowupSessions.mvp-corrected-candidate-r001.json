@@ -1,0 +1,316 @@
+{
+  "schema_version": "s02_mvp_followup_sessions_v1",
+  "created_at": "2026-10-27T03:21:40.218743+00:00",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+    "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+    "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+    "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+    "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+    "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+    "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+    "local_verification": [
+      {
+        "line": 2592,
+        "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+        "role": "user",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      }
+    ],
+    "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+    "explicit_approval_token": null
+  },
+  "registration_state": "已手工登记，后续独立任务；非当前MVP完成前置；无程序化Session registry",
+  "sessions": [
+    {
+      "session_id": "DE-EXEC-S041",
+      "Topic": "真实权限接入与多用户验收",
+      "Scope": "真实source/dataset READ、target MANAGE、只读禁止查看/复制/粘贴、撤权恢复、组织/真实会话；替换桩后独立实测。",
+      "Purpose": "保持真实权限责任，防止MVP桩升格。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "blocked",
+      "DeliveryState": "真实权限来源/隔离环境缺失，NOT_RUN，后续处理",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    },
+    {
+      "session_id": "DE-EXEC-S042",
+      "Topic": "跨context clipboard与完整DG-02",
+      "Scope": "跨标签/跨会话/跨仪表盘共享、身份代际同步、可信时间/TTL/重载退出的完整协议。",
+      "Purpose": "承接原共享与身份时效义务。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "todo",
+      "DeliveryState": "candidate; not started or registered in shared Dashboard",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    },
+    {
+      "session_id": "DE-EXEC-S043",
+      "Topic": "图表通用异步一致性与候选查询",
+      "Scope": "快速筛选/配置/自动与手动刷新/切页删除重建竞争；candidate query取消等待、通用双host/stage及Store发布。",
+      "Purpose": "单独解决通用迟到问题，不挡当前基本UI。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "todo",
+      "DeliveryState": "candidate; not started or registered in shared Dashboard",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    },
+    {
+      "session_id": "DE-EXEC-S044",
+      "Topic": "通用渲染资源治理",
+      "Scope": "Line/Carousel构造异常、全部renderer/host生命周期、通用双host资源交接；保留既有G2有界成果与LSC未决。",
+      "Purpose": "完整治理资源异常而不追认旧全包通过。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "todo",
+      "DeliveryState": "candidate; not started or registered in shared Dashboard",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    },
+    {
+      "session_id": "DE-EXEC-S045",
+      "Topic": "query组件完整过滤复制粘贴",
+      "Scope": "query→query自过滤/级联/引用重绑、独立副本、跨仪表盘、保存undo及权限；图表↔query仍拒绝。",
+      "Purpose": "恢复原Q066/Q067与query能力分母。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "todo",
+      "DeliveryState": "candidate; not started or registered in shared Dashboard",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    },
+    {
+      "session_id": "DE-EXEC-S046",
+      "Topic": "复杂过滤及原全量AC续验",
+      "Scope": "动态日期/复杂树/完整承载、50叶/1MB/1001枚举边界、原14F01矩阵、S01组件复制改类型与完整S10移交。",
+      "Purpose": "保持原全量验收与未裁政策，不静默消失。",
+      "BelongsTo": "DE-EXEC-BI01",
+      "batch": "SP-006 follow-up independent batch",
+      "Status": "candidate_ready",
+      "DeliveryState": "原生动态日期四件及容量源事实候选保留；未执行/未实现，后续激活；当前不派发",
+      "ClaimCeiling": "迁移计划，原未验保持，非功能/权限/资源完成。",
+      "Authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+        "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+        "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+        "local_verification": [
+          {
+            "line": 2592,
+            "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+            "role": "user",
+            "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+            "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+          }
+        ],
+        "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+        "explicit_approval_token": null
+      },
+      "currentCompletionPrecondition": false,
+      "Evidence": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json"
+      ],
+      "Next": "后续任务明确激活时重绑来源/范围/预算与精确准入；非当前MVP完成前置，不记为通过。"
+    }
+  ],
+  "running_lane_handoff": [
+    {
+      "lane": "G2 returned-instance ownership",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipCloseoutReconciliation-r001.md",
+      "state": "既有有界工程收尾通过，已实现/独立验证只按原报告范围",
+      "budget": "Design3/3保留，不重开",
+      "migrates_to": "DE-EXEC-S044",
+      "action": "保全代码/closeout/浏览器证据，不回退、不称全renderer或MVP通过。"
+    },
+    {
+      "lane": "Line/Carousel construction",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineStageConstructionRedValidation-r001.md",
+      "state": "全55 NOT_TRUSTED_AS_COMPLETE_RED；7PASS/47断言失败/1合同差异/0执行错误，仅returned-G Line投影可信RED",
+      "budget": "Design3/3；RED测试包Validation1/3；LSC046和LSCRV001..003未决",
+      "migrates_to": "DE-EXEC-S044",
+      "action": "保全55Cases/写前source/日志/报告，不启动当前S02资源Builder。"
+    },
+    {
+      "lane": "Line sibling-host stage",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineSiblingHostRenderDesignReview-r002.md",
+      "state": "NEEDS_REVISION、runner条件入口、source NOT_READY，无实现",
+      "budget": "2/3；LSHR-R2-001..003未决",
+      "migrates_to": "DE-EXEC-S043",
+      "additional_owner": "DE-EXEC-S044",
+      "action": "保全29Cases/r002审查，不继续第三轮或Builder作为当前前置。"
+    },
+    {
+      "lane": "Chart query candidate",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartQueryCandidateDesignReview-r002.md",
+      "state": "NEEDS_REVISION/NOT_READY；无正式RED/生产；legacy取消function-message TypeError oracle QCCD-R2-001开放",
+      "budget": "2/3；28主68子案identity保留",
+      "migrates_to": "DE-EXEC-S043",
+      "action": "移交r001/r002/Review/raw baseline提示，不启动当前query/axios框架。"
+    },
+    {
+      "lane": "旧产品/事务/authority整体包",
+      "report": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md",
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md"
+      ],
+      "state": "历史NEEDS_REVISION/AM-09等未决保留，新范围不翻转",
+      "budget": "各自3/3，禁止换名重置第四轮",
+      "migrates_to": "DE-EXEC-S046",
+      "additional_owners": [
+        "DE-EXEC-S041",
+        "DE-EXEC-S042",
+        "DE-EXEC-S045"
+      ],
+      "action": "新MVP依据明确新authority独立交付，旧发现移交而非通过。"
+    },
+    {
+      "lane": "旧query组件detached/source lanes",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "state": "各模块candidate/partial/bounded Validation和authority gap按原文保留",
+      "budget": "按各原durable报告；未知不补造/不重置",
+      "migrates_to": "DE-EXEC-S045",
+      "action": "只迁引用，不改S01/query生产或旧冻结资产。"
+    }
+  ],
+  "goal_sequence_authority": {
+    "selected_source": {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+      "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4"
+    },
+    "later_than_full_request": true,
+    "current_completion_precondition": false,
+    "note": "不再沿错误FullAuthority把六后续自动视作当前P2"
+  },
+  "authority_chronology_correction": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/AuthorityChronologyRepair-20261031/AuthorityChronologyAudit-r001.json",
+    "sha256": "92130e34a07a4bdea07a75cfe8bd47643eb86f79fd13c18a9704af6e394fd35e"
+  }
+}

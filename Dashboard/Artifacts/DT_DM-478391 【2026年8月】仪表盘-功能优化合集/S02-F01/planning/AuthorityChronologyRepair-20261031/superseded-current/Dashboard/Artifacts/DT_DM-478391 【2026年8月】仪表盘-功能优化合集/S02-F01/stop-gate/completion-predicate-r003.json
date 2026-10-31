@@ -1,0 +1,60 @@
+{
+  "schema_version": "stop_gate_completion_predicate_v1",
+  "predicate_id": "S02-full-predicate",
+  "source_completion_rule_id": "S02-original-full-completion",
+  "source_completion_rule_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "source_completion_rule_sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+  "issued_by_authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstFullAcceptanceAuthority-20261027.md",
+  "issued_by_authority_sha256": "143af02a1303d3e8170d2a0b2cc32b3b737bc50a9fffd55244274ae2534042bd",
+  "issued_by_authority_id": "current-user",
+  "expression": {
+    "all_of": [
+      {
+        "atom": {
+          "fact": "completion.remaining_must_have_ids",
+          "operator": "empty"
+        }
+      },
+      {
+        "atom": {
+          "fact": "scope_deltas",
+          "operator": "none_unapproved"
+        }
+      },
+      {
+        "atom": {
+          "fact": "completion.work_units",
+          "operator": "ids_terminal",
+          "required_ids": [
+            "S02.0",
+            "S02.1",
+            "S02.2",
+            "S02.3",
+            "S02.4",
+            "S02.5",
+            "S02.6",
+            "S02.7"
+          ]
+        }
+      },
+      {
+        "atom": {
+          "fact": "human_decisions",
+          "operator": "none_pending_admissible"
+        }
+      },
+      {
+        "atom": {
+          "fact": "final_evidence",
+          "operator": "required_kinds_bound",
+          "required_kinds": [
+            "independent_validation",
+            "final_diff",
+            "original_plan_coverage",
+            "post_closeout_reconciliation"
+          ]
+        }
+      }
+    ]
+  }
+}

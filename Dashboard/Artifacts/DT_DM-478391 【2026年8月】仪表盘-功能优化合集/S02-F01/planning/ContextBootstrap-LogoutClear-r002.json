@@ -1,0 +1,398 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-NORMAL-LOGOUT-CLEAR-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "原AC10/UI03真实本地前端正常logout/身份清空，真实后端权限不替代",
+    "objective": "主编辑页有效clip正常copy→同context辅助页正常账户退出→已核同实例Mvp public getter投影epoch变/clip空/非TTL；正常重入空clip另段",
+    "authority_role": "projection",
+    "assumptions": [
+      "S02专用Chrome context；后端当前standalone logout仅日志，不影响其它context server会话，非RT-AUTH",
+      "登录恢复在所有录制器关闭时单独执行，不写认证数据；不能拿重载证明此前已清空"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-state-tools/observe-logout-clear-r002.js",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LogoutClear*r002*",
+      "新explicit S02-only context正常copy/辅助页退出/public getter观察；无auth录制，重入另段"
+    ],
+    "forbidden_actions": [
+      "直接调用invalidate/clear或写Store/storage制造清空",
+      "输出密码/token/header/cookie/storage值/认证请求响应内容或登录记录",
+      "未证明实际既有非空module同实例就用默认空getter触发logout",
+      "影响其它浏览器context/修改backend权限/用standalone验RT-AUTH"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MvpAcceptanceReadinessReview-r002.md",
+      "revision": "d3f97246db43f9dc705829d94ede73891694b13f21f7f3a9f4a03d748574fbe7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r002.md",
+      "revision": "4d790b8d717992cea3dea962967568ede6f8cfd109c35e629dededda1d8acb88",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SaveTransportLoadingValidation-r002.md",
+      "revision": "e7a393ca84f81961e3687f24e9dab06a83c30b2b3c822dc008543a14e690a30a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "revision": "b760fffb47db4a8a187cc3dc996d6ddffb5f2b187038da625c5c8e0839d87e5d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+      "revision": "9f4eca86173318b7b964648d216fd7a6c153b41abce9eda12f8f6e9fc6944b82",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "revision": "f6df395cdaf628101440bc52df47c8ab952496244adcb6ccd263863e0737b159",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/layout/components/AccountOperator.vue",
+      "revision": "ee764048c6578ab9c8fd326cabdf70774bbc72c0c18a1c9bc4a86d9406304634",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/utils/logout.ts",
+      "revision": "878cb98f412c6c9263d615aaa59a1b7eb6aeaa18c41259f09861a517897d3434",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useCache.ts",
+      "revision": "cea005dca69db55d3e2661a3115acce2e83d2e368e3b61c73131aca94a55f647",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/substitute/permissions/login/SubstituleLoginServer.java",
+      "revision": "88bc3cd9e72697e72726f25dfde3adaae9d2331ffc8902356a316fd08c383ad4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "原logout predicate/真实UI→user.clear/同context cache/clock身份监听/observer实例证明及后端副作用边界",
+      "applicability": "U4 normal logout"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-state-tools/observe-logout-clear-r002.js",
+      "revision": "f0bdd911fbfdfb4d479784de68ef9699ff72ff63f486282629c089559a1cff96",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定新public explicit context与旧控制失败/正常清理，仍同U4",
+      "applicability": "U4 explicit context control recovery"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LogoutClearToolFreeze-r002.json",
+      "revision": "f04a888bcce2884136d744cdc817aaf5f0e603aef45948887cbdf8af4d3fd095",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定新public explicit context与旧控制失败/正常清理，仍同U4",
+      "applicability": "U4 explicit context control recovery"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r593.json",
+      "revision": "f8d4e7ccb5689f91f6c80848fd604f7bd7e39669b58c7a55a0bc6522889c635f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定新public explicit context与旧控制失败/正常清理，仍同U4",
+      "applicability": "U4 explicit context control recovery"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LogoutClear-events-r001.json",
+      "revision": "79d9c5c2e1bd02803513d87a7b36c8e00b6d010f23d36c6fcdc85a9fa6928702",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定新public explicit context与旧控制失败/正常清理，仍同U4",
+      "applicability": "U4 explicit context control recovery"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LogoutClear-control-recovery-r001.json",
+      "revision": "0deff69ea4395ab89b9567ada2af89517a0d13335a3a813783bef38659c6ec4b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "绑定新public explicit context与旧控制失败/正常清理，仍同U4",
+      "applicability": "U4 explicit context control recovery"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "保留owned context控制失败，按public browser.newContext隔离身份后执行同U4，不影响原S02便利context",
+    "task_id": "S02-NORMAL-LOGOUT-CLEAR-r002",
+    "recorded_at": "2026-10-30T22:32:24.092474+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r593.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-NORMAL-LOGOUT-CLEAR-r002",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-10"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "主编辑页有效clip正常copy→同context辅助页正常账户退出→已核同实例Mvp public getter投影epoch变/clip空/非TTL；正常重入空clip另段",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LogoutClear-events-r002.json"
+}

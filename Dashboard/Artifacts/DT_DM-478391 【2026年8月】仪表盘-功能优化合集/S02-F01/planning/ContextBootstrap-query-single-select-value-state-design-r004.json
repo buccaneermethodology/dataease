@@ -1,0 +1,160 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-query-single-select-value-state-design-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "基于r004独立审查最短路径，设计普通单选默认A、运行B的设计提取/runtime水合极窄纯合同；不接权限/UI/Store，独立审查后Builder。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "限定值投影九键，提取七键design和新runtime；不做完整Query适配或引用重绑。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectValueStateDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectValueStateFixtures-r001.json"
+    ],
+    "forbidden_actions": [
+      "修改源码、测试实现或现有冻结合同",
+      "缩减10项Goal AC或16项产品义务",
+      "把合法复杂查询形态永久拒绝来缩小支持范围",
+      "声称产品Builder准入、权限通过或Goal完成",
+      "改动S01、权限实现、部署或数据库"
+    ],
+    "maximum_claim": "只冻结可审查值状态纯合同候选，不授予Builder或产品验收"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterDesign-r004.md",
+      "revision": "863357ddfbefdf55f715d0d6e9dd8b87f8fc6e5526c5317034822c8facce2044",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterDesignReview-r004.md",
+      "revision": "49a51a7747207c3f4ea457cc6e8725aef294da2c5c496e95b87faa90c451395f",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "value-state semantics",
+      "reason": "直接证明配置默认和运行值区分及hydrate路径",
+      "domains": [
+        "scope",
+        "implementation",
+        "validation",
+        "acceptance"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "value-write-conflict",
+      "condition": "默认与运行写入出现无法由源码区分的分支",
+      "action": "该分支NOT_READY，禁止扩大到默认first-item/动态日期",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runtime-consumer-needed",
+      "condition": "水合语义需额外消费者证据",
+      "action": "扩读相邻消费者并保持九键域，不扩大产品接口",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_design_lane_then_semantic_review",
+    "reason": "完整查询适配设计为高语义风险；当前只写候选设计，产品Builder仍受原Goal前置门控。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original Goal and 16 obligations",
+    "query component source fields and consumers",
+    "existing reviewed subcontracts and fixtures",
+    "design output and exact fixtures"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "dependency",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "必须保留全部查询形态、Goal分母与权限边界；设计不得把未覆盖形态静默移出目标。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  }
+}

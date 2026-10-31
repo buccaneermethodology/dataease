@@ -1,0 +1,82 @@
+{
+  "scenario": "detail-table chart source to indicator-chart target, same dataset, full filter-tree replacement, query, visible result, explicit save, leave and reopen",
+  "environment": {
+    "url": "http://127.0.0.1:7070",
+    "mode": "local standalone session",
+    "permission": "explicit DEV test stub allow for copy/paste, then returned to unknown after reopen; not real authorization"
+  },
+  "dashboardId": "1312476889213964288",
+  "sourceId": "7520741153101058048",
+  "sourceType": "table-info",
+  "targetId": "7520752064427724800",
+  "targetType": "indicator",
+  "datasetId": "1312472054565572608",
+  "tree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "pasteResult": {
+    "outcome": "success",
+    "reason": null,
+    "operationId": 1,
+    "logicalGetDataCalls": 1,
+    "counterScope": "logical getData calls, not physical HTTP",
+    "queryType": "indicator",
+    "queryDatasetId": "1312472054565572608",
+    "resultValue": 6761,
+    "visibleIndicator": "6,761 amount",
+    "undefinedPaths": [],
+    "targetTreeEqualsCopiedTree": true,
+    "successMessage": "过滤条件已粘贴"
+  },
+  "saveReopen": {
+    "saveMessage": "保存成功",
+    "navigatedAway": true,
+    "reopenedBy": "previously observed editor URL",
+    "savedTreeMatchesCopiedTree": true,
+    "savedTreeHasAmountGreaterThan200": true,
+    "savedTreeHasNestedOrShopEnum": true,
+    "clipboardAfterReopen": null,
+    "permissionStubAfterReopen": "unknown; copy/paste disabled",
+    "editSessionIdAfterReopen": 3,
+    "revisionAfterReopen": 1,
+    "saveButtonDisabled": true
+  },
+  "limitations": [
+    "One table-info→indicator pair only; not all eligible chart types or P1 acceptance.",
+    "Local standalone plus DEV test stub is not real multi-user authorization.",
+    "Dashboard list-based reopen is not established; editor URL was used.",
+    "This run does not establish query→query behavior or any authorization, revoke, or restore behavior.",
+    "All original 26 and new P1 12 obligations remain in the complete Goal denominator."
+  ],
+  "evidenceRecordedAt": "2026-10-28T15:53:13Z"
+}

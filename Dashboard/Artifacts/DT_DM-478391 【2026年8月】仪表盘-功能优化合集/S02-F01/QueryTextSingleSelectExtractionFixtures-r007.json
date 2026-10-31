@@ -1,0 +1,837 @@
+{
+  "schema_version": "query_text_single_select_extraction_fixtures_v1",
+  "design_id": "S02-QSSDH-R4-01-02-TEXT-SELECT-EXTRACTION-r007",
+  "revision": 7,
+  "scope": {
+    "displayType": "0",
+    "multiple": false,
+    "optionValueSource": 0,
+    "parameterized": false,
+    "remote": false,
+    "tree": false,
+    "cascade": false,
+    "date": false
+  },
+  "case_count": 18,
+  "oracle_boundary": "r006合同增量：optional defaultValue若出现必须为string；未启用默认仅决定是否投影，不豁免输入类型校验。原16 identities逐字保留。",
+  "cases": [
+    {
+      "case_id": "TC-QTEXT-EXTRACT-001",
+      "intent": "默认A覆盖旧运行值B；两种查询投影均来自A",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "A"
+        },
+        "firstLoadFilterValue": [
+          "A"
+        ],
+        "subsequentFilterValue": [
+          "A"
+        ],
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-HYDRATE-002",
+      "intent": "未启用默认时旧运行值B不进入新runtime或过滤",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": false,
+          "defaultValueFirstItem": false,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": false,
+            "defaultValueFirstItem": false
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": false,
+          "defaultValueFirstItem": false,
+          "selectValue": {
+            "jsType": "undefined"
+          }
+        },
+        "firstLoadFilterValue": [],
+        "subsequentFilterValue": [],
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-003",
+      "intent": "普通JSON中的design-config字符串不是可信绑定",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": false,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "typecheck": "compile_error",
+        "runtime_result": "not_applicable"
+      },
+      "verification": {
+        "mode": "compile-time",
+        "expected": "plain JSON lacks VerifiedDesignValueSnapshot and VerifiedDesignBinding; type checker rejects helper invocation"
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-004",
+      "intent": "snapshot来源资源绑定与本次期望绑定不一致",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "other-resource",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "SOURCE_STAGE_UNVERIFIED",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-005",
+      "intent": "snapshot来源组件绑定与本次期望绑定不一致",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "other-component"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "SOURCE_STAGE_UNVERIFIED",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-006",
+      "intent": "可信类型中的来源revision非法",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": null,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": null,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "INVALID_INPUT",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-007",
+      "intent": "精确值态投影出现未知额外键",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "extraField": true
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "UNSUPPORTED_FIELD",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-008",
+      "intent": "精确值态投影缺少必需键",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "UNSUPPORTED_FIELD",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-009",
+      "intent": "字段选项来源不属于本合同shape；没有其它未知键",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 1,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "UNSUPPORTED_SHAPE",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-010",
+      "intent": "启用默认但为空字符串",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-011",
+      "intent": "启用默认但为null",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": null,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-012",
+      "intent": "启用默认但类型错误",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": 7,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-ROUNDTRIP-013",
+      "intent": "carrier JSON往返仍不包含运行值；新runtime从设计A重建",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "A"
+        },
+        "firstLoadFilterValue": [
+          "A"
+        ],
+        "subsequentFilterValue": [
+          "A"
+        ],
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-DETACH-014",
+      "intent": "合法值态只产生detached输出，源数据不变",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 12,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 12,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "OK",
+        "carrier": {
+          "schemaVersion": 1,
+          "revision": 12,
+          "resourceId": "dashboard-1",
+          "componentId": "q1",
+          "shape": {
+            "displayType": "0",
+            "multiple": false,
+            "optionValueSource": 0
+          },
+          "design": {
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": "A"
+          }
+        },
+        "runtime": {
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "A"
+        },
+        "firstLoadFilterValue": [
+          "A"
+        ],
+        "subsequentFilterValue": [
+          "A"
+        ],
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-015",
+      "intent": "snapshot与expected binding的revision均有效但不相等",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 8,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "SOURCE_STAGE_UNVERIFIED",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-016",
+      "intent": "snapshot与expected binding revision均缺失，属于非法输入",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": null,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": "A",
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ]
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": null,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "INVALID_INPUT",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-017",
+      "intent": "默认关闭时，若提供defaultValue，仍必须符合可选string字段类型",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": false,
+          "defaultValueFirstItem": false,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "defaultValue": null
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    },
+    {
+      "case_id": "TC-QTEXT-REJECT-018",
+      "intent": "默认关闭时，若提供defaultValue，仍必须符合可选string字段类型",
+      "input": {
+        "snapshot": {
+          "fixtureOnlyTrustedBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        },
+        "valueState": {
+          "displayType": "0",
+          "multiple": false,
+          "optionValueSource": 0,
+          "defaultValueCheck": false,
+          "defaultValueFirstItem": false,
+          "selectValue": "B",
+          "mapValue": [
+            "B"
+          ],
+          "defaultValue": 7
+        },
+        "expectedBinding": {
+          "fixtureOnlyBinding": true,
+          "revision": 9,
+          "resourceId": "dashboard-1",
+          "componentId": "q1"
+        }
+      },
+      "expected": {
+        "status": "DEFAULT_VALUE_INVALID",
+        "carrier": null,
+        "runtime": null,
+        "sourceUnchanged": true,
+        "queryCount": 0,
+        "storeWriteCount": 0,
+        "snapshotWriteCount": 0,
+        "partialOutputOnFailure": false
+      }
+    }
+  ],
+  "test_harness_note": "snapshot.fixtureOnlyTrustedBinding and expectedBinding.fixtureOnlyBinding are test descriptors only, not production fields; the harness constructs nominal types. The plain-JSON case is compile-time only."
+}

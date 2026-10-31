@@ -1,0 +1,83 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-F01-MANUAL2-PURE-HELPER-BUILDER-r001",
+  "session_id": "S02.1",
+  "lane": "s02_f01_manual2_pure_helper_builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-MANUAL2-PURE-HELPER-BUILDER-r001.json",
+      "sha256": "a35ea2a0c82bcfdc67b94211985b246703cbb26f0cd63555336a38524402d42a"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-F01-MANUAL2-PURE-HELPER-BUILDER-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectManual2PureContract-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTextSingleSelectManual2PureCases-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTextSingleSelectManual2PureContractReview-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Manual2PureHelperFreeze-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r254.json",
+    "core/core-frontend/src/custom-component/filter-copy/query-text-single-select-value-state.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-text-single-select-value-state.test.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-value-state.test.ts"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q005",
+    "AC-F01-Q006",
+    "AC-F01-Q007",
+    "AC-F01-Q008",
+    "AC-F01-Q009",
+    "AC-F01-Q010",
+    "AC-F01-Q011",
+    "AC-F01-Q012",
+    "AC-F01-Q013",
+    "AC-F01-Q014",
+    "AC-F01-Q015",
+    "AC-F01-ORIG-01",
+    "AC-F01-ORIG-02",
+    "AC-F04-Q066",
+    "AC-F04-Q067"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-manual2-pure.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-manual2-pure.test.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-manual2-pure-helper-test-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-manual2-pure-helper-source-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/Manual2PureHelperBuilderEvidence-r001.md"
+  ],
+  "required_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-manual2-pure.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-manual2-pure.test.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/Manual2PureHelperBuilderEvidence-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "仅纯helper及其定向fixture runner实现候选，不证明产品接线、source auth、权限或Goal验收。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-F01-MANUAL2-PURE-HELPER-BUILDER-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r254.json",
+  "working_directory": ".",
+  "execution_command": "接收端复验Context/Card digest并在首次写入前验证对应execution admission。严格先写唯一测试runner目标，运行可信RED并确认contract有效且失败指向缺失target的UNIMPLEMENTED；RED合格后才申请helper source target admission。实现一个单参数prepareManual2ValueState(valueState: unknown)，不认证来源、不读写任何外部状态。复用28个冻结case身份，补充P2 runner checks：defaultValue own undefined、mapValue hole、数组额外descriptor/symbol/accessor和getter调用数0；断言统一REJECTED、输出无部分字段、输入不变、detached carrier/runtime与跨调用隔离。运行GREEN、定向lint、严格TS检查；所有结果只声明pure helper候选。不得修改冻结输入、产品调用、Dashboard Goal、权限或其他源码。"
+}

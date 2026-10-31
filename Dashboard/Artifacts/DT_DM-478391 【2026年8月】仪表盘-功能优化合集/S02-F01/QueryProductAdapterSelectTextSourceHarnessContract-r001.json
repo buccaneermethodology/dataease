@@ -1,0 +1,192 @@
+{
+  "schema_version": "select_text_source_single_case_harness_contract_v1",
+  "contract_id": "S02-F01-ST-SRC-001-INFOFORMAT-HARNESS-r001",
+  "status": "frozen_for_local_harness_only",
+  "frozen_for_builder": true,
+  "scope_delta": "none",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "source_cases": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r003.json",
+    "sha256": "64c2b0b03ef720de5c62353d183edf262a2db68f096d6ee1f1c0338c07eee960"
+  },
+  "independent_review": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r003.md",
+    "sha256": "32432d6647dde7728eb9bd655f9c5caca752d0e828bcf5c22210843152d8a379"
+  },
+  "independent_delta_validation": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesign-DeltaValidation-r002.md",
+    "sha256": "341f42515db991a81978ab26b393e7b960001faf35a398f18005b6723e69d771"
+  },
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16
+  },
+  "included_case_ids": [
+    "ST-SRC-001"
+  ],
+  "excluded_case_ids": [
+    "ST-SRC-002",
+    "ST-SRC-003",
+    "ST-SRC-004",
+    "ST-SRC-005",
+    "ST-SRC-006",
+    "ST-SRC-007"
+  ],
+  "case": {
+    "case_id": "ST-SRC-001",
+    "entry": "infoFormat，仅创建返回；不隐式调用parameterCompletion",
+    "source_refs": [
+      "core/core-frontend/src/custom-component/v-query/options.ts:6-66",
+      "core/core-frontend/src/custom-component/v-query/options.ts:80-137",
+      "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1844-1872"
+    ],
+    "oracle_status": "DETERMINATE_CANDIDATE",
+    "variants": [
+      {
+        "variant_id": "CREATE",
+        "before": {
+          "input": {
+            "id": "f1",
+            "name": "字段一",
+            "deType": 0,
+            "type": "VARCHAR",
+            "datasetId": "D1"
+          },
+          "clock": {
+            "$date": "2026-10-20T00:00:00.000Z"
+          },
+          "guidReturn": "guid-fixed-1"
+        },
+        "steps": [
+          "解析options.ts的TypeScript AST，仅提取infoFormat函数initializer；不导入或求值模块主体/attributes初始化",
+          "在隔离函数作用域注入fixed Date与固定guid；计数器在infoFormat(input)同步调用前立即归零并开始，调用返回后立即停止",
+          "断言仅本次infoFormat调用窗口内Date构造次数为2、guid调用次数为1，返回的两个Date均为指定时刻"
+        ],
+        "expected_after": {
+          "returnValue": {
+            "id": "guid-fixed-1",
+            "name": "字段一",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "f1",
+              "type": "VARCHAR",
+              "name": "字段一",
+              "deType": 0
+            },
+            "displayId": "f1",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [],
+            "mapValue": [],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": {
+              "$date": "2026-10-20T00:00:00.000Z"
+            },
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": {
+              "$date": "2026-10-20T00:00:00.000Z"
+            },
+            "auto": false,
+            "defaultValue": {
+              "$js": "undefined"
+            },
+            "selectValue": {
+              "$js": "undefined"
+            },
+            "optionValueSource": 0,
+            "valueSource": [],
+            "dataset": {
+              "id": "D1",
+              "name": "",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": false,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {}
+          },
+          "input": {
+            "id": "f1",
+            "name": "字段一",
+            "deType": 0,
+            "type": "VARCHAR",
+            "datasetId": "D1"
+          },
+          "guidCalls": 1,
+          "dateConstructorCalls": 2,
+          "ownDefaultValueFirstItem": false,
+          "effects": []
+        },
+        "assertions": {
+          "unexpectedKeysOrWrites": "FAIL",
+          "realNetworkCalls": 0,
+          "realStoreWrites": 0,
+          "realPermissionClaims": 0,
+          "dateObservationWindow": {
+            "scope": "infoFormat(input)单次同步调用",
+            "sourceLoading": "只解析AST并提取infoFormat initializer；不导入或执行options.ts模块主体",
+            "counterStart": "在infoFormat(input)调用前立即归零并开始计数",
+            "counterEnd": "在infoFormat(input)同步返回后立即停止计数",
+            "expectedCalls": 2,
+            "excluded": "options.ts模块顶层attributes初始化Date调用不运行且不计入此字段"
+          }
+        }
+      }
+    ],
+    "unresolved": "attributes补全与setToDefault是不同阶段；本case不据此推断所有创建者/历史对象。",
+    "execution_status": "NOT_RUN",
+    "result": null,
+    "evidence": [],
+    "frozen_for_builder": false,
+    "goal_ac_ids": [
+      "AC-S02-02",
+      "AC-S02-03"
+    ],
+    "claim_ceiling": "仅指定局部阶段状态，不是合法组合全集或产品运行证据"
+  },
+  "scope": {
+    "source": "core/core-frontend/src/custom-component/v-query/options.ts",
+    "entry": "infoFormat(input)",
+    "observation_window": "single synchronous invocation; counter reset/start immediately before call and stopped immediately after return",
+    "forbidden": [
+      "module import/evaluation",
+      "options.ts module top-level attributes initialization",
+      "parameterCompletion",
+      "setToDefault",
+      "Vue/SFC/product UI or Store wiring",
+      "network",
+      "permissions",
+      "persistence/history"
+    ]
+  },
+  "claim_ceiling": "仅说明 AST 提取的当前 infoFormat initializer 在冻结 CREATE 输入下符合局部返回 oracle；不证明产品行为、完整复制链路、权限、Goal AC或Goal完成。"
+}

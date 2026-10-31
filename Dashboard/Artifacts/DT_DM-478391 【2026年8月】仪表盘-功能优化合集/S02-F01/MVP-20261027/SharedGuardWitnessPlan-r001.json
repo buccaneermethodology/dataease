@@ -1,0 +1,101 @@
+{
+  "schema_version": "s02_shared_guard_witness_plan_v1",
+  "created_at": "2026-10-30T20:57:52.347777+00:00",
+  "status": "PREPARATION_ONLY_NOT_IMPLEMENTED",
+  "authority": {
+    "goal": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "cases": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "original_acs": [
+      "AC-MVP-F01-02",
+      "AC-MVP-F01-04"
+    ]
+  },
+  "scope": "补原有共享guard证据，不修改产品guard、完整38/49、原cases或任何3/3实现；如见实际行为违约先保留失败并按原合同诊断",
+  "cases": [
+    {
+      "id": "G01",
+      "original_case": "MVP-UI-06",
+      "input": "合法静态日期eq+原shop子组",
+      "expectation": "accept_full_tree",
+      "boundary": "固定date字段1793083721147/deType1，dateValue/timeType=date/value为固定日期标量，不使用动态现在时间"
+    },
+    {
+      "id": "G02",
+      "original_case": "MVP-UI-06",
+      "input": "item的subTree为对象而非null",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "只改原合法leaf一个结构字段"
+    },
+    {
+      "id": "G03",
+      "original_case": "MVP-UI-06",
+      "input": "tree的subTree为null或数组",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "两畸形形态共享原case，不扩全部结构"
+    },
+    {
+      "id": "G04",
+      "original_case": "MVP-UI-05",
+      "input": "source或target dataset ID不可验证",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "缺失/null/空字符串；保留原字符串Long ID契约"
+    },
+    {
+      "id": "G05",
+      "original_case": "MVP-UI-05",
+      "input": "引用fieldId=count或-1",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "源树拒绝，不将count伪装普通字段"
+    },
+    {
+      "id": "G06",
+      "original_case": "MVP-UI-05",
+      "input": "计算字段不可用/field表达式非空",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "区分真实目录缺引用字段与表达式承载不支持；不新增所有计算字段一概禁止规则"
+    },
+    {
+      "id": "G07",
+      "original_case": "MVP-UI-05",
+      "input": "合法字段上不支持operator",
+      "expectation": "reject_whole_keep_clip",
+      "boundary": "数字字段like、日期字段like；沿原options而非从待测返回倒填"
+    },
+    {
+      "id": "G08",
+      "original_case": "MVP-UI-05",
+      "input": "query组件或不支持类别",
+      "expectation": "reject_before_dispatch_keep_clip",
+      "boundary": "真实composable入口+如实标记manager provider double或生产manager查询层；不靠DOM隐藏当鉴权"
+    }
+  ],
+  "intended_layer": "独立fixture+真实service/composable harness，纯/组件层；不冒充真实日期UI/后端鉴权",
+  "execution": "尚未改runner或执行；待第二轮准备审查精确缺口落盘后，冻结case资产与执行准入，最小新增见证，保留现有15case和provider边界",
+  "oracle": "正例完整date+shop树/ownKeys/undefined一致；负例必须全拒绝且上次导出clip/session保持，0候选dispatch按对应层计数，不强加拒绝码新要求",
+  "read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "sha256": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+      "sha256": "9f4eca86173318b7b964648d216fd7a6c153b41abce9eda12f8f6e9fc6944b82"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+      "sha256": "b760fffb47db4a8a187cc3dc996d6ddffb5f2b187038da625c5c8e0839d87e5d"
+    },
+    {
+      "path": "core/core-frontend/src/views/visualized/data/dataset/options.js",
+      "sha256": "8a2f9102d86428dc9f4e6cc90507ee8549d9bb3c8e7993a334b8139c65a497f6"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-mvp/check.mjs",
+      "sha256": "50c03f6373fb5bec8eadb3ac5d1c580568b62a9d26960ec33e0a5d07548d5694"
+    }
+  ]
+}

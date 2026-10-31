@@ -95,6 +95,8 @@ public class SymbolicMapHandler extends GroupChartHandler {
             String sql = (String) sqlMap.get("sql");
             sql = Utils.replaceSchemaAlias(sql, dsMap);
             SQLMeta sqlMeta2 = new SQLMeta();
+            // 明细沿用轴转换前的过滤条件及方言映射。
+            BeanUtils.copyBean(sqlMeta2, sqlMeta1);
             Table2SQLObj.table2sqlobj(sqlMeta2, null, "(" + sql + ")", crossDs);
             Field2SQLObj.field2sqlObj(sqlMeta2, allFieldsTmp, allFieldsTmp, crossDs, dsMap, Utils.getParams(allFieldsTmp), null, pluginManage);
             String querySQL;

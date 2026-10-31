@@ -1,0 +1,71 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-QSSDH-SOURCE-LIFECYCLE-M0-builder-r001",
+  "session_id": "S02.1",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-QSSDH-SOURCE-LIFECYCLE-M0-builder-r001.json",
+      "sha256": "dcab7254fca86a5456f3290a17e940c07ff6ed30b45d61a075ede82cc8968cc2"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectPreparationCaptureContract-r001.json",
+      "sha256": "256811438403033c0e3d44ed131228c3c1835f247ee18f3e9055b57c2fb7940b"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectPreparationCaptureCases-r001.json",
+      "sha256": "09e939e895afc962785f50d578b7efcf144a515d1e002aff41e549444742d12f"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r003.md",
+      "sha256": "4a583de325308180d992681af9636595ca8e53c2b07153082b2ca02dca403e4c"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-QSSDH-SOURCE-LIFECYCLE-M0-builder-r001",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-F01-Q004",
+    "AC-F01-Q006",
+    "AC-F01-Q014",
+    "M0-PREP-001",
+    "M0-PREP-002",
+    "M0-CAP-001",
+    "M0-CAP-002",
+    "M0-CAP-003",
+    "M0-CAP-004"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts"
+  ],
+  "required_outputs": [
+    "core/core-frontend/src/custom-component/filter-copy/query-single-select-session.ts",
+    "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts"
+  ],
+  "maximum_claim_ref": {
+    "summary": "M0 detached preparation/capture bounded candidate only; no Store/entry/history/network/permission or F01/Goal completion.",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-QSSDH-SOURCE-LIFECYCLE-M0-builder-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectDesignCarrierLifecycleDesignReview-r003.md",
+  "working_directory": ".",
+  "execution_command": "接收端先复验此卡canonical摘要、Context、Contract/Cases与两份target-bound execution admission；任何摘要漂移立即停止。按冻结用例实现两个同步纯函数prepareConfirmation(input:unknown)与captureSave(input:unknown)，只写卡内两个target。不得接Store、确认/发布入口、历史、网络、权限或dirty清理。先同一测试runner跑行为级RED并核对预期fingerprint，再运行同identity GREEN、深拷贝/副作用/失败分支、定向ESLint；RED/GREEN日志由父流程记录。不得修改合同/用例、不得读取fixture expected作为实现查表，不宣称完整生命周期/Goal验收。随后停止写入，交独立Validation。"
+}

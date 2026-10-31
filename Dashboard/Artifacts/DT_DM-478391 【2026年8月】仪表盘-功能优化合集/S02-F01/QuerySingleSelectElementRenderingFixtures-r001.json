@@ -1,0 +1,63 @@
+{
+  "schema_version": "qobs_element_rendering_fixtures_v1",
+  "authority": "QuerySingleSelectObservationProductAdapterFixtures-r004.json",
+  "scope": "Real element-plus-secondary ElSelectV2 presentation and keyboard interaction for an already selected C option.",
+  "cases": [
+    {
+      "id": "EL-001-invalid-selected-value",
+      "modelValue": "C",
+      "options": [
+        {
+          "label": "A",
+          "value": "A",
+          "disabled": false
+        },
+        {
+          "label": "B",
+          "value": "B",
+          "disabled": false
+        },
+        {
+          "label": "C — 当前值不在可用选项中",
+          "value": "C",
+          "disabled": true
+        }
+      ],
+      "oracle": [
+        "The closed select displays the invalid C label while retaining C as modelValue.",
+        "The select input exposes role=combobox, aria-haspopup=listbox, and an expanded state when opened.",
+        "The C row is rendered disabled and remains identifiable as the selected value.",
+        "Click/keyboard interaction cannot newly select C while it is disabled; any broader listbox/option role gap is recorded as an accessibility limitation rather than hidden."
+      ]
+    },
+    {
+      "id": "EL-002-unverified-selected-value",
+      "modelValue": "C",
+      "options": [
+        {
+          "label": "A",
+          "value": "A",
+          "disabled": false
+        },
+        {
+          "label": "B",
+          "value": "B",
+          "disabled": false
+        },
+        {
+          "label": "C — 当前值尚未核实",
+          "value": "C",
+          "disabled": true
+        }
+      ],
+      "oracle": [
+        "The closed select displays the unverified C label while retaining C as modelValue.",
+        "The C row remains rendered disabled and the status text is exposed in the rendered label."
+      ]
+    }
+  ],
+  "non_goals": [
+    "No real enum API, authorization, revocation, persistence, or dashboard save/reopen behavior.",
+    "No claim of full screen-reader conformance or product acceptance."
+  ]
+}

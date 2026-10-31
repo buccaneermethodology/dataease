@@ -1,0 +1,229 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-BUBBLE-READY-BUILDER-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "可信RED后两文件最小候选修复，同测试字节GREEN",
+    "objective": "可信RED后两文件最小候选修复，同测试字节GREEN",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/views/chart/components/js/panel/charts/map/bubble-map.ts",
+      "core/core-frontend/src/views/chart/components/js/panel/charts/map/point-fallback.ts"
+    ],
+    "forbidden_actions": [
+      "修改冻结新旧测试/fixture",
+      "修改SDK或共享ready/SFC",
+      "修改legacy或重构cleanup",
+      "宣称完整AC或权限通过"
+    ],
+    "maximum_claim": "两候选事件修复Builder结果"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/BubbleMapReadyRepairDesign-r003.md",
+      "revision": "56777f0a67f48261c6efe133994aa0723ecee65e9dc715a2390cf806f2387ac6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/BubbleMapReadyRepairReview-r003.md",
+      "revision": "db0dcfc66c34fd204bdf232a5966a71b6225191f36a67df479f3159d60111965",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/BubbleReady-RED-r002.json",
+      "revision": "f05368967700045344aded46d933693842a19455807b7c2d7a1259105629bacd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/BubbleReady-TestFreeze-r002.json",
+      "revision": "9112f86f6e480eaece5d1c873933567166cc6691f1d070f7c710333bd0cda3a6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/bubble-ready-before-r001/manifest.json",
+      "revision": "709145b5d641e4db2e8d2d4d2fcfaf2b7ca51b0d165fb1d7c984a9568390e5d9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r509.json",
+      "revision": "91431a02e9d422f9be3492d12c81a46f95dcf50205452a88b1a56bcaf4dc7d04",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "独立设计、可信RED与写前冻结",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "root按独立3/3审查和可信RED最小实现，后续独立验证",
+    "task_id": "S02-MVP-BUBBLE-READY-BUILDER-r001",
+    "recorded_at": "2026-10-29T09:22:17.722177+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r508.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r509.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-BUBBLE-READY-BUILDER-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r508.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "两候选事件修复Builder结果",
+  "design_objective": "可信RED后两文件最小候选修复，同测试字节GREEN",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/BubbleReady-GREEN-r001.json"
+}

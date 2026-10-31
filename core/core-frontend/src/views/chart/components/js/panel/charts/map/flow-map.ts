@@ -1,3 +1,4 @@
+import { preparedMapKey } from './filter-paste-ready'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   L7ChartView,
@@ -83,19 +84,26 @@ export class FlowMap extends L7ChartView<Scene, L7Config> {
 
   async drawChart(drawOption: L7DrawConfig<L7Config>) {
     const { chart, container } = drawOption
+    if (
+      drawOption.filterPaste &&
+      (!chart.xAxis || chart.xAxis.length < 2 || !chart.xAxisExt || chart.xAxisExt.length < 2)
+    )
+      throw new Error('paste_map_axes_missing')
     const containerDom = document.getElementById(container)
     if (!containerDom) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_missing')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const rect = containerDom.getBoundingClientRect()
-    if (rect.height <= 0) {
+    if (rect.height <= 0 || (drawOption.filterPaste && rect.width <= 1)) {
+      if (drawOption.filterPaste) throw new Error('paste_map_container_empty')
       return new L7Wrapper(drawOption.chartObj?.getScene(), [])
     }
     const xAxis = deepCopy(chart.xAxis)
     const xAxisExt = deepCopy(chart.xAxisExt)
     const { basicStyle, misc } = deepCopy(parseJson(chart.customAttr))
 
-    const mapKey = await this.getMapKey()
+    const mapKey = drawOption.filterPaste ? preparedMapKey() : await this.getMapKey()
     const mapStyle = getMapStyle(mapKey, basicStyle)
     // 底层
     const chartObj = drawOption.chartObj as unknown as L7Wrapper<L7Config, Scene>
@@ -104,7 +112,11 @@ export class FlowMap extends L7ChartView<Scene, L7Config> {
     const center = getMapCenter(basicStyle)
     scene = await getMapScene(chart, scene, container, mapKey, basicStyle, misc, mapStyle, center)
 
-    this.configZoomButton(chart, scene, mapKey)
+    if (drawOption.filterPaste) {
+      drawOption.filterPaste.addCleanup(() => scene.destroy())
+      if (!drawOption.filterPaste.check()) throw new Error('paste_map_cancelled')
+    }
+    if (!drawOption.filterPaste) this.configZoomButton(chart, scene, mapKey)
     if (xAxis?.length < 2 || xAxisExt?.length < 2) {
       return new L7Wrapper(scene, undefined)
     }
@@ -112,15 +124,21 @@ export class FlowMap extends L7ChartView<Scene, L7Config> {
     configList.push(this.lineConfig(chart, xAxis, xAxisExt, basicStyle, misc))
     this.startAndEndNameConfig(chart, xAxis, xAxisExt, misc, configList)
     this.pointConfig(chart, xAxis, xAxisExt, misc, configList)
-    configList[0].once('inited', () => {
-      mapRendered(container)
-    })
+    configList[0].once(
+      'inited',
+      drawOption.filterPaste
+        ? drawOption.filterPaste.callback(() => mapRendered(container))
+        : () => mapRendered(container)
+    )
     for (let i = 0; i < configList.length; i++) {
-      configList[i].on('inited', () => {
-        qqMapRendered(scene)
-      })
+      configList[i].on(
+        'inited',
+        drawOption.filterPaste
+          ? drawOption.filterPaste.callback(() => qqMapRendered(scene))
+          : () => qqMapRendered(scene)
+      )
     }
-    return new L7Wrapper(scene, configList)
+    return new L7Wrapper(scene, configList, drawOption.filterPaste)
   }
 
   lineConfig = (chart, xAxis, xAxisExt, basicStyle, misc) => {

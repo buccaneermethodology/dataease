@@ -1,0 +1,149 @@
+{
+  "schema_version": "s02_pure_subcontracts_v1",
+  "contract_id": "DE-S02-F01-PURE-GUARDS-r001",
+  "revision": "r001",
+  "status": "FROZEN_FOR_CASE_IMPLEMENTATION_ONLY",
+  "created_at_utc": "2026-10-16T03:39:27.179338+00:00",
+  "authority_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DesignDeltaReview-r003.md",
+      "sha256": "16a59291caa138f501eaeb1cf13a08b9ec39659aa1f26eb82f6ab0b071859f7c"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Cases.candidate.json",
+      "sha256": "401251db5931dd75473021fff0e2ca54c366c875b341065ebee10803136655c2"
+    }
+  ],
+  "subcontracts": [
+    {
+      "id": "PURE-KIND-001",
+      "case_ids": [
+        "TC-Q004-01",
+        "TC-Q004-02",
+        "TC-Q004-03",
+        "TC-Q004-04"
+      ],
+      "input_domain": {
+        "source_kind": [
+          "chart",
+          "query"
+        ],
+        "target_kind": [
+          "chart",
+          "query"
+        ]
+      },
+      "predicate": "allow iff source_kind equals target_kind; this predicate grants no authorization and does not assert commit, preview, or persistence",
+      "oracle": "exact decision equality"
+    },
+    {
+      "id": "PURE-DATASET-001",
+      "case_ids": [
+        "TC-Q006-01",
+        "TC-Q006-02",
+        "TC-Q006-03"
+      ],
+      "input_domain": {
+        "source_dataset_id": "non-empty string or null",
+        "target_dataset_id": "non-empty string or null",
+        "target_metadata_status": [
+          "resolved",
+          "not_found"
+        ]
+      },
+      "predicate": "allow iff both IDs are the same non-empty string and target metadata status is resolved; otherwise reject",
+      "oracle": "exact decision and reason equality; no permission assertion"
+    },
+    {
+      "id": "PURE-TTL-001",
+      "case_ids": [
+        "TC-Q008-1799999",
+        "TC-Q008-1800000",
+        "TC-Q008-1800001",
+        "TC-Q008-FUTURE-CREATED"
+      ],
+      "input_domain": {
+        "created_at_ms": "finite safe integer",
+        "now_ms": "finite safe integer",
+        "ttl_ms": 1800000
+      },
+      "predicate": "age_ms = now_ms - created_at_ms; valid iff age_ms >= 0 and age_ms < ttl_ms",
+      "oracle": "derive from the two timestamps; future creation is invalid; this is comparison semantics only and does not establish clock trust"
+    },
+    {
+      "id": "PURE-UTF8-LIMIT-001",
+      "case_ids": [
+        "TC-Q013-BYTES-999999",
+        "TC-Q013-BYTES-1000000",
+        "TC-Q013-BYTES-1000001"
+      ],
+      "input_domain": {
+        "payload": "Unicode string",
+        "max_utf8_bytes": 1000000
+      },
+      "predicate": "allow iff UTF-8 encoded payload byte length <= 1000000; equality is allowed",
+      "oracle": "measured byte length, not code point count; supplied strings are counter fixtures, not final JSON envelope"
+    },
+    {
+      "id": "PURE-LEAF-COUNT-001",
+      "case_ids": [
+        "TC-Q013-TREE-50",
+        "TC-Q013-TREE-51"
+      ],
+      "input_domain": {
+        "group": "{logic: AND|OR, items: node[]}",
+        "leaf": "{leaf_id, field_id, operator, value}"
+      },
+      "predicate": "count terminal leaves recursively; group nodes do not count; limit is 50 leaves inclusive",
+      "oracle": "exact leaf count and allow iff count <= 50; this abstract tree model is not a complete product filter schema"
+    },
+    {
+      "id": "PURE-ENUM-NO-EXTRA-LIMIT-001",
+      "case_ids": [
+        "TC-Q013-ENUM-1001"
+      ],
+      "input_domain": {
+        "leaf_count": 1,
+        "enum_count": 1001,
+        "serialized_utf8_bytes": "within 1000000"
+      },
+      "predicate": "no independent enum-count rejection; if other bound predicates pass, 1001 enum values do not alone reject",
+      "oracle": "decision allow for this bounded vector only"
+    }
+  ],
+  "frozen_case_ids": [
+    "TC-Q004-01",
+    "TC-Q004-02",
+    "TC-Q004-03",
+    "TC-Q004-04",
+    "TC-Q006-01",
+    "TC-Q006-02",
+    "TC-Q006-03",
+    "TC-Q008-1799999",
+    "TC-Q008-1800000",
+    "TC-Q008-1800001",
+    "TC-Q008-FUTURE-CREATED",
+    "TC-Q013-BYTES-999999",
+    "TC-Q013-BYTES-1000000",
+    "TC-Q013-BYTES-1000001",
+    "TC-Q013-TREE-50",
+    "TC-Q013-TREE-51",
+    "TC-Q013-ENUM-1001"
+  ],
+  "excluded_from_this_contract": [
+    "real permissions and permission revocation",
+    "metadata service availability/security",
+    "clock source integrity or anti-rollback",
+    "browser storage or cross-tab lifecycle",
+    "final envelope serializer/parser",
+    "query adapter schema or ID rebinding",
+    "UI confirmation/refresh",
+    "save/publish/reopen",
+    "read-only disclosure restrictions"
+  ],
+  "claim_ceiling": "仅上述纯比较/计数子合同边界冻结，可生成实现用case包；没有产品运行、可信RED/GREEN、Builder admission或权限验证。完整S02验收分母不变。"
+}

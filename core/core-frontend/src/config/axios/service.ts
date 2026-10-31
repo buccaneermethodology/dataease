@@ -243,6 +243,7 @@ service.interceptors.response.use(
     }
 
     if (!error?.response) {
+      error.config?.loading && tryHideLoading(permissionStore.getCurrentPath)
       return Promise.reject(error)
     }
 

@@ -1,0 +1,244 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-S02-F01-pure-guards-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "请基于这个草稿 Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md ，review并定稿S02 的Goal，然后落盘并实施这个Goal [$sge-governed-checkpoints-sp010](/Users/xiaomei/Documents/projects/dataease/.codex/skills/sge-governed-checkpoints-sp010/SKILL.md)&#x20;\n补充：当前S01还在继续收尾中，你可以先做不影响S02的工作，比如Goal定稿，Sessions设计，Design等工作\n补充授权见planning/UserIntent-supplement-r001.md：允许自主新增设置账号。\n最新原文见planning/UserIntent-supplement-r002.md：权限环境阻塞，先设计与开发准备，权限验收不豁免。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "仅实现已冻结的17项纯比较/计数子合同：类别、数据集ID、TTL显式时间差、UTF-8字节与语义树叶子数；不涉及权限、完整envelope或UI/持久化。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/pure-guards.ts",
+      "core/core-frontend/tests/filter-copy-pure/check.mjs"
+    ],
+    "forbidden_actions": [
+      "修改冻结Goal/合同/Cases",
+      "修改UI/Store/接口/持久化或权限代码",
+      "standalone/mock替代权限验收",
+      "推送发布",
+      "覆盖S01对象"
+    ],
+    "maximum_claim": "仅17个有界纯case同identity RED/GREEN候选；不证明完整产品、serializer、时钟可信、运行/权限/保存/发布"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "当前Goal与设计",
+      "reason": "权威、依赖、验收或源码证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "当前Goal与设计",
+      "reason": "权威、依赖、验收或源码证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md",
+      "revision": "118986e578d3afd19548abf45836a6f4d03cd70323b6edd4625d2c3cd468e8b9",
+      "applicability": "当前Goal与设计",
+      "reason": "权威、依赖、验收或源码证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "applicability": "当前Goal与设计",
+      "reason": "权威、依赖、验收或源码证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent-supplement-r002.md",
+      "revision": "6d41927b452194cbef69d2fbff7e2af1b4aed62eabc80fa186c91a9e6e7dfede",
+      "applicability": "当前依赖及用户边界",
+      "reason": "用户更新/S01终态导致rebaseline",
+      "domains": [
+        "scope",
+        "dependency"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Cases.candidate.json",
+      "revision": "484eaa5f834a2512e3d7eaf2fa41d7dbd9fa4ce43f970ec1292ddd4fe4fcd2da",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PureSubcontracts-r002.json",
+      "revision": "eeec347d7f07fe4a2de1cc12e7ac96411679f399594b934f7ce5a85703eb29ea",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/BoundedContractReview-r002.md",
+      "revision": "e409424999af0473836ab9d3f08a3589d1edb098128d70990a4e874f26c347f1",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/DesignDeltaReview-r003.md",
+      "revision": "16a59291caa138f501eaeb1cf13a08b9ec39659aa1f26eb82f6ab0b071859f7c",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Design.md",
+      "revision": "17dbf0cbc6fb9f6f4c7fcce958bd5e80a532844fe2aef684ac6de634584747c1",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/TestEntryDiscovery-r002.md",
+      "revision": "3da042fea31a5a9ec08710568b154896f13fffe64bae799025a0be5300eebefc",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/map-legend-format/check.mjs",
+      "revision": "59abfcaba13597b23bb3b83bf334cb89e4748d26b79922ed726fec4fb76c8b02",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "纯子合同实现与测试入口",
+      "reason": "固定AC、合同、可执行入口或精确写入边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "contract-or-source-drift",
+      "condition": "Goal/合同/Cases或builder write-scope依赖摘要变化",
+      "action": "停止并重建基线和准入",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "missing-domain",
+      "condition": "结构语义、Unicode/Node能力或用例输入不确定",
+      "action": "扩读或报告证据缺口，不扩大实现",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "只实现已冻结纯合同；运行时权限、envelope及查询适配器缺口仍保留原Goal要求。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": false,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_bounded_builder_with_independent_validation",
+    "reason": "独立BCR-r002接受有界输入/预期且现有Node+esbuild入口已证；仅此独立纯函数切片可先实施"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

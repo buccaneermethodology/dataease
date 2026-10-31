@@ -69,6 +69,7 @@ const vQueryRef = ref()
 const dvMainStore = dvMainStoreWithOut()
 const { curComponent, canvasViewInfo, mobileInPc, firstLoadMap, editMode } =
   storeToRefs(dvMainStore)
+provide('query-lifecycle-allowed', () => dvMainStore.querySingleSelectAllows(element.value))
 const canEdit = ref(false)
 const queryConfig = ref()
 const defaultStyle = {
@@ -812,6 +813,7 @@ const boxHeight = computed(() => {
 })
 
 const queryData = () => {
+  if (!dvMainStore.querySingleSelectAllows(element.value)) return
   let requiredName = ''
   let numName = ''
   const emitterList = (element.value.propValue || []).reduce((pre, next) => {

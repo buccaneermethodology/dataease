@@ -1,0 +1,96 @@
+{
+  "schema_version": "s02_picture_resource_ready_cases_v1",
+  "case_family": "PIC-RESOURCE-READY",
+  "original_obligation": "MVP-UI-10-PICTURE",
+  "review_round": 1,
+  "review_cap": 3,
+  "cases": [
+    {
+      "id": "PIC-RR-01",
+      "scenario": "pending cached resource, decodable placeholder",
+      "expected": "pending; zero shared writes"
+    },
+    {
+      "id": "PIC-RR-02",
+      "scenario": "successful cached resource",
+      "expected": "final resolved URL decoded; ready once"
+    },
+    {
+      "id": "PIC-RR-03",
+      "scenario": "network rejects, decodable failure placeholder",
+      "expected": "failure; zero shared writes"
+    },
+    {
+      "id": "PIC-RR-04",
+      "scenario": "non-image Blob",
+      "expected": "failure; zero shared writes"
+    },
+    {
+      "id": "PIC-RR-05",
+      "scenario": "existing failed cache entry",
+      "expected": "failure; no new successful candidate"
+    },
+    {
+      "id": "PIC-RR-06",
+      "scenario": "dispose while awaiting resource",
+      "expected": "no late src update or ready; cleanup once"
+    },
+    {
+      "id": "PIC-RR-07",
+      "scenario": "stale identity while awaiting resource",
+      "expected": "no late src update or commit"
+    },
+    {
+      "id": "PIC-RR-08",
+      "scenario": "timeout before resource resolves",
+      "expected": "failure; late completion ignored"
+    },
+    {
+      "id": "PIC-RR-09",
+      "scenario": "another candidate root uses failed resource",
+      "expected": "unrelated failure does not block this root"
+    },
+    {
+      "id": "PIC-RR-10",
+      "scenario": "data URL",
+      "expected": "actual load/decode required"
+    },
+    {
+      "id": "PIC-RR-11",
+      "scenario": "external URL",
+      "expected": "actual load/decode required, error rejects"
+    },
+    {
+      "id": "PIC-RR-12",
+      "scenario": "empty showUrl",
+      "expected": "legal empty branch, no image forged"
+    },
+    {
+      "id": "PIC-RR-13",
+      "scenario": "condition style OFF",
+      "expected": "zero query; retain existing first-image rules"
+    },
+    {
+      "id": "PIC-RR-14",
+      "scenario": "real image decode reject",
+      "expected": "failure; no commit"
+    },
+    {
+      "id": "PIC-RR-15",
+      "scenario": "resource scope cleared during wait",
+      "expected": "no commit from aborted cache"
+    },
+    {
+      "id": "PIC-RR-16",
+      "scenario": "final image disconnected or src changes",
+      "expected": "no stale ready"
+    }
+  ],
+  "write_exclusions": [
+    "Goal.final.json",
+    "UiIntegrationCases-r002.json",
+    "src/utils/resourceImageCache.ts",
+    "src/utils/resourceImages.ts"
+  ],
+  "claim_ceiling": "only bounded candidate resource readiness; mocks are not browser or real auth"
+}

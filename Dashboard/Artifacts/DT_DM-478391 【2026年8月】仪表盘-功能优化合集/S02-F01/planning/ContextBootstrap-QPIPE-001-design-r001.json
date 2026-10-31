@@ -1,0 +1,271 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPIPE-001-pure-composition-contract-design-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求设计审核后立即实施并加快S02；当前只推进已验证QPROJ/QMAP与候选QPREP之间的纯typed组合合同，不缩减Goal，不越过真实权限阻塞。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "设计并冻结纯模块QPROJ→QMAP→QPREP组合测试合同；不创建产品copy入口或产品代码。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineDesign-r001.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineFixtures-r001.json"
+    ],
+    "forbidden_actions": [
+      "修改Goal、QPROJ/QMAP/QPREP源码、已有冻结fixture或验证报告",
+      "声称QPREP package独立Validation通过",
+      "接入UI/Store/权限/网络/时间/持久化",
+      "用standalone/admin/mock替代权限",
+      "执行安装、构建或服务启动"
+    ],
+    "maximum_claim": "仅提议纯typed模块之间的组合设计与合成case，不代表产品链路、权限、完整query适配、Goal或S02完成"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "权威Goal",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionDesign-r001.md",
+      "revision": "89c3a54be31a09668e43da990369bb8273c0d94e0ef2765d5d8a8e9cdf113596",
+      "applicability": "QPROJ边界",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaProjectionFixtures-r001.json",
+      "revision": "d5ecf7a70c11108f80052605da4b016d9fb52296c800c7605d2e40208bed641d",
+      "applicability": "QPROJ冻结合同",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPROJ-001-Validation-r002.md",
+      "revision": "3e34234e902355f950d1d31363f8621948f3df9baaad286d80d68543c65704c3",
+      "applicability": "QPROJ独立Validation",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapDesign-r001.md",
+      "revision": "d0f94bc26549452e1a8a76467e37592a57d20f85cf363deb9e8daa36494b5f49",
+      "applicability": "QMAP边界",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryTargetComponentMapFixtures-r001.json",
+      "revision": "5fc940f9e1352fadbf1077799b1377269193156249c959f01cdc687c2ac97426",
+      "applicability": "QMAP冻结合同",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryTargetComponentMapDesignReview-r001.md",
+      "revision": "8f26df52abb655a9479d7b6bba5181d1cec7a5fd408085bb700147a2c451052d",
+      "applicability": "QMAP独立设计审查",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QMAP-001-Validation-r001.md",
+      "revision": "4c4a3169e9847511925e3941a4a64ce3a95c9eb5c03be5dd6ab9fbb0b7f5a069",
+      "applicability": "QMAP独立Validation",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidation-r001.md",
+      "revision": "9278dfa7490a43bdc13f1d1fa7c9165ed578d48ca6c955b74af00f880c72c765",
+      "applicability": "QPREP边界",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryAdapterDesignConsolidationFixtures-r001.json",
+      "revision": "08ed4a0c6ef376230baf856dd7cb0a9b6254733c318b914dbcea959bdc7dd915",
+      "applicability": "QPREP冻结合同",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryAdapterDesignConsolidationReview-r001.md",
+      "revision": "c761633b315dde7463c635999dcdf34a14941c1fe56804e1148acdc2aa789c61",
+      "applicability": "QPREP独立设计审查",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+      "revision": "9c0d15e3ad7a383c65c2e4af6a23c2377c064d4f7b30906990536b3dd94b0285",
+      "applicability": "QPROJ生产接口",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts",
+      "revision": "c234fc3ca42cecdc59aa5c9a5414eb7904837e6bd23da8a64fa178a999386b1a",
+      "applicability": "QMAP生产接口",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "QPREP生产接口",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r028.json",
+      "revision": "8e58c1a7c2f50a8e3c835cc9cf90963116569a265180f74d512c0213be109be9",
+      "applicability": "最新实际拓扑",
+      "reason": "组合接口、合同及证据边界",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "module-contract-drift",
+      "condition": "任一引用模块、contract或review摘要变化",
+      "action": "停下并重基线组合输入和identity",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "composition-ambiguity",
+      "condition": "模块组合需要未冻结产品语义",
+      "action": "在设计报告登记gap，不推断产品语义",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "纯组合case不取代原Goal完整产品、权限、UI、持久化及回归义务。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_design_review",
+    "reason": "为三个已存在纯模块之间的组合契约准备最小、可审查输入"
+  },
+  "skipped_reads": [
+    {
+      "domain": "产品UI/Store/权限路径：当前design slice不连接产品入口，相关行为单独冻结与验收"
+    }
+  ],
+  "validation_evidence_surfaces": [
+    "引用模块与冻结合同摘要",
+    "QPROJ→QMAP→QPREP顺序及错误传播",
+    "case identity与oracle",
+    "QPREP历史RED证据边界",
+    "原Goal/权限声明边界"
+  ]
+}

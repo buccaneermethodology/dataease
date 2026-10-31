@@ -1,0 +1,39 @@
+{
+  "schema_version": "s02_mvp_c1_execution_clarifications_v1",
+  "created_at": "2026-10-27T04:37:04.636415+00:00",
+  "scope": "当前C1共同handle/G2/S2/indicator；不改变Goal、15主ID、验收分母或原用户authority",
+  "based_on_design": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+    "sha256": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468"
+  },
+  "based_on_cases": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+    "sha256": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55"
+  },
+  "status": "执行端有限编码，待同第2轮独立Reviewer核对；不代替Review或新Goal批准",
+  "clarifications": [
+    {
+      "id": "C1-REQUEST-PROJECTION",
+      "rule": "PreparedQuery.request是完整ChartObj，只用于getData调用；wrapper chartExtRequest与setLastViewRequestInfo的发布值必须是独立clone的prepared.request.chartExtRequest，不得把整个ChartObj写入。",
+      "affected_cases": [
+        "MVP-UI-08",
+        "MVP-UI-11"
+      ]
+    },
+    {
+      "id": "C1-IDENTITY-COUPLED-EVENT",
+      "rule": "09身份失效子案调用真实A失效路径：clipboard清空，identityEpoch和editSessionId一起增加，revision按实际A保持。不得要求这些派生字段其余全不变，也不得声称此集成事件分别证明每个原始字段的独立有效性。其它非身份/clipboard相关目标配置/context保持，以真实耦合失效事件作为discard oracle。",
+      "affected_cases": [
+        "MVP-UI-09"
+      ]
+    },
+    {
+      "id": "C1-CLIP-COUPLED-EVENT",
+      "rule": "09新copy子案在相同身份/资源会话内成功复制新完整树：clipboard.revision和getMvpFilterSessionToken().revision一起变化，createdAt更新；identityEpoch/editSessionId保持。不伪造只改clipRevision而token.revision不变的真实生产事件。失败copy则原clip及revision/时间不变。",
+      "affected_cases": [
+        "MVP-UI-09"
+      ]
+    }
+  ],
+  "forbidden": "不改r001/r002冻结文件、不静默重置Review预算，不把地图/Tiny/picture fixture未备与全49运行未做当已通过"
+}

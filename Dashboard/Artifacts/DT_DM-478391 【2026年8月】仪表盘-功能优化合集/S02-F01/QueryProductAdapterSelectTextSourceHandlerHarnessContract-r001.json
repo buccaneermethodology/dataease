@@ -1,0 +1,4319 @@
+{
+  "schema_version": "select_text_source_local_handler_harness_contract_v1",
+  "contract_id": "S02-F01-ST-SRC-002-005-HANDLER-HARNESS-r001",
+  "status": "frozen_for_local_harness_only",
+  "frozen_for_builder": true,
+  "scope_delta": "none",
+  "authority": {
+    "goal_path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "goal_sha256": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0"
+  },
+  "source_cases": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceCases-r002.json",
+    "sha256": "9661f5a4689c150ee6bf07c1856bede06a80acc55ea966f6001ac326f8ae2cd0"
+  },
+  "independent_review": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceOracleDesignReview-r002.md",
+    "sha256": "2224d174b2751e2de6154393f14842336945aedd0e4349eef74af18f1d5dee26"
+  },
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16
+  },
+  "included_case_ids": [
+    "ST-SRC-002",
+    "ST-SRC-003",
+    "ST-SRC-004",
+    "ST-SRC-005"
+  ],
+  "excluded_case_ids": [
+    "ST-SRC-001",
+    "ST-SRC-006",
+    "ST-SRC-007"
+  ],
+  "cases": [
+    {
+      "case_id": "ST-SRC-002",
+      "entry": "必须区分handleDatasetChange与handleValueSourceChange",
+      "source_refs": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:987-1006",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1024-1064",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:2017-2021"
+      ],
+      "oracle_status": "DETERMINATE_CANDIDATE",
+      "variants": [
+        {
+          "variant_id": "DATASET-CHANGE",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "t=0调用handleDatasetChange；P1保持pending并比对checkpoint",
+            "显式resolve P1为指定response；只flush Promise微任务"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "field-new",
+                    "name": "新字段",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [
+              {
+                "dependency": "listFieldsWithPermissions",
+                "args": [
+                  "D1"
+                ],
+                "promise": "P1",
+                "state": "fulfilled"
+              }
+            ],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              },
+              "fields": [],
+              "cascadeArr": [],
+              "newDatasetId": "",
+              "oldDatasetId": "",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [
+                {
+                  "dependency": "listFieldsWithPermissions",
+                  "args": [
+                    "D1"
+                  ],
+                  "promise": "P1",
+                  "state": "pending"
+                }
+              ],
+              "messages": [],
+              "confirmation": null,
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "response": {
+              "data": [
+                {
+                  "id": "field-new",
+                  "name": "新字段",
+                  "deType": 0
+                }
+              ]
+            },
+            "targetObjectIdentity": "listFields回调写入同一condition.dataset；非替换condition",
+            "unexpectedWrites": "FAIL"
+          }
+        },
+        {
+          "variant_id": "SOURCE-SWITCH-DATASET-ALREADY-SET",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "直接调用handleValueSourceChange；不调用handleDatasetChange"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "unexpectedKeysOrWrites": "FAIL",
+            "realNetworkCalls": 0,
+            "realStoreWrites": 0,
+            "realPermissionClaims": 0
+          }
+        }
+      ],
+      "unresolved": "“source切换且dataset已选会清field并getOptions”并非1024分支行为；清字段来自987入口。本候选保留这个来源表述差异，不修改r002原件。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03"
+      ],
+      "claim_ceiling": "仅指定局部阶段状态，不是合法组合全集或产品运行证据"
+    },
+    {
+      "case_id": "ST-SRC-003",
+      "entry": "handleValueSourceChange缺dataset自动回填",
+      "source_refs": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1024-1064",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:2017-2021"
+      ],
+      "oracle_status": "DETERMINATE_CANDIDATE",
+      "variants": [
+        {
+          "variant_id": "ONE",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [
+              {
+                "componentId": "chart1",
+                "id": "D1"
+              }
+            ],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "按JSON声明顺序创建checkedFieldsMap非整数键",
+            "调用handleValueSourceChange；固定P1 response后flush微任务"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "f1",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "f1",
+              "sortId": "f1",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "field-new",
+                    "name": "新字段",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [
+              {
+                "componentId": "chart1",
+                "id": "D1"
+              }
+            ],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [
+              {
+                "dependency": "listFieldsWithPermissions",
+                "args": [
+                  "D1"
+                ],
+                "promise": "P1",
+                "state": "fulfilled"
+              }
+            ],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "f1",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "f1",
+                "sortId": "f1",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              },
+              "fields": [
+                {
+                  "componentId": "chart1",
+                  "id": "D1"
+                }
+              ],
+              "cascadeArr": [],
+              "newDatasetId": "",
+              "oldDatasetId": "",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [
+                {
+                  "dependency": "listFieldsWithPermissions",
+                  "args": [
+                    "D1"
+                  ],
+                  "promise": "P1",
+                  "state": "pending"
+                }
+              ],
+              "messages": [],
+              "confirmation": null,
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "response": {
+              "data": [
+                {
+                  "id": "field-new",
+                  "name": "新字段",
+                  "deType": 0
+                }
+              ]
+            },
+            "unexpectedWrites": "FAIL"
+          }
+        },
+        {
+          "variant_id": "MULTI-LAST",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1",
+                "chart2": "f2"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [
+              {
+                "componentId": "chart1",
+                "id": "D1"
+              },
+              {
+                "componentId": "chart2",
+                "id": "D2"
+              },
+              {
+                "componentId": "chart2",
+                "id": "D3"
+              }
+            ],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "按JSON声明顺序创建checkedFieldsMap非整数键",
+            "调用handleValueSourceChange；固定P1 response后flush微任务"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "f2",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "f2",
+              "sortId": "f2",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D3",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "field-new",
+                    "name": "新字段",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1",
+                "chart2": "f2"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [
+              {
+                "componentId": "chart1",
+                "id": "D1"
+              },
+              {
+                "componentId": "chart2",
+                "id": "D2"
+              },
+              {
+                "componentId": "chart2",
+                "id": "D3"
+              }
+            ],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [
+              {
+                "dependency": "listFieldsWithPermissions",
+                "args": [
+                  "D3"
+                ],
+                "promise": "P1",
+                "state": "fulfilled"
+              }
+            ],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "f2",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "f2",
+                "sortId": "f2",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D3",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1",
+                  "chart2": "f2"
+                },
+                "defaultValueFirstItem": false
+              },
+              "fields": [
+                {
+                  "componentId": "chart1",
+                  "id": "D1"
+                },
+                {
+                  "componentId": "chart2",
+                  "id": "D2"
+                },
+                {
+                  "componentId": "chart2",
+                  "id": "D3"
+                }
+              ],
+              "cascadeArr": [],
+              "newDatasetId": "",
+              "oldDatasetId": "",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [
+                {
+                  "dependency": "listFieldsWithPermissions",
+                  "args": [
+                    "D3"
+                  ],
+                  "promise": "P1",
+                  "state": "pending"
+                }
+              ],
+              "messages": [],
+              "confirmation": null,
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "response": {
+              "data": [
+                {
+                  "id": "field-new",
+                  "name": "新字段",
+                  "deType": 0
+                }
+              ]
+            },
+            "unexpectedWrites": "FAIL"
+          }
+        },
+        {
+          "variant_id": "EMPTY",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {},
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "按JSON声明顺序创建checkedFieldsMap非整数键",
+            "调用handleValueSourceChange；固定P1 response后flush微任务"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "field-new",
+                    "name": "新字段",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {},
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [
+              {
+                "dependency": "listFieldsWithPermissions",
+                "args": [
+                  ""
+                ],
+                "promise": "P1",
+                "state": "fulfilled"
+              }
+            ],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {},
+                "defaultValueFirstItem": false
+              },
+              "fields": [],
+              "cascadeArr": [],
+              "newDatasetId": "",
+              "oldDatasetId": "",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [
+                {
+                  "dependency": "listFieldsWithPermissions",
+                  "args": [
+                    ""
+                  ],
+                  "promise": "P1",
+                  "state": "pending"
+                }
+              ],
+              "messages": [],
+              "confirmation": null,
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "response": {
+              "data": [
+                {
+                  "id": "field-new",
+                  "name": "新字段",
+                  "deType": 0
+                }
+              ]
+            },
+            "unexpectedWrites": "FAIL"
+          }
+        }
+      ],
+      "unresolved": "MULTI-LAST只是当前forEach最后非空映射及最后匹配fields项胜出的源码事实，不是业务合法映射规则；空id仍调用依赖，真实API是否接受未知。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03"
+      ],
+      "claim_ceiling": "仅指定局部阶段状态，不是合法组合全集或产品运行证据"
+    },
+    {
+      "case_id": "ST-SRC-004",
+      "entry": "handleDatasetChange确认框回调；输入已完成handleCurrentChange记录",
+      "source_refs": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:964-1006",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1216-1226",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:2017-2021"
+      ],
+      "oracle_status": "DETERMINATE_CANDIDATE",
+      "variants": [
+        {
+          "variant_id": "CONFIRM",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D2",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [
+              [
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                },
+                {
+                  "datasetId": "D9--q9--f9",
+                  "fieldId": "f9"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D8--q8--f8",
+                  "fieldId": "f8"
+                },
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D7--q7--f7",
+                  "fieldId": "f7"
+                }
+              ]
+            ],
+            "newDatasetId": "D2",
+            "oldDatasetId": "D1",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "调用handleDatasetChange并断言pending_checkpoint",
+            "resolve C1；flush微任务，此时发生一次P1请求",
+            "resolve P1为response；flush微任务"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "",
+              "sortId": "",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D2",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "field-new",
+                    "name": "新字段",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [
+              [
+                {
+                  "datasetId": "D8--q8--f8",
+                  "fieldId": "f8"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D7--q7--f7",
+                  "fieldId": "f7"
+                }
+              ]
+            ],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [
+              {
+                "dependency": "listFieldsWithPermissions",
+                "args": [
+                  "D2"
+                ],
+                "promise": "P1",
+                "state": "fulfilled"
+              }
+            ],
+            "messages": [],
+            "confirmation": {
+              "messageKey": "v_query.to_modify_it",
+              "options": {
+                "confirmButtonType": "primary",
+                "type": "warning",
+                "confirmButtonText": "commons.confirm",
+                "cancelButtonText": "commons.cancel",
+                "autofocus": false,
+                "showClose": false
+              },
+              "promise": "C1",
+              "state": "fulfilled"
+            },
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              },
+              "fields": [],
+              "cascadeArr": [
+                [
+                  {
+                    "datasetId": "D1--q1--f1",
+                    "fieldId": "f1"
+                  },
+                  {
+                    "datasetId": "D9--q9--f9",
+                    "fieldId": "f9"
+                  }
+                ],
+                [
+                  {
+                    "datasetId": "D8--q8--f8",
+                    "fieldId": "f8"
+                  },
+                  {
+                    "datasetId": "D1--q1--f1",
+                    "fieldId": "f1"
+                  }
+                ],
+                [
+                  {
+                    "datasetId": "D7--q7--f7",
+                    "fieldId": "f7"
+                  }
+                ]
+              ],
+              "newDatasetId": "D2",
+              "oldDatasetId": "D1",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [],
+              "messages": [],
+              "confirmation": {
+                "messageKey": "v_query.to_modify_it",
+                "options": {
+                  "confirmButtonType": "primary",
+                  "type": "warning",
+                  "confirmButtonText": "commons.confirm",
+                  "cancelButtonText": "commons.cancel",
+                  "autofocus": false,
+                  "showClose": false
+                },
+                "promise": "C1",
+                "state": "pending"
+              },
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "response": {
+              "data": [
+                {
+                  "id": "field-new",
+                  "name": "新字段",
+                  "deType": 0
+                }
+              ]
+            },
+            "unexpectedWrites": "FAIL"
+          }
+        },
+        {
+          "variant_id": "CANCEL",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D2",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [
+              [
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                },
+                {
+                  "datasetId": "D9--q9--f9",
+                  "fieldId": "f9"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D8--q8--f8",
+                  "fieldId": "f8"
+                },
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D7--q7--f7",
+                  "fieldId": "f7"
+                }
+              ]
+            ],
+            "newDatasetId": "D2",
+            "oldDatasetId": "D1",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "steps": [
+            "调用handleDatasetChange并保持C1 pending至取消信号",
+            "测试适配器记录cancelled signal；不调用onFulfilled、不reject真实JavaScript Promise；排空已登记的同步/微任务工作",
+            "断言handler状态快照：dataset仍为D1、cascade与new/old缓冲不变、零P1请求和零发布/保存；不观察或宣称Promise rejection处理"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [
+              [
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                },
+                {
+                  "datasetId": "D9--q9--f9",
+                  "fieldId": "f9"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D8--q8--f8",
+                  "fieldId": "f8"
+                },
+                {
+                  "datasetId": "D1--q1--f1",
+                  "fieldId": "f1"
+                }
+              ],
+              [
+                {
+                  "datasetId": "D7--q7--f7",
+                  "fieldId": "f7"
+                }
+              ]
+            ],
+            "newDatasetId": "D2",
+            "oldDatasetId": "D1",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": {
+              "messageKey": "v_query.to_modify_it",
+              "options": {
+                "confirmButtonType": "primary",
+                "type": "warning",
+                "confirmButtonText": "commons.confirm",
+                "cancelButtonText": "commons.cancel",
+                "autofocus": false,
+                "showClose": false
+              },
+              "promise": "C1",
+              "state": "cancelled_signal_without_js_rejection"
+            },
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0
+          },
+          "assertions": {
+            "pending_checkpoint": {
+              "condition": {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              },
+              "fields": [],
+              "cascadeArr": [
+                [
+                  {
+                    "datasetId": "D1--q1--f1",
+                    "fieldId": "f1"
+                  },
+                  {
+                    "datasetId": "D9--q9--f9",
+                    "fieldId": "f9"
+                  }
+                ],
+                [
+                  {
+                    "datasetId": "D8--q8--f8",
+                    "fieldId": "f8"
+                  },
+                  {
+                    "datasetId": "D1--q1--f1",
+                    "fieldId": "f1"
+                  }
+                ],
+                [
+                  {
+                    "datasetId": "D7--q7--f7",
+                    "fieldId": "f7"
+                  }
+                ]
+              ],
+              "newDatasetId": "D2",
+              "oldDatasetId": "D1",
+              "queryElement": {
+                "id": "component1",
+                "propValue": [
+                  {
+                    "sentinel": "published-original"
+                  }
+                ]
+              },
+              "requests": [],
+              "messages": [],
+              "confirmation": {
+                "messageKey": "v_query.to_modify_it",
+                "options": {
+                  "confirmButtonType": "primary",
+                  "type": "warning",
+                  "confirmButtonText": "commons.confirm",
+                  "cancelButtonText": "commons.cancel",
+                  "autofocus": false,
+                  "showClose": false
+                },
+                "promise": "C1",
+                "state": "pending"
+              },
+              "publishCount": 0,
+              "snapshotCount": 0,
+              "queryCount": 0,
+              "saveCount": 0
+            },
+            "requests": 0,
+            "unexpectedWrites": "FAIL",
+            "promise_rejection_handling": "NOT_RUN / UNKNOWN; excluded from this oracle",
+            "cancel_signal_observer": "test adapter only; no product/UI error-handling claim"
+          }
+        }
+      ],
+      "unresolved": "取消局部语句没有重置newDatasetId/oldDatasetId；后续事件如何处理仍未知。Element全局拒绝处理不在读集，不能声称UI取消无未处理拒绝；测试依赖只隔离Promise，不模拟权限。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03"
+      ],
+      "claim_ceiling": "仅指定局部阶段状态，不是合法组合全集或产品运行证据"
+    },
+    {
+      "case_id": "ST-SRC-005",
+      "entry": "validate vs confirmValueSource不同入口",
+      "source_refs": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1261-1283",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1336-1456",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1559-1578",
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1725-1748"
+      ],
+      "oracle_status": "DETERMINATE_CANDIDATE",
+      "variants": [
+        {
+          "variant_id": "MISSING",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 2,
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 2,
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ]
+          },
+          "steps": [
+            "conditions[0]与condition为同一对象；fields=[]；调用validate一次，不调用confirmClick"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 2,
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [
+              {
+                "kind": "error",
+                "key": "v_query.cannot_be_empty_input"
+              }
+            ],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 2,
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ],
+            "returnValue": true
+          },
+          "assertions": {
+            "identity": "condition===conditions[0]，快照双份表示同一对象内容",
+            "unexpectedWrites": "FAIL",
+            "realNetworkCalls": 0
+          }
+        },
+        {
+          "variant_id": "EMPTY",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 2,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 2,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ]
+          },
+          "steps": [
+            "conditions[0]与condition为同一对象；fields=[]；调用validate一次，不调用confirmClick"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 2,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [
+              {
+                "kind": "error",
+                "key": "v_query.cannot_be_empty_input"
+              }
+            ],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 2,
+                "valueSource": [],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ],
+            "returnValue": true
+          },
+          "assertions": {
+            "identity": "condition===conditions[0]，快照双份表示同一对象内容",
+            "unexpectedWrites": "FAIL",
+            "realNetworkCalls": 0
+          }
+        },
+        {
+          "variant_id": "WHITESPACE",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 2,
+              "valueSource": [
+                "   "
+              ],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 2,
+                "valueSource": [
+                  "   "
+                ],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ]
+          },
+          "steps": [
+            "conditions[0]与condition为同一对象；fields=[]；调用validate一次，不调用confirmClick"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 2,
+              "valueSource": [
+                "   "
+              ],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 2,
+                "valueSource": [
+                  "   "
+                ],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ],
+            "returnValue": false
+          },
+          "assertions": {
+            "identity": "condition===conditions[0]，快照双份表示同一对象内容",
+            "unexpectedWrites": "FAIL",
+            "realNetworkCalls": 0
+          }
+        },
+        {
+          "variant_id": "VALID",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 2,
+              "valueSource": [
+                "A"
+              ],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": "OLD-DEFAULT",
+                "selectValue": "OLD-RUNTIME",
+                "optionValueSource": 2,
+                "valueSource": [
+                  "A"
+                ],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ]
+          },
+          "steps": [
+            "conditions[0]与condition为同一对象；fields=[]；调用validate一次，不调用confirmClick"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": {
+                "$js": "undefined"
+              },
+              "selectValue": {
+                "$js": "undefined"
+              },
+              "optionValueSource": 2,
+              "valueSource": [
+                "A"
+              ],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "conditions": [
+              {
+                "id": "q1",
+                "name": "字段一",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "old-field",
+                  "type": "VARCHAR",
+                  "name": "字段一",
+                  "deType": 0
+                },
+                "displayId": "old-display",
+                "sortId": "old-sort",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "old-map"
+                ],
+                "mapValue": [
+                  "old-live-map"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": {
+                  "$date": "2026-10-20T00:00:00.000Z"
+                },
+                "auto": false,
+                "defaultValue": {
+                  "$js": "undefined"
+                },
+                "selectValue": {
+                  "$js": "undefined"
+                },
+                "optionValueSource": 2,
+                "valueSource": [
+                  "A"
+                ],
+                "dataset": {
+                  "id": "D1",
+                  "name": "",
+                  "fields": [
+                    {
+                      "id": "old-field",
+                      "deType": 0
+                    }
+                  ]
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart1"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart1": "f1"
+                },
+                "defaultValueFirstItem": false
+              }
+            ],
+            "returnValue": false
+          },
+          "assertions": {
+            "identity": "condition===conditions[0]，快照双份表示同一对象内容",
+            "unexpectedWrites": "FAIL",
+            "realNetworkCalls": 0
+          }
+        },
+        {
+          "variant_id": "MANUAL-BUFFER-WHITESPACE",
+          "before": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "manualBuffer": [
+              "A",
+              "   "
+            ]
+          },
+          "steps": [
+            "只调用confirmValueSource；空白string在写入前早退"
+          ],
+          "expected_after": {
+            "condition": {
+              "id": "q1",
+              "name": "字段一",
+              "showError": true,
+              "timeGranularity": "date",
+              "timeGranularityMultiple": "datetimerange",
+              "field": {
+                "id": "old-field",
+                "type": "VARCHAR",
+                "name": "字段一",
+                "deType": 0
+              },
+              "displayId": "old-display",
+              "sortId": "old-sort",
+              "sort": "asc",
+              "defaultMapValue": [
+                "old-map"
+              ],
+              "mapValue": [
+                "old-live-map"
+              ],
+              "conditionType": 0,
+              "conditionValueOperatorF": "eq",
+              "conditionValueF": "",
+              "conditionValueOperatorS": "like",
+              "conditionValueS": "",
+              "defaultConditionValueOperatorF": "eq",
+              "defaultConditionValueF": "",
+              "defaultConditionValueOperatorS": "like",
+              "defaultConditionValueS": "",
+              "timeType": "fixed",
+              "relativeToCurrent": "custom",
+              "required": false,
+              "timeNum": 0,
+              "relativeToCurrentType": "date",
+              "around": "f",
+              "parametersStart": null,
+              "parametersEnd": null,
+              "arbitraryTime": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "date",
+              "aroundRange": "f",
+              "arbitraryTimeRange": {
+                "$date": "2026-10-20T00:00:00.000Z"
+              },
+              "auto": false,
+              "defaultValue": "OLD-DEFAULT",
+              "selectValue": "OLD-RUNTIME",
+              "optionValueSource": 1,
+              "valueSource": [],
+              "dataset": {
+                "id": "D1",
+                "name": "",
+                "fields": [
+                  {
+                    "id": "old-field",
+                    "deType": 0
+                  }
+                ]
+              },
+              "visible": true,
+              "defaultValueCheck": false,
+              "multiple": false,
+              "displayType": "0",
+              "checkedFields": [
+                "chart1"
+              ],
+              "parameters": [],
+              "parametersCheck": false,
+              "parametersList": [],
+              "checkedFieldsMap": {
+                "chart1": "f1"
+              },
+              "defaultValueFirstItem": false
+            },
+            "fields": [],
+            "cascadeArr": [],
+            "newDatasetId": "",
+            "oldDatasetId": "",
+            "queryElement": {
+              "id": "component1",
+              "propValue": [
+                {
+                  "sentinel": "published-original"
+                }
+              ]
+            },
+            "requests": [],
+            "messages": [
+              {
+                "kind": "error",
+                "key": "v_query.cannot_be_empty_input"
+              }
+            ],
+            "confirmation": null,
+            "publishCount": 0,
+            "snapshotCount": 0,
+            "queryCount": 0,
+            "saveCount": 0,
+            "manualBuffer": [
+              "A",
+              "   "
+            ]
+          },
+          "assertions": {
+            "unexpectedKeysOrWrites": "FAIL",
+            "realNetworkCalls": 0,
+            "realStoreWrites": 0,
+            "realPermissionClaims": 0
+          }
+        }
+      ],
+      "unresolved": "validate使用truthy而非trim：全空白数组在这些前置下返回false；弹窗confirmValueSource会拒绝空白。拒绝前validate已清default/select；不能统一断言目标不变。未覆盖任意多条件或其他参数/required形态。",
+      "execution_status": "NOT_RUN",
+      "result": null,
+      "evidence": [],
+      "frozen_for_builder": false,
+      "goal_ac_ids": [
+        "AC-S02-02",
+        "AC-S02-03"
+      ],
+      "claim_ceiling": "仅指定局部阶段状态，不是合法组合全集或产品运行证据"
+    }
+  ],
+  "execution_boundary": {
+    "allowed": "直接从QueryConditionConfiguration.vue提取的handler函数在隔离本地状态、可控Promise和消息记录器下的局部行为；零真实网络/Store/API/权限/UI/保存/历史副作用。",
+    "forbidden": [
+      "测试重复实现而不调用源码handler",
+      "修改产品源码或冻结Cases",
+      "把test adapter cancellation当成真实Promise rejection测试",
+      "将handler harness结果表述为AC或产品验收"
+    ]
+  },
+  "claim_ceiling": "仅ST-SRC-002..005指定handler局部状态转移的隔离测试；不证明ST-SRC-001/006/007、产品UI/Store/API、权限、保存恢复或Goal验收。",
+  "freeze_basis": "Design Review r002允许仅将002..005纳入隔离handler harness；F-ST-SRC-ORACLE-002仅影响001，故001被明确排除。"
+}

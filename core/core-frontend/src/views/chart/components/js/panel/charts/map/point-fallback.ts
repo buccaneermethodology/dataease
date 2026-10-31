@@ -238,7 +238,10 @@ export async function drawPointFallbackChart(
   }
 
   const { Choropleth: ChoroplethCtor } = await import('@antv/l7plot/dist/esm/plots/choropleth')
+  if (drawOption.filterPaste && !drawOption.filterPaste.check())
+    throw new Error('paste_map_cancelled')
   const view = new ChoroplethCtor(container, options)
+  drawOption.filterPaste?.addCleanup(() => view.destroy())
 
   const dotOptions: DotOptions = {
     source: {
@@ -309,14 +312,29 @@ export async function drawPointFallbackChart(
   }
 
   const dotLayer = new Dot(dotOptions)
-  bindMapHoverTooltipRefresh(container, view.scene, () => dotLayer.tooltip?.hideTooltip())
+  drawOption.filterPaste?.addCleanup(() => dotLayer.destroy())
+  if (!drawOption.filterPaste)
+    bindMapHoverTooltipRefresh(container, view.scene, () => dotLayer.tooltip?.hideTooltip())
 
   mapRendering(container)
-  view.once('loaded', () => {
-    mapRendered(container)
+  const afterLoaded = () => {
+    if (!drawOption.filterPaste) mapRendered(container)
+    if (drawOption.filterPaste) {
+      drawOption.filterPaste.listen(dotLayer, 'error', error =>
+        drawOption.filterPaste.fail(error || new Error('paste_map_error'))
+      )
+      drawOption.filterPaste.wait(dotLayer, 'loaded', () => mapRendered(container))
+    }
     dotLayer.addToScene(view.scene)
+    if (drawOption.filterPaste && !drawOption.filterPaste.check()) return
     if (label.show) {
-      attachMapLabels(view.scene, labelData, { ...label, fontFamily: chart.fontFamily })
+      ;(() => {
+        const cleanup = attachMapLabels(view.scene, labelData, {
+          ...label,
+          fontFamily: chart.fontFamily
+        })
+        drawOption.filterPaste?.addCleanup(cleanup)
+      })()
     }
     const map = view.scene.map
     map['fitBounds']?.(
@@ -387,7 +405,14 @@ export async function drawPointFallbackChart(
         }
       }
     }
-    configCarouselTooltip(chart, view, sourceData, null, undefined, drawOption)
-  })
+    if (!drawOption.filterPaste)
+      configCarouselTooltip(chart, view, sourceData, null, undefined, drawOption)
+  }
+  if (drawOption.filterPaste) {
+    drawOption.filterPaste.errors(view)
+    drawOption.filterPaste.errors(view.scene)
+    drawOption.filterPaste.wait(view, 'loaded', afterLoaded)
+    drawOption.filterPaste.seal()
+  } else view.once('loaded', afterLoaded)
   return view
 }

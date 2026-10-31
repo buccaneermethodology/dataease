@@ -1,0 +1,555 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SYMBOLIC-FRESH-UI-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。；允许准备并配置本地测试底图。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "已批准MVP次序下，核验地图fixture保存身份，正常UI配置五类地图、复制/粘贴/查询与保存重开。",
+    "objective": "三条连接均已实测新库，开始新context正常登录与symbolic过滤查询保存重开",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "新context局部API转发8110",
+      "新schema中S02固定仪表板正常UI编辑保存",
+      "本轮运行证据"
+    ],
+    "forbidden_actions": [
+      "修改原8100/7070/原库/旧数据源",
+      "未核连接身份先开展UI",
+      "输出凭据/token/dump",
+      "安装依赖或修改权限实现"
+    ],
+    "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SymbolicFreshRuntimePlan-r002.md",
+      "revision": "33b3ca9f18cc8f3093725361238d7efd2803477167a56a9b3bfab9c9993ae843",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SymbolicFreshRuntimeReview-r002.md",
+      "revision": "54084ecd50d6ae646e20a04840bbfb4135f8c4659ae238759660189c0cdf9e58",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicDetailsSourceBuild-r001.json",
+      "revision": "582242fb53535e7a351574b7f629c7676f4b460ee43d055de265d45b94bd3cf2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SymbolicDetailsValidation-r001.md",
+      "revision": "cbd1520d4a413c6b134b39cbcaffa929e00c264a0b22db0ea08d47b4ee8cca54",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r526.json",
+      "revision": "4cd57825ca12345faed8f36ab856b10dbe6767e3f44291c3d816fa180657c89f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "副本分阶段准备准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshPreparationFailure-r001.json",
+      "revision": "dfe8575f3bbeaf7a9d19a854f05af36b745ebdb16602967c4baefea4ec139546",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "实际失败与精确恢复脚本身份",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/fresh-runtime-tools/prepare-r002.py",
+      "revision": "0b0e7c80c3075b6e52e057e83a180412db8432393d73c64d28d3374a4547297f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "实际失败与精确恢复脚本身份",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r527.json",
+      "revision": "5ecdc1cc8f66afc1462f91e60fc8456cd5d495fb5252535760e6c674f7c14b4f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "实际失败与精确恢复脚本身份",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshPreparationFailure-r002.json",
+      "revision": "6afd5c1e18efd301337660b4f2220041b09ac1b01acb8fba81e9894a89291d6a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "导入后比较器失败与精确恢复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/fresh-runtime-tools/prepare-r003.py",
+      "revision": "58fbef4da189dbed64c2cc4563cff0cd1869c50aaae151e97bad9a0e9d06d6be",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "导入后比较器失败与精确恢复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r528.json",
+      "revision": "6dffbc3877f11ed90322646e505b316508114d96dd381be69be97b463578e9cb",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "导入后比较器失败与精确恢复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshPreparationFailure-r003.json",
+      "revision": "681646f168a1437c7b5f3c5b2baa598b8f93e30eb53a82296d1d726caa12c31c",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "二进制hash失败与精确修复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/fresh-runtime-tools/prepare-r004.py",
+      "revision": "04e9ba1fb32945c157862963df2d59209e83dcacd7a509fe89bffa4b158d4817",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "二进制hash失败与精确修复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r529.json",
+      "revision": "226cd89c9af702b66eda159a282c1365d879bd30a50281ac0fa6194fbc4f2869",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "二进制hash失败与精确修复",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshWatchdog-r001.json",
+      "revision": "86a1e5cd632447ead2ab4ecdf5cd4351aee0c6f24b6afbef6efc0514202bdab2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "启动前实际准备证据",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshPreparation-r004.json",
+      "revision": "79ea17c816790ac997d216425d89849d8f5f9a21b5f138a4539958474306939e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "启动前实际准备证据",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshReadModels-r001.json",
+      "revision": "d944269ba7c5f81a76ceeb6e45e7b8e5236e97089cac902575c4d1d83162578a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "启动前实际准备证据",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r530.json",
+      "revision": "dd1b72b04e11c7f7e78b584c976ca63b4907f1d5137e07d4980859b623467c7b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "启动前实际准备证据",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SymbolicFreshRuntimeGrantDelta-r003.md",
+      "revision": "690b881820e168cfa5c2a4296c13fb5c7c4e043e211e4dc7bdce0f7c013832c5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "首次失败恢复与新库精确授权",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SymbolicFreshRuntimeReview-r003.md",
+      "revision": "c4a8eede37b4cdba7e45414c56a1d77a35bec99fbf4e3232b33c4bd8add8c52b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "首次失败恢复与新库精确授权",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshSchemaGrant-r001.json",
+      "revision": "b469fbb22030f1e6b4d11ac0c2a7be2e3ccf5e23e9e50366bc801ea5beb8ba8b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "首次失败恢复与新库精确授权",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshAttemptArchive-r001.json",
+      "revision": "34a4072806acaeade07a503af4a87f44978aea42d3ae532f4877fc85b1076a41",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "首次失败恢复与新库精确授权",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r532.json",
+      "revision": "d73b42253efdbd8d9df793719081f584ee9c0a561c9e54b20516d45e7f5389d1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "首次失败恢复与新库精确授权",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshStartup-r002.json",
+      "revision": "258a989248d70eb7eaa53696f32a34cab6d36b0f675da86cd99717cb2785ff97",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "实际连接身份后UI准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r533.json",
+      "revision": "9ca4a922b95e7255add7ecc444ab6678b6a2ab2ae6382be48fcd05a8e293a53d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "实际连接身份后UI准入",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "独立设计1/3有界通过后实现测试见证前置，不修改生产",
+    "task_id": "S02-SYMBOLIC-FRESH-UI-r001",
+    "recorded_at": "2026-10-30T05:24:49.910330+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r533.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-SYMBOLIC-FRESH-UI-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "实际已执行的类型/角色和场景；未完成场景保留NOT_RUN，不宣称整体通过。",
+  "design_objective": "三条连接均已实测新库，开始新context正常登录与symbolic过滤查询保存重开",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SymbolicFreshUi-r001.json"
+}

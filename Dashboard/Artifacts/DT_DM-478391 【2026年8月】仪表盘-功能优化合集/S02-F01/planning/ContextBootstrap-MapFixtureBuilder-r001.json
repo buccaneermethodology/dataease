@@ -1,0 +1,200 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-MAP-FIXTURE-BUILDER-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "先完成界面 MVP，再补齐复杂场景，完整验收要求没有删减；继续执行既定Goal。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "按MVP先行顺序准备同dataset合法地图字段与repo内置资源",
+    "objective": "两份内置地图排他复制、四个坐标角色q→d，30行19字段保持",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "/Users/xiaomei/opt/dataease3.0/data/map-origin/000/000.json",
+      "/Users/xiaomei/opt/dataease3.0/data/map-origin/156/156.json",
+      "local://127.0.0.1:7070/dataset/1312472054565572608",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapFixtureExecution-r001.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapFixtureExecution-events-r001.jsonl"
+    ],
+    "forbidden_actions": [
+      "修改字段ID/类型/值/SQL/物理表",
+      "修改其他字段或其他dataset",
+      "覆盖现有不同地图文件",
+      "修改冻结CSV或产品源码",
+      "更改鉴权或重启服务",
+      "把fixture准备当地图验收或Goal完成"
+    ],
+    "maximum_claim": "合法隔离fixture准备结果；38义务与真实权限保持"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "地图fixture方案及既有来源",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/MapFixtureExecutionPlan-r001.json",
+      "revision": "4b539ebbac7ba53cb9ad7bf869f39a3c099c699a27b004dc3eea508110507dab",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "地图fixture方案及既有来源",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/MapFixtureExecutionReview-r001.md",
+      "revision": "5270f5a3392e391d0320be7477ce2ddbc7c01cf3928095a6621a9e512a0b5256",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "地图fixture方案及既有来源",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapFieldBaseline-r001.json",
+      "revision": "af2443faad2b31dcd719524862e90f2a750aa8363a0ca749240bcbc0b0417b0d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "地图fixture方案及既有来源",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapIndependentOracle-r001.json",
+      "revision": "241d821d5d97fcfe5f62acbf97ef31cbcf375d6f1e469ef7c0a0828914a13e07",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "地图fixture方案及既有来源",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "root执行独立审查通过的测试fixture准备，无产品代码改动",
+    "task_id": "S02-MVP-MAP-FIXTURE-BUILDER-r001",
+    "recorded_at": "2026-10-29T07:56:32.157562+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r503.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r504.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-MAP-FIXTURE-BUILDER-r001",
+    "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r503.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "合法隔离fixture准备结果；38义务与真实权限保持",
+  "design_objective": "两份内置地图排他复制、四个坐标角色q→d，30行19字段保持",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MapFixtureExecution-r001.json"
+}

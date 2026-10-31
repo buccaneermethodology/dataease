@@ -75,10 +75,28 @@ export const deleteChartFieldByChartId = async (chartId): Promise<IResponse> => 
   })
 }
 
-// 通过图表对象获取数据
-export const getData = async (data): Promise<IResponse> => {
-  delete data.data
+export interface ChartDataOutcomeOptions {
+  reportOutcome: true
+}
+
+export type ChartDataOutcome<T = IResponse> =
+  | { ok: true; value: T }
+  | { ok: false; error: IResponse<unknown> }
+
+// 通过图表对象获取数据；严格结果仅供显式选择的候选查询使用。
+export function getData<T = IResponse>(
+  data: object,
+  options: ChartDataOutcomeOptions
+): Promise<ChartDataOutcome<T>>
+export function getData(data): Promise<IResponse>
+export async function getData(data, options?: ChartDataOutcomeOptions): Promise<unknown> {
+  if (!options?.reportOutcome) {
+    delete data.data
+  }
   const copyData = cloneDeep(data)
+  if (options?.reportOutcome) {
+    delete copyData.data
+  }
   // K线图查询时先按横轴降序取最新数据，渲染阶段再恢复升序
   if (copyData.type === 'stock-line' && copyData.xAxis?.length) {
     copyData.xAxis[0].sort = 'desc'
@@ -104,13 +122,13 @@ export const getData = async (data): Promise<IResponse> => {
       originNameHandleBackWithArr(res?.data?.data, dataFields)
       originNameHandleBackWithArr(res?.data?.data?.left, ['fields'])
       originNameHandleBackWithArr(res?.data?.data?.right, ['fields'])
-      return res?.data
+      return options?.reportOutcome ? { ok: true, value: res?.data } : res?.data
     } else {
       originNameHandleBackWithArr(res, fields)
       originNameHandleBackWithArr(res?.data, dataFields)
       originNameHandleBackWithArr(res?.data?.left, ['fields'])
       originNameHandleBackWithArr(res?.data?.right, ['fields'])
-      return res
+      return options?.reportOutcome ? { ok: false, error: res } : res
     }
   })
 }

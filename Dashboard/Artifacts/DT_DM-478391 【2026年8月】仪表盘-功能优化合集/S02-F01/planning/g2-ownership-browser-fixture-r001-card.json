@@ -1,0 +1,67 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "G2-OWNERSHIP-BROWSER-FIXTURE-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-G2-OWNERSHIP-BROWSER-FIXTURE-r001.json",
+      "sha256": "2689244e04c3c026466787f2abfd3f6ad92c11576f7f425c143aa8bdcbaf8045"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "G2-OWNERSHIP-BROWSER-FIXTURE-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "write_scope": [
+    "core/core-frontend/tests/g2-render-ownership/browser/",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-BrowserFixtureBuild-r001.md"
+  ],
+  "required_outputs": [
+    "core/core-frontend/tests/g2-render-ownership/browser/index.html",
+    "core/core-frontend/tests/g2-render-ownership/browser/main.ts",
+    "core/core-frontend/tests/g2-render-ownership/browser/vite.config.ts",
+    "core/core-frontend/tests/g2-render-ownership/browser/README.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-BrowserFixtureBuild-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "只建立真实AntV G2普通line+生产helper浏览器验证夹具；实际浏览器行为待CUA验证，不代表产品CopyPaste或完整renderer。",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "G2-OWNERSHIP-BROWSER-FIXTURE-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r393.json",
+  "working_directory": ".",
+  "execution_command": "先复验Card/Context和fixture目录+report精确admission。实现隔离Vite测试页，host127.0.0.1 port7093 strictPort true，不启动服务由主代理执行。真正import生产createG2RenderAttempt与@antv/g2.Chart，静态虚构双系列line数据、原生legend/tooltip。提供中文可点击控件：渲染O、延迟渲染N、释放N、空数据、调整宽度、卸载、重复渲染；ready才发布活动scope，延期/卸载用真实helper行为。包装真实destroy计数/cleanup事件但调用原destroy，不mock chart。可视JSON输出每次attempt status/activeId/created/destroyed/cleanupErrors/DOM canvas数/尺寸，以及runtime错误可见文本。所有异步按钮捕获错误并显式显示，不静默忽略。需实际native legend和tooltip能手动交互，Resize调用真实changeSize或forceFit（以G2实际API为准）且scope时效检查。README明确测试页只证helper+真实G2，不能称DataEase line renderer或产品MVP。运行定向lint与Vite build到/tmp，不安装，不启动服务器；报告写待浏览器验证边界。保持helper与其它文件不变。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipDesign-r003.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/G2StageLifecycleOwnershipCases-r003.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2StageLifecycleOwnershipDesignReview-r003.md",
+    "core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/G2OWN-HelperBuild-r001.md",
+    "core/core-frontend/package.json",
+    "core/core-frontend/tests/pie-label-overflow/vite.config.ts",
+    "core/core-frontend/tests/pie-label-overflow/demo.ts"
+  ]
+}

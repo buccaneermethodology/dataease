@@ -1,0 +1,353 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPIPE-001-validation-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "用户要求设计审核后立即进行S02实现并加快Goal；独立验证本轮QPIPE有限实现，对原Goal和claim ceiling做对账。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "只读验证QPIPE六用例真实模块组合、可信RED/GREEN、实际spy调用轨迹、输入不变与边界声明。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QPIPE-001-Validation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改Builder产品文件、测试、冻结Design/Fixtures或Builder证据",
+      "把QPIPE候选扩张为产品接入或权限验收",
+      "将QPREP历史RED缺口追认为已解决"
+    ],
+    "maximum_claim": "只能判断QPIPE六项纯组合候选；不能宣称产品验收或Goal完成"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineDesign-r001.md",
+      "revision": "7269824ad1d0c3559e144ddf8bb65c379a6e75d08454e586b2eb7cbf4c4da93f",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineFixtures-r001.json",
+      "revision": "9e96dba76c5659efd99d5dac8cf0e3fe1fd4a46db0205f94f15b10cdec8f30bc",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryReferencePipelineDesignReview-r001.md",
+      "revision": "fb87206aefc67022a2289ccab90d947f93ffdc43cd6415c7ab28d70bdde39070",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/query-reference-pipeline-builder-card-r001.json",
+      "revision": "5553d50088d5ef89816ff44d32a6f4edf0d8dbc5d959a369ca92baebb34676af",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-query-reference-pipeline-builder-r001.json",
+      "revision": "9dbc6715a83167d2d5cc508b07c6c6764c087ac4e5295515bba43217ebebfa22",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-pipeline.ts",
+      "revision": "7066211a16f981cbd05df0c5e41d97f2d01b445b397c948f9ce2344ae34b9d10",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-reference/query-reference-pipeline.test.ts",
+      "revision": "9d8042ad4cfdcf375ed392ff3b60e625312890062ba38f486f52b648c9fdfa02",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-ExecutionEvidence-r001.md",
+      "revision": "fca684f8798fde936c5fcaa6e287bad68b934e54d60af344eb1ddba66441dea5",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.stdout.txt",
+      "revision": "dc2fb3b5d218a62013da3c75e9c34c9ce3222671860c920fca1ce1ff7a4b6636",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.stderr.txt",
+      "revision": "e44224127b5b47139471a98213599ee28a81b25ca8c2e3d18a0b09bef2f50d8f",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.exitcode.txt",
+      "revision": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.stdout.txt",
+      "revision": "9dbf580123d5d1c5435f8187fceaae24b39d5c78bc3c6522ba077ab5f35b71f9",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.stderr.txt",
+      "revision": "749d1f79c048809b4d16e84512f9fc8a6c1c2d3ff16dc5a863bbdef96e4572be",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.stdout.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.stderr.txt",
+      "revision": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.exitcode.txt",
+      "revision": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.snapshot.json",
+      "revision": "1e64b23f0355506e4856fbc3330e92c87b71b943b6866184ba879cd57faf075d",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "independent validation input",
+      "reason": "复算合同、builder和执行证据",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "digest-drift",
+      "condition": "任何冻结输入或builder产物摘要不匹配",
+      "action": "登记blocking finding并停止通过判断",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "claim-boundary-review",
+      "condition": "产品级或权限级结论无法由纯组合证据支持",
+      "action": "收窄verdict并明确未验证义务及后续依赖",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "Goal保留10项AC、14项F01及Q066/Q067；真实权限验收仍BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_validation",
+    "reason": "独立检查QPIPE Builder candidate，复算合同与范围边界。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始Goal和十项AC/十六义务",
+    "Design/fixtures和独立设计review",
+    "Builder卡/准入及摘要",
+    "实现、测试runner、完整QPIPE执行证据",
+    "各阶段stdout/stderr/exit和RED快照",
+    "QPIPE限定diff与claim ceiling",
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ]
+}

@@ -1,0 +1,843 @@
+{
+  "schema_version": "s02_parameter_binding_preparation_fixtures_v3",
+  "status": "candidate_not_frozen",
+  "design_ref": "QueryParameterBindingPreparationDesign-r003.md",
+  "scope": {
+    "source_authority": "caller_supplied_exact_id_map_only",
+    "target_authority": "caller_supplied_parameter_catalog_only",
+    "product_integration": "NOT_READY",
+    "goal_denominator": {
+      "goal_ac": 10,
+      "must_have": 26,
+      "product_obligations": 16,
+      "scope_delta": "none"
+    }
+  },
+  "fields": [
+    "variableName",
+    "alias",
+    "type",
+    "deType",
+    "details",
+    "defaultValue",
+    "defaultValueScope",
+    "id",
+    "datasetTableId",
+    "datasetGroupId",
+    "required",
+    "operator",
+    "value",
+    "datasetFullName"
+  ],
+  "cases": [
+    {
+      "id": "PBP-001-scalar",
+      "input": {
+        "targetComponentId": "new-c1",
+        "sourceParameterIds": [
+          "src-p1"
+        ],
+        "targetIdBySourceId": {
+          "src-p1": "dst-p1"
+        },
+        "targetParameterCatalog": [
+          {
+            "variableName": "created_at",
+            "alias": "Created at",
+            "type": [
+              "DATE",
+              "DATE"
+            ],
+            "deType": 4,
+            "details": "{\"format\":\"yyyy-MM-dd\",\"nested\":{\"keep\":true}}",
+            "defaultValue": "2026-01-01",
+            "defaultValueScope": "EDIT",
+            "id": "dst-p1",
+            "datasetTableId": "9",
+            "datasetGroupId": "17",
+            "required": true,
+            "operator": "between",
+            "value": [
+              "2026-01-01",
+              "2026-01-31"
+            ],
+            "datasetFullName": "Sales / Orders",
+            "futureOpaqueField": {
+              "nullable": null,
+              "items": [
+                1,
+                false,
+                {
+                  "x": "y"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c1",
+        "parameters": [
+          {
+            "variableName": "created_at",
+            "alias": "Created at",
+            "type": [
+              "DATE",
+              "DATE"
+            ],
+            "deType": 4,
+            "details": "{\"format\":\"yyyy-MM-dd\",\"nested\":{\"keep\":true}}",
+            "defaultValue": "2026-01-01",
+            "defaultValueScope": "EDIT",
+            "id": "dst-p1",
+            "datasetTableId": "9",
+            "datasetGroupId": "17",
+            "required": true,
+            "operator": "between",
+            "value": [
+              "2026-01-01",
+              "2026-01-31"
+            ],
+            "datasetFullName": "Sales / Orders",
+            "futureOpaqueField": {
+              "nullable": null,
+              "items": [
+                1,
+                false,
+                {
+                  "x": "y"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-002-time-range-order",
+      "input": {
+        "targetComponentId": "new-c2",
+        "sourceParameterIds": [
+          "src-start",
+          "src-end"
+        ],
+        "targetIdBySourceId": {
+          "src-start": "dst-start",
+          "src-end": "dst-end"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-end",
+            "variableName": "end_at",
+            "type": [
+              "DATE"
+            ]
+          },
+          {
+            "id": "dst-start",
+            "variableName": "start_at",
+            "type": [
+              "DATE"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c2",
+        "parameters": [
+          {
+            "id": "dst-start",
+            "variableName": "start_at",
+            "type": [
+              "DATE"
+            ]
+          },
+          {
+            "id": "dst-end",
+            "variableName": "end_at",
+            "type": [
+              "DATE"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-003-numeric-range",
+      "input": {
+        "targetComponentId": "new-c3",
+        "sourceParameterIds": [
+          "src-low",
+          "src-high"
+        ],
+        "targetIdBySourceId": {
+          "src-low": "dst-low",
+          "src-high": "dst-high"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-low",
+            "deType": 2
+          },
+          {
+            "id": "dst-high",
+            "deType": 2
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c3",
+        "parameters": [
+          {
+            "id": "dst-low",
+            "deType": 2
+          },
+          {
+            "id": "dst-high",
+            "deType": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-004-duplicate-source-dedupes-first",
+      "input": {
+        "targetComponentId": "new-c4",
+        "sourceParameterIds": [
+          "src-p1",
+          "src-p1"
+        ],
+        "targetIdBySourceId": {
+          "src-p1": "dst-p1"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-p1",
+            "variableName": "region"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c4",
+        "parameters": [
+          {
+            "id": "dst-p1",
+            "variableName": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-005-missing-map",
+      "input": {
+        "targetComponentId": "new-c5",
+        "sourceParameterIds": [
+          "src-p1"
+        ],
+        "targetIdBySourceId": {},
+        "targetParameterCatalog": [
+          {
+            "id": "dst-p1"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "parameter_mapping_missing"
+      }
+    },
+    {
+      "id": "PBP-006-target-not-found",
+      "input": {
+        "targetComponentId": "new-c6",
+        "sourceParameterIds": [
+          "src-p1"
+        ],
+        "targetIdBySourceId": {
+          "src-p1": "dst-missing"
+        },
+        "targetParameterCatalog": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_missing"
+      }
+    },
+    {
+      "id": "PBP-007-duplicate-target-catalog-id",
+      "input": {
+        "targetComponentId": "new-c7",
+        "sourceParameterIds": [
+          "src-p1"
+        ],
+        "targetIdBySourceId": {
+          "src-p1": "dst-p1"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-p1"
+          },
+          {
+            "id": "dst-p1"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_ambiguous"
+      }
+    },
+    {
+      "id": "PBP-008-non-injective-map",
+      "input": {
+        "targetComponentId": "new-c8",
+        "sourceParameterIds": [
+          "src-a",
+          "src-b"
+        ],
+        "targetIdBySourceId": {
+          "src-a": "dst-one",
+          "src-b": "dst-one"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-one"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_collision"
+      }
+    },
+    {
+      "id": "PBP-009-no-partial-result",
+      "input": {
+        "targetComponentId": "new-c9",
+        "sourceParameterIds": [
+          "src-a",
+          "src-b"
+        ],
+        "targetIdBySourceId": {
+          "src-a": "dst-a",
+          "src-b": "dst-missing"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_missing"
+      }
+    },
+    {
+      "id": "PBP-010-encoded-id-remains-opaque-string",
+      "input": {
+        "targetComponentId": "new-c10",
+        "sourceParameterIds": [
+          "|DE|7|DE|13|DE|p"
+        ],
+        "targetIdBySourceId": {
+          "|DE|7|DE|13|DE|p": "|DE|9|DE|17|DE|q"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "|DE|9|DE|17|DE|q",
+            "datasetTableId": "9",
+            "datasetGroupId": "17",
+            "type": [
+              "DATE",
+              "DATE"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c10",
+        "parameters": [
+          {
+            "id": "|DE|9|DE|17|DE|q",
+            "datasetTableId": "9",
+            "datasetGroupId": "17",
+            "type": [
+              "DATE",
+              "DATE"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-011-empty-references",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [],
+        "targetIdBySourceId": {},
+        "targetParameterCatalog": []
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c11",
+        "parameters": []
+      }
+    },
+    {
+      "id": "PBP-012-invalid-top-level",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-013-invalid-catalog-entry",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [],
+        "targetIdBySourceId": {},
+        "targetParameterCatalog": [
+          {
+            "variableName": "missing-id"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-014-invalid-mapping-value",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [
+          "src-a"
+        ],
+        "targetIdBySourceId": {
+          "src-a": ""
+        },
+        "targetParameterCatalog": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-015-conflict-priority",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [
+          "src-a",
+          "src-b"
+        ],
+        "targetIdBySourceId": {
+          "src-a": "dst-one",
+          "src-b": "dst-one"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-one"
+          },
+          {
+            "id": "dst-one"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_ambiguous"
+      }
+    },
+    {
+      "id": "PBP-016-unreferenced-duplicate-catalog-id",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [],
+        "targetIdBySourceId": {},
+        "targetParameterCatalog": [
+          {
+            "id": "unused"
+          },
+          {
+            "id": "unused"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "reason": "target_parameter_ambiguous"
+      }
+    },
+    {
+      "id": "PBP-017-interleaved-dedup-order",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [
+          "src-a",
+          "src-b",
+          "src-a",
+          "src-c",
+          "src-b"
+        ],
+        "targetIdBySourceId": {
+          "src-a": "dst-a",
+          "src-b": "dst-b",
+          "src-c": "dst-c"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-c"
+          },
+          {
+            "id": "dst-b"
+          },
+          {
+            "id": "dst-a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c11",
+        "parameters": [
+          {
+            "id": "dst-a"
+          },
+          {
+            "id": "dst-b"
+          },
+          {
+            "id": "dst-c"
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-018-opaque-json-nesting-preserved",
+      "input": {
+        "targetComponentId": "new-c11",
+        "sourceParameterIds": [
+          "src-a"
+        ],
+        "targetIdBySourceId": {
+          "src-a": "dst-a"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-a",
+            "extra": {
+              "notJson": "<runtime-only sentinel>"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c11",
+        "parameters": [
+          {
+            "id": "dst-a",
+            "extra": {
+              "notJson": "<runtime-only sentinel>"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-019-prototype-looking-id-is-exact-string",
+      "input": {
+        "targetComponentId": "new-c19",
+        "sourceParameterIds": [
+          "__proto__"
+        ],
+        "targetIdBySourceId": {
+          "__proto__": "dst-proto"
+        },
+        "targetParameterCatalog": [
+          {
+            "id": "dst-proto",
+            "opaque": {
+              "ok": true
+            }
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "targetComponentId": "new-c19",
+        "parameters": [
+          {
+            "id": "dst-proto",
+            "opaque": {
+              "ok": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PBP-020-inherited-property-does-not-satisfy-map",
+      "input": {
+        "targetComponentId": "new-c20",
+        "sourceParameterIds": [
+          "toString"
+        ],
+        "targetIdBySourceId": {},
+        "targetParameterCatalog": []
+      },
+      "expected": {
+        "ok": false,
+        "reason": "parameter_mapping_missing"
+      }
+    }
+  ],
+  "forbidden_claims": [
+    "source_to_target_mapping_is_authorized",
+    "query_or_sql_is_correct",
+    "product_integration_passed",
+    "permission_behavior_passed",
+    "goal_ac_closed",
+    "full_sql_variable_details_validation",
+    "range_endpoint_maps_rebound",
+    "same_dataset_compatibility_proved",
+    "caller_mapping_authorized",
+    "runtime_non_json_values_are_accepted",
+    "prototype_inherited_property_is_mapping",
+    "failed_or_empty_output_was_mutated"
+  ],
+  "oracle": {
+    "input_is_recursively_frozen_before_call": true,
+    "input_deep_equal_after_call": true,
+    "output_mutable_nodes_share_no_identity_with_any_input_node": true,
+    "mutating_output_nested_value_leaves_input_unchanged": true,
+    "failure_has_exact_shape": {
+      "ok": false,
+      "reason": "<stable reason>"
+    },
+    "success_has_exact_shape": {
+      "ok": true,
+      "targetComponentId": "<input>",
+      "parameters": "<expected records>"
+    },
+    "applies_to": "every case unless case_operations adds more specific mutation path"
+  },
+  "case_operations": {
+    "PBP-001-scalar": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_no_shared_mutable_identity": true,
+      "mutate_output_path": "/parameters/0/futureOpaqueField/items/2/x",
+      "replacement": "mutated",
+      "assert_output_path_changed": true,
+      "assert_input_unchanged": true
+    },
+    "PBP-011-empty-references": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_empty_result_shape": true,
+      "no_nested_mutation": "vacuous"
+    },
+    "PBP-012-invalid-top-level": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    },
+    "PBP-013-invalid-catalog-entry": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    },
+    "PBP-014-invalid-mapping-value": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    },
+    "PBP-015-conflict-priority": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    },
+    "PBP-016-unreferenced-duplicate-catalog-id": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    },
+    "PBP-017-interleaved-dedup-order": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_no_shared_mutable_identity": true
+    },
+    "PBP-018-opaque-json-nesting-preserved": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_no_shared_mutable_identity": true,
+      "mutate_output_path": "/parameters/0/extra/notJson",
+      "replacement": "changed",
+      "assert_output_path_changed": true,
+      "assert_input_unchanged": true
+    },
+    "PBP-019-prototype-looking-id-is-exact-string": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_no_shared_mutable_identity": true
+    },
+    "PBP-020-inherited-property-does-not-satisfy-map": {
+      "freeze_input": true,
+      "after_call_assert_input_deep_equal": true,
+      "assert_exact_failure_shape": true
+    }
+  },
+  "input_domain": {
+    "root": "unknown at runtime; accepted only if it is a plain record (prototype exactly Object.prototype or null), not null/array/class instance/Date/Map/Set/function",
+    "targetComponentId": "own property, non-empty string",
+    "sourceParameterIds": "own property, array; every item non-empty string; empty array legal",
+    "targetIdBySourceId": "own property, plain record; each own enumerable property value is a non-empty string; exact lookup must use own-property semantics (Object.hasOwn or equivalent); inherited values never satisfy a mapping",
+    "targetParameterCatalog": "own property, array; every item plain record with its own non-empty string id",
+    "opaque_records": "recursively JSON-safe: null/string/boolean/finite number/array/plain record; reject undefined, bigint, symbol, function, non-finite numbers, accessors, exotic prototypes, and cycles; preserve unknown own enumerable data keys and nested JSON values",
+    "catalog_duplicate_policy": "duplicate ids anywhere in supplied catalog fail, including unreferenced entries",
+    "mapping_extra_keys": "well-formed extra entries are ignored after all own values pass input-domain validation"
+  },
+  "failure_precedence": [
+    "invalid_input: root/field shape and all supplied source ids, all own mapping values, all catalog record/id shapes and recursively JSON-safe values; fail before mapping resolution",
+    "target_parameter_ambiguous: repeated catalog id anywhere, including unreferenced entries",
+    "for each unique source id in first-occurrence order: absent own mapping => parameter_mapping_missing; target id absent from catalog => target_parameter_missing; target already assigned to another unique source => target_parameter_collision"
+  ],
+  "failure_reason_enum": [
+    "invalid_input",
+    "parameter_mapping_missing",
+    "target_parameter_missing",
+    "target_parameter_ambiguous",
+    "target_parameter_collision"
+  ],
+  "helper_support_boundary": {
+    "same_source_repeated": "collapse to first occurrence, preserving first-occurrence order",
+    "different_sources_same_target": "reject locally with target_parameter_collision; not a product-wide policy",
+    "duplicate_catalog_id": "reject locally as ambiguous; not a product-wide policy",
+    "component_target": "opaque non-empty string; caller proves it belongs to target component",
+    "mapping_authority": "caller supplies references extracted from scalar parameters or range endpoint maps, exact source-to-target IDs, and a catalog proven to belong to target component; helper proves none of these"
+  },
+  "runtime_construction_schema": {
+    "schema": "s02_runtime_input_construction_v1",
+    "semantics": "runtime_cases are harness instructions, not JSON input values. Build each runtime input exactly from the instruction, call helper once, and assert exact expected shape/reason and unchanged reachable input graph.",
+    "ops": [
+      "replace_path_with_undefined",
+      "replace_path_with_function",
+      "replace_path_with_nan",
+      "set_prototype",
+      "add_cycle",
+      "define_accessor",
+      "delete_own_property"
+    ],
+    "mutation_paths": "JSON Pointer-like paths into input, evaluated before freezing; no eval or executable fixture payload"
+  },
+  "runtime_cases": [
+    {
+      "id": "PBP-RUNTIME-001-undefined-source-id",
+      "base_case": "PBP-001-scalar",
+      "ops": [
+        {
+          "op": "replace_path_with_undefined",
+          "path": "/sourceParameterIds/0"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-RUNTIME-002-function-in-opaque-value",
+      "base_case": "PBP-001-scalar",
+      "ops": [
+        {
+          "op": "replace_path_with_function",
+          "path": "/targetParameterCatalog/0/futureOpaqueField"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-RUNTIME-003-nan-in-opaque-value",
+      "base_case": "PBP-001-scalar",
+      "ops": [
+        {
+          "op": "replace_path_with_nan",
+          "path": "/targetParameterCatalog/0/deType"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-RUNTIME-004-cycle-in-opaque-value",
+      "base_case": "PBP-001-scalar",
+      "ops": [
+        {
+          "op": "add_cycle",
+          "path": "/targetParameterCatalog/0/futureOpaqueField",
+          "key": "self"
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-RUNTIME-005-inherited-map-prototype",
+      "base_case": "PBP-020-inherited-property-does-not-satisfy-map",
+      "ops": [
+        {
+          "op": "set_prototype",
+          "path": "/targetIdBySourceId",
+          "value": {
+            "toString": "dst-inherited"
+          }
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    },
+    {
+      "id": "PBP-RUNTIME-006-accessor-in-opaque-value",
+      "base_case": "PBP-001-scalar",
+      "ops": [
+        {
+          "op": "define_accessor",
+          "path": "/targetParameterCatalog/0/futureOpaqueField",
+          "getter_returns": {
+            "safe": true
+          }
+        }
+      ],
+      "expected": {
+        "ok": false,
+        "reason": "invalid_input"
+      }
+    }
+  ],
+  "mutation_oracle_matrix": {
+    "all_invocations": "recursively freeze each input graph before invocation; after invocation assert the reachable input graph is deeply equal to its pre-call snapshot (for runtime cases, compare supported graph shape without invoking accessors)",
+    "success_nonempty_parameters": "assert exact expected result; recursively enumerate mutable output nodes and prove no identity is shared with any input node; for every fixture with a declared mutation path, assign declared replacement, assert output changed, then assert input snapshot unchanged",
+    "success_empty_parameters": "assert exact success shape with empty array; identity-isolation check is vacuous; no nested mutation is required",
+    "failure": "assert exact {ok:false,reason} shape with no targetComponentId/parameters/partial payload; assert input unchanged; no output mutation is attempted",
+    "output_freeze": "not required"
+  }
+}

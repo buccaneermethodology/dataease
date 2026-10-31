@@ -1,0 +1,117 @@
+{
+  "scenario": "indicator source to area-chart target; apply the full nested filter tree and observe query and visible rendering; do not save",
+  "environment": {
+    "url": "http://127.0.0.1:7070",
+    "mode": "local standalone session",
+    "permission": "explicit DEV test stub allow during the observation; not real authorization"
+  },
+  "dashboardId": "1312476889213964288",
+  "sourceId": "7520752064427724800",
+  "sourceType": "indicator",
+  "targetId": "7520741153101058048",
+  "targetType": "chart",
+  "targetDisplayTitle": "基础柱状图 (existing component title remained visible)",
+  "selectedChartType": "面积图",
+  "datasetId": "1312472054565572608",
+  "tree": {
+    "logic": "and",
+    "items": [
+      {
+        "type": "item",
+        "fieldId": "1793083721146",
+        "filterType": "logic",
+        "term": "gt",
+        "value": "200"
+      },
+      {
+        "type": "tree",
+        "subTree": {
+          "logic": "or",
+          "items": [
+            {
+              "type": "item",
+              "fieldId": "1793083721149",
+              "filterType": "enum",
+              "enumValue": [
+                "果元店",
+                "南都店",
+                "香橙店",
+                "乐园店",
+                "红叶店",
+                "水围店"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "result": {
+    "outcome": "success",
+    "reason": null,
+    "operationId": 1,
+    "logicalGetDataCalls": 1,
+    "counterScope": "logical getData calls, not physical HTTP",
+    "queryType": "area",
+    "queryDatasetId": "1312472054565572608",
+    "rowCount": 5,
+    "visibleRows": [
+      {
+        "shop": "果元店",
+        "amount": 3218
+      },
+      {
+        "shop": "南都店",
+        "amount": 1284
+      },
+      {
+        "shop": "乐园店",
+        "amount": 563
+      },
+      {
+        "shop": "水围店",
+        "amount": 1141
+      },
+      {
+        "shop": "香橙店",
+        "amount": 555
+      }
+    ],
+    "visibleRenderedChart": "filled area chart with five shop categories and amount values; observed in the browser screenshot at runtime",
+    "amountSum": null,
+    "amountSumStatus": "not asserted"
+  },
+  "assertions": {
+    "sourceTreeCopiedToClipboard": true,
+    "targetTreeEqualsCopiedTree": true,
+    "undefinedPaths": [],
+    "datasetIdentityMatches": true,
+    "logicalQueryCompleted": true,
+    "visibleAreaRendered": true,
+    "pasteSuccessMessage": "过滤条件已粘贴",
+    "saveAttempted": false,
+    "explicitSaveCompleted": false
+  },
+  "browserConsole": {
+    "errorLevelEntriesObserved": 0,
+    "warningsObserved": [
+      "Element Plus radio label-as-value deprecation",
+      "Vue Teleport target/attribute warnings"
+    ],
+    "scope": "captured console log snapshot; these warnings were not identified as the Area render outcome"
+  },
+  "cleanup": {
+    "permissionStubReturnedTo": "unknown; copy/paste disabled",
+    "unsavedAreaChanges": "discarded via reload without saving",
+    "reopenedSavedBaseline": "明细表 remained selected; filter tree remained; clipboard null; save button disabled"
+  },
+  "limitations": [
+    "One indicator→area-chart pair only; no all-types matrix, P1 acceptance, or full Goal acceptance claimed.",
+    "Local standalone plus DEV permission stub is not real multi-user authorization.",
+    "The component title still read 基础柱状图 while the chart type was 面积图; the chart itself was visibly an area chart.",
+    "This exploratory success does not provide trusted RED/GREEN for AreaPasteFailureDesign-r003 and does not invalidate the separately frozen prior failure evidence.",
+    "No save/reopen claim is made for the area-chart state; it was intentionally discarded.",
+    "Dashboard list-based reopen remains unverified."
+  ],
+  "evidenceRecordedAt": "2026-10-28T15:44:01Z"
+}

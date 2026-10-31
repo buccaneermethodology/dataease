@@ -1,0 +1,2464 @@
+{
+  "schema_version": "s02_composition_oracles_v2",
+  "slice": "QE2E-001",
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "parent_fixture_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineFixtures-r001.json",
+      "sha256": "9e96dba76c5659efd99d5dac8cf0e3fe1fd4a46db0205f94f15b10cdec8f30bc"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectQueryPayloadFixtures-r001.json",
+      "sha256": "a5acada23685066b57bf54f1ced0c70ea92f43b32cd8eacd95b34b60d19f09eb"
+    }
+  ],
+  "composition_order": [
+    "prepareQueryReferencePipeline(real)",
+    "prepareSingleSelectQueryPayload(real; internally QTARGET real)"
+  ],
+  "cases": [
+    {
+      "id": "TC-QE2E-001",
+      "parent_payload_case": "TC-QPAYLOAD-001",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-B"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "designPayload": {
+            "id": "query-B",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "name": "目标查询",
+            "label": "目标查询",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "icon": "icon_search",
+            "isHang": false,
+            "freeze": false,
+            "x": 1,
+            "y": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "style": {
+              "rotate": 0,
+              "opacity": 1,
+              "borderActive": false,
+              "borderWidth": 1,
+              "borderRadius": 5,
+              "borderStyle": "solid",
+              "borderColor": "#cccccc",
+              "width": 400,
+              "height": 100
+            },
+            "request": {
+              "method": "GET",
+              "data": [],
+              "url": "",
+              "series": false,
+              "time": 1000,
+              "paramType": "",
+              "requestCount": 0
+            },
+            "matrixStyle": {},
+            "animations": [],
+            "canvasId": "canvas-main",
+            "events": {
+              "checked": false,
+              "showTips": false,
+              "type": "jump",
+              "jump": {
+                "value": "https://",
+                "type": "_blank"
+              }
+            },
+            "carousel": {
+              "enable": false,
+              "time": 10
+            },
+            "multiDimensional": {
+              "enable": false,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "groupStyle": {},
+            "isLock": false,
+            "maintainRadio": false,
+            "aspectRatio": 1,
+            "isShow": true,
+            "dashboardHidden": false,
+            "category": "base",
+            "dragging": false,
+            "resizing": false,
+            "collapseName": [
+              "position",
+              "background"
+            ],
+            "linkage": {
+              "duration": 0,
+              "data": [
+                {
+                  "id": "",
+                  "label": "",
+                  "event": "",
+                  "style": [
+                    {
+                      "key": "",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "commonBackground": {
+              "backgroundColorSelect": true,
+              "backdropFilterEnable": false,
+              "backgroundImageEnable": false,
+              "backgroundType": "innerImage",
+              "innerImage": "board/board_1.svg",
+              "outerImage": null,
+              "innerPadding": {
+                "mode": "uniform",
+                "top": 12
+              },
+              "borderRadius": {
+                "mode": "uniform",
+                "topLeft": 0
+              },
+              "backdropFilter": 4
+            },
+            "state": "prepare",
+            "cascade": []
+          },
+          "runtimePayload": {
+            "id": "query-B",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "name": "目标查询",
+            "label": "目标查询",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [
+                  "A-code"
+                ],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "defaultValue": "A",
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": true,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": [
+                  "A-code"
+                ],
+                "selectValue": "A"
+              }
+            ],
+            "icon": "icon_search",
+            "isHang": false,
+            "freeze": false,
+            "x": 1,
+            "y": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "style": {
+              "rotate": 0,
+              "opacity": 1,
+              "borderActive": false,
+              "borderWidth": 1,
+              "borderRadius": 5,
+              "borderStyle": "solid",
+              "borderColor": "#cccccc",
+              "width": 400,
+              "height": 100
+            },
+            "request": {
+              "method": "GET",
+              "data": [],
+              "url": "",
+              "series": false,
+              "time": 1000,
+              "paramType": "",
+              "requestCount": 0
+            },
+            "matrixStyle": {},
+            "animations": [],
+            "canvasId": "canvas-main",
+            "events": {
+              "checked": false,
+              "showTips": false,
+              "type": "jump",
+              "jump": {
+                "value": "https://",
+                "type": "_blank"
+              }
+            },
+            "carousel": {
+              "enable": false,
+              "time": 10
+            },
+            "multiDimensional": {
+              "enable": false,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "groupStyle": {},
+            "isLock": false,
+            "maintainRadio": false,
+            "aspectRatio": 1,
+            "isShow": true,
+            "dashboardHidden": false,
+            "category": "base",
+            "dragging": false,
+            "resizing": false,
+            "collapseName": [
+              "position",
+              "background"
+            ],
+            "linkage": {
+              "duration": 0,
+              "data": [
+                {
+                  "id": "",
+                  "label": "",
+                  "event": "",
+                  "style": [
+                    {
+                      "key": "",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "commonBackground": {
+              "backgroundColorSelect": true,
+              "backdropFilterEnable": false,
+              "backgroundImageEnable": false,
+              "backgroundType": "innerImage",
+              "innerImage": "board/board_1.svg",
+              "outerImage": null,
+              "innerPadding": {
+                "mode": "uniform",
+                "top": 12
+              },
+              "borderRadius": {
+                "mode": "uniform",
+                "topLeft": 0
+              },
+              "backdropFilter": 4
+            },
+            "state": "prepare",
+            "cascade": []
+          }
+        }
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP",
+        "QPAYLOAD",
+        "QTARGET"
+      ]
+    },
+    {
+      "id": "TC-QE2E-002",
+      "parent_payload_case": "TC-QPAYLOAD-002",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": false,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": [
+            {
+              "id": "old-query",
+              "defaultValue": "旧"
+            }
+          ],
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 777,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare",
+          "cascade": [
+            [
+              {
+                "id": "old-node",
+                "datasetId": "old-reference"
+              }
+            ]
+          ]
+        },
+        "expectedTargetId": "query-B"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "designPayload": {
+            "id": "query-B",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "name": "目标查询",
+            "label": "目标查询",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {}
+              }
+            ],
+            "icon": "icon_search",
+            "isHang": false,
+            "freeze": false,
+            "x": 1,
+            "y": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "style": {
+              "rotate": 0,
+              "opacity": 1,
+              "borderActive": false,
+              "borderWidth": 1,
+              "borderRadius": 5,
+              "borderStyle": "solid",
+              "borderColor": "#cccccc",
+              "width": 777,
+              "height": 100
+            },
+            "request": {
+              "method": "GET",
+              "data": [],
+              "url": "",
+              "series": false,
+              "time": 1000,
+              "paramType": "",
+              "requestCount": 0
+            },
+            "matrixStyle": {},
+            "animations": [],
+            "canvasId": "canvas-main",
+            "events": {
+              "checked": false,
+              "showTips": false,
+              "type": "jump",
+              "jump": {
+                "value": "https://",
+                "type": "_blank"
+              }
+            },
+            "carousel": {
+              "enable": false,
+              "time": 10
+            },
+            "multiDimensional": {
+              "enable": false,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "groupStyle": {},
+            "isLock": false,
+            "maintainRadio": false,
+            "aspectRatio": 1,
+            "isShow": true,
+            "dashboardHidden": false,
+            "category": "base",
+            "dragging": false,
+            "resizing": false,
+            "collapseName": [
+              "position",
+              "background"
+            ],
+            "linkage": {
+              "duration": 0,
+              "data": [
+                {
+                  "id": "",
+                  "label": "",
+                  "event": "",
+                  "style": [
+                    {
+                      "key": "",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "commonBackground": {
+              "backgroundColorSelect": true,
+              "backdropFilterEnable": false,
+              "backgroundImageEnable": false,
+              "backgroundType": "innerImage",
+              "innerImage": "board/board_1.svg",
+              "outerImage": null,
+              "innerPadding": {
+                "mode": "uniform",
+                "top": 12
+              },
+              "borderRadius": {
+                "mode": "uniform",
+                "topLeft": 0
+              },
+              "backdropFilter": 4
+            },
+            "state": "prepare",
+            "cascade": []
+          },
+          "runtimePayload": {
+            "id": "query-B",
+            "component": "VQuery",
+            "innerType": "VQuery",
+            "name": "目标查询",
+            "label": "目标查询",
+            "propValue": [
+              {
+                "id": "q-new",
+                "name": "省",
+                "showError": true,
+                "timeGranularity": "date",
+                "timeGranularityMultiple": "datetimerange",
+                "field": {
+                  "id": "province",
+                  "type": "VARCHAR",
+                  "name": "省",
+                  "deType": 0
+                },
+                "displayId": "province",
+                "sortId": "",
+                "sort": "asc",
+                "defaultMapValue": [],
+                "conditionType": 0,
+                "conditionValueOperatorF": "eq",
+                "conditionValueF": "",
+                "conditionValueOperatorS": "like",
+                "conditionValueS": "",
+                "defaultConditionValueOperatorF": "eq",
+                "defaultConditionValueF": "",
+                "defaultConditionValueOperatorS": "like",
+                "defaultConditionValueS": "",
+                "timeType": "fixed",
+                "relativeToCurrent": "custom",
+                "required": false,
+                "timeNum": 0,
+                "relativeToCurrentType": "date",
+                "around": "f",
+                "parametersStart": null,
+                "parametersEnd": null,
+                "arbitraryTime": "2026-10-16T00:00:00.000Z",
+                "timeNumRange": 0,
+                "relativeToCurrentTypeRange": "date",
+                "aroundRange": "f",
+                "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+                "auto": false,
+                "optionValueSource": 1,
+                "valueSource": [],
+                "dataset": {
+                  "id": "201",
+                  "name": "销售",
+                  "fields": []
+                },
+                "visible": true,
+                "defaultValueCheck": false,
+                "multiple": false,
+                "displayType": "0",
+                "checkedFields": [
+                  "chart-B"
+                ],
+                "parameters": [],
+                "parametersCheck": false,
+                "parametersList": [],
+                "checkedFieldsMap": {
+                  "chart-B": "province"
+                },
+                "hideConditionSwitching": false,
+                "resultMode": 0,
+                "relativeToCurrentRange": "custom",
+                "treeDatasetId": "201",
+                "setTimeRange": false,
+                "showEmpty": false,
+                "defaultNumValueStart": null,
+                "defaultNumValueEnd": null,
+                "numValueEnd": null,
+                "numValueStart": null,
+                "displayFormat": 0,
+                "timeRange": {
+                  "intervalType": "none",
+                  "dynamicWindow": false,
+                  "maximumSingleQuery": 0,
+                  "regularOrTrends": "fixed",
+                  "regularOrTrendsValue": "",
+                  "relativeToCurrent": "custom",
+                  "timeNum": 0,
+                  "relativeToCurrentType": "year",
+                  "around": "f",
+                  "timeNumRange": 0,
+                  "relativeToCurrentTypeRange": "year",
+                  "aroundRange": "f",
+                  "relativeToCurrentRange": "custom"
+                },
+                "oldTreeLoad": false,
+                "treeCheckedList": [],
+                "defaultValueFirstItem": false,
+                "treeFieldList": [],
+                "checkedFieldsMapArr": {},
+                "checkedFieldsMapArrNum": {},
+                "checkedFieldsMapStart": {},
+                "checkedFieldsMapStartNum": {},
+                "checkedFieldsMapEnd": {},
+                "checkedFieldsMapEndNum": {},
+                "parametersArr": {},
+                "mapValue": []
+              }
+            ],
+            "icon": "icon_search",
+            "isHang": false,
+            "freeze": false,
+            "x": 1,
+            "y": 1,
+            "sizeX": 72,
+            "sizeY": 4,
+            "style": {
+              "rotate": 0,
+              "opacity": 1,
+              "borderActive": false,
+              "borderWidth": 1,
+              "borderRadius": 5,
+              "borderStyle": "solid",
+              "borderColor": "#cccccc",
+              "width": 777,
+              "height": 100
+            },
+            "request": {
+              "method": "GET",
+              "data": [],
+              "url": "",
+              "series": false,
+              "time": 1000,
+              "paramType": "",
+              "requestCount": 0
+            },
+            "matrixStyle": {},
+            "animations": [],
+            "canvasId": "canvas-main",
+            "events": {
+              "checked": false,
+              "showTips": false,
+              "type": "jump",
+              "jump": {
+                "value": "https://",
+                "type": "_blank"
+              }
+            },
+            "carousel": {
+              "enable": false,
+              "time": 10
+            },
+            "multiDimensional": {
+              "enable": false,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "groupStyle": {},
+            "isLock": false,
+            "maintainRadio": false,
+            "aspectRatio": 1,
+            "isShow": true,
+            "dashboardHidden": false,
+            "category": "base",
+            "dragging": false,
+            "resizing": false,
+            "collapseName": [
+              "position",
+              "background"
+            ],
+            "linkage": {
+              "duration": 0,
+              "data": [
+                {
+                  "id": "",
+                  "label": "",
+                  "event": "",
+                  "style": [
+                    {
+                      "key": "",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "commonBackground": {
+              "backgroundColorSelect": true,
+              "backdropFilterEnable": false,
+              "backgroundImageEnable": false,
+              "backgroundType": "innerImage",
+              "innerImage": "board/board_1.svg",
+              "outerImage": null,
+              "innerPadding": {
+                "mode": "uniform",
+                "top": 12
+              },
+              "borderRadius": {
+                "mode": "uniform",
+                "topLeft": 0
+              },
+              "backdropFilter": 4
+            },
+            "state": "prepare",
+            "cascade": []
+          }
+        }
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP",
+        "QPAYLOAD",
+        "QTARGET"
+      ]
+    },
+    {
+      "id": "TC-QE2E-003",
+      "input": {
+        "propValue": [],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-B"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "REFERENCE_PIPELINE",
+        "cause": {
+          "stage": "QPROJ",
+          "reason": "INVALID_INPUT"
+        }
+      },
+      "expected_calls": [
+        "QPROJ"
+      ]
+    },
+    {
+      "id": "TC-QE2E-004",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-B"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "REFERENCE_PIPELINE",
+        "cause": {
+          "stage": "QMAP",
+          "reason": "MISSING_COMPONENT"
+        }
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP"
+      ]
+    },
+    {
+      "id": "TC-QE2E-005",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-X"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "CONTAINER",
+        "reason": "TARGET_ID_MISMATCH"
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP",
+        "QPAYLOAD"
+      ]
+    },
+    {
+      "id": "TC-QE2E-006",
+      "input": {
+        "propValue": [
+          {
+            "id": "q1",
+            "name": "省",
+            "showError": true,
+            "timeGranularity": "date",
+            "timeGranularityMultiple": "datetimerange",
+            "field": {
+              "id": "province",
+              "type": "VARCHAR",
+              "name": "省",
+              "deType": 0
+            },
+            "displayId": "province",
+            "sortId": "",
+            "sort": "asc",
+            "defaultMapValue": [
+              "A-code"
+            ],
+            "mapValue": [
+              "B-code"
+            ],
+            "conditionType": 0,
+            "conditionValueOperatorF": "eq",
+            "conditionValueF": "",
+            "conditionValueOperatorS": "like",
+            "conditionValueS": "",
+            "defaultConditionValueOperatorF": "eq",
+            "defaultConditionValueF": "",
+            "defaultConditionValueOperatorS": "like",
+            "defaultConditionValueS": "",
+            "timeType": "fixed",
+            "relativeToCurrent": "custom",
+            "required": false,
+            "timeNum": 0,
+            "relativeToCurrentType": "date",
+            "around": "f",
+            "parametersStart": null,
+            "parametersEnd": null,
+            "arbitraryTime": "2026-10-16T00:00:00.000Z",
+            "timeNumRange": 0,
+            "relativeToCurrentTypeRange": "date",
+            "aroundRange": "f",
+            "arbitraryTimeRange": "2026-10-16T00:00:00.000Z",
+            "auto": false,
+            "defaultValue": "A",
+            "selectValue": "B",
+            "optionValueSource": 1,
+            "valueSource": [],
+            "dataset": {
+              "id": "201",
+              "name": "销售",
+              "fields": []
+            },
+            "visible": true,
+            "defaultValueCheck": true,
+            "multiple": false,
+            "displayType": "0",
+            "checkedFields": [
+              "chart-A"
+            ],
+            "parameters": [],
+            "parametersCheck": false,
+            "parametersList": [],
+            "checkedFieldsMap": {
+              "chart-A": "province"
+            },
+            "hideConditionSwitching": false,
+            "resultMode": 0,
+            "relativeToCurrentRange": "custom",
+            "treeDatasetId": "201",
+            "setTimeRange": false,
+            "showEmpty": false,
+            "defaultNumValueStart": null,
+            "defaultNumValueEnd": null,
+            "numValueEnd": null,
+            "numValueStart": null,
+            "displayFormat": 0,
+            "timeRange": {
+              "intervalType": "none",
+              "dynamicWindow": false,
+              "maximumSingleQuery": 0,
+              "regularOrTrends": "fixed",
+              "regularOrTrendsValue": "",
+              "relativeToCurrent": "custom",
+              "timeNum": 0,
+              "relativeToCurrentType": "year",
+              "around": "f",
+              "timeNumRange": 0,
+              "relativeToCurrentTypeRange": "year",
+              "aroundRange": "f",
+              "relativeToCurrentRange": "custom"
+            },
+            "oldTreeLoad": false,
+            "treeCheckedList": [],
+            "defaultValueFirstItem": false,
+            "treeFieldList": [],
+            "checkedFieldsMapArr": {},
+            "checkedFieldsMapArrNum": {},
+            "checkedFieldsMapStart": {},
+            "checkedFieldsMapStartNum": {},
+            "checkedFieldsMapEnd": {},
+            "checkedFieldsMapEndNum": {},
+            "parametersArr": {}
+          }
+        ],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province",
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-B"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "QTARGET",
+        "cause": {
+          "stage": "DIRECTORY",
+          "reason": "TARGET_UNRESOLVED"
+        }
+      },
+      "expected_calls": [
+        "QPROJ",
+        "QMAP",
+        "QPREP",
+        "QPAYLOAD",
+        "QTARGET"
+      ]
+    },
+    {
+      "id": "TC-QE2E-007",
+      "input_ref": "TC-QE2E-001",
+      "expected_invariants": [
+        "input deeply frozen and unchanged",
+        "no mutable aliases among input/designPayload/runtimePayload",
+        "all child calls execute real modules"
+      ]
+    },
+    {
+      "id": "TC-QE2E-008",
+      "input": {
+        "propValue": [],
+        "cascade": [],
+        "maps": {
+          "conditionMap": {
+            "q1": "q-new"
+          },
+          "nodeMap": {}
+        },
+        "sourceComponents": [
+          {
+            "componentId": "chart-A",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "targetComponents": [
+          {
+            "componentId": "chart-B",
+            "datasetId": "201",
+            "fieldIds": [
+              "province"
+            ]
+          }
+        ],
+        "target": {
+          "id": "query-B",
+          "component": "VQuery",
+          "innerType": "VQuery",
+          "name": "目标查询",
+          "label": "目标查询",
+          "propValue": "",
+          "icon": "icon_search",
+          "isHang": false,
+          "freeze": false,
+          "x": 1,
+          "y": 1,
+          "sizeX": 72,
+          "sizeY": 4,
+          "style": {
+            "rotate": 0,
+            "opacity": 1,
+            "borderActive": false,
+            "borderWidth": 1,
+            "borderRadius": 5,
+            "borderStyle": "solid",
+            "borderColor": "#cccccc",
+            "width": 400,
+            "height": 100
+          },
+          "request": {
+            "method": "GET",
+            "data": [],
+            "url": "",
+            "series": false,
+            "time": 1000,
+            "paramType": "",
+            "requestCount": 0
+          },
+          "matrixStyle": {},
+          "animations": [],
+          "canvasId": "canvas-main",
+          "events": {
+            "checked": false,
+            "showTips": false,
+            "type": "jump",
+            "jump": {
+              "value": "https://",
+              "type": "_blank"
+            }
+          },
+          "carousel": {
+            "enable": false,
+            "time": 10
+          },
+          "multiDimensional": {
+            "enable": false,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "groupStyle": {},
+          "isLock": false,
+          "maintainRadio": false,
+          "aspectRatio": 1,
+          "isShow": true,
+          "dashboardHidden": false,
+          "category": "base",
+          "dragging": false,
+          "resizing": false,
+          "collapseName": [
+            "position",
+            "background"
+          ],
+          "linkage": {
+            "duration": 0,
+            "data": [
+              {
+                "id": "",
+                "label": "",
+                "event": "",
+                "style": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          "commonBackground": {
+            "backgroundColorSelect": true,
+            "backdropFilterEnable": false,
+            "backgroundImageEnable": false,
+            "backgroundType": "innerImage",
+            "innerImage": "board/board_1.svg",
+            "outerImage": null,
+            "innerPadding": {
+              "mode": "uniform",
+              "top": 12
+            },
+            "borderRadius": {
+              "mode": "uniform",
+              "topLeft": 0
+            },
+            "backdropFilter": 4
+          },
+          "state": "prepare"
+        },
+        "expectedTargetId": "query-X"
+      },
+      "expected": {
+        "ok": false,
+        "stage": "REFERENCE_PIPELINE",
+        "cause": {
+          "stage": "QPROJ",
+          "reason": "INVALID_INPUT"
+        }
+      },
+      "expected_calls": [
+        "QPROJ"
+      ]
+    },
+    {
+      "id": "TC-QE2E-010-side-assertion",
+      "construction_ref": "TC-QE2E-010",
+      "assertion": "getter_calls===0 after invocation"
+    }
+  ],
+  "runtime_constructed_invalid_input_cases": [
+    {
+      "id": "TC-QE2E-009",
+      "construction": "plain root with Object.create(null)",
+      "expected": {
+        "ok": false,
+        "stage": "ENVELOPE",
+        "reason": "INVALID_INPUT"
+      }
+    },
+    {
+      "id": "TC-QE2E-010",
+      "construction": "plain root with own getter on propValue; getter increments counter",
+      "expected": {
+        "ok": false,
+        "stage": "ENVELOPE",
+        "reason": "INVALID_INPUT"
+      }
+    },
+    {
+      "id": "TC-QE2E-011",
+      "construction": "valid-shape root containing a self-referential sourceComponents array",
+      "expected": {
+        "ok": false,
+        "stage": "ENVELOPE",
+        "reason": "INVALID_INPUT"
+      }
+    }
+  ],
+  "assertions": [
+    "exact structured output equality",
+    "expected real call sequence",
+    "input deep freeze/unchanged",
+    "success output has full VQuery roots",
+    "no value on failure",
+    "deep isolation input vs design/runtime and design vs runtime",
+    "no external side effects"
+  ],
+  "claim_ceiling": "Only detached normal-text single-select composition; no product wiring, authorization, browser, save/reopen, or Goal completion.",
+  "fixtures_revision": "r003"
+}

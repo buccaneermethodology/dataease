@@ -1,0 +1,386 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-SCOPE-REBASE-GOAL-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "依据已核实新的人类范围授权修订Goal的Topic/Scope/Purpose、完整旧→新AC差异/迁出Session和直接UI执行入口，不再仅顺序调整。",
+    "objective": "依据已核实新的人类范围授权修订Goal的Topic/Scope/Purpose、完整旧→新AC差异/迁出Session和直接UI执行入口，不再仅顺序调整。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/Goal.candidate.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/GoalScopePatch-r005.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/TSP.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/ScopeDelta.md",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/FollowupSessions.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/NextUiTask.md"
+    ],
+    "forbidden_actions": [
+      "不改当前Goal.final/旧Goal/旧Review/冻结证据/生产代码/共享Dashboard",
+      "不伪造显式approval token或平台receipt",
+      "不重复询问已授权权限测试桩/范围迁出",
+      "不把通用stage/资源/全竞态重新塞作S02前置",
+      "不把迁出记通过或静默丢原26/16/10"
+    ],
+    "maximum_claim": "仅新授权范围的Goal/TSP候选和逐项迁移可审阅包，尚未独立Review或产品验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+      "revision": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/scope-baseline-before-20261027/manifest.json",
+      "revision": "96972dbafaa3a1dbb1c1ebfe944435793090dcd3377e420f3fb1b4ead3ed1fb9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "9df3e32b3360a256b63c0a8b32fb99d4478ebd78bb24acfb3ceab0abbb1afc2f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/README.md",
+      "revision": "e33b77410fd1147f1875b283028da59f921f5955bdcb8168f95e576ccf9dad98",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Sessions.md",
+      "revision": "92e81abb48b55faa4ba1b056f9e9d643ca1a329802e23d8c91d66db11aa99d14",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Big_Ideas.md",
+      "revision": "27427a2ceabf2ee42fa3286b6e8bd29b4f5c94fbf3b73e17fc052c663c004206",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Decisions.md",
+      "revision": "26555cd362324ecec54879b7b65c95226739cd6fe3bc8693c4eefc5912e781e7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/authority-root-r002.json",
+      "revision": "5acc54ec9e2b82862129f7770b5869aa6889cb30b60402c8d4b9f651df37cd6d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/stop-gate/completion-predicate-r002.json",
+      "revision": "a43c4e8bd54add42996c67281077ede26b4466594b46da63ef4c2d74ccd82a78",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineStageConstructionRedValidation-r001.md",
+      "revision": "074c32ece625ffcc119db3407537f725dc22c37775b666680c0fa618c99780b3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineSiblingHostRenderDesignReview-r002.md",
+      "revision": "1c1c8d99d5d762f9db5eb131c3ba728c736efaad0ec0c30b1598cfb2ccda2424",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartQueryCandidateDesignReview-r002.md",
+      "revision": "29d2f2f76980bc44f23879bdbbf6502325fc8f5a7085632090a49b8b75ecc727",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-SCOPE-REBASE-GOAL-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal为10 AC/26 must-have/16产品义务且Scope Delta none；旧Chart→Chart r003与事务合同r003各自3/3且不得重开；AM-09仍NEEDS_REVISION；S01 F01 CONDITIONAL；真实权限环境BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "goal",
+    "reason": "依据已核实新的人类范围授权修订Goal的Topic/Scope/Purpose、完整旧→新AC差异/迁出Session和直接UI执行入口，不再仅顺序调整。",
+    "task_id": "S02-MVP-SCOPE-REBASE-GOAL-r001",
+    "recorded_at": "2026-10-27T03:05:21.680913+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r417.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r418.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-SCOPE-REBASE-GOAL-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q014",
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-S02-09"
+  ],
+  "maximum_claim": "仅新授权范围的Goal/TSP候选和逐项迁移可审阅包，尚未独立Review或产品验收。",
+  "design_objective": "依据已核实新的人类范围授权修订Goal的Topic/Scope/Purpose、完整旧→新AC差异/迁出Session和直接UI执行入口，不再仅顺序调整。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/NextUiTask.md"
+}

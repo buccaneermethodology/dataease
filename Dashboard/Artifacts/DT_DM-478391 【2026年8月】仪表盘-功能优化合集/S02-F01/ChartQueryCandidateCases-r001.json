@@ -1,0 +1,894 @@
+{
+  "schema_version": "chart_query_candidate_cases_r001",
+  "artifact_role": "首轮工程候选Cases；未冻结/未执行，不是产品权限验收",
+  "task_id": "CHART-QUERY-CANDIDATE-DESIGN-r001",
+  "review_round": "1/3 candidate",
+  "created_at": "2026-10-27T02:18:46.389059+00:00",
+  "card_canonical_sha256": "cab64c76f09aefd2bde5e9bf2bb6952cfb41843b8be675cd9f1eccfd964c6494",
+  "context_sha256": "ac84663fe1e801019675cf3d6a250be261f4ca1100dd5d5d934a4e22943fbecf",
+  "scope_delta": "none; preserve original 10 Goal AC / 26 must-have / 16 product obligations",
+  "case_identity": {
+    "algorithm": "sha256 canonical UTF-8 JSON sort_keys=True,separators=(comma,colon),ensure_ascii=False",
+    "payload_keys": [
+      "fixtures",
+      "cases",
+      "terminal_rule"
+    ],
+    "sha256": "63b4556d64da823395213d1a4c8b433d1bb77300de4bda9381d6ac8ff61b78e4"
+  },
+  "fixtures": {
+    "view": {
+      "id": "LINE-1",
+      "tableId": "DS-1",
+      "type": "line",
+      "render": "antv",
+      "isPlugin": false,
+      "customFilter": {
+        "logic": "and",
+        "items": []
+      },
+      "chartExtRequest": {
+        "drill": []
+      }
+    },
+    "success_query_result": {
+      "id": "LINE-1",
+      "tableId": "DS-1",
+      "type": "line",
+      "render": "antv",
+      "drill": false,
+      "drillFilters": [],
+      "chartExtRequest": {
+        "drill": []
+      },
+      "data": {
+        "fields": [],
+        "data": [
+          {
+            "field": "A",
+            "category": "S",
+            "value": 7
+          }
+        ]
+      }
+    },
+    "empty_query_result": {
+      "id": "LINE-1",
+      "tableId": "DS-1",
+      "type": "line",
+      "render": "antv",
+      "drill": false,
+      "drillFilters": [],
+      "chartExtRequest": {
+        "drill": []
+      },
+      "data": {
+        "fields": [],
+        "data": []
+      }
+    },
+    "wire_success_envelope": {
+      "code": 0,
+      "data": {
+        "id": "LINE-1",
+        "tableId": "DS-1",
+        "type": "line",
+        "render": "antv",
+        "drill": false,
+        "drillFilters": [],
+        "chartExtRequest": {
+          "drill": []
+        },
+        "data": {
+          "fields": [],
+          "data": [
+            {
+              "field": "A",
+              "category": "S",
+              "value": 7
+            }
+          ]
+        }
+      }
+    },
+    "business_passthrough_envelope": {
+      "code": 50002,
+      "msg": "fixture-business-denied"
+    },
+    "ids": {
+      "live_chart": "LINE-1",
+      "candidate_chart": "LINE-1",
+      "request_a": "candidate-A",
+      "request_b": "candidate-B"
+    },
+    "fake_secret": "fixture-only-signing-key",
+    "auth_cache": "fixture values only; never load workstation credentials"
+  },
+  "cases": [
+    {
+      "id": "QCC-001",
+      "axis": "ready",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "deferred adapter 返回wire_success_envelope",
+        "调用prepare；释放adapter；await outcome"
+      ],
+      "expected_terminal": {
+        "status": "ready"
+      },
+      "assertions": [
+        "bundle.requestId===candidate-A",
+        "bundle.chartData.data deepEqual [row]",
+        "真实api/chart.ts getData与service拦截器均执行",
+        "不写活动状态sentinel"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-002",
+      "axis": "empty",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "wire code0；query result.data.data=[]"
+      ],
+      "expected_terminal": {
+        "status": "empty"
+      },
+      "assertions": [
+        "empty仅由显式数组length0判定",
+        "仍携独立bundle；不凭undefined推empty"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-003",
+      "axis": "await",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "adapter保持pending；调用prepare后推进已知microtasks",
+        "验证未出现ready/empty；再release adapter"
+      ],
+      "expected_terminal": {
+        "status": "ready"
+      },
+      "assertions": [
+        "正常成功必须等待实际getData promise fulfilled",
+        "一次请求一个terminal，pending观察不算terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-004",
+      "axis": "input ownership",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "view含旧data/customFilter/axis originName；保存deep snapshot",
+        "prepare后输入对象原地改树/旧data",
+        "release success"
+      ],
+      "expected_terminal": {
+        "status": "ready"
+      },
+      "assertions": [
+        "helper未修改调用方view/旧data/树/axis",
+        "captured viewSnapshot为调用时独立副本",
+        "getData delete/data转码只作用独立request clone"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-005",
+      "axis": "response ownership",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "release adapter response",
+        "await ready后修改fixture原response.data"
+      ],
+      "expected_terminal": {
+        "status": "ready"
+      },
+      "assertions": [
+        "bundle.response为deep clone，不跟随adapter对象后改",
+        "bundle.chartData===bundle.response.data（bundle内部共享允许）",
+        "bundle与viewSnapshot互不引用"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-006",
+      "axis": "business passthrough",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "wire code50002通过既有service分支",
+        "await outcome"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "business"
+      },
+      "assertions": [
+        "绝非ready/empty",
+        "保留业务code/message在failure response或cause",
+        "现有axios行为不被handleErrorLocally跳过"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-007",
+      "axis": "ordinary business reject",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "wire code90001/msg fixture-denied；响应拦截器既有error流程"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "query"
+      },
+      "assertions": [
+        "cause===既有getData实际rejection value（fixture-denied字符串）",
+        "toast路径仍被观察",
+        "不把business reject转ready"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-008",
+      "axis": "transport error identity",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "真实axios adapter reject同一Error对象，无response"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "query"
+      },
+      "assertions": [
+        "outcome.error===original Error（不重写主因）",
+        "candidate registry清理",
+        "默认error handler仍执行"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-009",
+      "axis": "permission response",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "adapter reject AxiosError，response.status=403，headers DE-FORBIDDEN-FLAG=permission-denied"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "query"
+      },
+      "assertions": [
+        "现有showMsg/权限提示完整执行",
+        "随后candidate分支reject原AxiosError，cause身份相同",
+        "不使用handleErrorLocally",
+        "默认legacy仍按旧handler返回语义"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-010",
+      "axis": "413 response",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "adapter reject AxiosError response.status=413"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "query"
+      },
+      "assertions": [
+        "现有file_size_exceed toast执行",
+        "candidate保留原error rejection，不能undefined变成功",
+        "legacy413仍保持旧undefined行为"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-011",
+      "axis": "invalid shape",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "wire code0 data为缺data.data的object"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "response"
+      },
+      "assertions": [
+        "缺/undefined/null/非数组均不当empty",
+        "用表驱动只改变该payload字段，保存每个子结果"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-012",
+      "axis": "pre-aborted",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "caller.signal已aborted；prepare"
+      ],
+      "expected_terminal": {
+        "status": "aborted"
+      },
+      "assertions": [
+        "getData invocation=0",
+        "chartData adapter dispatch=0",
+        "candidate registry未登记"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-013",
+      "axis": "caller abort isolation",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "同chartId启动legacy live请求，记录cancelMap liveFn",
+        "candidate-A adapter pending；callerA.abort",
+        "release或reject底层，重复abort"
+      ],
+      "expected_terminal": {
+        "status": "aborted"
+      },
+      "assertions": [
+        "liveFn引用/取消计数不变",
+        "legacy live未被candidate abort取消",
+        "A只有一个terminal",
+        "candidate owner/listener清理"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-014",
+      "axis": "same chart sibling isolation",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "同chartId candidate A/B同时pending",
+        "abort A；release B"
+      ],
+      "expected_terminal": {
+        "A": "aborted",
+        "B": "ready"
+      },
+      "assertions": [
+        "两个不同Symbol owner",
+        "A abort不取消B，不碰legacy key",
+        "每个request恰有一个terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-015",
+      "axis": "late after abort",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "底层deferred不响应取消，helper先收到caller.abort",
+        "释放迟到success或reject（两子案）"
+      ],
+      "expected_terminal": {
+        "status": "aborted"
+      },
+      "assertions": [
+        "无第二terminal/ready",
+        "底层Promise两出口均被消费，无unhandledRejection",
+        "late观察不是另一个dispatch"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-016",
+      "axis": "stale after success",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "isCurrent初始true；请求pending时改false",
+        "release success"
+      ],
+      "expected_terminal": {
+        "status": "stale"
+      },
+      "assertions": [
+        "不返回candidate bundle给renderer",
+        "不写任何sentinel",
+        "一个terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-017",
+      "axis": "stale before attempt",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "isCurrent初始false；prepare"
+      ],
+      "expected_terminal": {
+        "status": "stale"
+      },
+      "assertions": [
+        "getData invocation=0",
+        "adapter dispatch=0",
+        "registry空"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-018",
+      "axis": "predicate failure",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "isCurrent首次或成功回包后throw同一Error（两子案）"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "current-check"
+      },
+      "assertions": [
+        "保留original predicate Error身份",
+        "首次throw不query；后置throw消耗当前query一次",
+        "无未捕获异常/第二terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-019",
+      "axis": "unsupported input",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "依次只改变type为bar、render非antv、plugin=true、有非空drill、tableId缺失",
+        "prepare"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "unsupported"
+      },
+      "assertions": [
+        "各子案不调用getData/adapter",
+        "普通line支持边界显式，不偷偷改原Goal复杂场景分母"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-020",
+      "axis": "legacy compatibility",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "直接getData(clone(view))，不传options",
+        "验证adapter config与legacy cancelMap",
+        "cancelRequestBatch(chartData/getData/LINE-1)"
+      ],
+      "expected_terminal": {
+        "legacy": "existing behavior"
+      },
+      "assertions": [
+        "旧chartId key仍登记，batch能取消",
+        "默认POST/body/编解码/headers/loading/error语义保持",
+        "无candidate registry登记"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-021",
+      "axis": "legacy batch isolation",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "legacy live和同id candidate pending",
+        "调用cancelRequestBatch(chartData/getData/LINE-1)",
+        "release candidate"
+      ],
+      "expected_terminal": {
+        "candidate": "ready",
+        "legacy": "canceled"
+      },
+      "assertions": [
+        "candidate token未cancel",
+        "legacy批量逻辑不遍历candidate registry",
+        "不注册legacy key/不覆盖liveFn"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-022",
+      "axis": "global cancellation",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "legacy live及candidate A/B pending",
+        "调用cancelAllRequest两次；release剩余deferred"
+      ],
+      "expected_terminal": {
+        "A": "aborted",
+        "B": "aborted",
+        "legacy": "canceled"
+      },
+      "assertions": [
+        "全局覆盖两注册表，不改变既有legacy循环",
+        "A/B各token取消一次，registry按owner清空",
+        "一个请求一个terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-023",
+      "axis": "registry lifecycle",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "成功、业务reject、transport reject、caller abort、global cancel分别运行",
+        "settle后观察registry；迟到cleanup重复调用"
+      ],
+      "expected_terminal": {
+        "variants": "各对应单一terminal"
+      },
+      "assertions": [
+        "全部owner entry移除",
+        "abort listener解绑",
+        "旧请求cleanup不能删除新owner",
+        "已settled后cancelAll无陈旧candidate取消回调"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-024",
+      "axis": "auth wait/global cancel",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "用真实configHandler与受控login/refresh adapter暂挂候选",
+        "确认await前candidate已登记；cancelAll",
+        "释放auth/signing等待"
+      ],
+      "expected_terminal": {
+        "status": "aborted"
+      },
+      "assertions": [
+        "候选chartData adapter dispatch=0",
+        "configHandler释放后throwIfRequested，不能用旧身份发chartData",
+        "auth刷新本身按既有流程，不谎称撤回已发auth请求",
+        "候选registry最终空；不要求物理取消无法控制的refresh Promise"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-025",
+      "axis": "auth signing headers preserved",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "真实service/refresh/HmacTool；fixture cache token/locale/proxy/mobile及link或embed，两个互斥子场景",
+        "fixture-only signing key启用HMAC；release result"
+      ],
+      "expected_terminal": {
+        "status": "ready"
+      },
+      "assertions": [
+        "candidate与legacy在认证/签名/lang/mobile/proxy/link优先embed规则一致",
+        "Authorization/X-Date存在；不向输出写fixture外凭据",
+        "无新axios实例；timeout/HMAC/refresh请求与chartData分层统计"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-026",
+      "axis": "response now unsupported",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "请求普通line；query结果带drill=true或非空drillFilters（分别）"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "unsupported"
+      },
+      "assertions": [
+        "不交给ordinary-line no-drill renderer",
+        "HTTP尝试已经发生，不把失败写成从未dispatch",
+        "保留全局axios处理；一个terminal"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-027",
+      "axis": "input serialization failure",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "view含cycle或BigInt（两子案，序列化策略明确）"
+      ],
+      "expected_terminal": {
+        "status": "failed",
+        "reason": "input"
+      },
+      "assertions": [
+        "JSON往返snapshot失败保留原Error",
+        "不调用getData，不登记transport",
+        "不清空活动旧预览来隐藏失败"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    },
+    {
+      "id": "QCC-028",
+      "axis": "cancel-error normalization",
+      "fixture_refs": [
+        "view",
+        "success_query_result"
+      ],
+      "actions": [
+        "global cancel令真实axios抛CanceledError；caller signal仍未aborted",
+        "await getData settle"
+      ],
+      "expected_terminal": {
+        "status": "aborted"
+      },
+      "assertions": [
+        "通过axios.isCancel或ERR_CANCELED识别，不能误标query failure",
+        "不把别的普通Error名称相似当cancel",
+        "不重写认证/权限handler"
+      ],
+      "observations": {},
+      "terminal_count": 1,
+      "claim": "module seam only; no real HTTP/permission/product acceptance"
+    }
+  ],
+  "terminal_rule": "helper每次调用恰一个逻辑outcome；HTTP dispatch/response/late观察另层；C014/022等每request各一",
+  "source_binding": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "sha256": "c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "sha256": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstAuthority-20261025.json",
+      "sha256": "a5b00d1678a7543e654c1b9eb07e77fe36f6810ab025f473d59ccd64b5979342"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/RequiredCapability-MvpSourceRead-r001.json",
+      "sha256": "f6b0db0dbb862a668eec27eb9f4d41ecde35454cff3ea061c708d710ff0a57d0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.json",
+      "sha256": "d3f434a4f6155a86899b577cb402b1235161a746ed91596abf0223a5189d4524"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartPreviewStateIsolationTrace-r001.md",
+      "sha256": "fa52cad08832ede25d3e4b58ce52ed47d772511767c2b56a297d42aecab0d528"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+      "sha256": "26cd1b827821c4b4be7b115aab09c3afde20b224f94cb8d39e4bb7219aa372f7"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "sha256": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7"
+    },
+    {
+      "path": "core/core-frontend/src/config/axios/index.ts",
+      "sha256": "ca376ed57a3e04de177eb37883d8bf61bba6d7a9925f4a85a30b9ba99c4d3038"
+    },
+    {
+      "path": "core/core-frontend/src/config/axios/service.ts",
+      "sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "sha256": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "sha256": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2"
+    },
+    {
+      "path": "core/core-frontend/src/config/axios/refresh.ts",
+      "sha256": "516076f98334156e582e52f2b863ed92d3b16ea5f0f39c64f82cf79018d2de3c"
+    },
+    {
+      "path": "core/core-frontend/src/views/tools/HmacTool.ts",
+      "sha256": "2b0498fb26969ce4bf7da82b59b550a2853718452024a0ba2de2637b5fc831fe"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "sha256": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047"
+    },
+    {
+      "path": "core/core-frontend/src/utils/cacheUtil.ts",
+      "sha256": "4a2020dc0fc272f6b4a2976f71a0df08adcc3b662baa01f1c047a555e9e3e0a7"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/user.ts",
+      "sha256": "b6deca80ca5e6590fdaebffe7105db62a30db2a76bdb90418d29f64267885fdc"
+    }
+  ],
+  "mutable_state_sentinels": [
+    "active view/customFilter/data",
+    "SFC chartData/isError/errMsg/drill/map/curView/myChart",
+    "dvMain details/origin/calParams/lastRequest",
+    "snapshot/dirty",
+    "emitter/callback/loading"
+  ],
+  "allowed_external_effects": [
+    "既有axios认证refresh/signature/lang/mobile/link/embed/proxy",
+    "既有toast/permission dialog/cache/linkToken/version/router/reload",
+    "caller-signal和global cancel自己的候选token；global同时按旧逻辑取消legacy"
+  ],
+  "forbidden": [
+    "新建axios实例或fake query bypass",
+    "触及SFC/Store/S01/旧Goal/旧Cases",
+    "用handleErrorLocally跳过全局权限响应",
+    "把所有请求resolve/reject/late各当一dispatch",
+    "assertion oracle依赖复制生产控制流或万能Proxy"
+  ],
+  "seam": {
+    "runner": "core/core-frontend/tests/chart-query-candidate/check.mjs",
+    "actual_modules": [
+      "src/api/chart-query-candidate.ts",
+      "src/api/chart.ts",
+      "src/config/axios/index.ts",
+      "src/config/axios/service.ts",
+      "src/config/axios/refresh.ts",
+      "src/config/axios/hmac.ts",
+      "src/views/tools/HmacTool.ts",
+      "src/utils/CalculateFields.ts",
+      "installed real axios/lodash-es"
+    ],
+    "adapter": "真实service.defaults.adapter受控deferred；记录真正adapter调用、config、CancelToken和response/error；不替换service或request/getData",
+    "environment_stubs": [
+      "显式cache/store/router/ElMessage/ElMessageBox/loading/isMobile/getLocale边界",
+      "XHR仅timeout/HMAC配置fixture；无外网",
+      "必要Vue/i18n浏览器宿主环境"
+    ],
+    "test_only_instrumentation": "内存bundle中以AST精确定位candidate registry并append export只供观察owner/size；不复制handler，不修改生产文件。baseline缺registry时显式featureAbsent→断言失败而非import错误。",
+    "red_bootstrap": "先落可import且同API的candidate stub，返回failed/not-implemented，允许最少类型声明以编译；无查询行为。必须独立批准RED seam/bootstrap。QCC-001首失败应为期望ready实际not-implemented，execution_errors=0；legacy若通过仍如实保留。缺模块/语法/打包错误不是RED。",
+    "red_green_identity": "Review冻结后同fixtures/cases/digest，Builder不得改Cases/expected；实现只改允许源码范围",
+    "evidence": "每case记录observations、assertion_failures、execution_errors、主因/cleanup分开、terminal ledger与adapter请求表；无真实网络/权限声明"
+  },
+  "recovery_event": {
+    "source": "父任务通知",
+    "kind": "transient model capacity error",
+    "action": "检查两输出不存在后恢复同Card同范围；不作为合同阻断或另起轮次"
+  },
+  "execution_status": "NOT_RUN; Design only"
+}

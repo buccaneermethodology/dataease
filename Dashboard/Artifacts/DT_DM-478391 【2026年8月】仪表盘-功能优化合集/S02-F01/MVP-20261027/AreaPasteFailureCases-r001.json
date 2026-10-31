@@ -1,0 +1,58 @@
+{
+  "schema_version": "s02_mvp_area_failure_cases_v1",
+  "case_set_id": "S02-MVP-AREA-PASTE-FAILURE-r001",
+  "goal_id": "DE-S02-F01",
+  "goal_sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+  "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstFullAcceptanceAuthority-20261027.md",
+  "runtime_witness_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeAreaPasteFailure-r001.json",
+  "scope": [
+    "AC-MVP-F01-01",
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-12"
+  ],
+  "claim_ceiling": "area failure diagnosis and bounded candidate only; no all-type or Goal acceptance",
+  "invariants": [
+    "candidate preparation must not mutate canonical target/tree/data before ready",
+    "failure leaves existing target tree/result/dirty/save state unchanged",
+    "area stays in eligible chart denominator",
+    "one paste attempt emits at most one logical getData call for captured case",
+    "raw error payloads, request, response, credentials and business rows are not copied into diagnostic output"
+  ],
+  "cases": [
+    {
+      "id": "AREA-PASTE-REAL-001",
+      "source": "MVP-20261027/evidence/RuntimeAreaPasteFailure-r001.json",
+      "setup": "Captured real UI target chart was changed from saved base bar to area; two-condition source tree and same dataset; actual getData response observed.",
+      "expected": "Replay the captured request/response against the actual production renderer path. Before repair it must reproduce the observed paste_render_failed fingerprint without setup/execution errors; after a causal repair the area renderer reaches ready and adopts the same filter tree only after readiness.",
+      "status": "candidate_requires_harness_reproduction"
+    },
+    {
+      "id": "AREA-PASTE-ATOMIC-002",
+      "setup": "Same eligible area target, renderer preparation is explicitly rejected after the query response.",
+      "expected": "No canonical tree, chart result, dirty snapshot, or success feedback is published; prior target state remains byte-equivalent."
+    },
+    {
+      "id": "AREA-PASTE-READY-003",
+      "setup": "Same eligible area target, production renderer readiness succeeds.",
+      "expected": "Exactly one candidate query; once ready and current target identity matches, full two-condition tree is adopted and existing normal save/load path can persist it."
+    },
+    {
+      "id": "AREA-PASTE-STALE-004",
+      "setup": "Captured area candidate is invalidated by target edit/type switch/unmount before renderer readiness.",
+      "expected": "No late publication; candidate renderer is disposed; previous canonical target remains unchanged."
+    },
+    {
+      "id": "AREA-DIAGNOSTIC-PRIVACY-005",
+      "setup": "Renderer failure includes arbitrary exception message and object fields.",
+      "expected": "Any added DEV diagnostic contains only an allowlisted static failure-stage/code and error class; it excludes request, response, row values, message, stack, token, or auth context."
+    }
+  ],
+  "red_green_rule": "A new runner must first reproduce AREA-PASTE-REAL-001 as a semantic failure using the captured evidence and actual production SFC setup with zero harness setup errors; only the identical case identity/fingerprint may be used for GREEN. Existing runtime witness alone is not a substitute for runner RED.",
+  "forbidden_collapses": [
+    "Do not call 317 map unit cases 49 chart-type runtime passes.",
+    "Do not treat readonly-view console warning as the area failure cause without causal evidence.",
+    "Do not treat local G2 doubles as real UI or real G2 acceptance.",
+    "Do not change Goal denominator, permission requirement, or Area eligibility."
+  ]
+}

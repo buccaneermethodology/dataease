@@ -1,0 +1,102 @@
+{
+  "schema_version": "s02_query_product_commit_cases_r001",
+  "status": "DESIGN_CANDIDATE_REVIEW_REQUIRED",
+  "design_ref": "QueryProductCommitDesign-r001.md",
+  "denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "common": {
+    "supported_shape": "sourceRoot/targetRoot propValue contains exactly one QCARRIER-supported ordinary text single-select condition; cascade is empty",
+    "source_payload_oracle_ref": {
+      "path": "QueryProductRebuildFixtures-r008.json",
+      "slice": "QTARGET-REBUILD-001",
+      "case_ids": ["001", "002", "003", "004", "005", "006", "007", "008", "009", "011", "012", "013", "014", "015", "016"]
+    },
+    "target_component": {
+      "component": "VQuery",
+      "innerType": "VQuery",
+      "id": "query-target-1",
+      "propValue": [{"$ref": "complete-target-condition-from-r008"}],
+      "cascade": []
+    },
+    "initial_effects": {
+      "componentDataVersion": 7,
+      "snapshotAppend": 0,
+      "snapshotIndex": 2,
+      "previewRequest": 0,
+      "queryRequest": 0,
+      "saveRequest": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "QPC-001",
+      "title": "确认同数据集的完整候选并仅发布一次",
+      "input": {
+        "sourceComponentId": "query-source-1",
+        "targetComponentId": "query-target-1",
+        "sameDataset": true,
+        "expectedTargetSignatureMatches": true,
+        "authorization": "actual current-subject result bound to source dataset read and target dashboard edit",
+        "consent": "confirmed",
+        "candidate": "complete design/runtime output from QTARGET-REBUILD-001"
+      },
+      "expected": {
+        "result": {"ok": true, "commitId": "new unique id", "publishedRoot": "original root with only target propValue+cascade replaced"},
+        "effects": {"rootPublish": 1, "snapshotAppend": 1, "previewRequest": 1, "queryRequest": 1, "saveRequest": 0},
+        "retained": ["all non-target components", "styles", "layout", "result data", "source root", "no shared object references"]
+      }
+    },
+    {
+      "id": "QPC-002",
+      "title": "拒绝跨图表/查询类型",
+      "input": {"sourceKind": "chart", "targetKind": "VQuery", "authorization": "not reached"},
+      "expected": {"result": {"ok": false, "stage": "SOURCE/TYPE"}, "allEffectsUnchanged": true}
+    },
+    {
+      "id": "QPC-003",
+      "title": "数据集不相同或字段引用未解析",
+      "input": {"sameDataset": false, "orphanFieldId": true, "authorization": "not reached"},
+      "expected": {"result": {"ok": false, "stage": "ADAPTER or SOURCE/TYPE"}, "nameFallback": false, "allEffectsUnchanged": true}
+    },
+    {
+      "id": "QPC-004",
+      "title": "当前身份/资源/目标权限拒绝或能力不可用",
+      "input": {"authorization": "deny, missing, stale, or API failure"},
+      "expected": {"result": {"ok": false, "stage": "AUTHORIZATION"}, "allEffectsUnchanged": true, "claim": "unit deny path does not prove real permission behavior"}
+    },
+    {
+      "id": "QPC-005",
+      "title": "目标在覆盖确认期间变化或不唯一",
+      "input": {"targetSignatureChanges": true, "orDuplicateTargetId": true},
+      "expected": {"result": {"ok": false, "stage": "TARGET_IDENTITY or TARGET_VERSION"}, "allEffectsUnchanged": true}
+    },
+    {
+      "id": "QPC-006",
+      "title": "用户取消覆盖",
+      "input": {"targetHasExistingCondition": true, "consent": "cancel"},
+      "expected": {"result": {"ok": false, "stage": "USER_CANCEL"}, "allEffectsUnchanged": true}
+    },
+    {
+      "id": "QPC-007",
+      "title": "未知 envelope 或 adapter 拒绝",
+      "input": {"unsupportedVersion": true, "or": "adapter returns failure"},
+      "expected": {"result": {"ok": false, "stage": "ENVELOPE or ADAPTER"}, "candidateExposed": false, "allEffectsUnchanged": true}
+    },
+    {
+      "id": "QPC-008",
+      "title": "保存成功后重开，撤销/重做沿既有路径",
+      "input": {"result": "QPC-001 committed", "save": "normal user save", "reopen": true},
+      "expected": {"persisted": "only if normal save succeeds", "pasteSaveRequests": 0, "undoRedo": "existing snapshot lifecycle", "runtime_permission": "NOT_RUN until isolated real-permission environment is available"}
+    }
+  ],
+  "oracle_limits": [
+    "这是产品事务设计 oracle，未执行产品代码。",
+    "`sameDataset` 与 authorization 文字是用例条件，不是假造权限证据。",
+    "当前 fixtures 仍需独立审查；目标完整输入/输出由引用的已冻结 QTARGET fixtures 提供，事务效应以本文件为准。",
+    "全 Goal 分母未缩减，权限、图表、共享生命周期及完整保存验收仍开放。"
+  ]
+}

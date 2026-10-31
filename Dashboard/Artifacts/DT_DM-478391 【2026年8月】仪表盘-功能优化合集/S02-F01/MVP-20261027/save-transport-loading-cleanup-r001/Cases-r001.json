@@ -1,0 +1,141 @@
+{
+  "schema_version": "s02_save_transport_loading_cases_v1",
+  "created_at": "2026-10-30T21:14:57.162632+00:00",
+  "original_ac": "AC-MVP-F01-09",
+  "trigger": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SaveFailure-events-r001.json",
+  "scope": "同路由无response请求失败的loading引用释放；无全局reset、无权限/缓存/请求响应契约变动",
+  "source_before_sha256": "5651f057658c8dd25adbcc73c7625f06834074069e6a5342cd92beb07f7d1f7c",
+  "oracle": "同一错误对象仍reject；只释放该请求占的一个当前路由loading引用，零loading和无config不凭空减；其它路径引用不变",
+  "cases": [
+    {
+      "id": "STL01",
+      "input": {
+        "loading": true,
+        "current_count": 1,
+        "response": null
+      },
+      "expected": {
+        "current_count": 0,
+        "reduce_calls": 1,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL02",
+      "input": {
+        "loading": true,
+        "current_count": 2,
+        "other_path_count": 7,
+        "response": null
+      },
+      "expected": {
+        "current_count": 1,
+        "other_path_count": 7,
+        "reduce_calls": 1,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL03",
+      "input": {
+        "loading": false,
+        "current_count": 2,
+        "response": null
+      },
+      "expected": {
+        "current_count": 2,
+        "reduce_calls": 0,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL04",
+      "input": {
+        "loading": null,
+        "current_count": 2,
+        "response": null
+      },
+      "expected": {
+        "current_count": 2,
+        "reduce_calls": 0,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL05",
+      "input": {
+        "config_absent": true,
+        "current_count": 2,
+        "response": null
+      },
+      "expected": {
+        "current_count": 2,
+        "reduce_calls": 0,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL06",
+      "input": {
+        "handleErrorLocally": true,
+        "loading": false,
+        "current_count": 2,
+        "response": null
+      },
+      "expected": {
+        "current_count": 2,
+        "reduce_calls": 0,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL07",
+      "input": {
+        "loading": true,
+        "current_count": 1,
+        "response": null,
+        "code": "ERR_CANCELED"
+      },
+      "expected": {
+        "current_count": 0,
+        "reduce_calls": 1,
+        "reset_calls": 0,
+        "rejection_identity": "same"
+      }
+    },
+    {
+      "id": "STL08",
+      "input": {
+        "loading": true,
+        "current_count": 1,
+        "response_status": 400
+      },
+      "expected": {
+        "current_count": 0,
+        "reduce_calls": 1,
+        "reset_calls": 0,
+        "rejection_identity": "same",
+        "existing_error_message_calls": 1
+      }
+    }
+  ],
+  "forbidden": [
+    "改fulfilled拦截器或已有有response/timeout/handleErrorLocally分支",
+    "resetLoadingMap用于普通network failure",
+    "返回成功/吞error/重试save/写DB",
+    "覆盖原失败/原恢复、扩为全部axios路由切换或所有错误通过"
+  ],
+  "runtime_acceptance": "新独立隔离case同U3：真实query、单次正常save受控transport abort、无success、loading释放、旧保存树200后读回/空clip，旧r001失败不追认",
+  "evidence_ceiling": "提取真实error callback +真实tryHideLoading实现为确定性unit，依赖store/UI provider有界替身；非全axios初始化/真实鉴权。runtime另验证完整调用。",
+  "known_exclusions": [
+    "路由在请求中切换时key归属问题是既有更广问题，本修复只同路由U3；不更改全HTTP loading设计",
+    "timeout原resetLoadingMap行为保持，不在本修复宣称并发正确",
+    "HTTP500吞错等其它既有分支不作为本次修复，不静默扩范围"
+  ]
+}

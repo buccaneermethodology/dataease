@@ -1,0 +1,215 @@
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/0-useChartFilterCopyMvp.ts
++++ core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts
+@@ -1,4 +1,4 @@
+-import { computed, effectScope, onBeforeUnmount, ref, watch, type Ref } from 'vue'
++import { computed, effectScope, onBeforeUnmount, reactive, ref, watch, type Ref } from 'vue'
+ import { useRoute } from 'vue-router_2'
+ import { useCache } from '@/hooks/web/useCache'
+ import { useUserStoreWithOut } from '@/store/modules/user'
+@@ -48,7 +48,23 @@
+   const route = useRoute()
+   const { wsCache } = useCache()
+   const { t } = useI18n()
+-  const permission = ref<MvpPermission>('unknown')
++  const permissionRoles = ['read-source', 'read-dataset', 'edit-target'] as const
++  const permissions = reactive<Record<(typeof permissionRoles)[number], MvpPermission>>({
++    'read-source': 'unknown',
++    'read-dataset': 'unknown',
++    'edit-target': 'unknown'
++  })
++  // 三项共同限制 DEV 验证能力；不定义生产资源权限规则。
++  const permission = computed<MvpPermission>({
++    get: () => {
++      const values = permissionRoles.map(role => permissions[role])
++      if (values.includes('deny')) return 'deny'
++      return values.every(value => value === 'allow') ? 'allow' : 'unknown'
++    },
++    set: value => {
++      for (const role of permissionRoles) permissions[role] = value
++    }
++  })
+   const fields = ref<MvpField[]>([])
+   const fieldsReady = ref(false)
+   const changed = ref(0)
+@@ -299,6 +315,7 @@
+     const current = getMvpFilterClipboard()
+     return JSON.stringify(
+       {
++        permissions: { ...permissions },
+         source: describeMvpFilterTree(view.value?.customFilter),
+         clipboard: current
+           ? {
+@@ -330,6 +347,8 @@
+     visible,
+     enabled,
+     permission,
++    permissions,
++    permissionRoles,
+     copyReason,
+     pasteReason,
+     copy,
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/1-index.vue
++++ core/core-frontend/src/views/chart/components/editor/index.vue
+@@ -208,6 +208,8 @@
+   visible: filterCopyVisible,
+   enabled: filterCopyEnabled,
+   permission: filterCopyPermission,
++  permissions: filterCopyPermissions,
++  permissionRoles: filterCopyPermissionRoles,
+   copyReason: filterCopyReason,
+   pasteReason: filterPasteReason,
+   status: filterCopyStatus,
+@@ -3465,6 +3467,31 @@
+                                 </option>
+                               </select>
+                             </label>
++                            <template v-if="filterCopyEnabled">
++                              <label
++                                v-for="role in filterCopyPermissionRoles"
++                                :key="role"
++                                style="display: block"
++                              >
++                                {{
++                                  t('chart.filter_copy_mvp.permission_' + role.split('-').join('_'))
++                                }}
++                                <select
++                                  v-model="filterCopyPermissions[role]"
++                                  :data-testid="'chart-filter-permission-' + role"
++                                >
++                                  <option value="unknown">
++                                    {{ t('chart.filter_copy_mvp.permission_unknown') }}
++                                  </option>
++                                  <option value="allow">
++                                    {{ t('chart.filter_copy_mvp.allow') }}
++                                  </option>
++                                  <option value="deny">
++                                    {{ t('chart.filter_copy_mvp.permission_denied') }}
++                                  </option>
++                                </select>
++                              </label>
++                            </template>
+                             <p
+                               v-if="filterCopyStatus"
+                               role="status"
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/2-zh-CN.ts
++++ core/core-frontend/src/locales/zh-CN.ts
+@@ -1410,6 +1410,9 @@
+       copy: '复制过滤条件',
+       paste: '粘贴过滤条件',
+       permission_stub: '权限测试桩',
++      permission_read_source: '读取源图表（开发验证）',
++      permission_read_dataset: '读取数据集（开发验证）',
++      permission_edit_target: '编辑目标图表（开发验证）',
+       allow: '允许（测试）',
+       permission_unknown: '权限未知，操作已禁用',
+       permission_denied: '权限拒绝，操作已禁用',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/3-en.ts
++++ core/core-frontend/src/locales/en.ts
+@@ -1449,6 +1449,9 @@
+       copy: 'Copy filter conditions',
+       paste: 'Paste filter conditions',
+       permission_stub: 'Permission test stub',
++      permission_read_source: 'Read source chart (development validation)',
++      permission_read_dataset: 'Read dataset (development validation)',
++      permission_edit_target: 'Edit target chart (development validation)',
+       allow: 'Allow (test)',
+       permission_unknown: 'Permission unknown; operation disabled',
+       permission_denied: 'Permission denied; operation disabled',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/4-tw.ts
++++ core/core-frontend/src/locales/tw.ts
+@@ -1392,6 +1392,9 @@
+       copy: '複製過濾條件',
+       paste: '貼上過濾條件',
+       permission_stub: '權限測試樁',
++      permission_read_source: '讀取來源圖表（開發驗證）',
++      permission_read_dataset: '讀取資料集（開發驗證）',
++      permission_edit_target: '編輯目標圖表（開發驗證）',
+       allow: '允許（測試）',
+       permission_unknown: '權限未知，操作已停用',
+       permission_denied: '權限拒絕，操作已停用',
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/5-check.mjs
++++ core/core-frontend/tests/filter-copy-mvp/check.mjs
+@@ -276,6 +276,39 @@
+   await m.nextTick()
+   await m.nextTick()
+ }
++await check('UI04 三角色各自deny/unknown同步拒绝，统一setter兼容且不覆盖其他角色', async () => {
++  const app = mount()
++  await resolveDirectory()
++  assert.ok(ui.permissions, 'UI04_ROLE_PERMISSION_PORTS_REQUIRED')
++  assert.deepEqual(Object.values(ui.permissions), ['unknown', 'unknown', 'unknown'])
++  for (const role of ui.permissionRoles) {
++    for (const state of ['deny', 'unknown']) {
++      ui.permission.value = 'allow'
++      assert.equal(ui.copyReason.value, null)
++      ui.permissions[role] = state
++      assert.equal(ui.permission.value, state)
++      const reason = state === 'deny' ? 'permission_denied' : 'permission_unknown'
++      assert.equal(ui.copyReason.value, reason)
++      assert.equal(ui.pasteReason.value, reason)
++      const clip = m.getMvpFilterClipboard()
++      ui.copy()
++      assert.equal(ui.status.value, reason)
++      assert.deepEqual(m.getMvpFilterClipboard(), clip)
++      assert.equal(Object.values(ui.permissions).filter(value => value === 'allow').length, 2)
++      ui.permissions[role] = 'allow'
++      assert.equal(ui.permission.value, 'allow')
++    }
++  }
++  ui.permissions['read-source'] = 'unknown'
++  ui.permissions['edit-target'] = 'deny'
++  assert.equal(ui.permission.value, 'deny')
++  ui.permission.value = 'allow'
++  assert.deepEqual(Object.values(ui.permissions), ['allow', 'allow', 'allow'])
++  const diagnostic = JSON.parse(ui.diagnostic.value)
++  assert.deepEqual(diagnostic.permissions, { 'read-source': 'allow', 'read-dataset': 'allow', 'edit-target': 'allow' })
++  app.unmount()
++  m.harness.pending.pop() // 此用例已消费的独立字段目录请求，保留原测试计数基线。
++})
+ await check('真实 composable：目录未加载/unknown拒绝；allow复制，paste明确未就绪', async () => {
+   const app = mount()
+   assert.equal(ui.copyReason.value, 'permission_unknown')
+--- Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/role-port-preimages-r001/6-check.mjs
++++ core/core-frontend/tests/filter-copy-mvp-paste/check.mjs
+@@ -731,6 +731,41 @@
+     m.env.dv.editMode = 'preview'
+   }
+ })
++await check('UI04 各角色在query或preview准备中撤权，旧tree/data保留且不发布', async () => {
++  for (const role of ['read-source', 'read-dataset', 'edit-target']) {
++    for (const denied of ['deny', 'unknown']) {
++      for (const phase of ['query', 'preview']) {
++        const f = fixture()
++        let ui
++        const pane = m.ref({ ...JSON.parse(JSON.stringify(f.view)), id: 'source', customFilter: tree })
++        m.env.dv.curComponent = { id: 'source' }
++        const app = renderer.createApp({ setup() { ui = m.useChartFilterCopyMvp(pane); return () => m.h('div') } })
++        app.mount({ children: [] })
++        await wait()
++        ui.permission.value = 'allow'
++        ui.copy()
++        pane.value = f.view
++        m.env.dv.curComponent = { id: 'target' }
++        await wait()
++        const oldView = lodash.cloneDeep(f.view)
++        const run = ui.paste()
++        assert.equal(m.env.requests.length, 1)
++        if (phase === 'preview') { f.queryOk(); await wait() }
++        ui.permissions[role] = denied
++        if (phase === 'query') { f.queryOk(); await wait() }
++        if (phase === 'preview') f.ready()
++        await run
++        assert.notEqual(ui.status.value, 'pasted')
++        assert.deepEqual(f.view, oldView)
++        assert.equal(m.env.writes.length, 0)
++        assert.equal(m.env.requests.length, 1)
++        app.unmount()
++        f.close()
++        m.env.dv.editMode = 'preview'
++      }
++    }
++  }
++})
+ await check('真实薄SFC父级error boundary：子render抛错即使prepare报ok也拒绝', async () => {
+   for (const fail of [false, true]) {
+     m.env.childThrow = fail

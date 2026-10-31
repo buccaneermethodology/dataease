@@ -21,7 +21,8 @@ import {
   defineAsyncComponent,
   provide,
   onUnmounted,
-  unref
+  unref,
+  toRaw
 } from 'vue'
 import { storeToRefs } from 'pinia'
 import { enumValueObj } from '@/api/dataset'
@@ -1593,7 +1594,6 @@ const confirmClick = () => {
   defaultConfigurationRef.value?.mult()
   defaultConfigurationRef.value?.single()
   handleDialogClick()
-  dialogVisible.value = false
   conditions.value.forEach(ele => {
     curComponent.value = ele
     multipleChange(
@@ -1603,6 +1603,81 @@ const confirmClick = () => {
     )
   })
   const oldArr = cloneDeep(unref(queryElement.value.propValue))
+  const lifecycle = dvMainStore.querySingleSelectLifecycleState()
+  if (lifecycle.phase === 'open') {
+    const nextCascade = cloneDeep(cascadeArr)
+    conditions.value.forEach(condition => {
+      nextCascade.forEach(level => {
+        level.forEach(item => {
+          if (item.datasetId.split('--')[1] === condition.id && condition.defaultValueCheck) {
+            const value = condition.mapValue
+            item.selectValue = Array.isArray(value) ? [...value] : value
+            item.currentSelectValue = Array.isArray(value) ? [...value] : value
+          }
+        })
+      })
+    })
+    const prepared = dvMainStore.prepareQuerySingleSelectConfirmation({
+      component: toRaw(queryElement.value),
+      queryRoot: {
+        propValue: JSON.parse(JSON.stringify(conditions.value)),
+        cascade: JSON.parse(JSON.stringify(nextCascade))
+      },
+      outerRoot: JSON.parse(JSON.stringify(componentData.value)),
+      componentId: queryElement.value.id,
+      expectedRevision: lifecycle.revision
+    })
+    if (prepared.ok) {
+      let committedResult: any = null
+      let committedComponent: any = null
+      const committed = dvMainStore.commitQuerySingleSelectConfirmation(
+        prepared,
+        lifecycle.revision,
+        {
+          replaceRoot(root) {
+            dvMainStore.setComponentData(root)
+          },
+          select(component) {
+            committedComponent = component
+            dvMainStore.setCurComponent({
+              component,
+              index: componentData.value.findIndex(item => item.id === component.id)
+            })
+          },
+          publishEvents() {
+            cascadeArr = []
+            snapshotStore.recordSnapshotCache('confirmClick')
+            curComponent.value.id = ''
+            relationshipChartIndex.value = 0
+            nextTick(() => {
+              const current = dvMainStore.querySingleSelectLifecycleState()
+              if (
+                !committedResult?.ok ||
+                current.phase !== 'open' ||
+                current.epoch !== lifecycle.epoch ||
+                current.revision !== committedResult.revision ||
+                !dvMainStore.querySingleSelectAllows(committedComponent)
+              )
+                return
+              emits('reRenderAll', oldArr, cloneDeep(conditions.value))
+              emits('queryData')
+            })
+          }
+        }
+      )
+      committedResult = committed
+      if (committed.ok) {
+        dialogVisible.value = false
+        return
+      }
+    }
+    dvMainStore.invalidateQuerySingleSelectSession()
+    // A managed confirmation must never fall through to the legacy direct-write
+    // path. The lifecycle owner invalidates its authority on preparation or
+    // commit failure; leave the editor open so the user can inspect/reopen it.
+    return
+  }
+  dialogVisible.value = false
   queryElement.value.propValue = []
   nextTick(() => {
     conditions.value.forEach(itx => {

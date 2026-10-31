@@ -1,0 +1,4454 @@
+{
+  "schema_version": "s02_p1_actual_acceptance_projection_v1",
+  "created_at": "2026-10-30T23:27:01.237467+00:00",
+  "status": "frozen_original_predicates_pending_ready_review",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "phase_order_authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpFirstFullAcceptanceAuthority-20261027.md",
+    "sha256": "143af02a1303d3e8170d2a0b2cc32b3b737bc50a9fffd55244274ae2534042bd"
+  },
+  "purpose": "实际P1产品验收证据判定，非第4轮准备审查；本轮不新增/豁免原predicate",
+  "obligations": {
+    "P1": 12,
+    "P2": 26,
+    "full": 38,
+    "builtin_types": 49,
+    "installed_plugin_count": null
+  },
+  "original_clauses": {
+    "entry": "先完成P1所需合同、设计、真实UI/query/save-reopen及其独立验收；只有P1退出条件全部满足方进入P2。P2涉及真实权限时必须等到可授权的真实权限实现和隔离多用户环境可用；测试桩、standalone或admin不能替代。每次Builder写入仍需针对当前Goal/合同/设计/实际拓扑的有效execution admission。",
+    "termination": "P1全部12条MVP义务完成且全eligible图表有真实source-copy/target-paste、query/预览及正常保存离开重开后，只记录P1 MVP里程碑并启动P2；不得在此终止Goal。只有P2全部26条原始要求（10项Goal AC+16项产品义务，包括真实多用户只读限制、权限撤销/恢复、跨上下文、复杂过滤与查询组件）全部完成，完整diff与独立终审绑定，且最新native authority-root、completion predicate、Stop Gate receipt均通过，才可给S02_COMPLETE结论。",
+    "evidence": "P1至少覆盖每个eligible图表作为source与target的真实UI运行、完整多条件树、独立查询结果oracle、正常保存及离开重开；未实测的类型、组合、拒绝路径不得计通过。P2按原始26项逐条验收，包括真实权限隔离环境，不使用测试桩冒充真实授权；全部38条保持追溯。",
+    "engineering_boundaries": "内存/单调30分钟TTL，页面reload/退出/身份变化清空，图表data refresh不清空；必要最小query/renderer修复应绑定当前路径真实触发与写范围，不恢复通用双host/取消框架前置，也不能先改活动树再query。"
+  },
+  "cases": [
+    {
+      "case_id": "AC-MVP-F01-01",
+      "original_requirement": "全部受支持图表基本能力：SupportedCharts每个eligible类型均能作为source复制和target粘贴相同dataset有效基本多条件树；不能仅bar→line或单叶，未知/应支持未实现类型不移除分母。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-01",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-02",
+      "original_requirement": "复用真实FilterTree/RowAuth/customFilter输出，至少两个有效条件及分组/运算符/值完整独立复制；不带样式/布局/结果；unsupported复杂结构整次明确拒绝，不悄悄丢字段。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-02",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-03",
+      "original_requirement": "同页面同编辑会话内存clipboard深拷贝，不写OS剪贴板；空源禁用、copy失败保留上次有效树、成功copy才替换；paste可重复不消耗不续期。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-03",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-04",
+      "original_requirement": "每次paste确认实际dataset ID一致且可验证、字段ID/类型/运算符完整承载；跨dataset、ID未知、缺字段、图表↔query/不支持类别、不完整树拒绝，不部分应用。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-04",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-05",
+      "original_requirement": "权限port按source-read/dataset-read/target-manage返回allow/deny/unknown；仅DEV显式开关测试桩且标识可见，unknown/deny拒绝；生产默认不启桩、不绕后端query/save鉴权。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-05",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-06",
+      "original_requirement": "非空目标先确认、取消tree/data/画面不变，空目标直接准备；候选校验/query和必要基本预览准备成功且目标复验有效后才采用；失败丢弃候选，不先写active树再query。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-06",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-07",
+      "original_requirement": "同目标最多一个paste在途、重复入口禁用；捕获operationId/targetId及目标编辑版本或完整摘要，回包再核；切目标/重新编辑/卸载失效，仅证明本局部paste边界。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-07",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-08",
+      "original_requirement": "真实query结果与独立oracle一致，准备成功采用后提示过滤条件已应用；取消/校验拒绝不发候选query，已发后失败如实留dispatch记录、保旧画面、不提示成功。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-08",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-09",
+      "original_requirement": "只走既有显式正常保存，无自动保存；保存后离开编辑器再重开完整基本树/分组/运算符/值与实际结果一致；未保存和保存失败不伪称持久化成功。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-09",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-10",
+      "original_requirement": "copy成功按单调elapsed计30分钟，[0,1800000ms)有效，>=1800000ms拒绝；页面reload、退出编辑、登出/身份变化清空；图表data refresh不清空且不延寿，不跨context持久化。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-10",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-11",
+      "original_requirement": "真实UI可见专用copy/paste入口、进行中/禁用/不匹配/失败/成功和开发权限桩标记，使用既有Element/i18n；正常过滤编辑/清空删除/保存回归有效。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-11",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    },
+    {
+      "case_id": "AC-MVP-F01-12",
+      "original_requirement": "隔离开发环境真实UI/前后端query/正常save-load覆盖每eligible类型source与target、多条件整树、dev桩三态、拒绝/取消/准备失败/局部失效/TTL清空与回归；非Builder独立验收当前22项，真实权限仍未验。",
+      "source": "Goal.final.json/must_have_ledger/AC-MVP-F01-12",
+      "decision": "not_yet_evaluated",
+      "required_evidence_rule": "逐原句按实际层次判断，不以ready、schema或计数替代产品predicate；复用已释放独立证据，缺原证据明确记录"
+    }
+  ],
+  "builtin_inventory": [
+    {
+      "inventory_id": "S02-MVP-CHART-antv-area",
+      "type": "area",
+      "render": "antv",
+      "library": "g2",
+      "class": "Area",
+      "inheritance": [
+        "Area",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+        "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+        "line": 85
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+        "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+        "line": 829
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "trend",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_area",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1449
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+          "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+          "line": 101
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/common.ts",
+          "sha256": "9b41926e0b7765a7a7222e2a21195877a1d02d838b709ff352e9c09a25997903",
+          "line": 75
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-area-stack",
+      "type": "area-stack",
+      "render": "antv",
+      "library": "g2",
+      "class": "StackArea",
+      "inheritance": [
+        "StackArea",
+        "Area",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+        "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+        "line": 837
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+        "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+        "line": 1130
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "trend",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_area_stack",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1456
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/area.ts",
+          "sha256": "87e5ece6ff557495579cbb064b293d4c2e4db86c7ef3f1d4caf2533b009c269b",
+          "line": 101
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/common.ts",
+          "sha256": "9b41926e0b7765a7a7222e2a21195877a1d02d838b709ff352e9c09a25997903",
+          "line": 75
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar",
+      "type": "bar",
+      "render": "antv",
+      "library": "g2",
+      "class": "Bar",
+      "inheritance": [
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+        "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+        "line": 70
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+        "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+        "line": 1018
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1470
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+          "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+          "line": 87
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-group",
+      "type": "bar-group",
+      "render": "antv",
+      "library": "g2",
+      "class": "GroupBar",
+      "inheritance": [
+        "GroupBar",
+        "StackBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/group-bar.ts",
+        "sha256": "9f96ce22e42a27a127989bb788670c6bfcae87161a870209815518f5e74d35d0",
+        "line": 78
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/group-bar.ts",
+        "sha256": "9f96ce22e42a27a127989bb788670c6bfcae87161a870209815518f5e74d35d0",
+        "line": 288
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_group",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1491
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+          "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+          "line": 87
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-group-stack",
+      "type": "bar-group-stack",
+      "render": "antv",
+      "library": "g2",
+      "class": "GroupStackBar",
+      "inheritance": [
+        "GroupStackBar",
+        "StackBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/group-stack-bar.ts",
+        "sha256": "437a9aadf1a3d76bbb82241940b4ed4d500eed69adce9c1a27c6b19fe2ed5f45",
+        "line": 31
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/group-stack-bar.ts",
+        "sha256": "437a9aadf1a3d76bbb82241940b4ed4d500eed69adce9c1a27c6b19fe2ed5f45",
+        "line": 197
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_group_stack",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1498
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+          "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+          "line": 87
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-horizontal",
+      "type": "bar-horizontal",
+      "render": "antv",
+      "library": "g2",
+      "class": "HorizontalBar",
+      "inheritance": [
+        "HorizontalBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+        "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+        "line": 35
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+        "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+        "line": 375
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_horizontal",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1512
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+          "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+          "line": 70
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-range",
+      "type": "bar-range",
+      "render": "antv",
+      "library": "g2",
+      "class": "RangeBar",
+      "inheritance": [
+        "RangeBar",
+        "HorizontalBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/range-bar.ts",
+        "sha256": "8b848e9567b77645d9dd6da99e4f9014fe0f1500a4faa8cd5dfcc219c2a5cdac",
+        "line": 89
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/range-bar.ts",
+        "sha256": "8b848e9567b77645d9dd6da99e4f9014fe0f1500a4faa8cd5dfcc219c2a5cdac",
+        "line": 446
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_range",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1533
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+          "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+          "line": 70
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-stack",
+      "type": "bar-stack",
+      "render": "antv",
+      "library": "g2",
+      "class": "StackBar",
+      "inheritance": [
+        "StackBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stack-bar.ts",
+        "sha256": "53a5afc125ecaf46f98ecb3da712c093fea5eb82a9654e9ed3b21d080fb6bde7",
+        "line": 39
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stack-bar.ts",
+        "sha256": "53a5afc125ecaf46f98ecb3da712c093fea5eb82a9654e9ed3b21d080fb6bde7",
+        "line": 321
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_stack",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1477
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+          "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+          "line": 87
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bar-stack-horizontal",
+      "type": "bar-stack-horizontal",
+      "render": "antv",
+      "library": "g2",
+      "class": "HorizontalStackBar",
+      "inheritance": [
+        "HorizontalStackBar",
+        "HorizontalBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stack-horizontal-bar.ts",
+        "sha256": "822a48bfbaf889c74f00577c8f48123081119d49bc143082ffcb076c99cf3122",
+        "line": 33
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stack-horizontal-bar.ts",
+        "sha256": "822a48bfbaf889c74f00577c8f48123081119d49bc143082ffcb076c99cf3122",
+        "line": 253
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bar_stack_horizontal",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1519
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+          "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+          "line": 70
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bidirectional-bar",
+      "type": "bidirectional-bar",
+      "render": "antv",
+      "library": "g2",
+      "class": "BidirectionalHorizontalBar",
+      "inheritance": [
+        "BidirectionalHorizontalBar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bidirectional-bar.ts",
+        "sha256": "53fa36fa169dce1b5abe7267131cb152b6a053bde058018f255e9c71d825decb",
+        "line": 93
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bidirectional-bar.ts",
+        "sha256": "53fa36fa169dce1b5abe7267131cb152b6a053bde058018f255e9c71d825decb",
+        "line": 1498
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bidirectional_bar",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1540
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "yAxisExt",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bidirectional-bar.ts",
+          "sha256": "53fa36fa169dce1b5abe7267131cb152b6a053bde058018f255e9c71d825decb",
+          "line": 121
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-box-plot",
+      "type": "box-plot",
+      "render": "antv",
+      "library": "g2",
+      "class": "BoxPlot",
+      "inheritance": [
+        "BoxPlot",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/box-plot.ts",
+        "sha256": "d38e31de075fb0d19761342f0dbcf5d6a071d0384e335b8310a116674b7c73ca",
+        "line": 91
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/box-plot.ts",
+        "sha256": "d38e31de075fb0d19761342f0dbcf5d6a071d0384e335b8310a116674b7c73ca",
+        "line": 749
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_box_plot",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1575
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "yAxis",
+        "filter",
+        "drill"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/box-plot.ts",
+          "sha256": "d38e31de075fb0d19761342f0dbcf5d6a071d0384e335b8310a116674b7c73ca",
+          "line": 130
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bubble-map",
+      "type": "bubble-map",
+      "render": "antv",
+      "library": "l7plot",
+      "class": "BubbleMap",
+      "inheritance": [
+        "BubbleMap",
+        "L7PlotChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/bubble-map.ts",
+        "sha256": "4fea68822f944cc4ab6ad706833325cc38d60a2f3ff7e3f7428dc5d4b2e0483e",
+        "line": 40
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/bubble-map.ts",
+        "sha256": "4fea68822f944cc4ab6ad706833325cc38d60a2f3ff7e3f7428dc5d4b2e0483e",
+        "line": 60
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "map",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_bubble_map",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1645
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "area",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/bubble-map.ts",
+          "sha256": "4fea68822f944cc4ab6ad706833325cc38d60a2f3ff7e3f7428dc5d4b2e0483e",
+          "line": 47
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/common.ts",
+          "sha256": "3a26878b97d34bfc705f3c93062c40f2c4d5b65eceef6682644319e90c5db64d",
+          "line": 48
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "l7plot-map",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-bullet-graph",
+      "type": "bullet-graph",
+      "render": "antv",
+      "library": "g2",
+      "class": "BulletGraph",
+      "inheritance": [
+        "BulletGraph",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bullet-graph.ts",
+        "sha256": "e42033748ec98acf0a4dc44c8b76bf3583a2d74ba2efd48298f2489fb06d76e8",
+        "line": 39
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bullet-graph.ts",
+        "sha256": "e42033748ec98acf0a4dc44c8b76bf3583a2d74ba2efd48298f2489fb06d76e8",
+        "line": 40
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.bullet_chart",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1561
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip",
+        "yAxisExt",
+        "extBubble"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bullet-graph.ts",
+          "sha256": "e42033748ec98acf0a4dc44c8b76bf3583a2d74ba2efd48298f2489fb06d76e8",
+          "line": 44
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-chart-mix",
+      "type": "chart-mix",
+      "render": "antv",
+      "library": "g2",
+      "class": "ColumnLineMix",
+      "inheritance": [
+        "ColumnLineMix",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix.ts",
+        "sha256": "ecff3739c94ee15f5fdd381dc686c695319da95f21fc77a95dcba780c587b46c",
+        "line": 57
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix.ts",
+        "sha256": "ecff3739c94ee15f5fdd381dc686c695319da95f21fc77a95dcba780c587b46c",
+        "line": 786
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "dual_axes",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_mix",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1729
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip",
+        "xAxisExtRight",
+        "yAxisExt"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix.ts",
+          "sha256": "ecff3739c94ee15f5fdd381dc686c695319da95f21fc77a95dcba780c587b46c",
+          "line": 72
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-mix",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-chart-mix-dual-line",
+      "type": "chart-mix-dual-line",
+      "render": "antv",
+      "library": "g2",
+      "class": "GroupLineMix",
+      "inheritance": [
+        "GroupLineMix",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-dual-line.ts",
+        "sha256": "c129715e801041474c80a63fdcd43f4d7146c290475d7a2f876c33f2b99603a1",
+        "line": 53
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-dual-line.ts",
+        "sha256": "c129715e801041474c80a63fdcd43f4d7146c290475d7a2f876c33f2b99603a1",
+        "line": 1005
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "dual_axes",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_mix_dual_line",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1750
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip",
+        "xAxisExtRight",
+        "yAxisExt",
+        "xAxisExt"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-dual-line.ts",
+          "sha256": "c129715e801041474c80a63fdcd43f4d7146c290475d7a2f876c33f2b99603a1",
+          "line": 69
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-mix",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-chart-mix-group",
+      "type": "chart-mix-group",
+      "render": "antv",
+      "library": "g2",
+      "class": "GroupLineMix",
+      "inheritance": [
+        "GroupLineMix",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-group.ts",
+        "sha256": "da3889119ac1faf832fad52fbee1a869ca75abc988fb7fa54a0f62534b386c1b",
+        "line": 58
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-group.ts",
+        "sha256": "da3889119ac1faf832fad52fbee1a869ca75abc988fb7fa54a0f62534b386c1b",
+        "line": 901
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "dual_axes",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_mix_group_column",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1736
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip",
+        "xAxisExtRight",
+        "yAxisExt",
+        "xAxisExt"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-group.ts",
+          "sha256": "da3889119ac1faf832fad52fbee1a869ca75abc988fb7fa54a0f62534b386c1b",
+          "line": 74
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-mix",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-chart-mix-stack",
+      "type": "chart-mix-stack",
+      "render": "antv",
+      "library": "g2",
+      "class": "StackLineMix",
+      "inheritance": [
+        "StackLineMix",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-stack.ts",
+        "sha256": "901d4a3c663bbad18cc351367912068c9ebce98eb1fb9d2269b88238959ffe74",
+        "line": 142
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-stack.ts",
+        "sha256": "901d4a3c663bbad18cc351367912068c9ebce98eb1fb9d2269b88238959ffe74",
+        "line": 997
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "dual_axes",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_mix_stack_column",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1743
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip",
+        "xAxisExtRight",
+        "yAxisExt",
+        "extStack"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/mix/mix-stack.ts",
+          "sha256": "901d4a3c663bbad18cc351367912068c9ebce98eb1fb9d2269b88238959ffe74",
+          "line": 163
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-mix",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-circle-packing",
+      "type": "circle-packing",
+      "render": "antv",
+      "library": "g2",
+      "class": "CirclePacking",
+      "inheritance": [
+        "CirclePacking",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/circle-packing.ts",
+        "sha256": "0beb2f8f7625c50654e7a798c0906c85ab23bfd3846a52ae5db837d15b37307f",
+        "line": 19
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/circle-packing.ts",
+        "sha256": "0beb2f8f7625c50654e7a798c0906c85ab23bfd3846a52ae5db837d15b37307f",
+        "line": 492
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_circle_packing",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1715
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/circle-packing.ts",
+          "sha256": "0beb2f8f7625c50654e7a798c0906c85ab23bfd3846a52ae5db837d15b37307f",
+          "line": 59
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-flow-map",
+      "type": "flow-map",
+      "render": "antv",
+      "library": "l7",
+      "class": "FlowMap",
+      "inheritance": [
+        "FlowMap",
+        "L7ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/flow-map.ts",
+        "sha256": "0e16163012beefaaadc4a296c3f95e821c09a1a1326de491701aace882ad7843",
+        "line": 26
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/flow-map.ts",
+        "sha256": "0e16163012beefaaadc4a296c3f95e821c09a1a1326de491701aace882ad7843",
+        "line": 80
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "map",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_flow_map",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1652
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "filter",
+        "flowMapStartName",
+        "flowMapEndName",
+        "yAxis"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/flow-map.ts",
+          "sha256": "0e16163012beefaaadc4a296c3f95e821c09a1a1326de491701aace882ad7843",
+          "line": 48
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "l7-map",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-funnel",
+      "type": "funnel",
+      "render": "antv",
+      "library": "g2",
+      "class": "Funnel",
+      "inheritance": [
+        "Funnel",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/funnel.ts",
+        "sha256": "9f0a7f013fdd4a71bda9da26c6b7abe46bc686c947dd7d86df9673e3b5b3a4fa",
+        "line": 25
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/funnel.ts",
+        "sha256": "9f0a7f013fdd4a71bda9da26c6b7abe46bc686c947dd7d86df9673e3b5b3a4fa",
+        "line": 350
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_funnel",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1701
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/funnel.ts",
+          "sha256": "9f0a7f013fdd4a71bda9da26c6b7abe46bc686c947dd7d86df9673e3b5b3a4fa",
+          "line": 58
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-gauge",
+      "type": "gauge",
+      "render": "antv",
+      "library": "g2",
+      "class": "Gauge",
+      "inheritance": [
+        "Gauge",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/gauge.ts",
+        "sha256": "592a2f74afa4ce3f947eef38ccd2966b4cd99045a099c3b4b2a48e1576e425d6",
+        "line": 165
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/gauge.ts",
+        "sha256": "592a2f74afa4ce3f947eef38ccd2966b4cd99045a099c3b4b2a48e1576e425d6",
+        "line": 608
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "quota",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_gauge",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1379
+        }
+      },
+      "axis": [
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/gauge.ts",
+          "sha256": "592a2f74afa4ce3f947eef38ccd2966b4cd99045a099c3b4b2a48e1576e425d6",
+          "line": 204
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-numeric",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-heat-map",
+      "type": "heat-map",
+      "render": "antv",
+      "library": "l7",
+      "class": "HeatMap",
+      "inheritance": [
+        "HeatMap",
+        "L7ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/heat-map.ts",
+        "sha256": "e2d14752da80763f6e7b14edcf4a775c450555cf5c8153bd64ce144a1ef03624",
+        "line": 26
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/heat-map.ts",
+        "sha256": "e2d14752da80763f6e7b14edcf4a775c450555cf5c8153bd64ce144a1ef03624",
+        "line": 58
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "map",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_heat_map",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1659
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/heat-map.ts",
+          "sha256": "e2d14752da80763f6e7b14edcf4a775c450555cf5c8153bd64ce144a1ef03624",
+          "line": 45
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "l7-map",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-custom-indicator",
+      "type": "indicator",
+      "render": "custom",
+      "library": "indicator",
+      "class": "IndicatorChartView",
+      "inheritance": [
+        "IndicatorChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/indicator.ts",
+        "sha256": "795c928d7e8d620a3476bdbfb4901a021110b314326d9a401d01e711929c382a",
+        "line": 9
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/indicator.ts",
+        "sha256": "795c928d7e8d620a3476bdbfb4901a021110b314326d9a401d01e711929c382a",
+        "line": 75
+      },
+      "palette": {
+        "render": "custom",
+        "entry_category": "quota",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_indicator",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1393
+        }
+      },
+      "axis": [
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/indicator.ts",
+          "sha256": "795c928d7e8d620a3476bdbfb4901a021110b314326d9a401d01e711929c382a",
+          "line": 60
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/custom-component/indicator/DeIndicator.vue",
+        "sha256": "49851f35e03c1251e13c877d6c3cac4e7d10b75c8995f036aa641991e49fd831",
+        "line": 400
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "custom-indicator",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-line",
+      "type": "line",
+      "render": "antv",
+      "library": "g2",
+      "class": "Line",
+      "inheritance": [
+        "Line",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+        "sha256": "acacb1ae0fde128a1cb894f06ce073454da04205e9225633168e5f67cc8b4311",
+        "line": 70
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+        "sha256": "acacb1ae0fde128a1cb894f06ce073454da04205e9225633168e5f67cc8b4311",
+        "line": 934
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "trend",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_line",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1442
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip",
+        "xAxisExt"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+          "sha256": "acacb1ae0fde128a1cb894f06ce073454da04205e9225633168e5f67cc8b4311",
+          "line": 83
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/common.ts",
+          "sha256": "9b41926e0b7765a7a7222e2a21195877a1d02d838b709ff352e9c09a25997903",
+          "line": 75
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-liquid",
+      "type": "liquid",
+      "render": "antv",
+      "library": "g2",
+      "class": "Liquid",
+      "inheritance": [
+        "Liquid",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/liquid.ts",
+        "sha256": "f02e15b15542293a10886529382f11d87c6f815f3ce71d61b26570f22544ae24",
+        "line": 18
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/liquid.ts",
+        "sha256": "f02e15b15542293a10886529382f11d87c6f815f3ce71d61b26570f22544ae24",
+        "line": 250
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "quota",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_liquid",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1386
+        }
+      },
+      "axis": [
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/numberic/liquid.ts",
+          "sha256": "f02e15b15542293a10886529382f11d87c6f815f3ce71d61b26570f22544ae24",
+          "line": 56
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-numeric",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-map",
+      "type": "map",
+      "render": "antv",
+      "library": "l7plot",
+      "class": "Map",
+      "inheritance": [
+        "Map",
+        "L7PlotChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/map.ts",
+        "sha256": "6d7b3957bd36b60d1ce90070904859d2efc57f6cece469d3545de2fc685f979d",
+        "line": 59
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/map.ts",
+        "sha256": "6d7b3957bd36b60d1ce90070904859d2efc57f6cece469d3545de2fc685f979d",
+        "line": 88
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "map",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_map",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1638
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "area",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/map.ts",
+          "sha256": "6d7b3957bd36b60d1ce90070904859d2efc57f6cece469d3545de2fc685f979d",
+          "line": 74
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/common.ts",
+          "sha256": "3a26878b97d34bfc705f3c93062c40f2c4d5b65eceef6682644319e90c5db64d",
+          "line": 48
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "l7plot-map",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-multi-scatter",
+      "type": "multi-scatter",
+      "render": "antv",
+      "library": "g2",
+      "class": "MultiScatter",
+      "inheritance": [
+        "MultiScatter",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter-multi.ts",
+        "sha256": "7398414d810640f456317f043f4b316a00005f78e2a6b0f58777b54e71911c05",
+        "line": 115
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter-multi.ts",
+        "sha256": "7398414d810640f456317f043f4b316a00005f78e2a6b0f58777b54e71911c05",
+        "line": 823
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_multi_scatter",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1687
+        }
+      },
+      "axis": [
+        "extColor",
+        "xAxis",
+        "yAxis",
+        "extBubble",
+        "yAxisExt",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter-multi.ts",
+          "sha256": "7398414d810640f456317f043f4b316a00005f78e2a6b0f58777b54e71911c05",
+          "line": 176
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-percentage-bar-stack",
+      "type": "percentage-bar-stack",
+      "render": "antv",
+      "library": "g2",
+      "class": "PercentageStackBar",
+      "inheritance": [
+        "PercentageStackBar",
+        "GroupStackBar",
+        "StackBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/percentage-stack-bar.ts",
+        "sha256": "9f428e2abd36e5061d1ddc8e2b50ac5a50cdc7215afb5310fb9dad0422d925a9",
+        "line": 42
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/percentage-stack-bar.ts",
+        "sha256": "9f428e2abd36e5061d1ddc8e2b50ac5a50cdc7215afb5310fb9dad0422d925a9",
+        "line": 249
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_percentage_bar_stack",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1484
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/bar.ts",
+          "sha256": "a66b6f5f6681759b86b639f69e29489fe18da391c25ce2eb012a350eaca0e14f",
+          "line": 87
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-percentage-bar-stack-horizontal",
+      "type": "percentage-bar-stack-horizontal",
+      "render": "antv",
+      "library": "g2",
+      "class": "PercentageStackBar",
+      "inheritance": [
+        "PercentageStackBar",
+        "HorizontalStackBar",
+        "HorizontalBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/percentage-stack-horizontal-bar.ts",
+        "sha256": "dc5fcb1e2adbcb353f65ed7bd6d2c94852074e5548a28fceb2ec2fc8a40ba007",
+        "line": 42
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/percentage-stack-horizontal-bar.ts",
+        "sha256": "dc5fcb1e2adbcb353f65ed7bd6d2c94852074e5548a28fceb2ec2fc8a40ba007",
+        "line": 269
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_percentage_bar_stack_horizontal",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1526
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+          "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+          "line": 70
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-custom-picture-group",
+      "type": "picture-group",
+      "render": "custom",
+      "library": "picture-group",
+      "class": "PictureGroupView",
+      "inheritance": [
+        "PictureGroupView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/picture-group.ts",
+        "sha256": "684ab8e2d145032385a641f322c078dfef41616cf72d2b743d3b7aa5c29ca4ef",
+        "line": 8
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/picture-group.ts",
+        "sha256": "684ab8e2d145032385a641f322c078dfef41616cf72d2b743d3b7aa5c29ca4ef",
+        "line": 27
+      },
+      "palette": {
+        "render": "custom",
+        "entry_category": "quota",
+        "group_display": "hidden",
+        "selectable_in_builtin_switch_palette": false,
+        "title_i18n_key": "visualization.picture_group",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1771
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/picture-group.ts",
+          "sha256": "684ab8e2d145032385a641f322c078dfef41616cf72d2b743d3b7aa5c29ca4ef",
+          "line": 16
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "STATIC_SPECIAL_CASE_RUNTIME_UNKNOWN",
+        "field_catalog_warning": "tableId watcher skips picture-group; cannot infer usable field list from axis declaration",
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/custom-component/picture-group/Component.vue",
+        "sha256": "95f0e275408e5321337823bca357996cb48cca68bc039b4ed3f9211fae3a6820",
+        "line": 255
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "custom-picture-group",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-pie",
+      "type": "pie",
+      "render": "antv",
+      "library": "g2",
+      "class": "Pie",
+      "inheritance": [
+        "Pie",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+        "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+        "line": 38
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+        "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+        "line": 366
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_pie",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1582
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+          "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+          "line": 39
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/common.ts",
+          "sha256": "a8103d2415973d5510fd51340f01340f10ea9e5fa37084a7462b026a5c15587d",
+          "line": 47
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-pie-donut",
+      "type": "pie-donut",
+      "render": "antv",
+      "library": "g2",
+      "class": "PieDonut",
+      "inheritance": [
+        "PieDonut",
+        "Pie",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+        "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+        "line": 371
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+        "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+        "line": 609
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_pie_donut",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1589
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/pie.ts",
+          "sha256": "b661e523b0ba8ca6354c9b94000f7de426d1df075cb6a0f26a19127a759b935c",
+          "line": 39
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/common.ts",
+          "sha256": "a8103d2415973d5510fd51340f01340f10ea9e5fa37084a7462b026a5c15587d",
+          "line": 47
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-pie-donut-rose",
+      "type": "pie-donut-rose",
+      "render": "antv",
+      "library": "g2",
+      "class": "RoseDonut",
+      "inheritance": [
+        "RoseDonut",
+        "Rose",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+        "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+        "line": 381
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+        "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+        "line": 394
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_pie_donut_rose",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1603
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+          "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+          "line": 38
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/common.ts",
+          "sha256": "a8103d2415973d5510fd51340f01340f10ea9e5fa37084a7462b026a5c15587d",
+          "line": 47
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-pie-rose",
+      "type": "pie-rose",
+      "render": "antv",
+      "library": "g2",
+      "class": "Rose",
+      "inheritance": [
+        "Rose",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+        "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+        "line": 37
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+        "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+        "line": 376
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_pie_rose",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1596
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/rose.ts",
+          "sha256": "17dbd2759a09040fa35d0082895c754873faf09d1fc33d0f5cbfbfd228d6014f",
+          "line": 38
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/pie/common.ts",
+          "sha256": "a8103d2415973d5510fd51340f01340f10ea9e5fa37084a7462b026a5c15587d",
+          "line": 47
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": false
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-progress-bar",
+      "type": "progress-bar",
+      "render": "antv",
+      "library": "g2",
+      "class": "ProgressBar",
+      "inheritance": [
+        "ProgressBar",
+        "HorizontalStackBar",
+        "HorizontalBar",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/progress-bar.ts",
+        "sha256": "ae6265dfb4b42980e44472373a6fa690c816a6a1433a55afa6b942c84981f6bc",
+        "line": 33
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/progress-bar.ts",
+        "sha256": "ae6265dfb4b42980e44472373a6fa690c816a6a1433a55afa6b942c84981f6bc",
+        "line": 474
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_progress_bar",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1547
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/horizontal-bar.ts",
+          "sha256": "5a27d749f3334a5f415f3ef8d7638bc956067caf8c0e1bbaa067d3e3fee61131",
+          "line": 70
+        },
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/common.ts",
+          "sha256": "50dc164d5fe62ee9d7e599b9b6e531c59f6d522b0084579834454ec70b1b5ef0",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-quadrant",
+      "type": "quadrant",
+      "render": "antv",
+      "library": "g2",
+      "class": "Quadrant",
+      "inheritance": [
+        "Quadrant",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/quadrant.ts",
+        "sha256": "d4699193ea9cb4e98f3458c9663ed7a71cd43f4dad9f8666eb7b47b406476628",
+        "line": 37
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/quadrant.ts",
+        "sha256": "d4699193ea9cb4e98f3458c9663ed7a71cd43f4dad9f8666eb7b47b406476628",
+        "line": 781
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_quadrant",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1694
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "yAxisExt",
+        "extBubble",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/quadrant.ts",
+          "sha256": "d4699193ea9cb4e98f3458c9663ed7a71cd43f4dad9f8666eb7b47b406476628",
+          "line": 101
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-radar",
+      "type": "radar",
+      "render": "antv",
+      "library": "g2",
+      "class": "Radar",
+      "inheritance": [
+        "Radar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/radar.ts",
+        "sha256": "9d35493ce5b8151827a571d2937324e1c35b7dd332202ca849979cdeaeff764b",
+        "line": 18
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/radar.ts",
+        "sha256": "9d35493ce5b8151827a571d2937324e1c35b7dd332202ca849979cdeaeff764b",
+        "line": 540
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "chart.chart_type_distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_radar",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1610
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/radar.ts",
+          "sha256": "9d35493ce5b8151827a571d2937324e1c35b7dd332202ca849979cdeaeff764b",
+          "line": 65
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-custom-rich-text",
+      "type": "rich-text",
+      "render": "custom",
+      "library": "rich-text",
+      "class": "RichTextChartView",
+      "inheritance": [
+        "RichTextChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/rich-text.ts",
+        "sha256": "8f32cf62091ef7fd131f392fcc18ba1105cd049aacc2afaf294ffcbb12e626bf",
+        "line": 8
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/rich-text.ts",
+        "sha256": "8f32cf62091ef7fd131f392fcc18ba1105cd049aacc2afaf294ffcbb12e626bf",
+        "line": 55
+      },
+      "palette": {
+        "render": "custom",
+        "entry_category": "quota",
+        "group_display": "hidden",
+        "selectable_in_builtin_switch_palette": false,
+        "title_i18n_key": "visualization.rich_text",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1764
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/others/rich-text.ts",
+          "sha256": "8f32cf62091ef7fd131f392fcc18ba1105cd049aacc2afaf294ffcbb12e626bf",
+          "line": 35
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/custom-component/rich-text/DeRichTextView.vue",
+        "sha256": "e542502bf21ebb65bffa6aa4fe778735bd632b5a1cde704ecb3bcfdadeec8b18",
+        "line": 608
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "custom-rich-text",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-sankey",
+      "type": "sankey",
+      "render": "antv",
+      "library": "g2",
+      "class": "G2ChartBar",
+      "inheritance": [
+        "G2ChartBar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/sankey.ts",
+        "sha256": "0a8e4d1d7876aa8670e7ae5d86b4155131cd86f742c16455485e74a4caae157e",
+        "line": 21
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/sankey.ts",
+        "sha256": "0a8e4d1d7876aa8670e7ae5d86b4155131cd86f742c16455485e74a4caae157e",
+        "line": 388
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "relation",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_sankey",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1708
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "yAxis",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/sankey.ts",
+          "sha256": "0a8e4d1d7876aa8670e7ae5d86b4155131cd86f742c16455485e74a4caae157e",
+          "line": 70
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-scatter",
+      "type": "scatter",
+      "render": "antv",
+      "library": "g2",
+      "class": "Scatter",
+      "inheritance": [
+        "Scatter",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter.ts",
+        "sha256": "d86162ef9601655637a45bc29f2d171dfa68a4a620bc52d6f943d0e19d628224",
+        "line": 19
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter.ts",
+        "sha256": "d86162ef9601655637a45bc29f2d171dfa68a4a620bc52d6f943d0e19d628224",
+        "line": 534
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_scatter",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1680
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "extBubble",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/relation/scatter.ts",
+          "sha256": "d86162ef9601655637a45bc29f2d171dfa68a4a620bc52d6f943d0e19d628224",
+          "line": 79
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-stock-line",
+      "type": "stock-line",
+      "render": "antv",
+      "library": "g2",
+      "class": "StockLine",
+      "inheritance": [
+        "StockLine",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stock-line.ts",
+        "sha256": "fbbc31c1f88c5a7999940d7ed798542d0e158d0eaddedd40de1d848e8322a413",
+        "line": 186
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stock-line.ts",
+        "sha256": "fbbc31c1f88c5a7999940d7ed798542d0e158d0eaddedd40de1d848e8322a413",
+        "line": 863
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "trend",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_stock_line",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1554
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/stock-line.ts",
+          "sha256": "fbbc31c1f88c5a7999940d7ed798542d0e158d0eaddedd40de1d848e8322a413",
+          "line": 215
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-stock",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-symbolic-map",
+      "type": "symbolic-map",
+      "render": "antv",
+      "library": "l7",
+      "class": "SymbolicMap",
+      "inheritance": [
+        "SymbolicMap",
+        "L7ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/symbolic-map.ts",
+        "sha256": "1ee20e2c2f0004c1f17bd6264d7bea4712405ca636265f56eb8751411f5b7f05",
+        "line": 40
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/symbolic-map.ts",
+        "sha256": "1ee20e2c2f0004c1f17bd6264d7bea4712405ca636265f56eb8751411f5b7f05",
+        "line": 98
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "map",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_symbolic_map",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1666
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "extBubble",
+        "filter",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/symbolic-map.ts",
+          "sha256": "1ee20e2c2f0004c1f17bd6264d7bea4712405ca636265f56eb8751411f5b7f05",
+          "line": 77
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "l7-map",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-t-heatmap",
+      "type": "t-heatmap",
+      "render": "antv",
+      "library": "g2",
+      "class": "TableG2Chart",
+      "inheritance": [
+        "TableG2Chart",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/table/t-heatmap.ts",
+        "sha256": "38fbd791d675828d7cf6717c439cc34109e08a144b2bd529e4574117e7b0ff31",
+        "line": 295
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/table/t-heatmap.ts",
+        "sha256": "38fbd791d675828d7cf6717c439cc34109e08a144b2bd529e4574117e7b0ff31",
+        "line": 955
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "table",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_table_heatmap",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1428
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "extColor",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/table/t-heatmap.ts",
+          "sha256": "38fbd791d675828d7cf6717c439cc34109e08a144b2bd529e4574117e7b0ff31",
+          "line": 346
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-heatmap",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-table-info",
+      "type": "table-info",
+      "render": "antv",
+      "library": "s2",
+      "class": "TableInfo",
+      "inheritance": [
+        "TableInfo",
+        "S2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-info.ts",
+        "sha256": "a1bdb6d00b5d94730b1c889b3e6d50f2d4e3e83a8b81e0016af8652d5041e200",
+        "line": 128
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-info.ts",
+        "sha256": "a1bdb6d00b5d94730b1c889b3e6d50f2d4e3e83a8b81e0016af8652d5041e200",
+        "line": 629
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "table",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_table_info",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1407
+        }
+      },
+      "axis": [
+        "xAxis",
+        "filter",
+        "drill"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-info.ts",
+          "sha256": "a1bdb6d00b5d94730b1c889b3e6d50f2d4e3e83a8b81e0016af8652d5041e200",
+          "line": 156
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentS2.vue",
+        "sha256": "43b44c57b27486cd46e101d76d4c64baac280bea3ff379e41b0294e18e5b11d4",
+        "line": 163
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "s2-table",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-table-normal",
+      "type": "table-normal",
+      "render": "antv",
+      "library": "s2",
+      "class": "TableNormal",
+      "inheritance": [
+        "TableNormal",
+        "S2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-normal.ts",
+        "sha256": "871c996326fcd319596fd3d09d0f029f3d8c3125f388011f1d316f8a8d75c4ab",
+        "line": 73
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-normal.ts",
+        "sha256": "871c996326fcd319596fd3d09d0f029f3d8c3125f388011f1d316f8a8d75c4ab",
+        "line": 531
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "table",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_table_normal",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1414
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "drill",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-normal.ts",
+          "sha256": "871c996326fcd319596fd3d09d0f029f3d8c3125f388011f1d316f8a8d75c4ab",
+          "line": 97
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentS2.vue",
+        "sha256": "43b44c57b27486cd46e101d76d4c64baac280bea3ff379e41b0294e18e5b11d4",
+        "line": 163
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "s2-table",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-table-pivot",
+      "type": "table-pivot",
+      "render": "antv",
+      "library": "s2",
+      "class": "TablePivot",
+      "inheritance": [
+        "TablePivot",
+        "S2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-pivot.ts",
+        "sha256": "9a8950d42b449438cbf104784cc435bc892b1e7aa7a18c4f1c9b0272b3b7c95a",
+        "line": 171
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-pivot.ts",
+        "sha256": "9a8950d42b449438cbf104784cc435bc892b1e7aa7a18c4f1c9b0272b3b7c95a",
+        "line": 1075
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "table",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_table_pivot",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1421
+        }
+      },
+      "axis": [
+        "xAxis",
+        "xAxisExt",
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/table/table-pivot.ts",
+          "sha256": "9a8950d42b449438cbf104784cc435bc892b1e7aa7a18c4f1c9b0272b3b7c95a",
+          "line": 214
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentS2.vue",
+        "sha256": "43b44c57b27486cd46e101d76d4c64baac280bea3ff379e41b0294e18e5b11d4",
+        "line": 163
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "s2-table",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-treemap",
+      "type": "treemap",
+      "render": "antv",
+      "library": "g2",
+      "class": "Treemap",
+      "inheritance": [
+        "Treemap",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/treemap.ts",
+        "sha256": "574ae8283d34d799b43b9508d3ebae7049346e3c3edc07c336ab43c3c507c0bc",
+        "line": 26
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/treemap.ts",
+        "sha256": "574ae8283d34d799b43b9508d3ebae7049346e3c3edc07c336ab43c3c507c0bc",
+        "line": 411
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_treemap",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1617
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/treemap.ts",
+          "sha256": "574ae8283d34d799b43b9508d3ebae7049346e3c3edc07c336ab43c3c507c0bc",
+          "line": 58
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-waterfall",
+      "type": "waterfall",
+      "render": "antv",
+      "library": "g2",
+      "class": "Waterfall",
+      "inheritance": [
+        "Waterfall",
+        "Bar",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/waterfall.ts",
+        "sha256": "07e1454c49d2b106fc7bd1595066abfe3b60df723b0c6e2491f3533d084f586e",
+        "line": 26
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/waterfall.ts",
+        "sha256": "07e1454c49d2b106fc7bd1595066abfe3b60df723b0c6e2491f3533d084f586e",
+        "line": 499
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "compare",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_waterfall",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1505
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter",
+        "drill",
+        "extLabel",
+        "extTooltip"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/bar/waterfall.ts",
+          "sha256": "07e1454c49d2b106fc7bd1595066abfe3b60df723b0c6e2491f3533d084f586e",
+          "line": 89
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-cartesian",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    },
+    {
+      "inventory_id": "S02-MVP-CHART-antv-word-cloud",
+      "type": "word-cloud",
+      "render": "antv",
+      "library": "g2",
+      "class": "WordCloud",
+      "inheritance": [
+        "WordCloud",
+        "G2ChartView",
+        "AntVAbstractChartView",
+        "AbstractChartView"
+      ],
+      "registration_status": "REGISTERED_BY_STATIC_GLOB_AND_SUBCLASS_DEFINITION",
+      "runtime_registration_status": "NOT_RUN",
+      "class_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/word-cloud.ts",
+        "sha256": "048a4b7e34d38a4da21dbfe0222e69afcbdf95767f88174878cfca7a0aed1712",
+        "line": 23
+      },
+      "constructor_source": {
+        "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/word-cloud.ts",
+        "sha256": "048a4b7e34d38a4da21dbfe0222e69afcbdf95767f88174878cfca7a0aed1712",
+        "line": 247
+      },
+      "palette": {
+        "render": "antv",
+        "entry_category": "distribute",
+        "group_display": "show",
+        "selectable_in_builtin_switch_palette": true,
+        "title_i18n_key": "chart.chart_word_cloud",
+        "source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/util/chart.ts",
+          "sha256": "dc7e5d0cf659863e56b30fb24ac757c64e61cad8a6875e93f67bcc7aef999548",
+          "line": 1624
+        }
+      },
+      "axis": [
+        "xAxis",
+        "yAxis",
+        "filter"
+      ],
+      "axis_sources": [
+        {
+          "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/distribution/word-cloud.ts",
+          "sha256": "048a4b7e34d38a4da21dbfe0222e69afcbdf95767f88174878cfca7a0aed1712",
+          "line": 53
+        }
+      ],
+      "filter_capability": {
+        "status": "STATIC_DECLARED_COMMON_EDITOR_CUSTOM_FILTER",
+        "supported_by_axis": true,
+        "editor_path": "built-in Editor non-plugin data branch -> openTreeFilter -> FilterTree -> RowAuth -> changeFilterData",
+        "editor_source": {
+          "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+          "sha256": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+          "line": 3366
+        },
+        "field_catalog_status": "RUNTIME_NOT_RUN",
+        "field_catalog_warning": null,
+        "type_eligibility": "sameDataset resolved target field catalog, basic-shape whitelist and explicit permission stub; no renderer-library restriction",
+        "no_filter_exclusion": false
+      },
+      "query_component_source": {
+        "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+        "sha256": "f3bf70c99bf5bcf1ebbe56e5d1caa4bd94660927a1a1785f756859cd9317503c",
+        "line": 552
+      },
+      "validation": {
+        "static_inventory": "INSPECTED_SOURCE_ONLY",
+        "payload_component": "NOT_RUN",
+        "query_save_chain": "NOT_RUN",
+        "browser_E2E": "NOT_RUN",
+        "permission_real": "NOT_RUN",
+        "family_plan_ref": "g2-relation-distribution",
+        "per_type_required": [
+          "mount real Editor for this type; inspect field catalog",
+          "real two-condition payload serialization/compatibility checks",
+          "verify copy/paste buttons and feedback for this type",
+          "query/save/reopen remains NOT_RUN until executed"
+        ],
+        "family_representative_required": true
+      }
+    }
+  ],
+  "inventory_source": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SupportedCharts.json",
+    "sha256": "163edf6b7f0a03f99256d02bb10f77c993847513f953a3e4fc743d0500c8dec4"
+  },
+  "inventory_scope_caution": "SupportedCharts历史scope_effect非当前authority；只复用源码清单/配置/类型事实，当前38/顺序以Goal及当前用户授权为准",
+  "decisions": {
+    "AC12_historical_22_text": "保留原句，最新authority要求P1 12/P2 26全38；不把旧22当当前分母",
+    "plugin_unknown": "不等0；遵TSP原发现应支持installed则追加，未知不移除应支持类型",
+    "type_coverage": "逐49实际source/target/query/tree/save/离开重开证据及共享前提；不机械新增2401或逐型所有负向",
+    "known_failures": "旧maps9/旧G2loader7为前后相同基线，不能隐藏、默认通过或默认新产品反例；按原predicate准确归属"
+  },
+  "output_rules": [
+    "逐12AC原句给pass/partial/blocked与证据和上限，不预填",
+    "逐49型给实际配置、source/target及完整正向证据落点，缺字段unknown不补值",
+    "整体P1仅全部原predicate满足时可accepted；否则准确列全部剩余",
+    "即使P1 accepted也不是S02完成；P2原26仍前置，真实权限NOT_RUN不变"
+  ],
+  "write_exclusions": [
+    "Goal/原predicate/冻结Cases/旧证据及源码不改",
+    "不UI/HTTP/DB/安装/构建/提交",
+    "不回写原C2历史、不重置任何原review预算"
+  ]
+}

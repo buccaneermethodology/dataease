@@ -1,0 +1,199 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-LOCAL-BASEMAP-CONFIG-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "允许准备并配置本地测试底图",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立r002评审后准备固定14键撤销工具、私密before和排他窗口，经实际网格预览正常UI保存底图，原始after与恢复dry-run",
+    "objective": "独立r002评审后准备固定14键撤销工具、私密before和排他窗口，经实际网格预览正常UI保存底图，原始after与恢复dry-run",
+    "authority_role": "projection",
+    "assumptions": [
+      "已保存的测试仪表板可用于 S02 验收；当前只有本机 standalone admin 与显式 DEV 测试桩。"
+    ]
+  },
+  "boundaries": {
+    "write_scope": [
+      "仅dataeasev3 core_sys_setting中已审14键正常UI保存/本次新增行守卫回退",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/local-basemap-tools",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemapRuntime-r001.json",
+      "/private/tmp/s02-basemap-private-*私密快照和本机排他锁"
+    ],
+    "forbidden_actions": [
+      "读取其他供应商密钥或无关库",
+      "更改产品源码或权限替补实现",
+      "已存在原始配置时继续保存（本工具仅支持before全缺失）",
+      "无实际网格预览保存或缺before/恢复工具保存",
+      "无after匹配/无明确restore命令提交恢复",
+      "宣称CAS/永久备份/完整地图产品或Goal通过"
+    ],
+    "maximum_claim": "本机测试网格实际渲染及正常配置，固定14键事务恢复回滚演练"
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前底图配置及有界撤销准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/LocalTestBasemapPlan-r002.md",
+      "revision": "c1ff2276cfecd71a8be5ff4ef9c5bfcd22133533bf9692b8431734c71360ca16",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前底图配置及有界撤销准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LocalTestBasemapReview-r002.md",
+      "revision": "4c47c7928d1751d81d92d491ba0f48e99670051dad65c61aed2408aab9e5ba6f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前底图配置及有界撤销准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemapFile-r001.json",
+      "revision": "30e2ddab5e8113be3bd6f37aa521e7a5b030c418db46fc0ba54ad13a46f618a3",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前底图配置及有界撤销准入",
+      "applicability": "current"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r512.json",
+      "revision": "414f5768a01a006dfa07287cf76ab4cc01472d65e8f98e0b6af12254ecdf98b5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前底图配置及有界撤销准入",
+      "applicability": "current"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "完整保留 Goal 的 P1 12 项界面 MVP + P2 原始 26 项复杂场景，共 38 项验收义务；MVP 只调整实现顺序，不删减权限或完成谓词。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": true,
+    "kb_truth": false,
+    "runtime_or_schema": true,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_agent_exception_no_delegation",
+    "reason": "root为唯一已知环境写者；独立方案2/3通过；保存前必须持flock及完成全部运行前置",
+    "task_id": "S02-LOCAL-BASEMAP-CONFIG-r001",
+    "recorded_at": "2026-10-29T13:10:07.413473+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r510.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r512.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-LOCAL-BASEMAP-CONFIG-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-09",
+    "AC-MVP-F01-12"
+  ],
+  "maximum_claim": "本机测试网格实际渲染及正常配置，固定14键事务恢复回滚演练",
+  "design_objective": "独立r002评审后准备固定14键撤销工具、私密before和排他窗口，经实际网格预览正常UI保存底图，原始after与恢复dry-run",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/LocalBasemapRuntime-r001.json"
+}

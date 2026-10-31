@@ -1,0 +1,221 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-SAVED-CANVAS-OWNER-runner-repair-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "按独立RED Validation r001 findings修复同一Saved Canvas Owner runner：复用fixture对象图/ref/step解释路径；RED只对每例首个begin调用按design优先级oracle逐例比较，不能用终态error替代；修正ref解析与数组mutation；GREEN逐API断言且执行既有创建型回归。仅允许修改精确runner和r002 RED证据；不改helper源码、fixture、合同、产品连接点或权限。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "修复冻结r003合同/r004设计要求的fixture runner语义缺陷，保持source absent并重新生成可信RED r002。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SAVED-CANVAS-OWNER-RED-r002.identity.json"
+    ],
+    "forbidden_actions": [
+      "创建或修改saved-canvas-owner helper源码",
+      "修改QuerySingleSelectSavedCanvasOwnerCases-r004.json或ImplementationContract-r003.json",
+      "调用Store/UI/权限/来源读取/copy/paste/commit/preview/query/save",
+      "修改既有create lifecycle实现或相关测试",
+      "运行standalone或mock权限验收",
+      "缩减Goal 10/26/16分母或宣称Goal完成"
+    ],
+    "maximum_claim": "仅表示修复后的同身份runner可产生候选RED；不表示helper实现、GREEN、产品行为、权限或Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "项目规则",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation",
+        "dependency"
+      ],
+      "reason": "治理硬门",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "完整Goal",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerImplementationContract-r003.json",
+      "revision": "268225f040bc1062e9e62dc071bcd43fa75542c6943300e5f49fd07fc0926d82",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "冻结实现合同",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+      "revision": "f7d430ed4801b647efd44499b37d86677563e466d3e216380aba6261ab9e4d59",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation"
+      ],
+      "reason": "有界owner设计",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+      "revision": "f209c9552d2807e628c8334d5e2164114837ec9af2a4592b1332d89715d9a822",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "40例fixture",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectSavedCanvasOwnerImplementationContractReview-r003.md",
+      "revision": "5f434be1128fa5215b2bba8c5fa22bd00b5e37438836a5ecc4331b961bc00425",
+      "domains": [
+        "acceptance",
+        "validation"
+      ],
+      "reason": "独立合同复核",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "真实权限状态",
+      "applicability": "S02-SAVED-CANVAS-OWNER-red-runner-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/SAVED-CANVAS-OWNER-RED-Validation-r001.md",
+      "revision": "f77f46bdd78cd017224faa0ec5d2ffca7e3833da6ab1e0a7c88e0828ef13b43b",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "validation"
+      ],
+      "reason": "独立RED复核及修复要求",
+      "applicability": "S02-SAVED-CANVAS-OWNER-runner-repair-r002"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+      "revision": "be6f662f038b008f7969603c7f7808656fa4f10200dd1f5bf9dcb23da89489fe",
+      "domains": [
+        "implementation",
+        "validation"
+      ],
+      "reason": "待修复runner当前语义",
+      "applicability": "S02-SAVED-CANVAS-OWNER-runner-repair-r002"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r198.json",
+      "revision": "d9795fa3cf681d6a12ca591d94d12444da7a8b24e22070bd8e1d78d2987b5ee3",
+      "domains": [
+        "dependency",
+        "scope"
+      ],
+      "reason": "最新父Topology",
+      "applicability": "S02-SAVED-CANVAS-OWNER-runner-repair-r002"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_appears",
+      "mode": "deterministic",
+      "condition": "在RED开始前source exact target存在",
+      "action": "停止；不得覆盖并重新基线",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner_semantic_gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "case oracle或failure classification与r003不一致",
+      "action": "记录finding并停止RED，不修改合同/fixture",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "reason": "可信RED runner高语义风险修复，需同身份逐例执行与独立复验。",
+    "route": "semantic_review"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "原始用户Goal及完整10/26/16分母",
+    "r003 implementation contract and r004 design/fixture",
+    "independent RED Validation r001 findings",
+    "exact runner diff and source-absent assertion",
+    "fixture object reference identity and mutation semantics",
+    "first-begin per-case oracle",
+    "same-identity RED output and identity manifest",
+    "creation regression command in GREEN path",
+    "permission blocker and product integration boundary"
+  ],
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation",
+      "dependency"
+    ],
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "Goal 10项AC、26项must-have、16项产品义务与Scope Delta none不变；S01独立；真实权限BLOCKED/NOT_RUN；修复runner不准入helper源码或产品入口。"
+  }
+}

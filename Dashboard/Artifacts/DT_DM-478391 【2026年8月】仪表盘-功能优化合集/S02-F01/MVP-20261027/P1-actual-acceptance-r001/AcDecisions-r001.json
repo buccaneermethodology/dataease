@@ -1,0 +1,600 @@
+{
+  "schema_version": "s02_actual_p1_ac_decisions_v1",
+  "reviewed_at": "2026-10-30T23:39:59.106163+00:00",
+  "reviewer": "/root/bubble_ready_validator_resumed",
+  "snapshot_id": "S02-ACTUAL-P1-ACCEPTANCE-r001",
+  "round": {
+    "current": 1,
+    "maximum": 3,
+    "unit": "actual_product_p1_acceptance",
+    "preparation_budget_used": "3/3_not_reset"
+  },
+  "contract": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/Contract-r001.json",
+    "sha256": "ae855e835097528fdec00a3c1bc421666bec3eeafe2c66e7ce8e7dd8dd242123"
+  },
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "overall_verdict": "accepted_with_bounds",
+  "claim_id": "P1_UI_MVP_COMPLETE",
+  "milestone_terminal": false,
+  "counts": {
+    "P1": 12,
+    "pass": 12,
+    "partial": 0,
+    "blocked": 0,
+    "P2_remaining": 26,
+    "full_obligations": 38,
+    "p1_basic_configurations_accepted": 49,
+    "full_product_types_accepted": 0,
+    "builtin_type_denominator": 49,
+    "installed_plugins": null
+  },
+  "rows": [
+    {
+      "ac_id": "AC-MVP-F01-01",
+      "original_requirement": "全部受支持图表基本能力：SupportedCharts每个eligible类型均能作为source复制和target粘贴相同dataset有效基本多条件树；不能仅bar→line或单叶，未知/应支持未实现类型不移除分母。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "49型实际双角色、同dataset多条件基本树与query/save-load按逐型证据接纳；38新链+map/bubble/table3新链和8类分层复用逐项判断，没有从静态注册或准备READY推PASS。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+          "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+        }
+      ],
+      "claim_ceiling": [
+        "仅各行指定基本配置；完整产品类型0/49；插件installed未知，不等0。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "仅各行指定基本配置；完整产品类型0/49；插件installed未知，不等0。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-02",
+      "original_requirement": "复用真实FilterTree/RowAuth/customFilter输出，至少两个有效条件及分组/运算符/值完整独立复制；不带样式/布局/结果；unsupported复杂结构整次明确拒绝，不悄悄丢字段。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "真实RowAuth根AND/子OR、两个有效条件与完整operator/value有多型严格descriptor；合法静态日期真UI与明确unsupported/畸形输入共享pure/component拒绝保旧已独立验证，复制数据结构不含样式布局结果。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeDynamicTreeValidation-r001.md",
+          "sha256": "3fa1f843557c1734e3af581079d174c948e02f59de71708f90cc49a0ea9c820f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r001.md",
+          "sha256": "b417bc241eb5955045a4bf2a356c169f1fd2012a82a53b0a7145d30aea2ffcd9"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r002.md",
+          "sha256": "4d790b8d717992cea3dea962967568ede6f8cfd109c35e629dededda1d8acb88"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceAValidation-r001.md",
+          "sha256": "48b7a56c6f7f21e615c9b1455305ad6faebaf8069eaddadd25193693e2015505"
+        }
+      ],
+      "claim_ceiling": [
+        "不宣称所有operator/结构或每型全部负向已运行；provider合成反例不冒充正常UI输入。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "不宣称所有operator/结构或每型全部负向已运行；provider合成反例不冒充正常UI输入。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-03",
+      "original_requirement": "同页面同编辑会话内存clipboard深拷贝，不写OS剪贴板；空源禁用、copy失败保留上次有效树、成功copy才替换；paste可重复不消耗不续期。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "真实服务cloneDeep/freeze/defensive clone与原生source编辑后clip保旧、空源禁用、拒绝copy保旧以及一次copy两次正常paste不消费/不续期联合支持；未导出fields不伪称runtime全量读取。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceAValidation-r001.md",
+          "sha256": "48b7a56c6f7f21e615c9b1455305ad6faebaf8069eaddadd25193693e2015505"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCopyIsolationValidation-r001.md",
+          "sha256": "f1473fcdbe51002bea454e7b87a58f59ecb3ed8385763964e49c5e61b6a7e32e"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCopyIsolationValidation-r002.md",
+          "sha256": "013d097ed7f1408813361c456a9c96e77f0ff03811fb960228c92019fdaa344f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md",
+          "sha256": "6a8440d0911488a06ed7720f76350679cd7b5c2a1c5cfbd0bd4b2eae2a32d617"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r002.md",
+          "sha256": "04e0a71d8031fa6311e11dd0be015250efcded4f07970aa9317748baefa090c4"
+        }
+      ],
+      "claim_ceiling": [
+        "OS不写与内部不可变性有静态/纯模块证据，未做OS外部剪贴板监听；诊断只到已导出字段。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "OS不写与内部不可变性有静态/纯模块证据，未做OS外部剪贴板监听；诊断只到已导出字段。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-04",
+      "original_requirement": "每次paste确认实际dataset ID一致且可验证、字段ID/类型/运算符完整承载；跨dataset、ID未知、缺字段、图表↔query/不支持类别、不完整树拒绝，不部分应用。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "实际dataset ID、字符串ID/目录/deType/operator完整承载；跨dataset真UI、九字段目录、17pure+三composable类别隔离拒绝共同支撑原基本校验，整次拒绝而无局部应用。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCrossDatasetValidation-r001.md",
+          "sha256": "78c5d23d1d096e3193c3dfd9091790207ab507cf63b67c6b24da8e796d18c45a"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeFieldCompatibilityValidation-r002.md",
+          "sha256": "0a1510ae5a920d99f064478f24245bb247cb77616366cf33b8122aec78e3ec79"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r002.md",
+          "sha256": "4d790b8d717992cea3dea962967568ede6f8cfd109c35e629dededda1d8acb88"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceBApiValidation-r001.md",
+          "sha256": "5155165db9dcb6ab3d7741140c5c3a6694830776de25fd1a6d1c9921f8f8b677"
+        }
+      ],
+      "claim_ceiling": [
+        "query类别0是receiver计数，不推物理HTTP0；不新增所有计算字段都拒绝的规则。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "query类别0是receiver计数，不推物理HTTP0；不新增所有计算字段都拒绝的规则。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-05",
+      "original_requirement": "权限port按source-read/dataset-read/target-manage返回allow/deny/unknown；仅DEV显式开关测试桩且标识可见，unknown/deny拒绝；生产默认不启桩、不绕后端query/save鉴权。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "三角色独立三态实现、DEV生产编译门、真实控件六组start与准备中变化后拒绝采用均有界成立；query/save沿既有API拦截鉴权，未新增默认放行，不以DEV替代真实权限。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceARolePortsValidation-r003.md",
+          "sha256": "726720f12d85ec48a459d53058351d9e7580a267f3a696fa7f08587e73d58e28"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RolePermissionControlsRuntimeValidation-r001.md",
+          "sha256": "ad6af1381e737eedc8b87001b0216a9e4f1b9db03efa53aeab52fd8dd29c2005"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RoleInFlightPermissionRuntimeValidation-r001.md",
+          "sha256": "eadf5c7d7b5ff877fb26af94cf7c602310dbd2d4c256b6ab192fcf25a0d9bd03"
+        }
+      ],
+      "claim_ceiling": [
+        "真实权限仍NOT_RUN/BLOCKED；在途整run原PARTIAL/清理失败历史不被六case局部有效覆盖。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "真实权限仍NOT_RUN/BLOCKED；在途整run原PARTIAL/清理失败历史不被六case局部有效覆盖。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-06",
+      "original_requirement": "非空目标先确认、取消tree/data/画面不变，空目标直接准备；候选校验/query和必要基本预览准备成功且目标复验有效后才采用；失败丢弃候选，不先写active树再query。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "正常非空确认/稳定取消、真实空目标无对话框、候选query/preview后才同步采用、query/准备失败保旧由真实短链与真实SFC组件见证支持；C1空态主数据已修，C2精确两入口反例后续有限修复；不宣称旧组件套件全绿。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeValidation-r001.md",
+          "sha256": "4a9c1fdce21e7110617d27456d9db1c24fd3bc239606c9d7ee22666165dd1825"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeOldStateValidation-r003.md",
+          "sha256": "4eda9c0269c0d8c5c050c22e3dc44df7d197aebe3ffc9d475382332f9269a8f7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativePngValidation-r002.md",
+          "sha256": "f8a915f5cd5954adafb3e513ff119cc1a444f0b700f2fb01968abd84aec524a6"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md",
+          "sha256": "6a8440d0911488a06ed7720f76350679cd7b5c2a1c5cfbd0bd4b2eae2a32d617"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptyTargetNetworkValidation-r003.md",
+          "sha256": "8a67a5e067dc2bdf1badd277efa32f4c7a1987f5a85105224c8d63c4ac9b809e"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC1Validation-r001.md",
+          "sha256": "173489a590f017e2e11f725969d1c85b36ed0424429b4325966c842e554c7eef"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC2Validation-r003.md",
+          "sha256": "17e6566b99fe25194bf957abaf58c95e4398df4d1edf5aee6aec9e3470575ee6"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC3Validation-r001.md",
+          "sha256": "b6f154974122a0220fff6f431cf78bda237bd5541cafb4b74360f5bbd10be211"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC4Validation-r001.md",
+          "sha256": "9669d41f3a7ebadaf592a4ee8d2e1dad205f5831acf4036d1e510e64501f2c3c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C2FiniteDisposalValidation-r001.md",
+          "sha256": "da9aacac0c4939ecd7ef1d3f5c18e983f0bcd2ddc9ad198eb9f49d0249357c8f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C1THeatmapPrimaryDataValidation-r003.md",
+          "sha256": "be82d391287f64f6c29e51f3c2660d9d695cc3131629a9d55937c2620ff80e04"
+        }
+      ],
+      "claim_ceiling": [
+        "旧maps308/9/0与旧G2loader7均不改PASS；真实SDK/GPU/异步跨卸载未验。",
+        "取消/保旧接纳原基本目标投影与组件控制流，不声称全Store/全画布所有瞬态不可变。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "旧maps308/9/0与旧G2loader7均不改PASS；真实SDK/GPU/异步跨卸载未验。",
+        "取消/保旧接纳原基本目标投影与组件控制流，不声称全Store/全画布所有瞬态不可变。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-07",
+      "original_requirement": "同目标最多一个paste在途、重复入口禁用；捕获operationId/targetId及目标编辑版本或完整摘要，回包再核；切目标/重新编辑/卸载失效，仅证明本局部paste边界。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "真实busy第二入口禁用/一次held请求、编辑300后回包不覆盖、正常切另一ID后原target保旧，与真实wrapper版本/context/identity/newcopy/TTL/unmount失效分支联合覆盖本局部paste边界。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeValidation-r001.md",
+          "sha256": "4a9c1fdce21e7110617d27456d9db1c24fd3bc239606c9d7ee22666165dd1825"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativePngValidation-r002.md",
+          "sha256": "f8a915f5cd5954adafb3e513ff119cc1a444f0b700f2fb01968abd84aec524a6"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/InFlightTargetSwitchRuntimeValidation-r001.md",
+          "sha256": "ce506c2988f8a989e217cf9eb960bafb462bfcb8a949132e37077cbbd052f73b"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC4Validation-r001.md",
+          "sha256": "9669d41f3a7ebadaf592a4ee8d2e1dad205f5831acf4036d1e510e64501f2c3c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceARolePortsValidation-r003.md",
+          "sha256": "726720f12d85ec48a459d53058351d9e7580a267f3a696fa7f08587e73d58e28"
+        }
+      ],
+      "claim_ceiling": [
+        "仅原局部paste边界，不推全Store/所有事件/全部响应竞争或真实权限撤销。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "仅原局部paste边界，不推全Store/所有事件/全部响应竞争或真实权限撤销。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-08",
+      "original_requirement": "真实query结果与独立oracle一致，准备成功采用后提示过滤条件已应用；取消/校验拒绝不发候选query，已发后失败如实留dispatch记录、保旧画面、不提示成功。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "逐型实际结果按各图表协议与预先CSV独立oracle一致；真实成功后提示、取消/校验拒绝0候选与已发后失败留logical/HTTP记录且不采用/不成功提示有原件，不把HTTP成功直接当采用。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+          "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceBApiValidation-r001.md",
+          "sha256": "5155165db9dcb6ab3d7741140c5c3a6694830776de25fd1a6d1c9921f8f8b677"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeValidation-r001.md",
+          "sha256": "4a9c1fdce21e7110617d27456d9db1c24fd3bc239606c9d7ee22666165dd1825"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeOldStateValidation-r003.md",
+          "sha256": "4eda9c0269c0d8c5c050c22e3dc44df7d197aebe3ffc9d475382332f9269a8f7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/NumericRangeRuntimeValidation-r001.md",
+          "sha256": "2997528775621296d8546280aad2407754e3af7b9374c4bc7ab59dc7b7e0301d"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SymbolicFreshRuntimeValidation-r002.md",
+          "sha256": "58d8cb42f0f449b64856c8a9c6da19b9f6a6039a851869bf4a2adec254b7ae76"
+        }
+      ],
+      "claim_ceiling": [
+        "物理count未捕获处保null；地图顶层/代表details不推所有details或全部SDK视觉；旧ubo保留。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "物理count未捕获处保null；地图顶层/代表details不推所有details或全部SDK视觉；旧ubo保留。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-09",
+      "original_requirement": "只走既有显式正常保存，无自动保存；保存后离开编辑器再重开完整基本树/分组/运算符/值与实际结果一致；未保存和保存失败不伪称持久化成功。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "逐型正常显式updateCanvas、panel实际离开后find/新本型query与完整基本过滤树相等；共享未保存窗三API0及单正常save pre-send abort无成功/当前编辑保留/正常读回旧已保存整view已补。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+          "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SaveTransportLoadingValidation-r002.md",
+          "sha256": "e7a393ca84f81961e3687f24e9dab06a83c30b2b3c822dc008543a14e690a30a"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimePasteHistoryValidation-r001.md",
+          "sha256": "9f3d657e2fbca4a2bf3157307986c9da1248bfa9f3dc76a445ebcf0b79fb22a7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r002.md",
+          "sha256": "04e0a71d8031fa6311e11dd0be015250efcded4f07970aa9317748baefa090c4"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptyTargetNetworkValidation-r003.md",
+          "sha256": "8a67a5e067dc2bdf1badd277efa32f4c7a1987f5a85105224c8d63c4ac9b809e"
+        }
+      ],
+      "claim_ceiling": [
+        "仅已绑定同路由loading引用、非local提前返回的pre-send无response失败；不证明后端事务/提交未知/跨路由/所有HTTP失败分支。",
+        "旧map19形状/日期默认键差异及UI轴附加键省略不被接纳成严格全DTO持久化通过。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "仅已绑定同路由loading引用、非local提前返回的pre-send无response失败；不证明后端事务/提交未知/跨路由/所有HTTP失败分支。",
+        "旧map19形状/日期默认键差异及UI轴附加键省略不被接纳成严格全DTO持久化通过。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-10",
+      "original_requirement": "copy成功按单调elapsed计30分钟，[0,1800000ms)有效，>=1800000ms拒绝；页面reload、退出编辑、登出/身份变化清空；图表data refresh不清空且不延寿，不跨context持久化。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "真实单调自然30min前后点+真实服务精确边界case、刷新与重复不续期、退出/reload清空及正常logout旧编辑页不reload先清空、重入空clip共同满足原基本生命周期；不声称精确UI毫秒延迟或服务器Token撤销。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceAValidation-r001.md",
+          "sha256": "48b7a56c6f7f21e615c9b1455305ad6faebaf8069eaddadd25193693e2015505"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardRealTtlValidation-r001.md",
+          "sha256": "23187dcd73b5095043bf2cbea3056dcc905180282b52042af3366739e3849e08"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r001.md",
+          "sha256": "d17d88e226155dea10c744b146cef9ca7d33b500c93e526865f26e2d1f1ca65b"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r002.md",
+          "sha256": "04e0a71d8031fa6311e11dd0be015250efcded4f07970aa9317748baefa090c4"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LogoutClearReentryValidation-r001.md",
+          "sha256": "1e0a5949d4a441447005b5c8b2e86c1cf172cc47e6149c565105a05dd489748f"
+        }
+      ],
+      "claim_ceiling": [
+        "真实TTL点1785418.2/1800914.1非1ms边界现场；logout351.3ms自copy起，非退出延迟。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "真实TTL点1785418.2/1800914.1非1ms边界现场；logout351.3ms自copy起，非退出延迟。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-11",
+      "original_requirement": "真实UI可见专用copy/paste入口、进行中/禁用/不匹配/失败/成功和开发权限桩标记，使用既有Element/i18n；正常过滤编辑/清空删除/保存回归有效。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "正常copy/paste入口和状态/i18n/DEV标记、真实RowAuth删除group/leaf成空树、正常编辑300、工具栏undo/redo及S2合法10+4分页和基本保存回归分别有可定位证据；未把组件canonical等同所有浏览器variant。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+          "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md",
+          "sha256": "6a8440d0911488a06ed7720f76350679cd7b5c2a1c5cfbd0bd4b2eae2a32d617"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimePasteHistoryValidation-r001.md",
+          "sha256": "9f3d657e2fbca4a2bf3157307986c9da1248bfa9f3dc76a445ebcf0b79fb22a7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/S2CanonicalPaginationValidation-r002.md",
+          "sha256": "c6b5556cab3a82e458abc18b0ad086f973a7173752b3bb270cfd075ff489662c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC4Validation-r001.md",
+          "sha256": "9669d41f3a7ebadaf592a4ee8d2e1dad205f5831acf4036d1e510e64501f2c3c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RolePermissionControlsRuntimeValidation-r001.md",
+          "sha256": "ad6af1381e737eedc8b87001b0216a9e4f1b9db03efa53aeab52fd8dd29c2005"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C2FiniteDisposalValidation-r001.md",
+          "sha256": "da9aacac0c4939ecd7ef1d3f5c18e983f0bcd2ddc9ad198eb9f49d0249357c8f"
+        }
+      ],
+      "claim_ceiling": [
+        "每型全部样式轴/长文本/缩放/移动/嵌入不由此认证；继承percent单位限制保留。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "每型全部样式轴/长文本/缩放/移动/嵌入不由此认证；继承percent单位限制保留。"
+      ]
+    },
+    {
+      "ac_id": "AC-MVP-F01-12",
+      "original_requirement": "隔离开发环境真实UI/前后端query/正常save-load覆盖每eligible类型source与target、多条件整树、dev桩三态、拒绝/取消/准备失败/局部失效/TTL清空与回归；非Builder独立验收当前22项，真实权限仍未验。",
+      "verdict": "pass",
+      "verdict_zh": "原P1 DEV基本范围有界通过",
+      "rationale": "本非Builder按逐字原12条及49逐类型实际证据作整体独立判定；隔离DEV真实UI/query/save-load、共享三态/拒绝/取消/失败/局部失效/TTL与回归均有有效层；原AC12旧22原句保留但当前38/P1 12/P2 26解释不缩分母。",
+      "evidence": [
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+          "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceAValidation-r001.md",
+          "sha256": "48b7a56c6f7f21e615c9b1455305ad6faebaf8069eaddadd25193693e2015505"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceARolePortsValidation-r003.md",
+          "sha256": "726720f12d85ec48a459d53058351d9e7580a267f3a696fa7f08587e73d58e28"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceBApiValidation-r001.md",
+          "sha256": "5155165db9dcb6ab3d7741140c5c3a6694830776de25fd1a6d1c9921f8f8b677"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC1Validation-r001.md",
+          "sha256": "173489a590f017e2e11f725969d1c85b36ed0424429b4325966c842e554c7eef"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC2Validation-r003.md",
+          "sha256": "17e6566b99fe25194bf957abaf58c95e4398df4d1edf5aee6aec9e3470575ee6"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC3Validation-r001.md",
+          "sha256": "b6f154974122a0220fff6f431cf78bda237bd5541cafb4b74360f5bbd10be211"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceC4Validation-r001.md",
+          "sha256": "9669d41f3a7ebadaf592a4ee8d2e1dad205f5831acf4036d1e510e64501f2c3c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeDynamicTreeValidation-r001.md",
+          "sha256": "3fa1f843557c1734e3af581079d174c948e02f59de71708f90cc49a0ea9c820f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCrossDatasetValidation-r001.md",
+          "sha256": "78c5d23d1d096e3193c3dfd9091790207ab507cf63b67c6b24da8e796d18c45a"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeFieldCompatibilityValidation-r002.md",
+          "sha256": "0a1510ae5a920d99f064478f24245bb247cb77616366cf33b8122aec78e3ec79"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCopyIsolationValidation-r001.md",
+          "sha256": "f1473fcdbe51002bea454e7b87a58f59ecb3ed8385763964e49c5e61b6a7e32e"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeCopyIsolationValidation-r002.md",
+          "sha256": "013d097ed7f1408813361c456a9c96e77f0ff03811fb960228c92019fdaa344f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md",
+          "sha256": "6a8440d0911488a06ed7720f76350679cd7b5c2a1c5cfbd0bd4b2eae2a32d617"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptyTargetNetworkValidation-r003.md",
+          "sha256": "8a67a5e067dc2bdf1badd277efa32f4c7a1987f5a85105224c8d63c4ac9b809e"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r001.md",
+          "sha256": "d17d88e226155dea10c744b146cef9ca7d33b500c93e526865f26e2d1f1ca65b"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardLifecycleValidation-r002.md",
+          "sha256": "04e0a71d8031fa6311e11dd0be015250efcded4f07970aa9317748baefa090c4"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeClipboardRealTtlValidation-r001.md",
+          "sha256": "23187dcd73b5095043bf2cbea3056dcc905180282b52042af3366739e3849e08"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeValidation-r001.md",
+          "sha256": "4a9c1fdce21e7110617d27456d9db1c24fd3bc239606c9d7ee22666165dd1825"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativePngValidation-r002.md",
+          "sha256": "f8a915f5cd5954adafb3e513ff119cc1a444f0b700f2fb01968abd84aec524a6"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeNegativeOldStateValidation-r003.md",
+          "sha256": "4eda9c0269c0d8c5c050c22e3dc44df7d197aebe3ffc9d475382332f9269a8f7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RolePermissionControlsRuntimeValidation-r001.md",
+          "sha256": "ad6af1381e737eedc8b87001b0216a9e4f1b9db03efa53aeab52fd8dd29c2005"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RoleInFlightPermissionRuntimeValidation-r001.md",
+          "sha256": "eadf5c7d7b5ff877fb26af94cf7c602310dbd2d4c256b6ab192fcf25a0d9bd03"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/InFlightTargetSwitchRuntimeValidation-r001.md",
+          "sha256": "ce506c2988f8a989e217cf9eb960bafb462bfcb8a949132e37077cbbd052f73b"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimePasteHistoryValidation-r001.md",
+          "sha256": "9f3d657e2fbca4a2bf3157307986c9da1248bfa9f3dc76a445ebcf0b79fb22a7"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/S2CanonicalPaginationValidation-r002.md",
+          "sha256": "c6b5556cab3a82e458abc18b0ad086f973a7173752b3bb270cfd075ff489662c"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r001.md",
+          "sha256": "b417bc241eb5955045a4bf2a356c169f1fd2012a82a53b0a7145d30aea2ffcd9"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SharedGuardWitnessValidation-r002.md",
+          "sha256": "4d790b8d717992cea3dea962967568ede6f8cfd109c35e629dededda1d8acb88"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SaveTransportLoadingValidation-r002.md",
+          "sha256": "e7a393ca84f81961e3687f24e9dab06a83c30b2b3c822dc008543a14e690a30a"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/LogoutClearReentryValidation-r001.md",
+          "sha256": "1e0a5949d4a441447005b5c8b2e86c1cf172cc47e6149c565105a05dd489748f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C2FiniteDisposalValidation-r001.md",
+          "sha256": "da9aacac0c4939ecd7ef1d3f5c18e983f0bcd2ddc9ad198eb9f49d0249357c8f"
+        },
+        {
+          "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/C1THeatmapPrimaryDataValidation-r003.md",
+          "sha256": "be82d391287f64f6c29e51f3c2660d9d695cc3131629a9d55937c2620ff80e04"
+        }
+      ],
+      "claim_ceiling": [
+        "只形成P1非终态里程碑；原P2 26、完整S02条件、真实权限及插件unknown不豁免。",
+        "本输出不写Goal状态或Goal终态Gate，不预判最终发布/生产就绪。"
+      ],
+      "remaining": [],
+      "not_observed_is_not_pass": [
+        "只形成P1非终态里程碑；原P2 26、完整S02条件、真实权限及插件unknown不豁免。",
+        "本输出不写Goal状态或Goal终态Gate，不预判最终发布/生产就绪。"
+      ]
+    }
+  ],
+  "goal_status_change_authorized_by_this_output": false,
+  "real_permissions": "BLOCKED/NOT_RUN",
+  "scope_delta_approved": [],
+  "remaining_goal_requirements": [
+    "P2原26项逐条按原合同完成与独立验收",
+    "发现应支持installed插件时显式追加分母补验；目前unknown不等0",
+    "完整S02最终diff/终审/最终状态绑定与native authority-root/predicate/Stop Gate"
+  ],
+  "type_decisions": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/P1-actual-acceptance-r001/TypeDecisions-r001.json",
+    "sha256": "fe10930ea1a259310dc58ed362fc552a5af18bcc32b8e7d0925e59bf6896006d"
+  },
+  "historical_failures_preserved": true
+}

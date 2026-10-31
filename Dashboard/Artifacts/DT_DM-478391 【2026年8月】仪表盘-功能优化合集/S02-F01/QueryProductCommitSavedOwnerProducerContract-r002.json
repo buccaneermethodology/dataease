@@ -1,0 +1,206 @@
+{
+  "schema_version": "s02_qpc_saved_owner_store_producer_contract_v1",
+  "contract_id": "S02-QPC-SAVED-OWNER-PRODUCER-001",
+  "revision": "r002",
+  "status": "CANDIDATE_FOR_INDEPENDENT_DELTA_REVIEW",
+  "frozen_for_builder": false,
+  "authority": {
+    "goal_ref": "Goal.final.json",
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none",
+    "s01": "independent"
+  },
+  "design_refs": [
+    "QueryProductCommitSavedOwnerProducerDesign-r001.md",
+    "QueryProductCommitStoreProducerTrace-r001.md",
+    "reviews/QueryProductCommitSavedOwnerProducerDesignReview-r001.md"
+  ],
+  "purpose": "定义已保存Dashboard编辑态Store owner的发布、代次与失效合同，作为后续精确审查输入；不实现产品接线。",
+  "state_axes": [
+    {
+      "axis": "resource_identity",
+      "fields": [
+        "requested_resource_id",
+        "response_resource_id",
+        "owner_resource_id"
+      ],
+      "rule": "仅normal_saved_edit要求请求ID与响应ID相同且非空；owner_resource_id取已验证响应ID。"
+    },
+    {
+      "axis": "load_generation",
+      "fields": [
+        "load_generation",
+        "request_generation"
+      ],
+      "rule": "每次新资源加载、缓存恢复、模式变化和卸载前递增；仅当前代次的响应可发布。"
+    },
+    {
+      "axis": "canvas_identity",
+      "fields": [
+        "canvas_instance_token",
+        "root_raw_reference",
+        "root_revision"
+      ],
+      "rule": "只绑定已完整发布的当前Store根；proxy/raw规范化规则须由实现与运行验证给出。"
+    },
+    {
+      "axis": "target_identity",
+      "fields": [
+        "target_id",
+        "target_raw_reference",
+        "target_cardinality"
+      ],
+      "rule": "仅当当前root中唯一匹配VQuery且raw引用仍相同才有效；删除、重复或替换使owner失效。"
+    },
+    {
+      "axis": "source_kind",
+      "fields": [
+        "normal_saved_edit",
+        "cache_restore",
+        "copy_as_new",
+        "template_create",
+        "blank_create",
+        "preview_embed"
+      ],
+      "rule": "normal edit与匹配资源的cache restore可成为候选；其余分支在本合同排除。"
+    },
+    {
+      "axis": "principal_organization",
+      "fields": [
+        "provider_identity_generation"
+      ],
+      "rule": "owner仅绑定不透明provider identity generation以便失效比较；不得保存principal/organization明文或授权布尔值。变化必须由真实provider事件驱动；provider尚未知。"
+    },
+    {
+      "axis": "authorization",
+      "fields": [],
+      "rule": "授权是owner之外的外部契约输入；不存入owner snapshot，不派生、不缓存、不证明。source read与target commit各自实时调用权威provider授权。"
+    }
+  ],
+  "lifecycle": [
+    {
+      "event": "begin_new_load",
+      "precondition": "任何新资源加载开始",
+      "transition": "先递增load_generation并清除当前owner，再发起请求。"
+    },
+    {
+      "event": "normal_saved_edit_loaded",
+      "precondition": "请求代次仍为当前；saved-edit模式；请求ID=响应ID且非空；组件根、view与resource metadata均完成发布",
+      "transition": "仅在完整Store context可观察后mint新owner，绑定当前root/target引用。"
+    },
+    {
+      "event": "cache_restore_complete",
+      "precondition": "恢复资源ID与当前saved-edit资源一致；snapshotPublish完成；新generation下当前root和唯一VQuery目标复验通过",
+      "transition": "mint新的owner generation；任何旧owner不可复用。"
+    },
+    {
+      "event": "load_failure_or_id_mismatch",
+      "precondition": "请求失败、请求代次过期或响应ID不一致",
+      "transition": "不mint owner；当前代owner保持无效；禁止旧响应重写Store。"
+    },
+    {
+      "event": "root_or_target_changed",
+      "precondition": "owner有效期间root被替换、目标删除/重复/替换或raw引用变化",
+      "transition": "invalidate owner；不得读取source config或写目标。"
+    },
+    {
+      "event": "principal_or_organization_changed",
+      "precondition": "由真实身份provider发出的已验证变化事件",
+      "transition": "invalidate owner并清除跨主体缓存关联；provider尚未知，不能由调用方自报事件替代。"
+    },
+    {
+      "event": "unmount_or_mode_exit",
+      "precondition": "dashboard离开编辑态或组件卸载",
+      "transition": "invalidate owner。"
+    },
+    {
+      "event": "partial_store_publication_failure",
+      "precondition": "owner已在发布开始时失效；已执行至少一个Store setter，但组件根、resource metadata、style或view未全部完成；setter抛错或完成谓词为false",
+      "transition": "本generation终态为publication_failed且owner=null；部分Store数据不得作为有效编辑context/owner输入；禁止source-read/target-commit；恢复只能启动新load generation并从权威完整资源重新发布，不在本合同尝试回滚旧Store快照。"
+    }
+  ],
+  "forbidden_collapses": [
+    "owner不是登录身份或授权票据",
+    "resource ID不等于canvas instance/load generation",
+    "owner有效不表示source可读或target可编辑",
+    "Store setter顺序静态可见不证明原子可见性",
+    "snapshot/cache调用不等于history append、preview dispatch、query request或save",
+    "standalone/admin/mock/static checkPer不能替代真实权限"
+  ],
+  "failure_precedence": [
+    "stale_generation",
+    "mode_not_supported",
+    "resource_id_mismatch",
+    "incomplete_store_publication",
+    "root_missing_or_changed",
+    "target_missing_or_ambiguous",
+    "target_raw_identity_changed",
+    "principal_or_organization_changed"
+  ],
+  "oracle_contract": {
+    "success_observations": [
+      "发布前后的load_generation与owner generation",
+      "resource requested/response/owner ID一致",
+      "当前Store根与唯一VQuery raw引用一致",
+      "旧owner失效",
+      "producer不调用source-read/target-commit/permission API"
+    ],
+    "rejection_observations": [
+      "owner absent/invalid",
+      "精确拒绝原因与优先级",
+      "Store root/resource/config/selection保持不变",
+      "旧响应不发布",
+      "无source-read/target-commit/preview/query/save副作用"
+    ],
+    "separation": "授权允许/拒绝属于另一合同与真实环境；此producer仅可断言不发起读取/提交，不判定授权。"
+  },
+  "excluded": [
+    "UI/Store产品实现",
+    "source config读取",
+    "copy/paste与目标提交",
+    "真实身份provider实现",
+    "权限判定/撤权行为",
+    "preview/query/save/history",
+    "copy-as-new、template、blank create、preview/embed producer支持"
+  ],
+  "claim_ceiling": "仅producer-local候选状态/生命周期合同；明确授权布尔值不属于owner snapshot，并定义多setter观察窗口/部分失败终态；不证明产品实现、原子可见性、权限或Goal验收。",
+  "implementation_entry": "NOT_READY_FOR_PRODUCT_UI_STORE；本合同与Cases独立复核后，最多再讨论detached producer-local model/helper的精确准入；产品Store接线仍需真实producer与权限能力。",
+  "supersedes": "QueryProductCommitSavedOwnerProducerContract-r001.json",
+  "review_disposition_ref": "reviews/QueryProductCommitSavedOwnerProducerContractReview-r001.md",
+  "owner_snapshot_contract": {
+    "included": [
+      "resource_id",
+      "load_generation",
+      "canvas_instance_token",
+      "root_raw_reference",
+      "root_revision",
+      "unique_target_id",
+      "target_raw_reference",
+      "provider_identity_generation"
+    ],
+    "excluded": [
+      "principal_id",
+      "organization_id",
+      "session_token",
+      "source_read_authorized",
+      "target_edit_authorized",
+      "permission_decision"
+    ],
+    "authorization_boundary": "owner snapshot只提供身份/代次一致性；source-read和target-commit调用前分别从真实provider读取当前主体及动作授权，任何允许/拒绝结果都不写回owner。"
+  },
+  "publication_observation_window": {
+    "start": "使旧owner失效之后、执行本次加载的第一个Store setter之前",
+    "points": [
+      "before_first_setter",
+      "after_each_store_setter",
+      "after_final_setter_before_owner_mint",
+      "synchronous_publish_return",
+      "next_vue_render_or_watcher_turn"
+    ],
+    "success_predicate": "仅最后setter成功且resource metadata、component root、style与view均属于同一request generation时发布owner；所有先前观察点均owner=null。",
+    "failure_predicate": "任一setter失败或同代完整性谓词为false时，owner=null且generation=publication_failed；不得让部分Store状态被owner消费者使用；需新generation重新加载恢复。",
+    "implementation_limit": "当前合同定义观测/终态，不声称现有Pinia setter原子；具体可见性屏障必须在实现与独立运行验证中证明。"
+  }
+}

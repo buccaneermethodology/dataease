@@ -1,0 +1,58 @@
+{
+  "schema_version": "s02_actual_topology_v1",
+  "topology_id": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-BUILDER-r001",
+  "recorded_at": "2026-10-20T19:57:11.965387+00:00",
+  "parent_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r295.json",
+  "phase": "sh_select_text_local_validator_harness_builder_candidate",
+  "task_id": "S02-F01-SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001",
+  "execution": {
+    "identity": "/root",
+    "state": "candidate_completed_validation_pending",
+    "result": "22/22 exact snapshots; same-case expected-return mutation fails at the exact snapshot assertion; targeted ESLint/diff-check pass."
+  },
+  "inputs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextLocalValidatorHarnessContract-r001.json",
+      "sha256": "88db63ca8b17f26f5817978464dee1b5dc09e550013899396994f91e0edadd2d"
+    },
+    {
+      "path": "core/core-frontend/tests/filter-copy-query-select-text-source/validator-harness.mjs",
+      "sha256": "57134880e9850f67faca6561c36f650fec97b6adf3c28b92387171e456a751ce"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SH-SELECT-TEXT-LOCAL-VALIDATOR-HARNESS-r001.md",
+      "sha256": "a66dbe82f3ea95acbc73c70eeea89a07a402909b30dea1432c144e7b7c3b4207"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextLegalCombinationsDesignReview-r001.md",
+      "sha256": "074bb5cc8db2d327f1a760906d35d5ed889c7a7376cf3f40814ce25f21f4faa0"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "sha256": "b054260afb973f414ba947e819565576b6cb204b72eed1e9044aee182d36adeb"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/execution-admission-sh-select-text-local-validator-harness-builder-r001.json",
+      "sha256": "2b58dff13a825c868f4719503f8f7a8bdc63675654e4f56a941315712da8bab6"
+    }
+  ],
+  "commands": [
+    "node tests/filter-copy-query-select-text-source/validator-harness.mjs",
+    "temporary runner copy with same-case expected return mutation (expected failure at complete snapshot assertion)",
+    "./node_modules/.bin/eslint tests/filter-copy-query-select-text-source/validator-harness.mjs",
+    "git diff --check -- tests/filter-copy-query-select-text-source/validator-harness.mjs"
+  ],
+  "goal_denominator": {
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "claim_ceiling": "仅支持22项局部validator输入的提取函数快照；不证明产品合法性、真实权限或Goal AC完成。",
+  "blockers": [
+    "independent Validation not yet performed",
+    "S01 F01 CONDITIONAL; real permission BLOCKED / NOT_RUN",
+    "6 NOT_READY cases remain excluded"
+  ],
+  "next_action": "MATERIALIZE_NEXT_ENTRY"
+}

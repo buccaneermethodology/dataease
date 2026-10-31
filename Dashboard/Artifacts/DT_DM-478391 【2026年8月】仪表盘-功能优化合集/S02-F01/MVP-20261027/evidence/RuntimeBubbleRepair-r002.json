@@ -1,0 +1,71 @@
+{
+  "recorded_at": "2026-10-29T13:50:19.411154+00:00",
+  "events": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBubbleRepair-events-r002.jsonl",
+    "sha256": "6e1d5ffc49a3a7318bec17fd5dd02880b9235dd08c4405f17e7adca914d8a84b"
+  },
+  "repair_validation": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/BubbleReadyValidation-r001.md",
+    "sha256": "0672f4a7db7e51544394b338831a1ce46f676fc35a446d553a4ff18a53afbfcd"
+  },
+  "normal_ui": true,
+  "browser": "fresh installed Chrome via bundled Playwright",
+  "environment": "isolated7070/8100/dataeasev3; standalone admin and DEV allow",
+  "target": {
+    "type": "bubble-map",
+    "before_threshold": 200,
+    "after_threshold": 500,
+    "outcome": "success",
+    "logical_query_calls": 1,
+    "complete_immediate_tree_equals_clipboard": true,
+    "province_rows": {
+      "江苏省": 1982,
+      "浙江省": 1243,
+      "广东省": 1868
+    },
+    "independent_csv_matches": true
+  },
+  "source_to_indicator": {
+    "source": "bubble-map500",
+    "indicator_before_threshold": 200,
+    "indicator_after_threshold": 500,
+    "outcome": "success",
+    "logical_query_calls": 1,
+    "immediate_tree_equals_clipboard": true,
+    "amount": 5093,
+    "independent_oracle_matches": true
+  },
+  "explicit_save_success": true,
+  "leave_to_workbench_observed_then_reopened": true,
+  "reopen": {
+    "bubble_type": "气泡地图",
+    "bubble_threshold": "500",
+    "indicator_threshold": "500",
+    "indicator_visible": "5,093",
+    "clipboard_empty_both": true,
+    "bubble_exact_tree_equals_before_save": true,
+    "indicator_exact_tree_equals_before_save": true
+  },
+  "screenshots": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBubbleRepair-pasted500-r002.png",
+      "sha256": "4653a9d6c3c49c6c9967dff55efc63051ef6ef3619863014e174f997a54e6ab4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeBubbleRepair-reopened-verified-r002.png",
+      "sha256": "1ac8a0d845076b705ae3648b1d395ee31b6c8b39396070fd55dee3867c881430"
+    }
+  ],
+  "driver_errata": [
+    "前四事件含一次未等待角色切换导致的bubble200自复制；已由role_selection_erratum标注，不计200→500通过",
+    "首个SPA导航未等待工作台落地；由reopen_driver_wait_incomplete标注，不计重开；随后实际等待工作台查看全部再返回，记录verified事件"
+  ],
+  "limitations": [
+    "真实权限仍BLOCKED/NOT_RUN",
+    "仅本类型双向正常局部自测；完整负向/失败旧态/跨入口及独立产品验收未完",
+    "保存重开tree是否null/default字段完全一致如实列布尔；完整AC09未关闭",
+    "只有逻辑getData次数，不代表物理HTTP次数",
+    "地图图片不证明地理精度或资源无泄漏"
+  ],
+  "claim_ceiling": "气泡地图局部目标/来源与显式保存重开实际观察；不是完整类型AC/MVP/Goal完成"
+}

@@ -1,0 +1,724 @@
+{
+  "schema_version": "s02_mvp_scope_delta_v1",
+  "created_at": "2026-10-27T03:21:40.218743+00:00",
+  "authority": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+    "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+    "source_thread_id": "01a16109-aa34-78a0-8f47-f48aebb7e396",
+    "platform_user_message_id": "01a17b46-fa6c-7713-8511-a16644a2f999",
+    "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+    "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061",
+    "raw_user_text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+    "local_verification": [
+      {
+        "line": 2592,
+        "retained_message_id": "msg_01a17b46-fa6c-7713-8511-a152a2514503",
+        "role": "user",
+        "turn_id": "01a17b46-fa3f-7b62-98cf-89c84ba14006",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      }
+    ],
+    "source_note": "通过user角色/turn/原文摘要匹配；platform指针与retained消息ID分别保留，不要求两者字面相同。",
+    "explicit_approval_token": null
+  },
+  "old_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "bytes_sha256": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+    "canonical_digest": "9fd9d11ba6b0d514b9bdb3527dac963221f1467d6851292fd5384b327040f672",
+    "revision": "resolved-399df0d1d7ba7f39",
+    "snapshot_manifest": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/scope-baseline-before-20261027/manifest.json"
+  },
+  "candidate_goal_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/Goal.candidate.json",
+  "counts": {
+    "historical_total": 26,
+    "historical_general_ac": 10,
+    "historical_product": 16,
+    "current_required": 22,
+    "current_general_ac": 10,
+    "current_product": 12,
+    "legacy_product_approved_deferred": 16,
+    "candidate_ledger_total": 38,
+    "landed": 0
+  },
+  "scope_changes": [
+    {
+      "scope_delta_id": "SD-MVP-20261027-01",
+      "impact": "narrowed",
+      "description": "全部受支持图表基本多条件copy/paste代替原图表+query+复杂场景的当前S02完整前置。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-02",
+      "impact": "authority_changed",
+      "description": "真实权限迁S041；当前仅DEV显式allow/deny/unknown测试桩，unknown拒绝。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-03",
+      "impact": "deferred",
+      "description": "跨context clipboard/DG-02迁S042；当前同页同编辑会话内存与单调TTL。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-04",
+      "impact": "deferred",
+      "description": "通用异步/candidate-query/通用双host迁S043；当前保留单目标单paste与operation/target重查。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-05",
+      "impact": "deferred",
+      "description": "全面渲染资源治理迁S044；不撤销已完成G2工程。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-06",
+      "impact": "deferred",
+      "description": "原query组件复制/级联/独立副本迁S045。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-07",
+      "impact": "deferred",
+      "description": "复杂动态条件、原容量边界和完整历史AC续验迁S046。"
+    },
+    {
+      "scope_delta_id": "SD-MVP-20261027-08",
+      "impact": "claim_changed",
+      "description": "仅可声明权限测试桩下界面MVP；原全量/真实权限/生产ready禁止追认。"
+    }
+  ],
+  "rows": [
+    {
+      "requirement_id": "AC-S02-01",
+      "original_text": "Entry Packet、仓库 revision、权限及前置门槛均可复核。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-01",
+      "original_status": "pending",
+      "original_text_sha256": "241cd1a932405f38f5b036acc171dd73b1da860d89007191287cfcb4b59057e4",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-01"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-02",
+      "original_text": "所有冻结 F01 REQ/BR/DEC/AC 已映射到设计与测试，无关键未决项。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-02",
+      "original_status": "pending",
+      "original_text_sha256": "130635618c376db98a4ecce703b1fda5d8d3e8e7130b2c0d66fae236a1fa2450",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-02"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-03",
+      "original_text": "Design Freeze Review 有明确结论，代码实现不越界。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-03",
+      "original_status": "pending",
+      "original_text_sha256": "53abe8da624926a16806f73300e088301b7dbb1a697420e223ce29690acf95dd",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-03"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-04",
+      "original_text": "复制、兼容校验、粘贴、保存和回显完整链路符合契约。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-04",
+      "original_status": "pending",
+      "original_text_sha256": "c0ae0ea8896d6b2f5517228249ab1a57890001164152668e84b90dddc3779d3c",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-04"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-05",
+      "original_text": "非法目标、无权限、错误输入和保存失败按契约处理。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-05",
+      "original_status": "pending",
+      "original_text_sha256": "4fabb29474e4f3915240a4316fa50c5c3e790beb1ebd00280cc6405961146154",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-05"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-06",
+      "original_text": "权限、安全与历史配置兼容均有验证证据。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-06",
+      "original_status": "pending",
+      "original_text_sha256": "2af2b63038b96ed2a8b92ceb2d9ccc7de62a4c67c576361a850f7c256284a065",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-06"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-07",
+      "original_text": "冻结 F01 AC 测试覆盖 100%，必需测试通过；失败/跳过/未运行不得隐藏。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-07",
+      "original_status": "pending",
+      "original_text_sha256": "8259f8366f8ad582a46e6708691e012927f8a03350de8b6532e75c9eab00a9c9",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-07"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-08",
+      "original_text": "既有过滤器回归通过，变更与回滚方案可追溯。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-08",
+      "original_status": "pending",
+      "original_text_sha256": "90a717b1a99955711c9822c67f54d11467896280c347002499d68b39f8679096",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-08"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-09",
+      "original_text": "独立审查 findings 有编号、severity、依据、影响、建议及 disposition；阻塞项关闭。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-09",
+      "original_status": "pending",
+      "original_text_sha256": "164fea91e825688a032c8e8255752b14e538e1c45cc07ce94906954b7e5d917d",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-09"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-S02-10",
+      "original_text": "完成最终对账、双 verdict 和 Stop Gate，产出可验证终态凭证。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md#AC-S02-10",
+      "original_status": "pending",
+      "original_text_sha256": "25faf34cc3659a4084aceed13daab8d2f638651af0449ee1fc88f59870e4305a",
+      "newDisposition": "revised_current",
+      "new_goal_status": "pending",
+      "currentMvpIds": [
+        "AC-S02-10"
+      ],
+      "followupSessionId": null,
+      "reason": "原通用AC按新授权当前MVP边界修订；原文/证据/原pending状态保全，不再以旧全量作前置。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": true,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q004",
+      "original_text": "（可观察结果）：图表→图表及查询→查询允许；图表↔查询均拒绝且目标配置不变。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q004",
+      "original_status": "pending",
+      "original_text_sha256": "39dc805ba7b4c959db0582bdce749898d0b26705aaceab006e461b05cc434c72",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-01",
+        "AC-MVP-F01-04"
+      ],
+      "followupSessionId": "DE-EXEC-S045",
+      "reason": "当前图表基本copy及跨类别拒绝；query全量迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q005",
+      "original_text": "（可观察结果）：B获得同一配置；不要求跨设备/浏览器；刷新B不得制造新有效期。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q005",
+      "original_status": "pending",
+      "original_text_sha256": "a7a5418fb4c54bac69f0a5794752ff2d875dc95a352ee9f422db76f6b196d9b9",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-03",
+        "AC-MVP-F01-10"
+      ],
+      "followupSessionId": "DE-EXEC-S042",
+      "reason": "同页内存留当前，跨标签B获取/跨context协议迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q006",
+      "original_text": "（可观察结果）：仅D1通过；D2即使字段同名同类型仍拒绝；ID无法确认也拒绝。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q006",
+      "original_status": "pending",
+      "original_text_sha256": "385d1ce4c75398fe0f9b412ba7a71dfe60794ce9d2af6737df4546ec494df497",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-04"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "当前严格dataset ID/字段检查；原复杂全矩阵历史AC续验。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q007",
+      "original_text": "（可观察结果）：确认后树完全等于T且旧条件消失；取消配置/预览不变；空目标直接应用。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q007",
+      "original_status": "pending",
+      "original_text_sha256": "8901f9337a7ade527c0fe446d61f02dcf2ad8f1f8c46c4cc06f50db0702bbf2c",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-02",
+        "AC-MVP-F01-06"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "基本整树/覆盖确认/取消/空目标留当前；复杂全形态续验迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q008",
+      "original_text": "（可观察结果）：未过期可重复使用且不消耗、不续期；超过30分钟拒绝并提示重新复制；新复制替换T并重计时；恰30分钟判定见ISS-AC-01。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q008",
+      "original_status": "pending",
+      "original_text_sha256": "97c0748dda75bdf2a189c633a96485d20843543602cdc97652c8264446564111",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-03",
+        "AC-MVP-F01-10"
+      ],
+      "followupSessionId": "DE-EXEC-S042",
+      "reason": "当前单页单调30分钟不续期；跨context时间和ISS-AC-01完整政策迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q009",
+      "original_text": "（可观察结果）：旧内容不可恢复；每次粘贴重验身份、数据集访问及目标编辑权限，拒绝时不改目标。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q009",
+      "original_status": "pending",
+      "original_text_sha256": "66c155875ce170523954c4927704866e86fa14cbe815af48a10e83303ae35b37",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-05",
+        "AC-MVP-F01-10"
+      ],
+      "followupSessionId": "DE-EXEC-S041",
+      "reason": "当前身份清空和dev桩每次复核；真实权限/撤权/完整会话迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q010",
+      "original_text": "（可观察结果）：DataEase共享内容可用，系统剪贴板不被覆盖；不要求操作系统粘贴快捷键。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q010",
+      "original_status": "pending",
+      "original_text_sha256": "c3a8595b71a90f463868ea29dfae65e95ad3f8c7cd4f652aa54c4fbb02a28166",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-03"
+      ],
+      "followupSessionId": "DE-EXEC-S042",
+      "reason": "同页内存不写OS保留；原完整共享/跨context续验迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q011",
+      "original_text": "（可观察结果）：复制按钮禁用，不通过空复制清空目标；原有删除/清空操作仍可用。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q011",
+      "original_status": "pending",
+      "original_text_sha256": "aa5d94fd9cbd7bd8f2bf25f99c7de221c94158eeab043c70150455b3114c5a68",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-03",
+        "AC-MVP-F01-11"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "空源禁用/原清空删除留当前；原全量AC独立续验不称已完成。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q012",
+      "original_text": "（可观察结果）：两者过滤命中记录ID相同；保存动态规则而非结果，样式/布局/查询结果不复制。；均校验失败并拒绝粘贴，提示“过滤条件不匹配，请重新复制”；目标旧树、已保存版本和当前预览ID{5}保持，零新过滤查询/刷新，不部分应用可解析片段；有效完整树仍命中{2,3,5}。不新增操作系统剪贴板入口",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q012",
+      "original_status": "pending",
+      "original_text_sha256": "28fcdb1faed3e0fd2acfd51d94463dfd11e8ae53c781824c7a8b83c535959e45",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-02",
+        "AC-MVP-F01-04",
+        "AC-MVP-F01-08"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "基本静态树/结果/整拒绝当前；动态表达式/完整复杂serializer矩阵迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q013",
+      "original_text": "（可观察结果）：50且不超容量允许，51或超1MB拒绝且T保持；组合节点不计叶子，1001枚举未超两限应允许；字节口径见ISS-AC-02。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q013",
+      "original_status": "pending",
+      "original_text_sha256": "a9c43a7ec4a45dca206d095dcd3fb80778d9f0c2fc1dd2b3faf680ce40eb7660",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-02",
+        "AC-MVP-F01-04"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "基本树不裁成单叶且不截断；原50叶/1MB/1001枚举全部边界不作当前前置，原未裁口径保留。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q014",
+      "original_text": "（可观察结果）：成功立即预览新条件，只有正常保存后重开保留；取消/失败不刷新、不修改；不新增自动保存。；成功显示“过滤条件已应用”并按T刷新预览；取消/失败不得显示该成功反馈，目标与预览保持原状",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q014",
+      "original_status": "pending",
+      "original_text_sha256": "377067750282ec6f5f08e7fe5af3fe5b442b58042b2361340c30b7ec9fa752f5",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-06",
+        "AC-MVP-F01-07",
+        "AC-MVP-F01-08",
+        "AC-MVP-F01-09"
+      ],
+      "followupSessionId": "DE-EXEC-S043",
+      "reason": "当前准备成功采用/失败保旧/保存重开；通用异步交错/全部renderer强证明迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-Q015",
+      "original_text": "（可观察结果）：通用规则完整应用；维度/指标/排序/样式不带入；无法完整承载时整次拒绝。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-Q015",
+      "original_status": "pending",
+      "original_text_sha256": "ba7555312cb046ca16fda3de6f5302600bda09fc5e4693f55496b5091e00b2c5",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-01",
+        "AC-MVP-F01-02",
+        "AC-MVP-F01-04"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "全部受支持图表基本完整承载/不带轴样式当前；复杂规则全矩阵迁后。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-ORIG-01",
+      "original_text": "：U_editor按既有编辑权可操作；U_view不可查看过滤条件、复制或粘贴，目标不变；不能只隐藏按钮当鉴权通过。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-ORIG-01",
+      "original_status": "pending",
+      "original_text_sha256": "29a6aadbd18325c2bd02f00fb2fe080f95326c3cd0ec6a6676b211ad5fdfeaf8",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-05"
+      ],
+      "followupSessionId": "DE-EXEC-S041",
+      "reason": "只证dev三态和现有后端鉴权不变；真实U_editor/U_view不追认。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F01-ORIG-02",
+      "original_text": "：保留为历史方案线索，不据此替代F01专门过滤复制；S01检查原组件复制/改类型流程仍可用，当前不把该句升格新操作入口。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F01-ORIG-02",
+      "original_status": "pending",
+      "original_text_sha256": "756c6bb31f35f5bf48f4bb858061a6eafa4f37038c13b8f4e04b75eb2ef9a7b5",
+      "newDisposition": "split_current_and_approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [
+        "AC-MVP-F01-11"
+      ],
+      "followupSessionId": "DE-EXEC-S046",
+      "reason": "不新增组件复制入口；当前保基本UI回归，不等待S01原全量组件复制改类型关闭。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F04-Q066",
+      "original_text": "（可观察结果）：完整目标全量独立复制，无查询结果/样式；缺字段/承载不全/成环则整次拒绝；有旧配置需确认。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F04-Q066",
+      "original_status": "pending",
+      "original_text_sha256": "630ffc54f86cb97a9c6f6c7166d5c758e5abfe1da140c2f42836b5f1f03ae32e",
+      "newDisposition": "approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [],
+      "followupSessionId": "DE-EXEC-S045",
+      "reason": "query自过滤/级联完整复制整体迁后，当前不宣称query能力。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    },
+    {
+      "requirement_id": "AC-F04-Q067",
+      "original_text": "（可观察结果）：互不联动，两个独立副本，跨仪表盘同样成立，不新增共享模板引用。",
+      "original_evidence": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md#AC-F04-Q067",
+      "original_status": "pending",
+      "original_text_sha256": "5a19a9afbd559f1416d4c5d15e971fa5aefc971532af68ae78ecbaf0cf3ac0cb",
+      "newDisposition": "approved_deferred",
+      "new_goal_status": "approved_deferred",
+      "currentMvpIds": [],
+      "followupSessionId": "DE-EXEC-S045",
+      "reason": "query独立副本/跨仪表盘整体迁后，不以图表deepclone替代。",
+      "authority": {
+        "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+        "sha256": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+        "message_sha256": "2e0f9cb96ed8130b3787263b345e7156fc405a7abafcd4b71569c05709598061"
+      },
+      "currentCompletionPrecondition": false,
+      "historicalAcceptance": "not completed / original evidence ceiling unchanged"
+    }
+  ],
+  "running_lane_handoff": [
+    {
+      "lane": "G2 returned-instance ownership",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/G2OwnershipCloseoutReconciliation-r001.md",
+      "state": "既有有界工程收尾通过，已实现/独立验证只按原报告范围",
+      "budget": "Design3/3保留，不重开",
+      "migrates_to": "DE-EXEC-S044",
+      "action": "保全代码/closeout/浏览器证据，不回退、不称全renderer或MVP通过。"
+    },
+    {
+      "lane": "Line/Carousel construction",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineStageConstructionRedValidation-r001.md",
+      "state": "全55 NOT_TRUSTED_AS_COMPLETE_RED；7PASS/47断言失败/1合同差异/0执行错误，仅returned-G Line投影可信RED",
+      "budget": "Design3/3；RED测试包Validation1/3；LSC046和LSCRV001..003未决",
+      "migrates_to": "DE-EXEC-S044",
+      "action": "保全55Cases/写前source/日志/报告，不启动当前S02资源Builder。"
+    },
+    {
+      "lane": "Line sibling-host stage",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/LineSiblingHostRenderDesignReview-r002.md",
+      "state": "NEEDS_REVISION、runner条件入口、source NOT_READY，无实现",
+      "budget": "2/3；LSHR-R2-001..003未决",
+      "migrates_to": "DE-EXEC-S043",
+      "additional_owner": "DE-EXEC-S044",
+      "action": "保全29Cases/r002审查，不继续第三轮或Builder作为当前前置。"
+    },
+    {
+      "lane": "Chart query candidate",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartQueryCandidateDesignReview-r002.md",
+      "state": "NEEDS_REVISION/NOT_READY；无正式RED/生产；legacy取消function-message TypeError oracle QCCD-R2-001开放",
+      "budget": "2/3；28主68子案identity保留",
+      "migrates_to": "DE-EXEC-S043",
+      "action": "移交r001/r002/Review/raw baseline提示，不启动当前query/axios框架。"
+    },
+    {
+      "lane": "旧产品/事务/authority整体包",
+      "report": [
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md",
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+        "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md"
+      ],
+      "state": "历史NEEDS_REVISION/AM-09等未决保留，新范围不翻转",
+      "budget": "各自3/3，禁止换名重置第四轮",
+      "migrates_to": "DE-EXEC-S046",
+      "additional_owners": [
+        "DE-EXEC-S041",
+        "DE-EXEC-S042",
+        "DE-EXEC-S045"
+      ],
+      "action": "新MVP依据明确新authority独立交付，旧发现移交而非通过。"
+    },
+    {
+      "lane": "旧query组件detached/source lanes",
+      "report": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "state": "各模块candidate/partial/bounded Validation和authority gap按原文保留",
+      "budget": "按各原durable报告；未知不补造/不重置",
+      "migrates_to": "DE-EXEC-S045",
+      "action": "只迁引用，不改S01/query生产或旧冻结资产。"
+    }
+  ],
+  "session_inventory": {
+    "shared_max": 35,
+    "current_ids": [
+      "DE-EXEC-S036",
+      "DE-EXEC-S037",
+      "DE-EXEC-S038",
+      "DE-EXEC-S039",
+      "DE-EXEC-S040"
+    ],
+    "followup_ids": [
+      "DE-EXEC-S041",
+      "DE-EXEC-S042",
+      "DE-EXEC-S043",
+      "DE-EXEC-S044",
+      "DE-EXEC-S045",
+      "DE-EXEC-S046"
+    ],
+    "registration_state": "candidate only; shared Dashboard unchanged by this lane"
+  },
+  "automation_gap": "protected goal_patch resolve要求显式SGE_GOAL_PATCH_APPROVAL_V1 token，原人类消息没有；不伪造/不改工具/不声称resolve已通过。直接新request形成新canonical候选，独立Review后由native root吸收。",
+  "status": "new human scope authorized; candidate package not independently reviewed or accepted"
+}

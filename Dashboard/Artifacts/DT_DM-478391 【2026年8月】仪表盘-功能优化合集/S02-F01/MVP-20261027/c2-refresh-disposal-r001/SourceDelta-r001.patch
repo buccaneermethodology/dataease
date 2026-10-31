@@ -1,0 +1,43 @@
+--- ChartComponentG2Plot.vue.before
++++ core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
+@@ -690,6 +690,11 @@
+   }
+ }
+ let myChart = null
++const releaseCurrentChart = () => {
++  const chart = myChart
++  myChart = null
++  chart?.destroy()
++}
+ let activeG2Scope: G2RenderScope<G2Chart> | null = null
+ let activeG2Version = 0
+ let ownedG2Generation = false
+@@ -1539,8 +1544,8 @@
+ let mapPasteInstance
+ let cancelMapPreparation: (() => void) | undefined
+ const releaseMapPreparation = () => {
++  if (mapPasteInstance && myChart === mapPasteInstance) myChart = null
+   cancelMapPreparation?.()
+-  if (mapPasteInstance && myChart === mapPasteInstance) myChart = null
+ }
+ const assertMapPreparation = () => {
+   if (mapPasteReady && !mapPasteReady.check()) throw new Error('paste_map_cancelled')
+@@ -1619,8 +1624,7 @@
+     else {
+       clearG2SliderAdapter()
+       clearG2LegendPaginationAdapter()
+-      myChart?.destroy()
+-      myChart = null
++      releaseCurrentChart()
+     }
+   }
+   let timeout: ReturnType<typeof setTimeout>
+@@ -1821,7 +1825,7 @@
+       cleanup(() => G2TooltipCarousel.destroyByContainer(containerId))
+       cleanup(clearG2SliderAdapter)
+       cleanup(clearG2LegendPaginationAdapter)
+-      cleanup(() => myChart?.destroy())
++      cleanup(releaseCurrentChart)
+     }
+   } finally {
+     cleanup(() => resizeObserver?.disconnect())

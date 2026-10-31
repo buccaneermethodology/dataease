@@ -1,0 +1,78 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-RUNTIME-EMPTY-SOURCE-TARGET-VALIDATION-r002",
+  "session_id": "DE-EXEC-S038",
+  "lane": "validation",
+  "role": "validation",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "4db931a6764a8c48345e7e8358e579550a9bc98594bf1654647716d72b9678c4"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeEmptySourceTarget-r001.json",
+      "sha256": "dc98acba5edf33693850e7ae17768f99ada3bb2c3c21204988c857a75dfabac4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeEmptySourceTarget-events-r001.json",
+      "sha256": "cc64b75eaf19ddc1acb7dcabe396e754227e27bd984178e4677799f5cda59aee"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "sha256": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/runtime-empty-source-target-admission-r001.json",
+      "sha256": "05512a113c73813d5b667625f569e44e8033377fe5351c1b25243eb66bc6ca1f"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r545.json",
+      "sha256": "d2db719ea23b2f8432c84fc4c1cee301ef7486b40e48629bb4bb2caf74cd7fe4"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-fixtures/TeaMaterialExtended-r001.csv",
+      "sha256": "abc8bed0862129d58724bcefff2563862e48d1ea057365ae8d5d2c853e64472b"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r001.md",
+      "sha256": "949f46b7ef144e50c59a9818b91d3678f0b7211b8fc7c035eeed1fe3aaa4cd4b"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/RuntimeEmptySourceTarget-NativeDriverSupplement-r002.json",
+      "sha256": "f8f7388d997608ec1fe827b8f49610c1a4fbf328abea56a608485999057ee679"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-RUNTIME-EMPTY-SOURCE-TARGET-VALIDATION-r002",
+    "parent_snapshot_ref": null
+  },
+  "delta_read_set": [],
+  "acceptance_criteria_ids": [
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-06",
+    "AC-MVP-F01-08",
+    "AC-MVP-F01-12"
+  ],
+  "write_scope": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/RuntimeEmptySourceTargetValidation-r002.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "具体fixture/修复方案可执行性，不是完整MVP/权限/Goal通过",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SymbolicFreshRuntimePlan-r002.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "runtime-empty-source-target-validation-r002",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r545.json",
+  "working_directory": ".",
+  "execution_command": "同一空源/目标证据交付物第2/3轮，仅补原生执行协议，原r001 PARTIAL及所有原字节不改。按新增capsule指定原生日志7个call/7output的line/call_id/逐行SHA只读复验（不需全量导出日志/不读其它内容）；核真实UI group删除初失败/hover恢复、leaf删除/确认、DOM observer安装到settled断开、paste单次点击且无确认点击，以及正常退出恢复。结合既有原始事件判断F1/F2能否有界关闭；F3只能支持本执行器无显式Save调用，不把缺全网络save审计升为全来源无写。严格区分native执行后提取与预冻结，非历史重建/新UI复跑。一次查全，不机械第3轮，不重开地图/C2旧3/3；只写r002review，不UI/DB写，不改原报告。"
+}

@@ -1,0 +1,7 @@
+Lane Task Card: Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-c2-maps-builder-r001-card.json
+Card SHA-256: daa5ea58daa823f890b23f7002fb835eca2ef7f0cf579716c3d3981a1e36afe8
+Verify: python3 .codex/skills/sge-governed-checkpoints-sp010/scripts/lane_task_card.py validate Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/s02-mvp-c2-maps-builder-r001-card.json --repo . --expected-card-sha256 daa5ea58daa823f890b23f7002fb835eca2ef7f0cf579716c3d3981a1e36afe8
+Lane: builder | Session: DE-S02-F01 | Role: builder
+Mode: full_baseline
+Working directory: .
+Execute: 复验卡和每target admission。先准备新map专用harness，root确认C1 Validator完成current重放前暂不写生产，以便其SHA不漂移；准备/读源码不等待。获root放行后立即实现C2。消费r002+第三轮delta+11fixture，重点真实L7 scene+全部layer callback完成/error/30s timeout及监听先于add，L7Plot polygon/point/bubble plot+dot add/loaded真实链。地图strict opt-in守旧render:void默认兼容，不用await void假ready；callback body异常必须reject。G2 strict map分支调用实际类和ready桥，本地metadata仍kind:g2，scene/plot instance局部且candidate事件/tooltip禁副作用。不得缺容器/轴/资产当合法空态。先真实旧SFC/类可运行语义RED再同IDGREEN，库double协议补齐不替换drawChart整体。当前active map成功正常绘制已预热场景：请提供轻量public canPrepareFilterPaste/isFilterPasteMapReady检查，供wrapper在capture前验证已加载mapStore/必要SDK，缺基础设施具体拒绝；不得为candidate冷初始化写全局/输出key。尽早将该方法和各library ready接口消息root与C4 Builder。wrapper由另一Builder接l7/l7plot，保持G2/S2/indicator C1回归不动。第3轮报告F3-01/02按其精确范围执行，不改现去重或把synthetic DTO当真实golden。只做聚焦lint/style/types；测试记录SDK double层，真实地图运行另验。

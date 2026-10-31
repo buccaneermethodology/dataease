@@ -1,0 +1,620 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-MVP-C234-DESIGN-REVIEW-r003",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "1. 真实权限来源缺失和DG-02 协议未冻结的问题，同意你的建议处理方案，暂时不接真实权限服务，使用明确的测试桩，按照你建议的首个MVP的5个边界进行处理；同时，对于限定边界以外的、原本属于S02范围内的内容，记录Sessions以便进行后续任务的跟踪，比如跨会话跨标签的完整实现、真实权限的处理等工作；\n2. 迟到响应污染 这个问题 是个**图表异步更新的通用问题，日常操作也会遇到**，例如：\n\n- 快速切换门店、日期或筛选条件；\n- 连续修改图表配置；\n- 自动刷新时，用户又手动刷新；\n- 数据还没返回，就切换页面、删除图表或重新创建图表。\n\n共同点都是：**操作先发出的，不一定先完成。旧操作晚完成时，可能干扰新状态。**\n\n复制粘贴只是触发它的一种方式，而且要求更严格：条件、数据和画面需要对应起来，失败时还要保留原状态。\n\n\n\n建议把这个问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n\n3. 首个MVP不能只实现 从特定图表之间的复制粘贴，要实现所有支持的图表的过滤条件能够复制粘贴，但是功能上，更偏重基本的复制粘贴功能，对于上述1、2涉及到的更复杂功能场景可以暂不要求全部实现；\n4. 渲染资源清理：建议把这个通用问题也作为一个单独的session记录跟踪，暂不列入S02的范围；\n5. 同意把第一轮做得更小、更直接的5个点\n\n\n\n以上内容，请据此与主Agent沟通，修正Goal的TSP\n\n",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "UI同交付物第3/3轮，独立核查C234具体fixture补齐与原r002机制，给有限Builder准入；C1设计继承第2轮不重审预算",
+    "objective": "UI同交付物第3/3轮，独立核查C234具体fixture补齐与原r002机制，给有限Builder准入；C1设计继承第2轮不重审预算",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md"
+    ],
+    "forbidden_actions": [
+      "不改冻结Goal/Design/Cases/Review/样本或任何生产代码",
+      "不安装、构建、启动服务、访问数据库、读输出凭据",
+      "不把新增fixture称RED或真实业务golden"
+    ],
+    "maximum_claim": "C234设计与具体组件故障fixture的有界实现准入，非RED或运行验收"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints/SKILL.md",
+      "revision": "c4d8463bc350c44ad600c92400f783c565b2e968720bfeed1df67a49112b8933",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+      "revision": "641dfa78e63b1d53e25c08ea5c71c4458c272399c749aa84f0dea63ab89023a4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r002.md",
+      "revision": "ea2f947c370b554b8f9510d39924e1455c28705088bf4739df78c4725a034468",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r002.json",
+      "revision": "e365ef111582ef84f20f26e6136854409b7fc66bb0931cae40a9df5318036d55",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiC1ExecutionClarifications-r001.json",
+      "revision": "619a1f869b59624e8a51044c43024e9e386ee6d9125cf8dd00dcdc5008d8d0a7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r002.md",
+      "revision": "3a56a82c67fc4f68c93d9f2097c79c7a6a70a284a61f522470255a16988a8357",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SliceBApiValidation-r001.md",
+      "revision": "5155165db9dcb6ab3d7741140c5c3a6694830776de25fd1a6d1c9921f8f8b677",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SupportedCharts.json",
+      "revision": "163edf6b7f0a03f99256d02bb10f77c993847513f953a3e4fc743d0500c8dec4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/c1-before-r001/manifest.json",
+      "revision": "7d813b16380fe99284e9440e03dd99ed43ff1d7c4db257364dc0b4d9ae035742",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/UiRowAuthOutput-r001.json",
+      "revision": "a5b648d9e2d2c9b57eae05e430ad11152864004f6c6d4d5fbf5e726abc92f276",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/UiFreshSerializerCopy-r001.json",
+      "revision": "973d36574e11ee1448f99cb5627acb67e30789d3354f940e84b14e560e79cd47",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/TwoConditionSqlOracle-r001.json",
+      "revision": "a2b0b6834b4e53c6465cf6a60e050dfc8ccbcc037c9f233d7c9a51edb41c5506",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/rich-text/DeRichTextView.vue",
+      "revision": "e542502bf21ebb65bffa6aa4fe778735bd632b5a1cde704ecb3bcfdadeec8b18",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/picture-group/Component.vue",
+      "revision": "95f0e275408e5321337823bca357996cb48cca68bc039b4ed3f9211fae3a6820",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/picture-group/Attr.vue",
+      "revision": "164bda617764bdb14ae9731e1cbfcc0ece9eebd32929cad06f76f239a6cb3cef",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/picture-group/PictureGroupThreshold.vue",
+      "revision": "3e76fccbd1950db69361dadc33681340909ce4bead4ce13a81cd6011be229edc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/common/common_table.ts",
+      "revision": "71268df9a19aea83ec285083797cc18ad16f19e4648438ea9ab8c29486480d1a",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/types/impl/l7.ts",
+      "revision": "e5fbfaece8d40f71124386554d59a552a92f2156010e5d0b94dd6fcc73dca916",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/types/impl/l7plot.ts",
+      "revision": "e63a044bbc5dca7bc07f645faf3df5684f8de8c545339f87fa0ce8978718d6cc",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/flow-map.ts",
+      "revision": "0e16163012beefaaadc4a296c3f95e821c09a1a1326de491701aace882ad7843",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/heat-map.ts",
+      "revision": "e2d14752da80763f6e7b14edcf4a775c450555cf5c8153bd64ce144a1ef03624",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/symbolic-map.ts",
+      "revision": "1ee20e2c2f0004c1f17bd6264d7bea4712405ca636265f56eb8751411f5b7f05",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/map.ts",
+      "revision": "6d7b3957bd36b60d1ce90070904859d2efc57f6cece469d3545de2fc685f979d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/bubble-map.ts",
+      "revision": "4fea68822f944cc4ab6ad706833325cc38d60a2f3ff7e3f7428dc5d4b2e0483e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/map/point-fallback.ts",
+      "revision": "0b527635655f7a867476fc5e83c91abd88c6372047430eab89315dfb7981af25",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiC234ConcreteFixtures-r001.json",
+      "revision": "cdec6ed17380d4cc62eba495c4edd785d12178fd4758a5cfb993dd530426f4d5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiC234ConcreteFixtures-r001.md",
+      "revision": "c23842fc1f7bab978b8bda7d0f7d375827ca01df5dbbcf3e9287320b5e0858c2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "当前原始范围、冻结合同、实现/验证及精确准入依据。",
+      "applicability": "S02-MVP-C234-DESIGN-REVIEW-r003"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "新授权当前MVP22项；原26逐项保全、六复杂主题迁后。A只实现真实UI/copy/guard，不宣称paste/full MVP；不等待通用框架。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "validation",
+    "reason": "UI同交付物第3/3轮，独立核查C234具体fixture补齐与原r002机制，给有限Builder准入；C1设计继承第2轮不重审预算",
+    "task_id": "S02-MVP-C234-DESIGN-REVIEW-r003",
+    "recorded_at": "2026-10-27T05:25:29.060783+00:00",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r436.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r437.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "original objective",
+    "acceptance criteria",
+    "actual diff",
+    "final state"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-MVP-C234-DESIGN-REVIEW-r003",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "maximum_claim": "C234设计与具体组件故障fixture的有界实现准入，非RED或运行验收",
+  "design_objective": "UI同交付物第3/3轮，独立核查C234具体fixture补齐与原r002机制，给有限Builder准入；C1设计继承第2轮不重审预算",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r003-C234.md"
+}

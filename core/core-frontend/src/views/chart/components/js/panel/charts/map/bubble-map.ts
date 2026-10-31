@@ -1,3 +1,4 @@
+import { canPrepareFilterPasteMap } from './filter-paste-ready'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   L7PlotChartView,
@@ -62,6 +63,13 @@ export class BubbleMap extends L7PlotChartView<ChoroplethOptions, Choropleth> {
   }
 
   async drawChart(drawOption: L7PlotDrawOptions<Choropleth>): Promise<Choropleth> {
+    if (
+      drawOption.filterPaste &&
+      (!canPrepareFilterPasteMap(drawOption.chart, drawOption.scope ? '156' : drawOption.areaId) ||
+        !drawOption.chart.xAxis?.length ||
+        !drawOption.chart.yAxis?.length)
+    )
+      throw new Error('paste_map_infrastructure_unavailable')
     const { chart, level, areaId, container, action, scope, gadmName } = drawOption
     if (!areaId) {
       return
@@ -107,10 +115,14 @@ export class BubbleMap extends L7PlotChartView<ChoroplethOptions, Choropleth> {
       data = fakeData
     } else {
       if (scope) {
-        geoJson = cloneDeep(await getGeoJsonFile('156', useGlobalAreaMapping))
+        geoJson = cloneDeep(
+          await getGeoJsonFile('156', drawOption.filterPaste ? false : useGlobalAreaMapping)
+        )
         geoJson.features = geoJson.features.filter(f => scope.includes('156' + f.properties.adcode))
       } else {
-        geoJson = cloneDeep(await getGeoJsonFile(areaId, useGlobalAreaMapping))
+        geoJson = cloneDeep(
+          await getGeoJsonFile(areaId, drawOption.filterPaste ? false : useGlobalAreaMapping)
+        )
       }
     }
     if (areaId.startsWith('geo_') && geoJson?.features?.length) {
@@ -168,7 +180,7 @@ export class BubbleMap extends L7PlotChartView<ChoroplethOptions, Choropleth> {
           : undefined,
         disableInteraction: false
       })
-      this.configZoomButton(chart, view)
+      if (!drawOption.filterPaste) this.configZoomButton(chart, view)
       return view
     }
     let options: ChoroplethOptions = {
@@ -234,24 +246,43 @@ export class BubbleMap extends L7PlotChartView<ChoroplethOptions, Choropleth> {
 
     const tooltip = deepCopy(options.tooltip)
     options = { ...options, tooltip: { ...tooltip, showComponent: false } }
+    if (drawOption.filterPaste && !drawOption.filterPaste.check())
+      throw new Error('paste_map_cancelled')
     const view = new Choropleth(container, options)
+    drawOption.filterPaste?.addCleanup(() => view.destroy())
     const dotLayer = this.getDotLayer(chart, geoJson, drawOption, customSubArea)
+    drawOption.filterPaste?.addCleanup(() => dotLayer.destroy())
     if (!areaId.startsWith('custom_')) {
       dotLayer.options = { ...dotLayer.options, tooltip }
     }
-    this.configZoomButton(chart, view)
-    bindMapHoverTooltipRefresh(container, view.scene, () => dotLayer.tooltip?.hideTooltip())
+    if (!drawOption.filterPaste) this.configZoomButton(chart, view)
+    if (!drawOption.filterPaste)
+      bindMapHoverTooltipRefresh(container, view.scene, () => dotLayer.tooltip?.hideTooltip())
     mapRendering(container)
-    view.once('loaded', () => {
+    const afterLoaded = () => {
       // 修改地图鼠标样式为默认
       view.scene.map._canvasContainer.lastElementChild.style.cursor = 'default'
       if (mapLabel.show) {
-        attachMapLabels(view.scene, mapLabels, { ...mapLabel, fontFamily: chart.fontFamily })
+        ;(() => {
+          const cleanup = attachMapLabels(view.scene, mapLabels, {
+            ...mapLabel,
+            fontFamily: chart.fontFamily
+          })
+          drawOption.filterPaste?.addCleanup(cleanup)
+        })()
+      }
+      if (drawOption.filterPaste) {
+        drawOption.filterPaste.listen(dotLayer, 'error', error =>
+          drawOption.filterPaste.fail(error || new Error('paste_map_error'))
+        )
+        drawOption.filterPaste.wait(dotLayer, 'loaded', () => mapRendered(container))
       }
       dotLayer.addToScene(view.scene)
-      dotLayer.once('add', () => {
-        mapRendered(container)
-      })
+      if (drawOption.filterPaste && !drawOption.filterPaste.check()) return
+      if (!drawOption.filterPaste)
+        dotLayer.once('add', () => {
+          mapRendered(container)
+        })
       view.scene.map['keyboard'].disable()
       dotLayer.on('dotLayer:click', (ev: MapMouseEvent) => {
         const evData = ev.feature.properties
@@ -283,11 +314,18 @@ export class BubbleMap extends L7PlotChartView<ChoroplethOptions, Choropleth> {
           }
         })
       })
-      dotLayer.once('loaded', () => {
-        chart.container = container
-        configCarouselTooltip(chart, view, data || [], null, customSubArea, drawOption)
-      })
-    })
+      if (!drawOption.filterPaste)
+        dotLayer.once('loaded', () => {
+          chart.container = container
+          configCarouselTooltip(chart, view, data || [], null, customSubArea, drawOption)
+        })
+    }
+    if (drawOption.filterPaste) {
+      drawOption.filterPaste.errors(view)
+      drawOption.filterPaste.errors(view.scene)
+      drawOption.filterPaste.wait(view, 'loaded', afterLoaded)
+      drawOption.filterPaste.seal()
+    } else view.once('loaded', afterLoaded)
     return view
   }
 

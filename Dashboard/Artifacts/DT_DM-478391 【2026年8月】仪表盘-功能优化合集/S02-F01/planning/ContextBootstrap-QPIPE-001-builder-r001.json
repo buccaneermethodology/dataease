@@ -1,0 +1,219 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-QPIPE-001-pure-query-reference-composition-builder-r001",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "用户要求设计审核后立即开始S02实现并加快Goal执行；本切片只实施已独立审核通过的QPROJ→QMAP→QPREP纯组合。完整Goal分母不变，真实权限验收保持阻塞未运行。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "新增纯函数按冻结顺序组合三个现有真实模块；保留错误stage/reason、输入不变、无部分输出。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-reference-pipeline.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-reference-pipeline.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-red.snapshot.json",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QPIPE-001-ExecutionEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改Goal、冻结Design/Fixtures或QPROJ/QMAP/QPREP/pure-guards",
+      "改动既有copy入口、UI、Store、权限、持久化、网络、时钟、随机ID或事件",
+      "用stub代替三个真实模块或从stage伪造实际调用轨迹",
+      "安装依赖或启动服务",
+      "将纯组合测试声明为产品或权限验收"
+    ],
+    "maximum_claim": "最多仅六项冻结QPIPE纯模块组合Builder候选；不代表QPROJ/QMAP/QPREP package追认、产品入口、UI/保存、真实权限或完整Goal验收"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineDesign-r001.md",
+      "revision": "7269824ad1d0c3559e144ddf8bb65c379a6e75d08454e586b2eb7cbf4c4da93f",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryReferencePipelineFixtures-r001.json",
+      "revision": "9e96dba76c5659efd99d5dac8cf0e3fe1fd4a46db0205f94f15b10cdec8f30bc",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryReferencePipelineDesignReview-r001.md",
+      "revision": "fb87206aefc67022a2289ccab90d947f93ffdc43cd6415c7ab28d70bdde39070",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-schema-projection.ts",
+      "revision": "9c0d15e3ad7a383c65c2e4af6a23c2377c064d4f7b30906990536b3dd94b0285",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-target-component-map.ts",
+      "revision": "c234fc3ca42cecdc59aa5c9a5414eb7904837e6bd23da8a64fa178a999386b1a",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-reference-plan.ts",
+      "revision": "cad91daa9e416260565519bcc705743f34726357cda35a6a8a73f423f7aeff46",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/package.json",
+      "revision": "7e425e59824c20ab5005950cab568fce090e9cd45ecc89e5e9968aa7b537344a",
+      "applicability": "implementation authority/evidence",
+      "reason": "冻结范围、真实接口或项目执行规范",
+      "domains": [
+        "scope",
+        "acceptance",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "frozen-input-drift",
+      "condition": "Goal/design/fixtures/review或三个源模块摘要变化",
+      "action": "停止，登记delta并重做Builder准入",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "runner-unavailable",
+      "condition": "当前Node/esbuild不可用",
+      "action": "不安装依赖，保存阻断证据并报告",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "implementation",
+      "validation"
+    ],
+    "preservation_statement": "保留Goal原10项AC、14项F01义务及Q066/Q067；权限、产品schema、UI、Store、保存回显、历史兼容、完整回归与最终独立验收仍待完成。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": false,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_builder",
+    "reason": "独立设计复核PASS_WITH_BOUNDS；按六项冻结identity组合现有真实模块。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "冻结六项fixture",
+    "可信RED与输入摘要",
+    "真实模块同identity GREEN及调用顺序spy",
+    "定向ESLint",
+    "独立只读Validation",
+    "完整差异和claim ceiling"
+  ]
+}

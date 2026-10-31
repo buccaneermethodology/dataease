@@ -1,0 +1,49 @@
+{
+  "schema_version": "s02_symbolic_details_test_freeze_v1",
+  "at": "2026-10-30T04:18:24.376570+00:00",
+  "cases": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SymbolicDetailsFilterCases-r001.json",
+    "sha256": "d72844b5b7d0bd47d8079b94e775c30c2a377390623765d9e7d0118bcee1daeb"
+  },
+  "design_review": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/SymbolicDetailsFilterDesignReview-r001.md",
+    "sha256": "77f8ee62c1ffdd7e09d81388a63d82adc246a348230f6730b25e3e26c93bd035"
+  },
+  "test_source": {
+    "path": "core/core-backend/src/test/java/io/dataease/chart/charts/impl/map/SymbolicMapFilterRegression.java",
+    "sha256": "b34b33911107381a298d826b26260b7f100dc99f5c387828c44a257f66e1ab9c"
+  },
+  "runner": {
+    "path": "core/core-backend/src/test/scripts/run-symbolic-map-filter-regression.py",
+    "sha256": "4b8749d98bf8d9d257a95b287ee3b0cb554a0ca297fbca3b8925a84fbecc4af5"
+  },
+  "source_before": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/symbolic-details-before-r001/SymbolicMapHandler.java",
+    "sha256": "531eb7bf7424065622574986f471d5bf55010e12dd5247c8d8c3e89268d434dc"
+  },
+  "production_compile_sources": [
+    "SymbolicMapHandler",
+    "SQLProvider",
+    "Field2SQLObj",
+    "Table2SQLObj",
+    "Dimension2SQLObj",
+    "Quota2SQLObj",
+    "ChartDataBuild"
+  ],
+  "review_preconditions": {
+    "nonempty_group": "恰1代表，ID在本组匹配原始行集合，amount保持聚合值；空聚合必须0组",
+    "DIALECT": "真实DE_CALC_FIELD_PLACEHOLDER_901/902/903，三filter字符串均使用反引号占位；三独立dialect map指向实际合成表达式；执行实际Provider替换helpers",
+    "CROSS": "dsMap两个条目使实际Utils.isCrossDs=true；Provider重建seam直接return原SQL，不做非cross table/dialect替换；仅H2执行所收SQL，非真实跨库"
+  },
+  "seams": [
+    "ChartViewManege计数字段metadata；无缓存/i18n推断",
+    "DatasetDataManage命名no-op，合成字段已命名",
+    "Provider外部方言/连接用H2边界；非cross调用实际table与calc替换helper，cross直接返回；fetch只执行所收SQL",
+    "11例数据与预期仅冻结Cases；不根据expected_ids补过滤"
+  ],
+  "prototype_errors_not_RED": [
+    "首轮javac引用不存在KEYWORD_PREFIX/SUFFIX",
+    "第二轮transFieldDTO真实i18n缓存缺bean；后改成已声明计数字段seam"
+  ],
+  "claim_ceiling": "冻结输入，可信RED尚待实际本runner执行；非产品/权限完成"
+}

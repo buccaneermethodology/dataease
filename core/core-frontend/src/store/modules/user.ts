@@ -1,5 +1,6 @@
 import { clearResourceImages } from '@/utils/resourceImageCache'
 import { clearBindings } from '@/utils/platformBinding'
+import { invalidateMvpFilterSession } from '@/custom-component/filter-copy/mvp-chart-filter-copy'
 import { defineStore } from 'pinia'
 import { store } from '../index'
 import { useCache } from '@/hooks/web/useCache'
@@ -134,6 +135,7 @@ export const userStore = defineStore('user', {
       changeLocale(language as any)
     },
     clear() {
+      invalidateMvpFilterSession()
       clearBindings()
       clearResourceImages()
       const keys: string[] = ['token', 'uid', 'name', 'oid', 'language', 'exp', 'time', 'proxyInfo']

@@ -1,0 +1,674 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "对同一产品接线交付物 r003 做本交付物第3/3轮最终完整Review；一次性核对r002的CFPI-001..008修订、源码兼容和全量59案例；分别裁定Design Freeze与Product Builder Entry，绝不启动第4轮。只写本轮评审报告。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立审查本交付物第3/3轮修订是否可冻结及Builder入场；保留S02全分母、source-read及真实权限证据边界。",
+    "authority_role": "projection",
+    "assumptions": [],
+    "objective": "裁定r003最终设计是否满足冻结；识别全部残余问题并给出Builder Entry预测。"
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r003.md"
+    ],
+    "forbidden_actions": [
+      "修改被审Design/Cases/Goal/源码",
+      "运行真实权限、数据库或生产操作",
+      "用standalone/admin/mock替代真实权限",
+      "把候选案例或静态源码提升为产品验收",
+      "超过本交付物3/3轮次或另开r004"
+    ],
+    "maximum_claim": "仅审查本交付物r003最终设计与案例，不证明产品运行、真实权限验收或S02完成。"
+  },
+  "required_read_set": [
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/DataEase_S02_F01_Loop_Goal_Draft_r001.md",
+      "revision": "118986e578d3afd19548abf45836a6f4d03cd70323b6edd4625d2c3cd468e8b9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "28c94d3c35d4ce0a891ce77ecc915932d67f88ef813f3d2815dc0dce11f91b64",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-004/Resume-r004/AcceptanceCriteria.md",
+      "revision": "e07eba2e04340d2aecb97ab063bcbc4a9efe81d5026f30ea04fe1aee74f3cab0",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartToChartFilterCopyProductSliceReview-r003.md",
+      "revision": "21000696bf62b6be2755e264c69ac7c905e7fc2818a764d867ff63c49a67b1b1",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartPasteTransactionalPreviewDesignReview-r003.md",
+      "revision": "26cd1b827821c4b4be7b115aab09c3afde20b224f94cb8d39e4bb7219aa372f7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterTreeBackendLifecycleTraceReview-r003.md",
+      "revision": "9bfd35402bbd122459512075f0bcf65f9fbe26e70024280192cd0dacd54319f6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsRequestReview-r003.md",
+      "revision": "b64f0917b1951b07f7469e943955f1478ee73040af3bc9f642587f8b75069e94",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Sessions.md",
+      "revision": "6bbec0c116d8ec98d5a38ad50f0fca226ceb679a4e9d614b93abf6fb93c6593b",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/TestStrategy.md",
+      "revision": "c30c6da030d99c1f0f28a5a62fb2ff7d804d28d01f1b7aeb071494ae39fa5d19",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationDesign-r001.md",
+      "revision": "3c467085491dd8376cde9d1fac7361b16fc0956caaee64f5456356eda0769fb5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationCases-r001.json",
+      "revision": "eb508382ab94cb87e4a4afd9c3949ebad5e996076578298c2eb8c2c79e5bf6e7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/FilterTree.vue",
+      "revision": "683a69f36ea24e60d2777b02fc88adf1c39311d0f59a316516fbc6ab27c145a9",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/index.vue",
+      "revision": "0a8d78ffce297d941cd2d42c4240d0f266bac53926360d2bf83c6134a641f39d",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/index.vue",
+      "revision": "2b0b1794737e35331a59569cd516078da898435e3f9c3db31d0287847240b1bd",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue",
+      "revision": "e9429bf59915e5a23d4f9d70987b126ca8b8329863be3208c625367e71f607e5",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/views/components/ChartComponentS2.vue",
+      "revision": "43b44c57b27486cd46e101d76d4c64baac280bea3ff379e41b0294e18e5b11d4",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/api/chart.ts",
+      "revision": "6dbe0684c95f0c2be625a7a0094db894a0d431f003c8d7613145279dc3f218a7",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-backend/src/main/java/io/dataease/chart/manage/ChartDataManage.java",
+      "revision": "eb99db6b91253147acd40bccea0c329eebf859e6dcf9df6d12f6aeeca2d8fcf6",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/dvMain.ts",
+      "revision": "2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/store/modules/data-visualization/snapshot.ts",
+      "revision": "5ffd11d4740efbd8570e31c42cffb8870a879eaf309bb4f31b00e40cc57c2e30",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "审查原始Q009/Q014、真实产品调用链、candidate全量案例及权限和保存重开声明边界。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationDesign-r003.md",
+      "revision": "6e1f68da44ace340ebdad6b37c85ceee1c5eaf73aa173f9e881c675128628a70",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/ChartFilterCopyProductIntegrationCases-r003.json",
+      "revision": "5ea63ce04b3d099beb902e688abf1db48b1056e1b26df96a5fd8806fd8cfc90d",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r001.md",
+      "revision": "cbe21f31a9770ad7786f22f88a1ff76a4b0e90d327412de45cd7ae8587df7a3c",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/editor/filter/auth-tree-chart/RowAuth.vue",
+      "revision": "ebef31245e8525d82e6c82dbe4e83c313b74f1d9af8bae5e7d76b788eba0e775",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "sdk/api/api-permissions/src/main/java/io/dataease/api/permissions/auth/api/ResourceAuthApi.java",
+      "revision": "4555a5fcd67e83f7f27fcc4cc6b1fc512c039cfdf41d71de4a68ea666dfec06c",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/panel/charts/g2/line/line.ts",
+      "revision": "acacb1ae0fde128a1cb894f06ce073454da04205e9225633168e5f67cc8b4311",
+      "domains": [
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对本版新增的过滤树结构、source-read权限契约、候选渲染器实现与r001全量评审发现。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r002.md",
+      "revision": "9d163b8de5b938af17e94070678bcffeb8e0a7c8729ad754e956938bbc03c833",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "r003终轮评审：核验本轮设计、案例、审查发现与renderer源码。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/AuthorityMaterialsPostReviewCorrectionReview-r002.md",
+      "revision": "bda036af3c7cf1c1e0251d9fee877b5794f31a0675800bf38cf64a0397522a33",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "r003终轮评审：核验本轮设计、案例、审查发现与renderer源码。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    },
+    {
+      "path": "core/core-frontend/src/views/chart/components/js/G2TooltipCarousel.ts",
+      "revision": "f3a1d565701da75bc027edca263e18e7e08b0096b08523d2cfcc3b0ce0860389",
+      "domains": [
+        "authority",
+        "scope",
+        "acceptance",
+        "implementation",
+        "identity",
+        "validation",
+        "dependency",
+        "claim_ceiling",
+        "topology"
+      ],
+      "reason": "r003终轮评审：核验本轮设计、案例、审查发现与renderer源码。",
+      "applicability": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source-drift",
+      "mode": "deterministic",
+      "condition": "任一必读摘要变化",
+      "action": "停止审查并重建Context/Card。",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "new-source-gap",
+      "mode": "evidence_backed_agent_evaluated",
+      "condition": "候选接线依赖的API/renderer/权限路径无法从绑定材料确认",
+      "action": "扩展读取精确源码并在报告中限定结论。",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "implementation",
+      "identity",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "Goal为10 AC/26 must-have/16产品义务且Scope Delta none；旧Chart→Chart r003与事务合同r003各自3/3且不得重开；AM-09仍NEEDS_REVISION；S01 F01 CONDITIONAL；真实权限环境BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "contract_or_acceptance": true,
+    "dashboard_state": true,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "single_independent_semantic_review",
+    "reason": "独立第3/3轮完整审查ChartFilterCopyProductIntegration Design/Cases r003；只写一份Review报告。",
+    "task_id": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003",
+    "recorded_at": "2026-10-26T01:52:00Z",
+    "base_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r378.json",
+    "actual_snapshot_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r379.json"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "Goal原始分母与Q009/Q014原文",
+    "旧Chart→Chart/事务合同终轮Review及r002 CFPI发现吸收情况",
+    "FilterTree/editor/G2 renderer/query/Store/snapshot/save实际调用链",
+    "59项完整案例的状态投影、dispatch账本和稳定request-id终态",
+    "staged query/render host、hooks、原子发布与资源清理可行性",
+    "source-read/target-manage/dataset READ和真实权限边界",
+    "Copy→Paste→页面内刷新→显式保存→离开重开案例及真实路径",
+    "TTL/容量/身份/跨标签/logout剪贴板边界"
+  ],
+  "snapshot": {
+    "snapshot_id": "S02-F01-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r003",
+    "parent_snapshot_ref": "ContextBootstrap-CHART-FILTER-COPY-PRODUCT-INTEGRATION-DESIGN-REVIEW-r002.json"
+  },
+  "acceptance_criteria_ids": [
+    "AC-F01-Q009",
+    "AC-F01-Q014",
+    "AC-S02-02",
+    "AC-S02-03",
+    "AC-S02-05",
+    "AC-S02-06"
+  ],
+  "maximum_claim": "只审查本产品接线候选的设计冻结和Builder准入；不证明UI/权限/产品验收或完整S02。",
+  "design_objective": "一次性全量审查面向实际UI的 chart-to-chart 产品接线合同，确认准确oracle与实际源码接线可行性，并区分产品Builder与真实权限验证阻塞。",
+  "output_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/ChartFilterCopyProductIntegrationDesignReview-r002.md"
+}

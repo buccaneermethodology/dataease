@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-30T04:25:53.163852+00:00",
+  "purpose": "由当前源码在独立临时快照构建standalone后端，以后续实际UI验证替代旧jar；本步只构建",
+  "build_root": "/private/tmp/s02-symbolic-backend-build-r001",
+  "inputs": "根/core/backend三个POM原字节及backend/src完整快照；不拷贝私密外置配置/凭据",
+  "command": [
+    "mvn",
+    "-o",
+    "-f",
+    "/private/tmp/s02-symbolic-backend-build-r001/core/core-backend/pom.xml",
+    "package",
+    "-Pstandalone",
+    "-Dmaven.antrun.skip=true",
+    "-Dmaven.test.skip=true"
+  ],
+  "effects": [
+    "所有classes/Q类/flattened POM/jar仅写临时快照",
+    "maven.antrun.skip来自已安装antrun3.1.0插件真实descriptor，跳过copy-front-2-back的move",
+    "不启动Spring、不连接数据库、不改当前target/前端dist、运行中8100jar或服务",
+    "offline仅消费既有本地依赖，不下载或安装；依赖缺失明确构建阻塞，不静默安装"
+  ],
+  "claim_ceiling": "若成功仅证明当前快照后端package；Surefire显式skip，不称Maven测试通过；独立H2另负责11case；真实权限/完整产品构建未验"
+}

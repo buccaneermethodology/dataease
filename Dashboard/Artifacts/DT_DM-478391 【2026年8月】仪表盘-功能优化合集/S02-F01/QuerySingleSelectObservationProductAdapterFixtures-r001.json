@@ -1,0 +1,64 @@
+{
+  "schema_version": "qobs_async_product_adapter_fixtures_v1",
+  "design_ref": "QuerySingleSelectObservationProductAdapterDesign-r001.md",
+  "scope": {
+    "component": "core/core-frontend/src/custom-component/v-query/Select.vue",
+    "mode": "ordinary runtime single-select, optionValueSource=1",
+    "excluded": ["multiple", "configuration editor", "optionValueSource=0", "optionValueSource=2", "permissions", "persistence"]
+  },
+  "assertion_contract": {
+    "enumeration_requests": "initial request plus at most one verification request",
+    "query_refreshes_from_observation": 0,
+    "design_default_writes_from_observation": 0,
+    "stale_then_finally": "no state writes and no loading changes",
+    "loading": "true continuously between initial request and current terminal settlement"
+  },
+  "cases": [
+    {
+      "id": "QOBS-PA-001",
+      "sequence": ["initial enum request starts with A", "user selects C while pending", "initial response succeeds without C"],
+      "expected": {"verification_requests": 1, "total_requests": 2, "selected": "C", "options": "previously accepted", "validity": "pending", "loading": true, "query_refreshes": 0, "default_writes": 0}
+    },
+    {
+      "id": "QOBS-PA-002",
+      "sequence": ["QOBS-PA-001", "verification succeeds with C"],
+      "expected": {"selected": "C", "validity": "valid", "options": "verification response", "loading": false, "query_refreshes": 0, "default_writes": 0}
+    },
+    {
+      "id": "QOBS-PA-003",
+      "sequence": ["QOBS-PA-001", "verification succeeds without C"],
+      "expected": {"selected": "C", "validity": "invalid and visibly marked", "options": "verification response", "loading": false, "query_refreshes": 0, "default_writes": 0}
+    },
+    {
+      "id": "QOBS-PA-004",
+      "sequence": ["QOBS-PA-001", "verification rejects"],
+      "expected": {"selected": "C", "validity": "unverified", "options": "previously accepted", "loading": false, "automatic_retries": 0, "query_refreshes": 0}
+    },
+    {
+      "id": "QOBS-PA-005",
+      "sequence": ["QOBS-PA-001", "user changes C to D and starts a newer enum request", "old verification resolves and finally runs"],
+      "expected": {"selected": "D", "validity": "new request state unchanged", "options": "new request state unchanged", "loading": "new request loading remains true", "stale_writes": 0, "query_refreshes_from_old_response": 0}
+    },
+    {
+      "id": "QOBS-PA-006",
+      "sequence": ["request starts on raw object X", "same resource id is replaced by raw object Y", "X response and finally settle"],
+      "expected": {"Y_state": "unchanged by X", "loading_Y": "unchanged", "options_Y": "unchanged", "stale_writes": 0}
+    },
+    {
+      "id": "QOBS-PA-007",
+      "sequence": ["new current request starts", "older request finally runs"],
+      "expected": {"loading": true, "request_identity": "new request remains current", "older_writes": 0}
+    },
+    {
+      "id": "QOBS-PA-008",
+      "sequence": ["invoke multiple, configuration editor, source 0 and source 2 paths"],
+      "expected": {"adapter_invocations": 0, "legacy_behavior": "unchanged and separately regression-tested"}
+    }
+  ],
+  "not_yet_verified": [
+    "real Vue component behavior and Element Select invalid-value rendering",
+    "request input capture for every asynchronous scheduling point",
+    "default/required/empty-option/remote/cascade release compatibility",
+    "S01 Entry Packet and real permission-isolation acceptance"
+  ]
+}

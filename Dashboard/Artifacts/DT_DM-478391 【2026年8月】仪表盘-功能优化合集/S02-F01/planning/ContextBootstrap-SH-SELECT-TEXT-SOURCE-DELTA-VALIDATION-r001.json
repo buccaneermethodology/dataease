@@ -1,0 +1,273 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001",
+  "task_profile": "validation",
+  "raw_user_intent": {
+    "text": "独立只读验证 QueryProductAdapterSelectTextSourceTrace-r002 是否关闭独立Review r002 的 F-ST-SRC-001 (P2)：核对原始r001与修订r002的差异、options.ts精确字段行及配置页补全路径，检查是否保留10/26/16与Scope Delta none及所有NOT_RUN/阻塞；只写指定DeltaValidation报告，不修改候选、源码或Dashboard状态。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立验证一项来源定位/阶段边界文档修复，不评价产品实现或Goal。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTrace-DeltaValidation-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改候选或产品源码",
+      "将静态源码核对写为运行通过",
+      "准入产品Builder或关闭F01/Goal义务"
+    ],
+    "maximum_claim": "仅判断F-ST-SRC-001文档修复是否准确、是否关闭该局部finding；不证明设计、产品、权限或Goal验收。"
+  },
+  "required_read_set": [
+    {
+      "path": "AGENTS.md",
+      "revision": "270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "claim_ceiling"
+      ],
+      "reason": "项目边界及执行规则。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+      "revision": "b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f",
+      "domains": [
+        "authority",
+        "scope",
+        "validation",
+        "topology"
+      ],
+      "reason": "治理审查与独立性要求。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "domains": [
+        "authority",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "核对Goal原分母和主张上限。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/UserIntent.md",
+      "revision": "e64919a69df515670a4bd0ce225ccffd59b3428222633e0e7183d202d73935c7",
+      "domains": [
+        "authority",
+        "scope"
+      ],
+      "reason": "核对原始用户意图。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterFullShapeDesignReview-r001.md",
+      "revision": "0965ba805cbcc218538857ff9fefe26a11ad4002cceae39546e77ef1b09fee54",
+      "domains": [
+        "design",
+        "acceptance",
+        "dependency"
+      ],
+      "reason": "核对源finding和指定最小下一切片。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QueryProductAdapterSelectTextSourceTrace-r002.md",
+      "revision": "f0c62881696554ced04ce9c1587edac899258f24abb14e5b88360a2a2cf13151",
+      "domains": [
+        "design",
+        "acceptance",
+        "claim_ceiling"
+      ],
+      "reason": "修订候选",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/options.ts",
+      "revision": "4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核新建默认对象。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue",
+      "revision": "0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核配置/确认入口。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8",
+      "domains": [
+        "implementation",
+        "design"
+      ],
+      "reason": "复核运行/异步消费。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/../SP-005/S02-S09_EntryPacket.md",
+      "revision": "4598a5d74567e1e1d3de81ce263909231dc054d8102535bc0d917238c412c658",
+      "domains": [
+        "dependency",
+        "authority"
+      ],
+      "reason": "核对S01依赖状态。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/PermissionEnvironment.md",
+      "revision": "bf1498aa23f4f864e2c5c3d999b6b1a6044849ba25a9cd7d7d85104b6f233b9d",
+      "domains": [
+        "dependency",
+        "claim_ceiling"
+      ],
+      "reason": "核对真实权限阻塞。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r272.json",
+      "revision": "d83f1940630e9c374a68f6373c58ca28741d34d62eb74a6a9d29a22383c50ef8",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "核对最新组件验证边界和阻塞状态。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/SH-SELECT-TEXT-SOURCE-TRACE-REPAIR-r001.md",
+      "revision": "bd1748c1aca412d1b84f701bb1d6772830e890e9915d9b61522604c11378c475",
+      "domains": [
+        "validation",
+        "implementation"
+      ],
+      "reason": "Builder修订记录",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QueryProductAdapterSelectTextSourceTraceReview-r002.md",
+      "revision": "fb9bf729306b8bce54e32579048ea81678ca2dfe886f31aba3b57aabdad60ae1",
+      "domains": [
+        "validation",
+        "design"
+      ],
+      "reason": "原finding报告",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r273.json",
+      "revision": "717e8e04bedb0f4785549832bd4d42d160f94f3d9e653ca62299c88325508ea0",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "修订入口状态",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r274.json",
+      "revision": "113409807dbe4ef829c7b883a55ac7f631e92520dd6f0db0d56ae6d7f80566e2",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "本次修订与程序偏差的实际边界。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r275.json",
+      "revision": "a62e7bd0863e8c387c16b316816d6349979164887f9f82936a6872dab98ce184",
+      "domains": [
+        "topology",
+        "dependency"
+      ],
+      "reason": "复核修订包及治理偏差记录。",
+      "applicability": "S02-F01-SH-SELECT-TEXT-SOURCE-REPAIR-DELTA-VALIDATION-r001"
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "source_path_or_behavior_disagreement",
+      "condition": "若来源定位与文档行为陈述不符",
+      "mode": "evidence_backed_agent_evaluated",
+      "action": "指出准确路径、修正边界并限制结论",
+      "can_suppress_deterministic": false
+    },
+    {
+      "trigger_id": "scope_or_dependency_drift",
+      "condition": "若Gate/Session/权限或S01状态与候选不符",
+      "mode": "deterministic",
+      "action": "保留差异并限制可接受范围",
+      "can_suppress_deterministic": false
+    }
+  ],
+  "semantic_refresh": {
+    "required_when_digest_unchanged": true,
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ]
+  },
+  "epistemic_search_space": {
+    "required_domains": [
+      "authority",
+      "scope",
+      "acceptance",
+      "design",
+      "implementation",
+      "validation",
+      "dependency",
+      "claim_ceiling",
+      "topology"
+    ],
+    "preservation_statement": "10 Goal AC、26 must-have、16 product obligations完整保留；Scope Delta none；S01 F01 Packet仍CONDITIONAL；真实权限BLOCKED/NOT_RUN。",
+    "missing_evidence_action": "expand_or_report_evidence_gap"
+  },
+  "change_impact": {
+    "kb_truth": false,
+    "dashboard_state": true,
+    "contract_or_acceptance": true,
+    "runtime_or_schema": false,
+    "external_side_effect": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "topology": {
+    "basis": "change_impact",
+    "route": "independent_bounded_design_review",
+    "reason": "复核入口因当前工作树和r001卡片摘要漂移重建；只读独立复核，不授权实现。"
+  },
+  "skipped_reads": [],
+  "validation_evidence_surfaces": [
+    "F-ST-SRC-001",
+    "acceptance criteria",
+    "actual diff",
+    "candidate r001/r002 diff",
+    "claim ceiling and blockers",
+    "exact source lines",
+    "final state",
+    "original objective"
+  ],
+  "acceptance_criteria_ids": [
+    "AC-S02-02",
+    "AC-S02-03"
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "schema_version": "s02_picture_resource_ready_cases_v1",
+  "case_family": "PIC-RESOURCE-READY",
+  "original_obligation": "MVP-UI-10-PICTURE",
+  "review_round": 2,
+  "review_cap": 3,
+  "cases": [
+    {
+      "id": "PIC-RR-01",
+      "scenario": "pending cached resource, decodable placeholder",
+      "expected": "pending; zero shared writes",
+      "schedules": [
+        "pending placeholder load/decode before first barrier scan"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-02",
+      "scenario": "successful cached resource",
+      "expected": "final resolved URL decoded; ready once",
+      "schedules": [
+        "success before first scan",
+        "success after first scan",
+        "final load before resourceReady gate"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-03",
+      "scenario": "network rejects, decodable failure placeholder",
+      "expected": "failure; zero shared writes",
+      "schedules": [
+        "failure before first scan",
+        "failure after first scan"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-04",
+      "scenario": "non-image Blob",
+      "expected": "failure; zero shared writes",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-05",
+      "scenario": "existing failed cache entry",
+      "expected": "failure; no new successful candidate",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-06",
+      "scenario": "dispose while awaiting resource",
+      "expected": "no late src update or ready; cleanup once",
+      "schedules": [
+        "unmount during helper",
+        "duplicate dispose/unmount"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-07",
+      "scenario": "stale identity while awaiting resource",
+      "expected": "no late src update or commit",
+      "schedules": [
+        "isCurrent false during helper",
+        "isCurrent false during decode"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-08",
+      "scenario": "timeout before resource resolves",
+      "expected": "failure; late completion ignored",
+      "schedules": [
+        "10s total expires while load deferred",
+        "late success does not change src"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-09",
+      "scenario": "another candidate root uses failed resource",
+      "expected": "unrelated failure does not block this root",
+      "schedules": [
+        "unrelated failed root with distinct placeholder"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-10",
+      "scenario": "data URL",
+      "expected": "actual load/decode required",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-11",
+      "scenario": "external URL",
+      "expected": "actual load/decode required, error rejects",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-12",
+      "scenario": "empty showUrl",
+      "expected": "legal empty branch, no image forged",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-13",
+      "scenario": "condition style OFF",
+      "expected": "zero query; retain existing first-image rules",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-14",
+      "scenario": "real image decode reject",
+      "expected": "failure; no commit",
+      "schedules": [
+        "ordinary deterministic completion"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-15",
+      "scenario": "resource scope cleared during wait",
+      "expected": "no commit from aborted cache",
+      "schedules": [
+        "clear before first scan",
+        "clear between barriers with recreate",
+        "clear during final decode"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    },
+    {
+      "id": "PIC-RR-16",
+      "scenario": "final image disconnected or src changes",
+      "expected": "no stale ready",
+      "schedules": [
+        "sourceUrl changes during helper",
+        "src attribute changes during decode",
+        "root/image disconnected"
+      ],
+      "oracle": "只在同一冻结source/image/root且当前、helper稳定、最终实际src相同并decode成功时ready；失败/取消/超时零共享写入，监听timer清理"
+    }
+  ],
+  "write_exclusions": [
+    "Goal.final.json",
+    "UiIntegrationCases-r002.json",
+    "src/utils/resourceImageCache.ts",
+    "src/utils/resourceImages.ts"
+  ],
+  "claim_ceiling": "only bounded candidate resource readiness; mocks are not browser or real auth",
+  "execution_boundary": {
+    "production": [
+      "actual picture SFC",
+      "resourceImage",
+      "waitForResourceImages"
+    ],
+    "doubles": [
+      "Vue custom DOM renderer with normalized src/getAttribute/querySelectorAll/getComputedStyle",
+      "deferred network Blob and FileReader",
+      "load/decode"
+    ],
+    "not_proven": [
+      "browser rendering",
+      "real auth",
+      "full Goal"
+    ]
+  }
+}

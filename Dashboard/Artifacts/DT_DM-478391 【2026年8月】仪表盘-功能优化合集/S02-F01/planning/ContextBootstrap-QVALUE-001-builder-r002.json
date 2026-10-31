@@ -1,0 +1,215 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "DE-S02-F01-QVALUE-001-builder-r002",
+  "task_profile": "implementation",
+  "raw_user_intent": {
+    "text": "在QueryProductAdapterDesign-r004独立审查后的最短路径上，实施已通过独立设计审查的QVALUE-001极窄纯函数：将普通文本单选配置的默认值与运行值分离；不接权限/UI/Store/产品入口。保持S02原10项AC和16项产品义务。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "实施九键单选value-state纯函数，输出七键design及独立九键runtime；真实权限仍NOT_RUN，完整Goal保持open。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "core/core-frontend/src/custom-component/filter-copy/query-single-select-value-state.ts",
+      "core/core-frontend/tests/filter-copy-query-reference/query-single-select-value-state.test.ts",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-red.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-red.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-red.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-green.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-green.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-green.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-lint.stdout.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-lint.stderr.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-lint.exitcode.txt",
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/evidence/QVALUE-001-ExecutionEvidence-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改完整产品适配器、UI/Store/carrier、权限、保存或历史入口",
+      "改写或缩减Goal AC/产品义务分母",
+      "调用已有默认COPY或无默认重建器代替合同",
+      "使用standalone/admin/mock声称真实权限通过",
+      "修改S01、数据库、安装或部署"
+    ],
+    "maximum_claim": "仅纯函数Builder候选；独立Validation与产品入口/权限验收未完成"
+  },
+  "change_impact": {
+    "contract_or_acceptance": false,
+    "dashboard_state": false,
+    "external_side_effect": false,
+    "kb_truth": false,
+    "runtime_or_schema": false,
+    "semantic_risk": "high",
+    "write_conflict": false
+  },
+  "required_read_set": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+      "revision": "f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "scope/AC authority",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectValueStateDesign-r001.md",
+      "revision": "f85af9bad61d62ea44edbcd4332bef61d5b56ad123b2c3249f9b681a486a50d2",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "frozen bounded contract",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectValueStateFixtures-r001.json",
+      "revision": "06e21cbd6523b06e6e9c7c1ef1577e11e0d6e09bee27c7ccd46770e339f03553",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "10 frozen cases and oracle",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySingleSelectValueStateDesignReview-r001.md",
+      "revision": "bd0403853f72269a9fce9c16359288e46e9fb1d9876350969ef4018933bf573f",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "independent design readiness",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-query-single-select-value-state-design-r004.json",
+      "revision": "4ef157b2112f6def0b036c93684ad225895e91bc61bc60aa67fb5fbd78ebed52",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "design context and bounds",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/filter-copy/query-single-select-default-copy.ts",
+      "revision": "364e1bfe27d0013b3fb2ecdc22105e54aedf07cdbe0a5ce731fbf1fdff497b44",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "overlap boundary; existing COPY behavior",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Select.vue",
+      "revision": "0aef2907019552e4b00a2762cd69fc60b8a13d6b3941a3e5b9b19a5667125bb4",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "config/runtime value write paths",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/custom-component/v-query/Component.vue",
+      "revision": "70e15c5f8c2fbb591e9ca975f0b335eff183df3c677116682e354211d941b6a9",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "reset/hydration behavior",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    },
+    {
+      "path": "core/core-frontend/src/hooks/web/useFilter.ts",
+      "revision": "d2db975ae988218a921a5e3a76869e1a66d234eeebeedb1bfcf71e847e90416a",
+      "applicability": "QVALUE-001 bounded builder",
+      "reason": "first-query consumer semantics",
+      "domains": [
+        "scope",
+        "acceptance",
+        "dependency",
+        "implementation",
+        "validation"
+      ]
+    }
+  ],
+  "conditional_read_set": [
+    {
+      "trigger_id": "fixture-shape-conflict",
+      "condition": "冻结case或设计字段含义与运行值/默认值来源不一致",
+      "mode": "deterministic",
+      "can_suppress_deterministic": false,
+      "action": "停止实现并报告精确case/字段差异，重新设计review"
+    },
+    {
+      "trigger_id": "json-boundary-surface",
+      "condition": "JSON验证涉及访问器/特殊原型/循环或非有限值",
+      "mode": "evidence_backed_agent_evaluated",
+      "can_suppress_deterministic": false,
+      "action": "扩读同目录pure JSON验证模式并补合同允许的防御断言"
+    }
+  ],
+  "epistemic_search_space": {
+    "missing_evidence_action": "expand_or_report_evidence_gap",
+    "preservation_statement": "即使实现窄域纯函数，也必须保留全部查询形态、原10项AC、16项产品义务及真实权限未验证边界。",
+    "required_domains": [
+      "scope",
+      "acceptance",
+      "dependency",
+      "implementation",
+      "validation"
+    ]
+  },
+  "semantic_refresh": {
+    "anchors": [
+      "objective",
+      "authority",
+      "claim_ceiling",
+      "critical_dependencies"
+    ],
+    "required_when_digest_unchanged": true
+  },
+  "skipped_reads": [],
+  "topology": {
+    "basis": "change_impact",
+    "reason": "窄纯模块实现，需可信RED/GREEN和独立验证；无产品/权限集成。",
+    "route": "bounded_builder_after_independent_design_review_and_target_admission"
+  },
+  "validation_evidence_surfaces": [
+    "10 frozen input/design/runtime oracles",
+    "same-runner assertion-level RED and GREEN",
+    "focused ESLint",
+    "independent full baseline validation",
+    "Goal denominator and permission claim ceiling"
+  ]
+}

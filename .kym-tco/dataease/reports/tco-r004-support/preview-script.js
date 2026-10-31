@@ -1,0 +1,13 @@
+
+const D=JSON.parse(document.getElementById('data').textContent),P=D.progress;
+const $=id=>document.getElementById(id);const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+for(const [id,title] of Object.entries(D.titles))$('node').add(new Option(id.toUpperCase()+' · '+title,id));for(const [id,label] of Object.entries(P.states))$('status').add(new Option(label,id));
+const badge=s=>`<span class="tag ${esc(s)}">${esc(P.states[s])}</span>`;
+$('summary').innerHTML=Object.entries(P.states).filter(([s])=>P.items.some(i=>i.status===s)).map(([s,l])=>`<span class="tag ${s}">${l} ${P.items.filter(i=>i.status===s).length}项</span>`).join('');
+$('profiles').innerHTML=D.profiles.map(p=>`<tr><td>${esc(p.label)}</td><td>${p.denominator}</td><td>${p.goals.contract.met} / ${p.goals.contract.gap}</td><td>${p.goals.implementation.met} / ${p.goals.implementation.gap}</td></tr>`).join('');
+function render(){const q=$('search').value.trim().toLowerCase(),node=$('node').value,stage=$('stage').value,status=$('status').value;
+const selected=P.items.filter(i=>(!node||i.node_id===node)&&(!stage||i.stage===stage)&&(!status||i.status===status)&&(!q||(JSON.stringify(i)+D.titles[i.node_id]).toLowerCase().includes(q)));
+$('visible').textContent=`显示 ${selected.length} / ${P.items.length} 个推进项`;
+$('cards').innerHTML=Object.entries(D.titles).map(([id,title])=>{const rows=selected.filter(i=>i.node_id===id);if(!rows.length)return '';return `<article><div class="rowtop"><h3>${id.toUpperCase()} · ${esc(title)}</h3><span class="tag">整体 Coverage：design_only</span></div><p class="muted">${esc(D.coverage[id])}</p>${rows.map(i=>`<details><summary><strong>${esc(i.title)}</strong> <span class="tag">${esc(i.stage)}</span> ${badge(i.before_status)} → ${badge(i.status)}</summary><p>${esc(i.result)}</p><p><b>下一步：</b>${esc(i.next)}<br><b>责任：</b>${esc(i.owner)} · <small>${esc(i.id)}</small></p><div class="evidence">${i.evidence_refs.map(r=>`<a href="${esc(D.links[r])}">${esc(r.split('/').pop())}</a>`).join('<br>')}</div></details>`).join('')}</article>`}).join('')||'<p>没有匹配的推进项。</p>';
+const ac=P.ac_bindings.filter(x=>!node||x.function_id.toLowerCase()===node);$('acRows').innerHTML=ac.map(x=>`<tr><td>${esc(x.ac_id)}<br>${esc(x.function_id)}</td><td>${x.status==='partial_static_binding_runtime_required'?'部分静态绑定，待运行验证':'显式缺口'}</td><td>${esc(x.then)}</td><td>${esc((x.gaps||[]).join('；'))}<br>${esc(x.disposition||x.claim_binding_ceiling||'')}</td></tr>`).join('');}
+for(const id of ['search','node','stage','status'])$(id).addEventListener('input',render);$('reset').onclick=()=>{for(const id of ['search','node','stage','status'])$(id).value='';render()};render();

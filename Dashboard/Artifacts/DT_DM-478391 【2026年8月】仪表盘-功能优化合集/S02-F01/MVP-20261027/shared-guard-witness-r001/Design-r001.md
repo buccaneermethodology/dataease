@@ -1,0 +1,9 @@
+# 原UI05/06共享guard见证方案
+
+这是verification-only补证，不新增产品行为，不修改service/composable/原UiIntegrationCases或Scope。原S039准备第2/3已明确释放U2。真实RowAuth日粒度gt2024/03/15+六店已从正常界面配置、bubble源copy→symbolic目标paste、正常query/save/leave/reopen后再语义恢复amount500/200；源码实现未因该正例改动。日期原件/运行前CSV oracle与StaticDateNativeGolden另绑定；两控制失败零保存和正常取消原迹保留。
+
+新增20条有界pure/component见证由Cases-r001冻结。source/target不可验证dataset只指缺失/null/空串；不是将任何非空未知ID加假目录后冒充验证。count/-1、目录缺失计算字段或非null表达式、两个非法operator与三畸形subTree都从同native黄金原件作显式合成变形。whole reject必须保上次有效clip/session/目标，不部分应用；这些不是额外真实UI golden。
+
+正例按ownKeys顺序与undefinedPaths独立重建native对象，不能把JSON遗漏的own undefined变成missing。真实service/composable/Vue/emitter保留；Store/身份/字段目录为明确provider替身；registry facade只映射已核SupportedCharts49静态render/type/axis，不声称真实plugin runtime。类别案必须先bar正常control可receiver dispatch1，再证明VQuery/v-query错类别copy/paste拒绝、receiver0与旧clip/目标不变，避免以未ready目录或无receiver制造假阴性。receiver计数不冒充物理HTTP0。
+
+在现有harness模式上新建独立runner，不改原15-case runner及任何耗尽预算源码。冻结新runner SHA后直接执行verification GREEN；没有要实现的新行为，不声称虚构RED→修复。出现反例则保留，按真实变动另诊断，不修改冻结期望迎合实现。只定向lint新runner；非unit组件guard新维护case同步中文BDD reader card。独立验证一次查全真实日期/CSV/两save/语义恢复及20案；本U2包首轮最多3/3，不为了流程多开review。

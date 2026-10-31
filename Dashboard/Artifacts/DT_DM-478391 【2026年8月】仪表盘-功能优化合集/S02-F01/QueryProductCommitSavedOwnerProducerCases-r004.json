@@ -1,0 +1,677 @@
+{
+  "schema_version": "s02_qpc_saved_canvas_owner_producer_cases_v2",
+  "contract_id": "S02-QPC-SAVED-OWNER-PRODUCER-001",
+  "revision": "r004",
+  "contract_ref": "QueryProductCommitSavedOwnerProducerContract-r002.json",
+  "supersedes": "QueryProductCommitSavedOwnerProducerCases-r003.json",
+  "frozen_for_builder": false,
+  "status": "CANDIDATE_FOR_INDEPENDENT_DELTA_REVIEW",
+  "case_order": [
+    "QPC-PROD-001",
+    "QPC-PROD-002",
+    "QPC-PROD-003",
+    "QPC-PROD-004",
+    "QPC-PROD-005",
+    "QPC-PROD-006",
+    "QPC-PROD-007",
+    "QPC-PROD-008",
+    "QPC-PROD-009",
+    "QPC-PROD-010",
+    "QPC-PROD-011",
+    "QPC-PROD-012",
+    "QPC-PROD-013",
+    "QPC-PROD-014"
+  ],
+  "cases": [
+    {
+      "case_id": "QPC-PROD-001",
+      "title": "normal saved edit publishes after complete current-generation context",
+      "setup": {
+        "mode": "saved_edit",
+        "requested_id": "R1",
+        "current_generation": 1,
+        "response_id": "R1",
+        "publication_complete": true,
+        "root_ref": "ROOT1",
+        "targets": [
+          {
+            "id": "VQ1",
+            "raw_ref": "TARGET1",
+            "type": "VQuery"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "op": "begin_load",
+          "generation": 1
+        },
+        {
+          "op": "publish_complete_store_context",
+          "response_id": "R1",
+          "root_ref": "ROOT1"
+        },
+        {
+          "op": "observe_after_final_setter"
+        },
+        {
+          "op": "mint_owner"
+        }
+      ],
+      "observation_points": [
+        "before_first_setter",
+        "after_final_setter_before_owner_mint",
+        "synchronous_publish_return",
+        "next_vue_render_or_watcher_turn"
+      ],
+      "expected": {
+        "owner": "present",
+        "owner_resource_id": "R1",
+        "generation": 1,
+        "target": "TARGET1",
+        "source_read_calls": 0,
+        "target_commit_calls": 0,
+        "owner_identity_unchanged_at_next_vue_render_or_watcher_turn": true,
+        "owner_generation_unchanged_at_next_vue_render_or_watcher_turn": true,
+        "owner_snapshot_at_mint": {
+          "resource_id": "R1",
+          "generation": 1,
+          "root_raw_ref": "ROOT1",
+          "target_raw_ref": "TARGET1"
+        },
+        "next_tick_observation_matches_mint_snapshot": true,
+        "next_tick_root_raw_ref": "ROOT1",
+        "next_tick_target_raw_ref": "TARGET1"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-002",
+      "title": "resource response ID mismatch rejects",
+      "setup": {
+        "mode": "saved_edit",
+        "requested_id": "R1",
+        "current_generation": 2,
+        "response_id": "R2",
+        "publication_complete": true
+      },
+      "actions": [
+        {
+          "op": "begin_load",
+          "generation": 2
+        },
+        {
+          "op": "receive_response",
+          "response_id": "R2"
+        }
+      ],
+      "observation_points": [
+        "on_response_before_any_publication"
+      ],
+      "expected": {
+        "owner": "absent",
+        "reason": "resource_id_mismatch",
+        "store_mutations_after_rejection": 0,
+        "source_read_calls": 0,
+        "target_commit_calls": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-003",
+      "title": "late old response cannot publish over newer resource",
+      "setup": {
+        "mode": "saved_edit",
+        "current_generation": 5,
+        "request_generation": 4,
+        "response_id": "R1",
+        "current_store_resource_id": "R2"
+      },
+      "actions": [
+        {
+          "op": "receive_response",
+          "request_generation": 4
+        }
+      ],
+      "observation_points": [
+        "on_stale_response"
+      ],
+      "expected": {
+        "owner_for_old_generation": "absent",
+        "reason": "stale_generation",
+        "current_store_resource_id": "R2",
+        "store_mutations_from_stale_response": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-004",
+      "title": "partial setter publication remains non-owner and fails closed",
+      "setup": {
+        "mode": "saved_edit",
+        "requested_id": "R1",
+        "generation": 6,
+        "prior_owner": "present_for_generation_5",
+        "setter_order": [
+          "resource_metadata",
+          "component_root",
+          "style",
+          "view"
+        ],
+        "failure_at": "style_setter_throws"
+      },
+      "actions": [
+        {
+          "op": "invalidate_prior_owner",
+          "generation": 6
+        },
+        {
+          "op": "set_resource_metadata"
+        },
+        {
+          "op": "set_component_root"
+        },
+        {
+          "op": "set_style",
+          "result": "throws"
+        }
+      ],
+      "observation_points": [
+        "before_first_setter",
+        "after_resource_metadata_setter",
+        "after_component_root_setter",
+        "after_failed_style_setter",
+        "synchronous_publish_return",
+        "next_vue_render_or_watcher_turn"
+      ],
+      "expected": {
+        "owner": "absent",
+        "generation_state": "publication_failed",
+        "reason": "partial_publication_failed",
+        "partial_store_usable_as_owner_context": false,
+        "source_read_calls": 0,
+        "target_commit_calls": 0,
+        "recovery": "new_generation_and_full_authoritative_reload"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-005",
+      "title": "matching cache restore creates a fresh owner generation",
+      "setup": {
+        "mode": "cache_restore",
+        "current_resource_id": "R1",
+        "cache_resource_id": "R1",
+        "new_generation": 8,
+        "snapshot_publish_complete": true,
+        "root_ref": "ROOT2",
+        "targets": [
+          {
+            "id": "VQ2",
+            "raw_ref": "TARGET2",
+            "type": "VQuery"
+          }
+        ],
+        "prior_owner_generation": 7
+      },
+      "actions": [
+        {
+          "op": "invalidate_prior_owner"
+        },
+        {
+          "op": "snapshot_publish",
+          "resource_id": "R1",
+          "generation": 8
+        },
+        {
+          "op": "mint_owner"
+        }
+      ],
+      "observation_points": [
+        "before_snapshot_publish",
+        "after_snapshot_publish",
+        "after_owner_mint"
+      ],
+      "expected": {
+        "owner": "present",
+        "owner_generation": 8,
+        "prior_owner_valid": false,
+        "target": "TARGET2",
+        "source_read_calls": 0,
+        "target_commit_calls": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-006",
+      "title": "cache restore for a different resource rejects",
+      "setup": {
+        "mode": "cache_restore",
+        "current_resource_id": "R1",
+        "cache_resource_id": "R2",
+        "generation": 9,
+        "pre_restore_store_digest": "STORE-R1"
+      },
+      "actions": [
+        {
+          "op": "validate_cache_identity"
+        },
+        {
+          "op": "reject_restore"
+        }
+      ],
+      "observation_points": [
+        "before_cache_publish"
+      ],
+      "expected": {
+        "owner": "absent",
+        "reason": "resource_id_mismatch",
+        "store_digest": "STORE-R1",
+        "source_read_calls": 0,
+        "target_commit_calls": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-007",
+      "title": "target deletion, duplication or replacement invalidates owner",
+      "setup": {
+        "mode": "saved_edit",
+        "owner_target_raw_ref": "TARGET3"
+      },
+      "actions": [
+        {
+          "op": "replace_tree_case",
+          "variants": [
+            "target_missing",
+            "target_duplicate",
+            "target_raw_replaced"
+          ]
+        },
+        {
+          "op": "revalidate_owner"
+        }
+      ],
+      "observation_points": [
+        "before_and_after_tree_change"
+      ],
+      "expected": {
+        "owner": "invalid",
+        "reasons": [
+          "target_missing",
+          "target_ambiguous",
+          "target_raw_identity_changed"
+        ],
+        "source_read_calls": 0,
+        "target_commit_calls": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-008",
+      "title": "principal change from real provider invalidates owner",
+      "setup": {
+        "mode": "saved_edit",
+        "owner_provider_identity_generation": "P1",
+        "provider_event": "principal_changed_to_P2"
+      },
+      "actions": [
+        {
+          "op": "consume_verified_provider_event"
+        },
+        {
+          "op": "invalidate_owner"
+        }
+      ],
+      "observation_points": [
+        "on_provider_event"
+      ],
+      "expected": {
+        "owner": "invalid",
+        "identity_generation": "P2",
+        "authorization_decision_in_owner": false
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-009",
+      "title": "organization change from real provider invalidates owner",
+      "setup": {
+        "mode": "saved_edit",
+        "owner_provider_identity_generation": "O1",
+        "provider_event": "organization_changed_to_O2"
+      },
+      "actions": [
+        {
+          "op": "consume_verified_provider_event"
+        },
+        {
+          "op": "invalidate_owner"
+        }
+      ],
+      "observation_points": [
+        "on_provider_event"
+      ],
+      "expected": {
+        "owner": "invalid",
+        "identity_generation": "O2",
+        "authorization_decision_in_owner": false
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-010",
+      "title": "copy-as-new does not reuse source owner",
+      "setup": {
+        "mode": "copy_as_new",
+        "source_resource_id": "R1",
+        "destination_resource_id": null
+      },
+      "actions": [
+        {
+          "op": "load_copy_source"
+        }
+      ],
+      "observation_points": [
+        "after_copy_source_load"
+      ],
+      "expected": {
+        "saved_owner_for_source_as_destination": "absent",
+        "reason": "mode_not_supported"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-011",
+      "title": "template and blank create are excluded from saved owner",
+      "setup": {
+        "mode_variants": [
+          "template_create",
+          "blank_create"
+        ],
+        "new_resource_id": null
+      },
+      "actions": [
+        {
+          "op": "create_init"
+        },
+        {
+          "op": "load_template_or_blank_root"
+        }
+      ],
+      "observation_points": [
+        "after_create_init",
+        "after_root_load"
+      ],
+      "expected": {
+        "saved_owner": "absent",
+        "reason": "mode_not_supported"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-012",
+      "title": "preview/embed is excluded from editor producer",
+      "setup": {
+        "mode_variants": [
+          "preview",
+          "onlyPreview",
+          "embed"
+        ]
+      },
+      "actions": [
+        {
+          "op": "enter_non_editor_mode"
+        }
+      ],
+      "observation_points": [
+        "after_mode_resolution"
+      ],
+      "expected": {
+        "saved_owner": "absent",
+        "reason": "mode_not_supported"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-013",
+      "title": "unmount or mode exit invalidates owner",
+      "setup": {
+        "mode": "saved_edit",
+        "owner_generation": 10
+      },
+      "actions": [
+        {
+          "op": "unmount_or_exit_edit_mode"
+        }
+      ],
+      "observation_points": [
+        "on_unmount_or_mode_exit"
+      ],
+      "expected": {
+        "owner": "invalid",
+        "generation_advanced_once": true,
+        "source_read_calls": 0,
+        "target_commit_calls": 0
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    },
+    {
+      "case_id": "QPC-PROD-014",
+      "title": "owner never authorizes source read or target commit",
+      "setup": {
+        "mode": "saved_edit",
+        "owner": "present",
+        "authorization_external_variants": [
+          "allowed",
+          "denied",
+          "unknown"
+        ]
+      },
+      "actions": [
+        {
+          "op": "inspect_producer_exports_and_calls"
+        }
+      ],
+      "observation_points": [
+        "producer_api_boundary"
+      ],
+      "expected": {
+        "source_read_calls": 0,
+        "target_commit_calls": 0,
+        "authorization_fields_in_owner_snapshot": false,
+        "authorization_decision": "external_only"
+      },
+      "forbidden_calls": [
+        "readDesign",
+        "source_read",
+        "copy",
+        "paste",
+        "target_commit",
+        "permission_api",
+        "preview",
+        "query",
+        "save"
+      ],
+      "status": "DESIGN_ONLY",
+      "execution_ok": null,
+      "evidence_refs": []
+    }
+  ],
+  "blocked_cases": [
+    "真实principal/organization provider事件",
+    "真实权限allow/deny与撤权恢复",
+    "产品Store watcher/render部分发布可见性",
+    "source-read/target-commit运行时路径"
+  ],
+  "claim_ceiling": "仅producer-local候选状态/生命周期合同；明确授权布尔值不属于owner snapshot，并定义多setter观察窗口/部分失败终态；不证明产品实现、原子可见性、权限或Goal验收。"
+}

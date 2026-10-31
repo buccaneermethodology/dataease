@@ -1,0 +1,545 @@
+{
+  "status": "设计增量候选，非冻结",
+  "card_sha256": "678299325f14233ab1c422de4244f0743056d367fd15e903f73fff5cc5fa42c7",
+  "provenance": "全部合成；完整指本包typed绑定/事务输入完整，不声称这些最小组件对象可脱离宿主直接挂载",
+  "carrier_proposal": {
+    "name": "QueryDesignSnapshotStore（拟新增，非现存）",
+    "key": [
+      "documentId",
+      "componentId",
+      "editRevision"
+    ],
+    "initial_capture": "canvasUtils.ts:643 JSON.parse后、646 historyAdaptor前保存原始字节；适配后另存深拷贝设计配置，667 setComponentData前完成",
+    "capture_constraint": "必须确认initCanvasDataPrepare收到的canvasInfo是授权编辑配置且尚未经外参注入；此调用前置尚待核实",
+    "update_events": [
+      "配置确认成功提交候选时更新revision",
+      "新增/删除查询条件成功时更新",
+      "撤销/重做由对应设计快照恢复",
+      "正常重新载入重建"
+    ],
+    "excluded_events": [
+      "运行选择",
+      "外参注入",
+      "用户查询重置",
+      "枚举结果回调"
+    ],
+    "copy_entry": "QueryConditionConfiguration的编辑配置入口读取本carrier；当前未确认编辑以该面板候选为准并带sourceRevision，运行Store只作预览",
+    "lifetime": "关闭文档/登出/换身份销毁；权限失效拒绝访问；不得跨身份复用",
+    "persistence": "仍用既有配置schema；保存时用carrier中查询设计配置覆盖待序列化副本的对应propValue/cascade，运行Store不反写默认；历史已有污染无从逆推，需来源版本/用户编辑恢复"
+  },
+  "combined_binding_fixture": {
+    "source": {
+      "documentId": "doc-A",
+      "editRevision": 7,
+      "component": {
+        "id": "query-A",
+        "component": "VQuery",
+        "style": {
+          "left": 10
+        },
+        "propValue": [
+          {
+            "id": "q-province",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "D1",
+              "fields": []
+            },
+            "field": {
+              "id": "f-province",
+              "deType": 0,
+              "type": "VARCHAR",
+              "name": "省"
+            },
+            "displayId": "f-province",
+            "multiple": true,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": [
+              "浙江"
+            ],
+            "defaultMapValue": [
+              "浙江"
+            ],
+            "mapValue": [
+              "江苏"
+            ],
+            "selectValue": [
+              "江苏"
+            ],
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-province"
+            },
+            "parameters": []
+          },
+          {
+            "id": "q-city",
+            "displayType": "0",
+            "optionValueSource": 1,
+            "dataset": {
+              "id": "D1",
+              "fields": []
+            },
+            "field": {
+              "id": "f-city",
+              "deType": 0,
+              "type": "VARCHAR",
+              "name": "市"
+            },
+            "displayId": "f-city",
+            "multiple": true,
+            "defaultValueCheck": true,
+            "defaultValueFirstItem": false,
+            "defaultValue": [
+              "杭州"
+            ],
+            "defaultMapValue": [
+              "杭州"
+            ],
+            "mapValue": [
+              "南京"
+            ],
+            "selectValue": [
+              "南京"
+            ],
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city"
+            },
+            "parameters": []
+          }
+        ],
+        "cascade": [
+          [
+            {
+              "id": "n1",
+              "datasetId": "D1--q-province--f-province",
+              "fieldId": "",
+              "placeholder": "首级",
+              "selectValue": [
+                "浙江"
+              ],
+              "currentSelectValue": [
+                "江苏"
+              ]
+            },
+            {
+              "id": "n2",
+              "datasetId": "D1--q-city--f-city",
+              "fieldId": "",
+              "placeholder": "配置级联字段",
+              "selectValue": [
+                "杭州"
+              ],
+              "currentSelectValue": [
+                "南京"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "target": {
+      "documentId": "doc-B",
+      "editRevision": 12,
+      "component": {
+        "id": "query-B",
+        "component": "VQuery",
+        "style": {
+          "left": 99
+        },
+        "propValue": [],
+        "cascade": []
+      },
+      "binding": {
+        "sourceChartId": "chart-A",
+        "targetChartId": "chart-B",
+        "sourceDatasetId": "D1",
+        "targetDatasetId": "D1",
+        "fieldIds": [
+          "f-province",
+          "f-city"
+        ],
+        "authority": "目标编辑者选择chart-B并由目标组件目录唯一ID校验；拟新增绑定输入，不宣称现有UI已提供"
+      }
+    },
+    "expected_candidate": {
+      "id": "query-B",
+      "component": "VQuery",
+      "style": {
+        "left": 99
+      },
+      "propValue": [
+        {
+          "id": "q-province-new",
+          "displayType": "0",
+          "optionValueSource": 1,
+          "dataset": {
+            "id": "D1",
+            "fields": []
+          },
+          "field": {
+            "id": "f-province",
+            "deType": 0,
+            "type": "VARCHAR",
+            "name": "省"
+          },
+          "displayId": "f-province",
+          "multiple": true,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": [
+            "浙江"
+          ],
+          "defaultMapValue": [
+            "浙江"
+          ],
+          "mapValue": [
+            "浙江"
+          ],
+          "selectValue": [
+            "浙江"
+          ],
+          "checkedFields": [
+            "chart-B"
+          ],
+          "checkedFieldsMap": {
+            "chart-B": "f-province"
+          },
+          "parameters": []
+        },
+        {
+          "id": "q-city-new",
+          "displayType": "0",
+          "optionValueSource": 1,
+          "dataset": {
+            "id": "D1",
+            "fields": []
+          },
+          "field": {
+            "id": "f-city",
+            "deType": 0,
+            "type": "VARCHAR",
+            "name": "市"
+          },
+          "displayId": "f-city",
+          "multiple": true,
+          "defaultValueCheck": true,
+          "defaultValueFirstItem": false,
+          "defaultValue": [
+            "杭州"
+          ],
+          "defaultMapValue": [
+            "杭州"
+          ],
+          "mapValue": [
+            "杭州"
+          ],
+          "selectValue": [
+            "杭州"
+          ],
+          "checkedFields": [
+            "chart-B"
+          ],
+          "checkedFieldsMap": {
+            "chart-B": "f-city"
+          },
+          "parameters": []
+        }
+      ],
+      "cascade": [
+        [
+          {
+            "id": "n1-new",
+            "datasetId": "D1--q-province-new--f-province",
+            "fieldId": "",
+            "placeholder": "首级",
+            "selectValue": [
+              "浙江"
+            ],
+            "currentSelectValue": [
+              "浙江"
+            ]
+          },
+          {
+            "id": "n2-new",
+            "datasetId": "D1--q-city-new--f-city",
+            "fieldId": "",
+            "placeholder": "配置级联字段",
+            "selectValue": [
+              "杭州"
+            ],
+            "currentSelectValue": [
+              "杭州"
+            ]
+          }
+        ]
+      ]
+    },
+    "omitted_component_defaults": "沿宿主infoFormat+attributes，未完整执行；不得把本fixture当产品启动成功",
+    "evidence": [
+      "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:1591-1629",
+      "core/core-frontend/src/custom-component/v-query/QueryCascade.vue:74-78,142-165"
+    ]
+  },
+  "shape_fixtures": [
+    {
+      "id": "tree-bindings",
+      "input": {
+        "treeFieldList": [
+          {
+            "id": "f-province",
+            "datasetGroupId": "D1"
+          },
+          {
+            "id": "f-city",
+            "datasetGroupId": "D1"
+          }
+        ],
+        "oldTreeLoad": false,
+        "checkedFields": [
+          "chart-A"
+        ],
+        "checkedFieldsMap": {
+          "chart-A": "f-province"
+        },
+        "treeCheckedList": []
+      },
+      "expected_restored": {
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-province"
+            }
+          },
+          {
+            "checkedFields": [
+              "chart-A"
+            ],
+            "checkedFieldsMap": {
+              "chart-A": "f-city"
+            }
+          }
+        ]
+      },
+      "expected_rebound": {
+        "treeCheckedList": [
+          {
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-province"
+            }
+          },
+          {
+            "checkedFields": [
+              "chart-B"
+            ],
+            "checkedFieldsMap": {
+              "chart-B": "f-city"
+            }
+          }
+        ]
+      },
+      "evidence": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:2318-2347",
+      "scope": "树逐层绑定可证；完整候选枚举/默认树值编码待运行"
+    },
+    {
+      "id": "tree-old-load",
+      "input_patch": {
+        "oldTreeLoad": true
+      },
+      "expected_restored_maps": [
+        {
+          "chart-A": "f-province"
+        },
+        {
+          "chart-A": "f-province"
+        }
+      ],
+      "evidence": "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:2336-2341",
+      "scope": "保持历史映射，不强制改成每层field id"
+    },
+    {
+      "id": "tree-default-on-init",
+      "input": {
+        "defaultValueCheck": true,
+        "multiple": true,
+        "defaultValue": [
+          "浙江-de-杭州"
+        ],
+        "selectValue": [
+          "江苏-de-南京"
+        ]
+      },
+      "expected": {
+        "selectValue": [
+          "浙江-de-杭州"
+        ]
+      },
+      "evidence": "core/core-frontend/src/custom-component/v-query/Tree.vue:134-143",
+      "scope": "init赋值精确；路径字符串语义未作全量证明"
+    },
+    {
+      "id": "parameter-binding",
+      "input": {
+        "checkedFields": [
+          "chart-A"
+        ],
+        "checkedFieldsMapArr": {
+          "chart-A": [
+            "p1",
+            "p2"
+          ]
+        },
+        "checkedFieldsMapStart": {
+          "chart-A": "p1"
+        },
+        "checkedFieldsMapEnd": {
+          "chart-A": "p2"
+        },
+        "parametersArr": {
+          "chart-A": [
+            {
+              "id": "p1",
+              "variableName": "start",
+              "deType": 1,
+              "type": [
+                "date",
+                "date"
+              ],
+              "datasetGroupId": "D1"
+            },
+            {
+              "id": "p2",
+              "variableName": "end",
+              "deType": 1,
+              "type": [
+                "date",
+                "date"
+              ],
+              "datasetGroupId": "D1"
+            }
+          ]
+        }
+      },
+      "expected": "全部组件键chart-A→chart-B；参数对象必须由target getSqlParams精确ID返回的完整对象替换；id/name近似不通过",
+      "evidence": [
+        "core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue:599-633,1730-1755",
+        "core/core-frontend/src/hooks/web/useFilter.ts:525-555"
+      ],
+      "unknown": "type值域/参数额外字段未核实，以上type是合成占位，不是已证合法可消费参数"
+    },
+    {
+      "id": "date-timing",
+      "input": {
+        "displayType": "1",
+        "timeType": "dynamic",
+        "defaultValueCheck": true,
+        "timeNum": 0,
+        "relativeToCurrentType": "date",
+        "around": "f"
+      },
+      "expected_mount": "Component.onBeforeMount不调用getDynamicRange，仅恢复级联current",
+      "expected_reset": "resetData调用getDynamicRange后new Date(result[0])写default/select",
+      "expected_prepare": "调用拟抽取纯求值器，不调用resetData；固定时钟/时区后才给确切日期oracle",
+      "evidence": "core/core-frontend/src/custom-component/v-query/Component.vue:330-338,658-747,1033",
+      "unknown": "日期子组件首次加载求值链与编码/时区完整oracle未证"
+    }
+  ],
+  "failure_matrix": [
+    {
+      "event": "prepare_parse_error",
+      "state": "UNCOMMITTED",
+      "observable_result": "原目标/预览/P0/快照不变，0过滤请求",
+      "owner_action": "适配器返回结构诊断"
+    },
+    {
+      "event": "cancel",
+      "state": "UNCOMMITTED",
+      "observable_result": "完全不发布，0过滤请求",
+      "owner_action": "控制器丢弃候选"
+    },
+    {
+      "event": "target_revision_changed",
+      "state": "STALE",
+      "observable_result": "目标保持其当前新版，不回滚覆盖别人编辑",
+      "owner_action": "控制器重新prepare并重新确认"
+    },
+    {
+      "event": "auth_recheck_failed",
+      "state": "UNCOMMITTED",
+      "observable_result": "不发布，旧目标不变",
+      "owner_action": "控制器报权限失败；真实验收待环境"
+    },
+    {
+      "event": "store_replace_throws_before_write",
+      "state": "UNCOMMITTED",
+      "observable_result": "旧根对象保持，0通知/快照",
+      "owner_action": "提交协调器记录错误"
+    },
+    {
+      "event": "store_replace_observed_then_throw",
+      "state": "INDETERMINATE",
+      "observable_result": "不可声称零副作用；禁止成功提示/自动重放",
+      "owner_action": "提交协调器读取commitId判断已发布与否，记录故障；实现须消除此接缝后准入"
+    },
+    {
+      "event": "published_snapshot_error",
+      "state": "COMMITTED_DEGRADED",
+      "observable_result": "新配置保留，P0不变，不能声称完整粘贴成功；不自动回滚已观察状态",
+      "owner_action": "快照适配器按commitId修复一次快照；未修复前阻止后续同目标粘贴"
+    },
+    {
+      "event": "published_notify_error",
+      "state": "COMMITTED_DEGRADED",
+      "observable_result": "新配置保留，显示预览未完成，不能成功提示",
+      "owner_action": "通知outbox按commitId重试同一逻辑刷新，不再提交配置/快照"
+    },
+    {
+      "event": "preview_network_error",
+      "state": "COMMITTED_PREVIEW_FAILED",
+      "observable_result": "新编辑配置保留，旧预览带错误标记，P0不变",
+      "owner_action": "查询层显式重试，不能当校验拒绝"
+    },
+    {
+      "event": "all_ack",
+      "state": "COMMITTED",
+      "observable_result": "新配置+一次快照+一次逻辑预览，正常保存前P0不变",
+      "owner_action": "显示过滤条件已应用"
+    }
+  ],
+  "negative_bindings": [
+    {
+      "input": "无chart-A→target唯一绑定",
+      "expected": "prepare诊断，不能按同dataset自动任选"
+    },
+    {
+      "input": "q-city缺失但cascade仍引用",
+      "expected": "拒绝，0副作用"
+    },
+    {
+      "input": "目标revision 12→13",
+      "expected": "STALE，保持13，重新确认"
+    },
+    {
+      "input": "q-province→q-city→q-province",
+      "expected": "拒绝有向环"
+    }
+  ],
+  "checks": {
+    "product_tests": "NOT_RUN",
+    "runtime_authorization": "BLOCKED",
+    "design_freeze": "NOT_CLAIMED"
+  }
+}

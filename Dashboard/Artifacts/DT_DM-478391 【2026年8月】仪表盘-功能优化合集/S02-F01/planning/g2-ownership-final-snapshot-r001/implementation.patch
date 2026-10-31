@@ -1,0 +1,2711 @@
+--- a/core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
++++ b/core/core-frontend/src/views/chart/components/views/components/ChartComponentG2Plot.vue
+@@ -45,6 +45,12 @@
+ import G2TooltipCarousel from '@/views/chart/components/js/G2TooltipCarousel'
+ import { listenerTooltipShow } from '@/views/chart/components/js/panel/charts/g2/bar/barUtil'
+ import { createChartRefreshMock } from './chart-refresh-mock'
++import { type Chart as G2Chart } from '@antv/g2'
++import {
++  createG2RenderAttempt,
++  G2RenderAttemptFailure,
++  type G2RenderScope
++} from './g2-render-attempt'
+ const mockRefreshResponse = import.meta.env.DEV ? createChartRefreshMock() : undefined
+ const { t } = useI18n()
+ const dvMainStore = dvMainStoreWithOut()
+@@ -257,7 +263,10 @@
+     return
+   }
+   const chart = myChart
++  const replayScope = activeG2Scope
++  const replayVersion = g2RenderVersion
+   requestAnimationFrame(() => {
++    if (replayScope && !isActiveG2Scope(replayVersion, replayScope, chart)) return
+     if (chart !== myChart || !linkageActiveHistory.value) {
+       return
+     }
+@@ -619,6 +628,15 @@
+   const chartView = chartViewManager.getChartView(view.render, view.type)
+   recursionTransObj(customAttrTrans, chart.customAttr, scale.value, terminal.value)
+   recursionTransObj(customStyleTrans, chart.customStyle, scale.value, terminal.value)
++  if (chartView.library !== ChartLibraryType.G2 && (activeG2Scope || ownedG2Generation)) {
++    // 仅离开 owned line 时使进行中的尝试失效；L7 绘制本身沿用原分支。
++    g2RenderVersion++
++    ownedG2Generation = false
++    g2Timer && clearTimeout(g2Timer)
++    finishG2Schedule?.()
++    clearG2ResizeSchedule()
++    if (activeG2Scope) disposeActiveG2Scope()
++  }
+   switch (chartView.library) {
+     case ChartLibraryType.L7_PLOT:
+       await renderL7Plot(chart, chartView as L7PlotChartView<any, any>, callback)
+@@ -635,6 +653,29 @@
+   }
+ }
+ let myChart = null
++let activeG2Scope: G2RenderScope<G2Chart> | null = null
++let activeG2Version = 0
++let ownedG2Generation = false
++const reportG2CleanupErrors = (errors: unknown[]) => {
++  if (errors.length) console.warn('G2 cleanup errors', errors)
++}
++const isActiveG2Scope = (version: number, scope: G2RenderScope<G2Chart>, instance: G2Chart) =>
++  !chartComponentUnmounted &&
++  version === g2RenderVersion &&
++  activeG2Scope === scope &&
++  myChart === instance &&
++  !scope.closed
++const disposeActiveG2Scope = () => {
++  const scope = activeG2Scope
++  activeG2Scope = null
++  myChart = null
++  if (scope) reportG2CleanupErrors(scope.dispose())
++}
++const clearG2ResizeSchedule = () => {
++  g2ResizeTimer && clearTimeout(g2ResizeTimer)
++  g2ResizeTimer = undefined
++  G2TooltipCarousel.dequeueResize(containerId)
++}
+ let g2Timer: number
+ let finishG2Schedule: (() => void) | undefined
+ let g2RenderQueue = Promise.resolve()
+@@ -644,10 +685,20 @@
+ let g2TiledLegendCleanup: (() => void) | undefined
+ let g2LegendPaginationCleanup: (() => void) | undefined
+ const clearG2SliderAdapter = () => {
++  if (activeG2Scope) {
++    activeG2Scope.removeCleanup('slider')
++    return
++  }
+   g2SliderCleanup?.()
+   g2SliderCleanup = undefined
+ }
+ const clearG2LegendPaginationAdapter = () => {
++  if (activeG2Scope) {
++    activeG2Scope.removeCleanup('assist')
++    activeG2Scope.removeCleanup('tiled')
++    activeG2Scope.removeCleanup('pagination')
++    return
++  }
+   assistLineCleanup?.()
+   assistLineCleanup = undefined
+   g2TiledLegendCleanup?.()
+@@ -698,6 +749,9 @@
+     replayLinkageActive()
+   }
+   const version = ++g2RenderVersion
++  const ownedLine = chart.type === 'line' && chartView.library === ChartLibraryType.G2
++  ownedG2Generation = ownedLine
++  if (ownedLine || activeG2Scope) clearG2ResizeSchedule()
+   g2Timer && clearTimeout(g2Timer)
+   finishG2Schedule?.()
+   return new Promise<void>(resolve => {
+@@ -707,7 +761,14 @@
+       g2RenderQueue = g2RenderQueue
+         .then(async () => {
+           if (chartComponentUnmounted || version !== g2RenderVersion) return
++          const notifiedCleanupErrors = new Set<Error>()
++          const notifyCleanupErrors = (errors: Error[]) => {
++            errors.forEach(error => notifiedCleanupErrors.add(error))
++            reportG2CleanupErrors(errors)
++          }
+           try {
++            // owned line 切换到 legacy 前先释放旧 scope，避免 legacy 再次 destroy 旧实例。
++            if (!ownedLine && activeG2Scope) disposeActiveG2Scope()
+             // 仅在移动端配置右侧缩略区域隐藏图表文本
+             let dashboardHidden = props.element.dashboardHidden
+             if (dvMainStore.mobileInPc) {
+@@ -731,6 +792,119 @@
+               scale: scale.value,
+               action,
+               quadrantDefaultBaseline
++            }
++            if (ownedLine) {
++              const isCurrent = () => !chartComponentUnmounted && version === g2RenderVersion
++              const scope = activeG2Scope
++              const instance = scope?.instance
++              if (autoRefresh && scope && instance) {
++                const isActive = () => isActiveG2Scope(version, scope, instance)
++                const updated = await chartView.updateData(drawOptions, () => {
++                  if (!isActive()) return
++                  // remove 先释放旧 adapter，再安装并登记本实例的新 adapter。
++                  scope.removeCleanup('assist')
++                  if (!isActive()) return
++                  scope.replaceCleanup('assist', installG2AssistLineVisibility(instance, chart))
++                })
++                if (!isActive()) return
++                if (updated) {
++                  activeG2Version = version
++                  replayLinkageActive()
++                  return
++                }
++              }
++              configEmptyDataStyle([1], containerId)
++              clearG2ResizeSchedule()
++              if (activeG2Scope) {
++                disposeActiveG2Scope()
++              } else {
++                // legacy -> owned：保留原资源释放顺序，再清空活动指针。
++                G2TooltipCarousel.destroyByContainer(containerId)
++                clearG2SliderAdapter()
++                clearG2LegendPaginationAdapter()
++                myChart?.destroy()
++                myChart = null
++              }
++              const result = await createG2RenderAttempt<G2Chart>({
++                isCurrent,
++                onCleanupErrors: notifyCleanupErrors,
++                initialCleanups: [
++                  {
++                    key: 'carousel',
++                    cleanup: () => G2TooltipCarousel.destroyByContainer(containerId)
++                  },
++                  { key: 'resize', cleanup: clearG2ResizeSchedule }
++                ],
++                create: async () => {
++                  if (Array.isArray(chart.data?.data) && chart.data.data.length === 0) {
++                    return { kind: 'empty' }
++                  }
++                  const instance = await chartView.drawChart(drawOptions)
++                  return { kind: 'instance', instance }
++                },
++                setup: scope => {
++                  const chartInstance = scope.instance
++                  listenerTooltipShow(chartInstance, { ...chart, container: containerId })
++                  configAxisTitleOverflowTooltip(
++                    { ...chart, container: containerId },
++                    chartInstance
++                  )
++                  chartView.applyThemeFont(chartInstance, chart.fontFamily)
++                  chartView.optimizeLargeData(chartInstance)
++                  const legendContainer = document.getElementById(containerId)
++                  chartInstance.options(
++                    applyG2TiledLegend(
++                      chartInstance.options(),
++                      chart.customStyle?.legend,
++                      legendContainer?.clientWidth || 1,
++                      legendContainer?.clientHeight || 1,
++                      (event, payload) => chartInstance.emit(event, payload),
++                      !isDashboard() ||
++                        dvMainStore.canvasStyleData?.dashboard?.themeColor === 'dark'
++                        ? 'dark'
++                        : 'light'
++                    )
++                  )
++                  if (chart.customStyle?.legend?.displayMode === 'tile') {
++                    scope.replaceCleanup('tiled', installG2TiledLegendStateAdapter(chartInstance))
++                  }
++                  scope.replaceCleanup(
++                    'assist',
++                    installG2AssistLineVisibility(chartInstance, chart)
++                  )
++                },
++                render: async scope => {
++                  await scope.instance.render()
++                },
++                afterRender: async scope => {
++                  const chartInstance = scope.instance
++                  installG2SvgCoordinateScaleAdapter(chartInstance)
++                  await chartView.afterRender?.(chartInstance)
++                  if (!isCurrent()) return
++                  scope.replaceCleanup('slider', installG2SliderAdapter(chartInstance))
++                  scope.replaceCleanup(
++                    'pagination',
++                    installG2SideLegendPaginationAdapter(chartInstance, {
++                      afterPageLayout: () => {
++                        if (isActiveG2Scope(activeG2Version, scope, chartInstance)) {
++                          replayLinkageActive()
++                        }
++                      }
++                    })
++                  )
++                }
++              })
++              if (result.status === 'ready') {
++                if (!isCurrent()) {
++                  reportG2CleanupErrors(result.scope.dispose())
++                  return
++                }
++                activeG2Scope = result.scope
++                activeG2Version = version
++                myChart = result.scope.instance
++                replayLinkageActive()
++              }
++              return
+             }
+             if (
+               autoRefresh &&
+@@ -805,7 +979,15 @@
+               replayLinkageActive()
+             }
+           } catch (e) {
+-            console.error('renderG2Plot error', e)
++            if (e instanceof G2RenderAttemptFailure) {
++              console.error('renderG2Plot error', e.originalError ?? e)
++              // helper 已通知的 cleanup errors 不重复输出；主业务错误保持单独观察。
++              reportG2CleanupErrors(
++                e.cleanupErrors.filter(error => !notifiedCleanupErrors.has(error))
++              )
++            } else {
++              console.error('renderG2Plot error', e)
++            }
+           }
+         })
+         .finally(resolve)
+@@ -1289,12 +1471,16 @@
+         renderChart(curView)
+       } else {
+         g2ResizeTimer && clearTimeout(g2ResizeTimer)
++        const resizeVersion = activeG2Scope ? activeG2Version : g2RenderVersion
++        const resizeScope = activeG2Scope
++        const resizeInstance = resizeScope?.instance
+         g2ResizeTimer = setTimeout(() => {
+           G2TooltipCarousel.enqueueResize(containerId, async () => {
+             const chartView = chartViewManager.getChartView(curView.render, curView.type)
+-            const chartInstance = myChart
++            const chartInstance = resizeScope ? resizeInstance : myChart
+             if (
+               chartComponentUnmounted ||
++              (resizeScope && !isActiveG2Scope(resizeVersion, resizeScope, resizeInstance)) ||
+               chartView.library !== ChartLibraryType.G2 ||
+               typeof chartInstance?.forceFit !== 'function'
+             ) {
+@@ -1316,7 +1502,11 @@
+               )
+             )
+             await chartInstance.forceFit()
+-            if (!chartComponentUnmounted && chartInstance === myChart) {
++            if (
++              !chartComponentUnmounted &&
++              chartInstance === myChart &&
++              (!resizeScope || isActiveG2Scope(resizeVersion, resizeScope, resizeInstance))
++            ) {
+               replayG2TiledLegendSelection(chartInstance.options(), (event, payload) =>
+                 chartInstance.emit(event, payload)
+               )
+@@ -1353,21 +1543,31 @@
+   }
+ }
+ onBeforeUnmount(() => {
++  // 先同步失效，已开始的库 Promise 只能 settle，不能再发布或回放。
++  chartComponentUnmounted = true
++  g2RenderVersion++
++  const cleanup = (release: () => void) => {
++    try {
++      release()
++    } catch (error) {
++      reportG2CleanupErrors([error])
++    }
++  }
+   try {
+-    chartComponentUnmounted = true
+-    g2RenderVersion++
+-    clearTimeout(g2Timer)
+-    finishG2Schedule?.()
+-    g2ResizeTimer && clearTimeout(g2ResizeTimer)
+-    G2TooltipCarousel.dequeueResize(containerId)
+-    G2TooltipCarousel.destroyByContainer(containerId)
+-    clearG2SliderAdapter()
+-    clearG2LegendPaginationAdapter()
+-    myChart?.destroy()
+-    resizeObserver?.disconnect()
+-    intersectionObserver?.disconnect()
+-  } catch (e) {
+-    console.warn(e)
++    cleanup(() => clearTimeout(g2Timer))
++    cleanup(() => finishG2Schedule?.())
++    cleanup(clearG2ResizeSchedule)
++    if (activeG2Scope) {
++      cleanup(disposeActiveG2Scope)
++    } else {
++      cleanup(() => G2TooltipCarousel.destroyByContainer(containerId))
++      cleanup(clearG2SliderAdapter)
++      cleanup(clearG2LegendPaginationAdapter)
++      cleanup(() => myChart?.destroy())
++    }
++  } finally {
++    cleanup(() => resizeObserver?.disconnect())
++    cleanup(() => intersectionObserver?.disconnect())
+   }
+ })
+ </script>
+--- /dev/null
++++ b/core/core-frontend/src/views/chart/components/views/components/g2-render-attempt.ts
+@@ -0,0 +1,187 @@
++export type G2RenderCleanup = () => void
++
++export interface G2RenderInstance {
++  destroy(): void
++}
++
++export type G2RenderCreateResult<T extends G2RenderInstance> =
++  | { kind: 'instance'; instance: T }
++  | { kind: 'empty' }
++
++export interface G2RenderScope<T extends G2RenderInstance> {
++  readonly instance: T
++  readonly closed: boolean
++  isCurrent(): boolean
++  replaceCleanup(key: string, cleanup: G2RenderCleanup): Error[]
++  removeCleanup(key: string): Error[]
++  dispose(): Error[]
++}
++
++export interface G2RenderAttemptOptions<T extends G2RenderInstance> {
++  create(): G2RenderCreateResult<T> | Promise<G2RenderCreateResult<T>>
++  isCurrent(): boolean
++  setup(scope: G2RenderScope<T>): void
++  render(scope: G2RenderScope<T>): void | Promise<void>
++  afterRender(scope: G2RenderScope<T>): void | Promise<void>
++  initialCleanups?: { key: string; cleanup: G2RenderCleanup }[]
++  onCleanupErrors?(errors: Error[]): void
++}
++
++export type G2RenderAttemptResult<T extends G2RenderInstance> =
++  | { status: 'ready'; scope: G2RenderScope<T>; cleanupErrors: Error[] }
++  | { status: 'empty' | 'stale'; cleanupErrors: Error[] }
++
++export class G2RenderAttemptFailure extends Error {
++  readonly code: 'G2_RENDER_ATTEMPT_FAILED' | 'G2_RENDER_INSTANCE_MISSING'
++  readonly originalError: unknown
++  readonly cause: unknown
++  readonly cleanupErrors: Error[]
++
++  constructor(
++    originalError: unknown,
++    cleanupErrors: Error[],
++    code: 'G2_RENDER_ATTEMPT_FAILED' | 'G2_RENDER_INSTANCE_MISSING' = 'G2_RENDER_ATTEMPT_FAILED'
++  ) {
++    super(
++      code === 'G2_RENDER_INSTANCE_MISSING'
++        ? 'G2 render attempt did not return an instance or an explicit empty result'
++        : 'G2 render attempt failed'
++    )
++    this.name = 'G2RenderAttemptFailure'
++    this.code = code
++    this.originalError = originalError
++    this.cause = originalError
++    this.cleanupErrors = [...cleanupErrors]
++  }
++}
++
++function cleanupError(error: unknown): Error {
++  if (error instanceof Error) return error
++  return Object.assign(new Error('G2 cleanup threw a non-Error value'), { cause: error })
++}
++
++export async function createG2RenderAttempt<T extends G2RenderInstance>(
++  options: G2RenderAttemptOptions<T>
++): Promise<G2RenderAttemptResult<T>> {
++  const cleanups = new Map<string, G2RenderCleanup>()
++  const attemptErrors: Error[] = []
++  let instance: T | undefined
++  let closed = false
++  let finished = false
++  let missingInstance = false
++
++  const runCleanup = (cleanup: G2RenderCleanup): Error[] => {
++    try {
++      cleanup()
++      return []
++    } catch (error) {
++      return [cleanupError(error)]
++    }
++  }
++
++  // 通知只包含本次清理错误；通知自身的异常返回给调用者，不递归通知。
++  const reportCleanupErrors = (errors: Error[]): Error[] => {
++    if (!errors.length) return errors
++    const reported = [...errors]
++    try {
++      options.onCleanupErrors?.([...errors])
++    } catch (error) {
++      reported.push(cleanupError(error))
++    }
++    if (!finished) attemptErrors.push(...reported)
++    return reported
++  }
++
++  const dispose = (): Error[] => {
++    if (closed) return []
++    closed = true
++    const pending = [...cleanups.values()].reverse()
++    cleanups.clear()
++    const errors: Error[] = []
++    for (const cleanup of pending) errors.push(...runCleanup(cleanup))
++    const ownedInstance = instance
++    if (ownedInstance) errors.push(...runCleanup(() => ownedInstance.destroy()))
++    return errors
++  }
++
++  const removeCleanup = (key: string): Error[] => {
++    const cleanup = cleanups.get(key)
++    if (!cleanup) return []
++    // 先移除登记，cleanup 重入 remove/dispose 时不会重复执行本项。
++    cleanups.delete(key)
++    return reportCleanupErrors(runCleanup(cleanup))
++  }
++
++  const replaceCleanup = (key: string, cleanup: G2RenderCleanup): Error[] => {
++    const errors: Error[] = []
++    // 清旧项时可能重入并登记相同 key；外层接管前逐项释放，不能覆盖遗失。
++    let previous = cleanups.get(key)
++    while (previous) {
++      cleanups.delete(key)
++      errors.push(...runCleanup(previous))
++      previous = cleanups.get(key)
++    }
++    // cleanup 也可能重入并关闭 scope，因此释放后再次判断 closed。
++    if (closed) errors.push(...runCleanup(cleanup))
++    else cleanups.set(key, cleanup)
++    return reportCleanupErrors(errors)
++  }
++
++  const release = () => reportCleanupErrors(dispose())
++  const terminal = (status: 'empty' | 'stale'): G2RenderAttemptResult<T> => {
++    release()
++    finished = true
++    return { status, cleanupErrors: [...attemptErrors] }
++  }
++  const current = () => !closed && options.isCurrent()
++
++  try {
++    for (const initial of options.initialCleanups ?? []) {
++      replaceCleanup(initial.key, initial.cleanup)
++    }
++    if (!current()) return terminal('stale')
++
++    const created = await options.create()
++    if (
++      !created ||
++      (created.kind !== 'empty' &&
++        (created.kind !== 'instance' ||
++          !created.instance ||
++          typeof created.instance.destroy !== 'function'))
++    ) {
++      missingInstance = true
++      throw new Error('G2 render instance is missing')
++    }
++    if (created.kind === 'instance') instance = created.instance
++    if (!current()) return terminal('stale')
++    if (created.kind === 'empty') return terminal('empty')
++
++    const scope: G2RenderScope<T> = {
++      instance: created.instance,
++      get closed() {
++        return closed
++      },
++      isCurrent: () => options.isCurrent(),
++      replaceCleanup,
++      removeCleanup,
++      dispose
++    }
++    options.setup(scope)
++    if (!current()) return terminal('stale')
++    await options.render(scope)
++    if (!current()) return terminal('stale')
++    await options.afterRender(scope)
++    if (!current()) return terminal('stale')
++
++    finished = true
++    return { status: 'ready', scope, cleanupErrors: [...attemptErrors] }
++  } catch (originalError) {
++    release()
++    finished = true
++    throw new G2RenderAttemptFailure(
++      missingInstance ? undefined : originalError,
++      attemptErrors,
++      missingInstance ? 'G2_RENDER_INSTANCE_MISSING' : 'G2_RENDER_ATTEMPT_FAILED'
++    )
++  }
++}
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/check.mjs
+@@ -0,0 +1,650 @@
++import assert from 'node:assert/strict'
++import { createHash } from 'node:crypto'
++import { readFile } from 'node:fs/promises'
++import { fileURLToPath } from 'node:url'
++import path from 'node:path'
++import { build } from 'esbuild'
++
++const frontendRoot = fileURLToPath(new URL('../../', import.meta.url))
++const repoRoot = path.resolve(frontendRoot, '../..')
++const artifactRoot = path.join(
++  repoRoot,
++  'Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01'
++)
++const casesPath = path.join(artifactRoot, 'G2StageLifecycleOwnershipCases-r002.json')
++const sourcePath = path.join(
++  frontendRoot,
++  'src/views/chart/components/views/components/g2-render-attempt.ts'
++)
++const casesSha256 = 'f4348c739094943db73872ebc974d9b5048186d627c5022df2fa9c33d5fd2bba'
++const hash = value => createHash('sha256').update(value).digest('hex')
++const canonical = value => {
++  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
++  if (value && typeof value === 'object') {
++    return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`
++  }
++  return JSON.stringify(value)
++}
++const modeArg = process.argv.indexOf('--mode')
++const mode = modeArg < 0 ? 'green' : process.argv[modeArg + 1]
++const records = []
++const summary = {
++  mode,
++  contract_valid: false,
++  production_module_imported: false,
++  helper_cases_executed: 0,
++  passed: 0,
++  assertion_failures: 0,
++  execution_errors: 0,
++  first_fingerprint: null,
++  component_cases: 'NOT_RUN: helper-only RED preparation excludes component changes'
++}
++
++function deferred() {
++  let resolve
++  const promise = new Promise(done => { resolve = done })
++  return { promise, resolve }
++}
++
++async function bounded(promise, phase) {
++  let timer
++  try {
++    return await Promise.race([
++      promise,
++      new Promise((_, reject) => {
++        timer = setTimeout(() => reject(new Error(`Execution timeout: ${phase}`)), 3000)
++      })
++    ])
++  } finally {
++    clearTimeout(timer)
++  }
++}
++
++function validateCases(contract) {
++  assert.equal(contract.schema_version, 's02_g2_ownership_cases_v1')
++  assert.equal(contract.frozen_for_builder, true)
++  assert.equal(contract.cases.length, 23)
++  const scenarios = [
++    'success', 'stale_start', 'stale_after_create', 'stale_after_setup',
++    'stale_after_render', 'stale_after_afterRender', 'explicit_empty',
++    'create_reject', 'setup_throw', 'render_reject', 'after_reject',
++    'dispose_twice', 'cleanup_throws', 'replace', 'remove_reentrant',
++    'register_closed', 'scope_isolation', 'destroy_throws',
++    'unexpected_undefined', 'stale_cleanup_error', 'failure_cleanup_error',
++    'replace_cleanup_error', 'notify_throws'
++  ]
++  contract.cases.forEach((item, index) => {
++    assert.equal(item.id, `G2OWN-${String(index + 1).padStart(3, '0')}`)
++    assert.equal(item.scenario, scenarios[index])
++    assert.equal(item.red_fingerprint, `${item.id}: NOT_IMPLEMENTED`)
++    assert.equal(item.runner_ref, 'core/core-frontend/tests/g2-render-ownership/check.mjs')
++    assert.ok(item.arrange && item.oracle)
++    assert.ok(Array.isArray(item.oracle.events))
++    assert.ok(Array.isArray(item.oracle.cleanup_error_ids))
++    assert.ok(Array.isArray(item.oracle.extra))
++    assert.ok(['ready', 'stale', 'empty', 'failure'].includes(item.oracle.outcome))
++    assert.equal(
++      item.oracle.event_comparison,
++      item.oracle.event_projection
++        ? 'exact_order_after_explicit_prefix_projection'
++        : 'exact_order'
++    )
++  })
++}
++
++function environment(item, instanceId = item.arrange.instance_id, sharedEvents = []) {
++  const arrange = item.arrange
++  const state = {
++    item,
++    events: sharedEvents,
++    current: arrange.current !== false,
++    instanceId,
++    destroyCount: 0,
++    scope: null,
++    errors: new Map(),
++    errorIds: new Map(),
++    phaseGates: new Map(),
++    notificationBatches: [],
++    operationReturns: [],
++    returnedCleanupErrors: null
++  }
++  const errorFor = id => {
++    if (!state.errors.has(id)) {
++      const error = new Error(`fixture error: ${id}`)
++      state.errors.set(id, error)
++      state.errorIds.set(error, id)
++    }
++    return state.errors.get(id)
++  }
++  const assertErrors = (errors, expectedIds, channel) => {
++    assert.ok(Array.isArray(errors), `${channel}: cleanup channel must be an array`)
++    assert.equal(errors.length, expectedIds.length, `${channel}: error count differs`)
++    expectedIds.forEach((id, index) => {
++      assert.equal(errors[index], errorFor(id), `${channel}: error reference/order differs at ${index}`)
++    })
++  }
++  const cleanup = (id, key = id) => () => {
++    state.events.push(`cleanup:${id}`)
++    if (id === 'reentrant') {
++      const errors = state.scope.removeCleanup(key)
++      assert.deepEqual(errors, [], 'Removed cleanup must not run again on reentry')
++    }
++    if (arrange.throw_cleanup?.includes(id)) throw errorFor(id)
++  }
++  const instance = {
++    destroy() {
++      state.destroyCount++
++      state.events.push(item.scenario === 'scope_isolation' ? `destroy:${instanceId}` : 'destroy')
++      if (arrange.throw_destroy) throw errorFor('destroy')
++    }
++  }
++  state.instance = instance
++  state.errorFor = errorFor
++  state.assertErrors = assertErrors
++  state.cleanup = cleanup
++  state.gateFor = phase => {
++    if (!state.phaseGates.has(phase)) {
++      state.phaseGates.set(phase, { entered: deferred(), release: deferred() })
++    }
++    return state.phaseGates.get(phase)
++  }
++  const pause = async phase => {
++    const gate = state.gateFor(phase)
++    gate.entered.resolve()
++    await gate.release.promise
++  }
++  state.options = {
++    isCurrent: () => state.current,
++    initialCleanups: arrange.initial_cleanup_ids.map(id => ({ key: id, cleanup: cleanup(id) })),
++    async create() {
++      state.events.push('create')
++      if (arrange.throw_at === 'create') throw errorFor(arrange.error_id)
++      if (item.scenario === 'scope_isolation' && instanceId === 'A') await pause('create')
++      if (arrange.stale_at === 'create') state.current = false
++      if (arrange.create_outcome === 'empty') return { kind: 'empty' }
++      if (arrange.create_outcome === 'undefined') return undefined
++      return { kind: 'instance', instance }
++    },
++    setup(scope) {
++      state.events.push('setup')
++      state.scope = scope
++      assert.equal(scope.instance, instance, 'setup must receive this attempt instance')
++      assert.equal(scope.closed, false)
++      assert.equal(scope.isCurrent(), state.current)
++      if (arrange.setup_registers) assertErrors(scope.replaceCleanup(arrange.setup_registers, cleanup(arrange.setup_registers)), [], 'setup register return')
++      if (arrange.stale_at === 'setup') state.current = false
++      if (arrange.throw_at === 'setup') throw errorFor(arrange.error_id)
++    },
++    async render(scope) {
++      state.events.push('render')
++      assert.equal(scope, state.scope, 'render must keep the setup scope')
++      assert.equal(scope.instance, instance)
++      if (arrange.stale_at === 'render_deferred') await pause('render')
++      if (arrange.throw_at === 'render') throw errorFor(arrange.error_id)
++    },
++    async afterRender(scope) {
++      state.events.push('afterRender')
++      assert.equal(scope, state.scope, 'afterRender must keep the setup scope')
++      assert.equal(scope.instance, instance)
++      if (arrange.after_registers) assertErrors(scope.replaceCleanup(arrange.after_registers, cleanup(arrange.after_registers)), [], 'afterRender register return')
++      if (arrange.stale_at === 'afterRender_deferred') await pause('afterRender')
++      if (arrange.throw_at === 'afterRender') throw errorFor(arrange.error_id)
++    },
++    onCleanupErrors(errors) {
++      assert.ok(Array.isArray(errors), 'notification: cleanup channel must be an array')
++      state.notificationBatches.push([...errors])
++      for (const error of errors) state.events.push(`notify:${state.errorIds.get(error)}`)
++      if (arrange.throw_notify) throw errorFor('notify')
++    }
++  }
++  return state
++}
++
++function captureInvocation(createAttempt, state) {
++  // 同步 throw 与异步 reject 均被捕获，避免并发隔离案例出现 unhandled rejection。
++  return Promise.resolve().then(() => createAttempt(state.options)).then(
++    result => ({ ok: true, result }),
++    error => ({ ok: false, error })
++  )
++}
++
++async function driveDeferred(state, settled, phase) {
++  const gate = state.gateFor(phase)
++  const reached = await bounded(Promise.race([
++    gate.entered.promise.then(() => true),
++    settled.then(() => false)
++  ]), `${phase} entry`)
++  if (reached) {
++    state.current = false
++    gate.release.resolve()
++  }
++  return reached
++}
++
++function requireExpectedFailure(captured, item, state) {
++  if (captured.ok) {
++    assert.notEqual(item.oracle.outcome, 'failure', 'Expected failure must reject')
++    return
++  }
++  const error = captured.error
++  if (error?.code === 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED') throw error
++  if (error?.code !== 'G2_RENDER_ATTEMPT_FAILED' && error?.code !== 'G2_RENDER_INSTANCE_MISSING') throw error
++  assert.equal(item.oracle.outcome, 'failure', 'Unexpected contract failure')
++  assert.equal(error.code, item.oracle.failure_code)
++  if (item.oracle.primary_error_identity) {
++    const primary = state.errorFor(item.oracle.primary_error_identity)
++    assert.equal(error.originalError, primary, 'Business error identity must survive cleanup')
++    assert.equal(error.cause, primary, 'Failure cause must preserve original error reference')
++  } else {
++    assert.equal(error.originalError ?? null, null)
++  }
++  state.assertErrors(error.cleanupErrors, item.oracle.cleanup_error_ids, 'failure.cleanupErrors')
++}
++
++// 仅投影既有 Cases 的通道归属，不新增 expected：ready 之后的 operation 错误
++// 属于该次 operation 返回值；自动清理错误属于 result/failure 返回值和通知。
++function operationErrorIds(item, operationIndex) {
++  const nonEmpty = {
++    'G2OWN-013': { 3: ['bad'] },
++    'G2OWN-018': { 1: ['destroy'] },
++    'G2OWN-022': { 1: ['bad'] }
++  }
++  return nonEmpty[item.id]?.[operationIndex] ?? []
++}
++
++function assertResultChannel(item, state, captured) {
++  if (!captured.ok) return
++  const expected = item.arrange.operation ? [] : item.oracle.cleanup_error_ids
++  state.assertErrors(captured.result.cleanupErrors, expected, 'result.cleanupErrors')
++  // 固定返回时点的观察，不把后续 operation 的错误并入 earlier ready 结果。
++  state.returnedCleanupErrors = [...captured.result.cleanupErrors]
++}
++
++function assertNotificationChannel(item, state) {
++  const notifiedIds = item.oracle.events
++    .filter(event => event.startsWith('notify:'))
++    .map(event => event.slice('notify:'.length))
++  assert.equal(state.notificationBatches.length, notifiedIds.length ? 1 : 0, 'notification: callback count differs')
++  if (notifiedIds.length) state.assertErrors(state.notificationBatches[0], notifiedIds, 'notification[0]')
++}
++
++function assertOperationChannels(item, state) {
++  const operations = item.arrange.operation ?? []
++  assert.equal(state.operationReturns.length, operations.length, 'operation returns: call count differs')
++  operations.forEach((operation, index) => {
++    assert.equal(state.operationReturns[index].operation, operation)
++    state.assertErrors(state.operationReturns[index].errors, operationErrorIds(item, index), `operation[${index}] ${operation}`)
++  })
++}
++
++function applyOperations(state, result, operations) {
++  assert.equal(result.status, 'ready', 'Scope operations require a ready result')
++  assert.equal(result.scope, state.scope)
++  assert.equal(result.scope.instance, state.instance)
++  let disposeCalls = 0
++  for (const [index, operation] of operations.entries()) {
++    const [action, key, label] = operation.split(':')
++    let errors
++    if (action === 'add' || action === 'replace') {
++      errors = result.scope.replaceCleanup(key, state.cleanup(label ?? key, key))
++    } else if (action === 'remove') {
++      errors = result.scope.removeCleanup(key)
++    } else if (action === 'dispose') {
++      errors = result.scope.dispose()
++      disposeCalls++
++      assert.equal(result.scope.closed, true, 'dispose must close the scope')
++    } else {
++      throw new Error(`Unsupported frozen operation: ${operation}`)
++    }
++    state.assertErrors(errors, operationErrorIds(state.item, index), `operation[${index}] ${operation}`)
++    state.operationReturns.push({ operation, errors: [...errors] })
++    if (action === 'dispose' && disposeCalls > 1) {
++      assert.deepEqual(errors, [], 'Repeated dispose must return no errors or perform work')
++    }
++  }
++}
++
++function assertOracle(item, state, captured) {
++  requireExpectedFailure(captured, item, state)
++  const oracle = item.oracle
++  if (captured.ok) {
++    assert.equal(captured.result.status, oracle.outcome)
++    if (state.returnedCleanupErrors === null) assertResultChannel(item, state, captured)
++    state.assertErrors(state.returnedCleanupErrors, item.arrange.operation ? [] : oracle.cleanup_error_ids, 'result.cleanupErrors at return')
++    if (captured.result.status === 'ready') {
++      assert.equal(captured.result.scope, state.scope)
++      assert.equal(captured.result.scope.instance, state.instance)
++      if (!captured.result.scope.closed) assert.equal(captured.result.scope.isCurrent(), state.current)
++    }
++  }
++  const events = oracle.event_projection
++    ? state.events.filter(event => oracle.event_projection.some(prefix => event.startsWith(prefix)))
++    : state.events
++  assert.deepEqual(events, oracle.events, 'Frozen event oracle differs')
++  assert.equal(state.destroyCount, oracle.destroy_count, 'destroy count differs')
++  assertOperationChannels(item, state)
++  assertNotificationChannel(item, state)
++  if (oracle.primary_error_identity === null && captured.ok) assert.equal(captured.error, undefined)
++  for (const extra of oracle.extra) {
++    if (extra === 'G2_RENDER_INSTANCE_MISSING') {
++      assert.equal(captured.error.code, extra)
++    } else if (extra !== 'B_untouched') {
++      throw new Error(`Unsupported frozen extra oracle: ${extra}`)
++    }
++  }
++}
++
++async function runCase(item, createAttempt) {
++  if (item.scenario === 'scope_isolation') {
++    assert.deepEqual(item.arrange.attempts, ['A:deferred', 'B:ready'])
++    assert.deepEqual(item.arrange.stale, ['A'])
++    const events = []
++    const a = environment(item, 'A', events)
++    const b = environment(item, 'B', events)
++    const aSettled = captureInvocation(createAttempt, a)
++    const aGate = a.gateFor('create')
++    const entered = await bounded(Promise.race([
++      aGate.entered.promise.then(() => true),
++      aSettled.then(() => false)
++    ]), 'isolation A deferred create')
++    const bCaptured = await bounded(captureInvocation(createAttempt, b), 'isolation B ready')
++    if (entered) {
++      a.current = false
++      aGate.release.resolve()
++    }
++    const aCaptured = await bounded(aSettled, 'isolation A stale settle')
++    // 先收齐并分类 A/B；未知执行错误优先，禁止 A 的 stub 掩盖 B 的错误。
++    propagateInvocationErrors([aCaptured, bCaptured])
++    assert.equal(entered, true, 'A create must be pending while B becomes ready')
++    assert.equal(aCaptured.result.status, 'stale')
++    a.assertErrors(aCaptured.result.cleanupErrors, [], 'isolation A result.cleanupErrors')
++    assert.equal(bCaptured.result.status, 'ready')
++    assert.equal(bCaptured.result.scope.instance, b.instance)
++    assert.equal(bCaptured.result.scope, b.scope)
++    assert.equal(bCaptured.result.scope.closed, false)
++    assert.equal(bCaptured.result.scope.isCurrent(), true)
++    b.assertErrors(bCaptured.result.cleanupErrors, [], 'isolation B result.cleanupErrors')
++    assertNotificationChannel(item, a)
++    assertResultChannel(item, b, bCaptured)
++    assert.deepEqual({ A: a.destroyCount, B: b.destroyCount }, item.oracle.instance_destroy_counts)
++    assert.notEqual(a.scope, b.scope)
++    assertOracle(item, { ...b, destroyCount: a.destroyCount + b.destroyCount }, bCaptured)
++    return
++  }
++  const state = environment(item)
++  const settled = captureInvocation(createAttempt, state)
++  let deferredReached = null
++  if (item.arrange.stale_at?.endsWith('_deferred')) {
++    deferredReached = await driveDeferred(state, settled, item.arrange.stale_at.replace('_deferred', ''))
++  }
++  const captured = await bounded(settled, item.id)
++  requireExpectedFailure(captured, item, state)
++  assertResultChannel(item, state, captured)
++  if (deferredReached !== null) assert.equal(deferredReached, true, 'Required deferred phase was not reached')
++  if (item.arrange.operation) applyOperations(state, captured.result, item.arrange.operation)
++  assertOracle(item, state, captured)
++}
++
++function propagateInvocationErrors(captures) {
++  const rejected = captures.filter(captured => !captured.ok)
++  const knownCodes = new Set([
++    'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED', 'G2_RENDER_ATTEMPT_FAILED',
++    'G2_RENDER_INSTANCE_MISSING', 'ERR_ASSERTION'
++  ])
++  const unknown = rejected.find(captured => !knownCodes.has(captured.error?.code))
++  if (unknown) throw unknown.error
++  const nonStub = rejected.find(captured => captured.error?.code !== 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED')
++  if (nonStub) {
++    if (nonStub.error?.code === 'ERR_ASSERTION') throw nonStub.error
++    assert.fail(`Isolation attempt unexpectedly rejected: ${nonStub.error.code}`)
++  }
++  if (rejected.length) throw rejected[0].error
++}
++
++function classifyCaseError(item, error) {
++  if (error?.code === 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED' || error?.code === 'ERR_ASSERTION') {
++    return {
++      status: 'ASSERTION_FAILURE',
++      fingerprint: error?.code === 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED'
++        ? item.red_fingerprint
++        : `${item.id}: ORACLE_MISMATCH`,
++      error_code: error.code,
++      message: error.message
++    }
++  }
++  return { status: 'EXECUTION_ERROR', message: String(error?.stack ?? error) }
++}
++
++// 诊断入口只构造 oracle 的输入 transcript；不实现或替换生产 helper，
++// 不运行产品 GREEN。每个负例先验证完整通道 transcript 被接受，再删改
++// 唯一目标通道，要求同一个真实 oracle 因该通道拒绝。
++function channelTranscript(item) {
++  const state = environment(item)
++  state.current = item.oracle.outcome !== 'stale'
++  state.events.push(...item.oracle.events)
++  state.destroyCount = item.oracle.destroy_count
++  state.scope = {
++    instance: state.instance,
++    closed: Boolean(item.arrange.operation?.includes('dispose')),
++    isCurrent: () => state.current
++  }
++  state.operationReturns = (item.arrange.operation ?? []).map((operation, index) => ({
++    operation,
++    errors: operationErrorIds(item, index).map(state.errorFor)
++  }))
++  const notifiedIds = item.oracle.events.filter(event => event.startsWith('notify:'))
++    .map(event => event.slice('notify:'.length))
++  if (notifiedIds.length) state.notificationBatches.push(notifiedIds.map(state.errorFor))
++  if (item.oracle.outcome === 'failure') {
++    const primary = item.oracle.primary_error_identity
++      ? state.errorFor(item.oracle.primary_error_identity)
++      : undefined
++    return {
++      state,
++      captured: {
++        ok: false,
++        error: Object.assign(new Error('oracle transcript'), {
++          code: item.oracle.failure_code,
++          originalError: primary,
++          cause: primary,
++          cleanupErrors: item.oracle.cleanup_error_ids.map(state.errorFor)
++        })
++      }
++    }
++  }
++  return {
++    state,
++    captured: {
++      ok: true,
++      result: {
++        status: item.oracle.outcome,
++        scope: state.scope,
++        cleanupErrors: (item.arrange.operation ? [] : item.oracle.cleanup_error_ids).map(state.errorFor)
++      }
++    }
++  }
++}
++
++async function runOracleSelfTests(contract) {
++  const witnesses = []
++  let channelControls = 0
++  const byId = id => {
++    const item = contract.cases.find(item => item.id === id)
++    assert.ok(item, `Missing frozen identity: ${id}`)
++    return item
++  }
++  const channelWitness = (name, caseId, channel, mutate) => {
++    const item = byId(caseId)
++    const control = channelTranscript(item)
++    assertOracle(item, control.state, control.captured)
++    channelControls++
++    const negative = channelTranscript(item)
++    mutate(negative)
++    let failure
++    try {
++      assertOracle(item, negative.state, negative.captured)
++    } catch (error) {
++      failure = error
++    }
++    assert.equal(failure?.code, 'ERR_ASSERTION', `${name}: corrupted channel was not rejected`)
++    assert.ok(failure.message.includes(channel), `${name}: rejection must identify ${channel}; got ${failure.message}`)
++    const witness = {
++      name, case_id: caseId, control_accepted: true, mutation_rejected: true,
++      classification: classifyCaseError(item, failure).status,
++      rejection_channel: channel, message: failure.message
++    }
++    witnesses.push(witness)
++    console.log(JSON.stringify({ oracle_negative_witness: witness }))
++  }
++  channelWitness('020_result_missing_setup', 'G2OWN-020', 'result.cleanupErrors', ({ captured }) => {
++    captured.result.cleanupErrors = []
++  })
++  channelWitness('021_failure_missing_setup', 'G2OWN-021', 'failure.cleanupErrors', ({ captured }) => {
++    captured.error.cleanupErrors = []
++  })
++  channelWitness('022_replace_return_missing_bad', 'G2OWN-022', 'operation[1]', ({ state }) => {
++    state.operationReturns[1].errors = []
++  })
++  channelWitness('023_result_missing_setup_keeps_notify', 'G2OWN-023', 'result.cleanupErrors', ({ state, captured }) => {
++    captured.result.cleanupErrors = [state.errorFor('notify')]
++  })
++  channelWitness('020_result_duplicate_setup', 'G2OWN-020', 'result.cleanupErrors', ({ state, captured }) => {
++    captured.result.cleanupErrors = [state.errorFor('setup'), state.errorFor('setup')]
++  })
++  channelWitness('021_failure_duplicate_setup', 'G2OWN-021', 'failure.cleanupErrors', ({ state, captured }) => {
++    captured.error.cleanupErrors = [state.errorFor('setup'), state.errorFor('setup')]
++  })
++  channelWitness('020_result_cloned_error', 'G2OWN-020', 'result.cleanupErrors', ({ captured }) => {
++    captured.result.cleanupErrors = [new Error('fixture error: setup')]
++  })
++  channelWitness('023_result_error_order_reversed', 'G2OWN-023', 'result.cleanupErrors', ({ state, captured }) => {
++    captured.result.cleanupErrors = [state.errorFor('notify'), state.errorFor('setup')]
++  })
++  channelWitness('013_manual_dispose_missing_bad', 'G2OWN-013', 'operation[3]', ({ state }) => {
++    state.operationReturns[3].errors = []
++  })
++  channelWitness('018_dispose_missing_destroy', 'G2OWN-018', 'operation[1]', ({ state }) => {
++    state.operationReturns[1].errors = []
++  })
++  channelWitness('018_repeat_dispose_returns_error', 'G2OWN-018', 'operation[2]', ({ state }) => {
++    state.operationReturns[2].errors = [state.errorFor('destroy')]
++  })
++  channelWitness('020_notification_missing_error', 'G2OWN-020', 'notification[0]', ({ state }) => {
++    state.notificationBatches[0] = []
++  })
++  channelWitness('020_notification_duplicate_callback', 'G2OWN-020', 'notification:', ({ state }) => {
++    state.notificationBatches.push([state.errorFor('setup')])
++  })
++  channelWitness('022_result_contaminated_by_operation', 'G2OWN-022', 'result.cleanupErrors', ({ state, captured }) => {
++    captured.result.cleanupErrors = [state.errorFor('bad')]
++  })
++  channelWitness('015_remove_unexpected_error', 'G2OWN-015', 'operation[1]', ({ state }) => {
++    state.operationReturns[1].errors = [state.errorFor('unexpected')]
++  })
++  const item = byId('G2OWN-017')
++  for (const unknownIndex of [1, 0]) {
++    let calls = 0
++    const executionError = new TypeError(`negative execution error ${unknownIndex}`)
++    const stubError = Object.assign(new Error('diagnostic stub'), { code: 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED' })
++    let observed
++    try {
++      await runCase(item, () => Promise.reject(calls++ === unknownIndex ? executionError : stubError))
++    } catch (error) {
++      observed = error
++    }
++    assert.equal(calls, 2, 'Both attempts must execute before classification')
++    assert.equal(observed, executionError, 'Unknown execution error must outrank the other stub')
++    const classification = classifyCaseError(item, observed).status
++    assert.equal(classification, 'EXECUTION_ERROR')
++    const witness = {
++      name: unknownIndex ? '017_A_stub_B_TypeError' : '017_A_TypeError_B_stub',
++      case_id: item.id, calls, classification,
++      original_error_identity_preserved: true, stub_did_not_mask_execution_error: true
++    }
++    witnesses.push(witness)
++    console.log(JSON.stringify({ oracle_negative_witness: witness }))
++  }
++  // 精确双 stub 仍保持冻结的 RED 投影；负例修复不得改变此基线。
++  let calls = 0
++  let exactStub
++  try {
++    await runCase(item, () => {
++      calls++
++      return Promise.reject(Object.assign(new Error('diagnostic stub'), { code: 'G2_RENDER_ATTEMPT_NOT_IMPLEMENTED' }))
++    })
++  } catch (error) {
++    exactStub = error
++  }
++  assert.equal(calls, 2)
++  assert.equal(classifyCaseError(item, exactStub).fingerprint, item.red_fingerprint)
++  console.log(JSON.stringify({ oracle_self_test_summary: {
++    diagnostic_only: true,
++    negative_witnesses_rejected: witnesses.length,
++    positive_channel_controls_accepted: channelControls,
++    exact_dual_stub_control: 'PASS',
++    helper_green_proven: false,
++    production_stub_modified: false
++  } }))
++  summary.oracle_self_test_witnesses = witnesses.length
++  summary.mode = 'oracle-self-test'
++  summary.diagnostic_only = true
++}
++
++try {
++  assert.ok(mode === 'red' || mode === 'green', '--mode must be red or green')
++  const bytes = await readFile(casesPath)
++  assert.equal(hash(bytes), casesSha256, 'Frozen Cases digest drift')
++  const contract = JSON.parse(bytes)
++  validateCases(contract)
++  summary.contract_valid = true
++  if (process.argv.includes('--self-test-oracle')) {
++    await runOracleSelfTests(contract)
++  } else {
++  const bundled = await build({
++    entryPoints: [sourcePath],
++    bundle: true,
++    write: false,
++    platform: 'node',
++    format: 'esm',
++    target: 'node18',
++    logLevel: 'silent'
++  })
++  const module = await import(`data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`)
++  assert.equal(typeof module.createG2RenderAttempt, 'function')
++  summary.production_module_imported = true
++  summary.cases_sha256 = hash(bytes)
++  summary.source_sha256 = hash(await readFile(sourcePath))
++  summary.runner_sha256 = hash(await readFile(fileURLToPath(import.meta.url)))
++  summary.bundle_sha256 = hash(bundled.outputFiles[0].text)
++  for (const item of contract.cases) {
++    summary.helper_cases_executed++
++    const record = { id: item.id, scenario: item.scenario, case_sha256: hash(canonical(item)) }
++    try {
++      await runCase(item, module.createG2RenderAttempt)
++      record.status = 'PASS'
++      summary.passed++
++    } catch (error) {
++      Object.assign(record, classifyCaseError(item, error))
++      if (record.status === 'ASSERTION_FAILURE') {
++        summary.assertion_failures++
++        summary.first_fingerprint ??= record.fingerprint
++      } else {
++        summary.execution_errors++
++      }
++    }
++    records.push(record)
++    console.log(JSON.stringify({ case: record }))
++  }
++  summary.red_rule_satisfied = summary.contract_valid && summary.production_module_imported &&
++    summary.helper_cases_executed === contract.red_rule.helper_executed &&
++    summary.assertion_failures === contract.red_rule.assertion_failures &&
++    summary.execution_errors === contract.red_rule.execution_errors &&
++    summary.first_fingerprint === contract.red_rule.first_fingerprint &&
++    records.every(record => record.fingerprint === `${record.id}: NOT_IMPLEMENTED`)
++  }
++} catch (error) {
++  summary.execution_errors++
++  console.error(error?.stack ?? error)
++}
++console.log(JSON.stringify({ summary }))
++process.exitCode = summary.execution_errors > 0 ? 2 : summary.assertion_failures > 0 ? 1 : 0
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/component-check.mjs
+@@ -0,0 +1,1016 @@
++import fs from 'node:fs/promises'
++import path from 'node:path'
++import vm from 'node:vm'
++import { createHash } from 'node:crypto'
++import { createRequire } from 'node:module'
++import { fileURLToPath } from 'node:url'
++import { parse, compileScript } from '@vue/compiler-sfc'
++import { parse as parseAst } from '@babel/parser'
++import { transform } from 'esbuild'
++import * as vue from 'vue'
++import * as lodash from 'lodash-es'
++
++// 只在内存编译磁盘 SFC；唯一变换为 AST 定位的只读 snapshot getter。
++// G2/API/Store/DOM/时钟都是具名显式 doubles，不复制 renderG2，不检测 helper 字样判通过。
++const frontend = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
++const repo = path.resolve(frontend, '../..')
++const sourcePath = path.join(
++  frontend,
++  'src/views/chart/components/views/components/ChartComponentG2Plot.vue'
++)
++const parent = path.join(repo, 'Dashboard/Artifacts')
++const artifactDir = path.join(
++  parent,
++  (await fs.readdir(parent)).find(x => x.startsWith('DT_DM-478391')),
++  'S02-F01'
++)
++const casePath = path.join(artifactDir, 'G2StageLifecycleOwnershipCases-r003.json')
++const sha = text => createHash('sha256').update(text).digest('hex')
++const canonical = value =>
++  JSON.stringify(value, (_k, v) =>
++    v && typeof v === 'object' && !Array.isArray(v)
++      ? Object.fromEntries(
++          Object.keys(v)
++            .sort()
++            .map(k => [k, v[k]])
++        )
++      : v
++  )
++const require = createRequire(import.meta.url)
++const mode = process.argv.includes('--mode')
++  ? process.argv[process.argv.indexOf('--mode') + 1]
++  : 'red'
++const report = {
++  schema_version: 'g2_component_execution_v1',
++  mode,
++  contract_valid: false,
++  actual_sfc_compiled: false,
++  component_cases_executed: 0,
++  passed: 0,
++  assertion_failures: 0,
++  execution_errors: 0,
++  cases: [],
++  supplemental_r013: [],
++  not_proven: [
++    '真实G2库和浏览器',
++    '权限',
++    'Copy/Paste MVP',
++    'stage/query/Store原子提交',
++    '全Goal完成'
++  ]
++}
++const deferred = () => {
++  let resolve, reject
++  const promise = new Promise((a, b) => {
++    resolve = a
++    reject = b
++  })
++  return { promise, resolve, reject }
++}
++const tick = async () => {
++  for (let i = 0; i < 40; i++) await Promise.resolve()
++}
++const bounded = async (label, execute) => {
++  let timer
++  try {
++    return await Promise.race([
++      execute(),
++      new Promise((_, reject) => {
++        timer = setTimeout(() => reject(new Error(`HARNESS_TIMEOUT: ${label}`)), 1500)
++      })
++    ])
++  } finally {
++    clearTimeout(timer)
++  }
++}
++let compiledCode, helperCode, contract
++function walk(node, visit) {
++  if (!node || typeof node !== 'object') return
++  if (node.type) visit(node)
++  for (const [key, value] of Object.entries(node)) {
++    if (['loc', 'start', 'end'].includes(key)) continue
++    if (Array.isArray(value)) value.forEach(x => walk(x, visit))
++    else if (value && typeof value === 'object') walk(value, visit)
++  }
++}
++async function compileActualSfc() {
++  const sourceBytes = await fs.readFile(sourcePath),
++    caseBytes = await fs.readFile(casePath)
++  if (sha(caseBytes) !== 'b8844f51bed1f0574215210003ad1d59831c75635f9b0b6ed091baf3b78bbfe7')
++    throw new Error('FROZEN_CASES_DIGEST_MISMATCH')
++  contract = JSON.parse(caseBytes)
++  if (
++    canonical(contract.component_cases.map(c => c.id)) !==
++    canonical(['G2OWN-C01', 'G2OWN-C02', 'G2OWN-C03', 'G2OWN-C04', 'G2OWN-C05', 'G2OWN-C06'])
++  )
++    throw new Error('COMPONENT_CASE_IDENTITY_MISMATCH')
++  report.contract_valid = true
++  const parsed = parse(sourceBytes.toString(), { filename: sourcePath })
++  if (parsed.errors.length) throw new Error(`SFC_PARSE: ${parsed.errors}`)
++  const script = compileScript(parsed.descriptor, { id: 'g2-ownership-actual-sfc' }).content
++  const ast = parseAst(script, { sourceType: 'module', plugins: ['typescript'] }),
++    methods = []
++  walk(ast, n => {
++    if (n.type === 'ObjectMethod' && n.key?.name === 'setup') methods.push(n)
++  })
++  if (methods.length !== 1) throw new Error('SETUP_AST_ANCHOR_NOT_UNIQUE')
++  const returns = methods[0].body.body.filter(
++    n =>
++      n.type === 'ReturnStatement' &&
++      n.argument?.type === 'Identifier' &&
++      n.argument.name === '__returned__'
++  )
++  if (returns.length !== 1) throw new Error('RETURN_AST_ANCHOR_NOT_UNIQUE')
++  const injection = `Object.defineProperty(__returned__, '__g2OwnershipSnapshot', {enumerable: false, configurable: false, get: () => Object.freeze({myChart, activeG2Scope: typeof activeG2Scope === 'undefined' ? null : activeG2Scope, g2RenderVersion, chartComponentUnmounted})});\n`
++  const at = returns[0].start,
++    instrumented = script.slice(0, at) + injection + script.slice(at)
++  const output = await transform(instrumented, {
++    loader: 'ts',
++    format: 'cjs',
++    target: 'es2022',
++    define: { 'import.meta.env.DEV': 'false' },
++    sourcefile: sourcePath
++  })
++  compiledCode = output.code
++  const helperPath = path.join(path.dirname(sourcePath), 'g2-render-attempt.ts')
++  const helperBytes = await fs.readFile(helperPath)
++  helperCode = (
++    await transform(helperBytes.toString(), {
++      loader: 'ts',
++      format: 'cjs',
++      target: 'es2022',
++      sourcefile: helperPath
++    })
++  ).code
++  report.actual_sfc_compiled = true
++  report.identity = {
++    source_path: path.relative(repo, sourcePath),
++    source_sha256_before: sha(sourceBytes),
++    helper_source_sha256: sha(helperBytes),
++    helper_compiled_sha256: sha(helperCode),
++    frozen_cases_sha256: sha(caseBytes),
++    component_case_identity_sha256: sha(canonical(contract.component_cases)),
++    compiled_bundle_sha256: sha(compiledCode),
++    runner_sha256: sha(await fs.readFile(fileURLToPath(import.meta.url))),
++    compiler_sfc_version: require('@vue/compiler-sfc/package.json').version,
++    vue_version: vue.version,
++    esbuild_version: require('esbuild/package.json').version,
++    seam: {
++      setup_anchors: methods.length,
++      return_anchors: returns.length,
++      insertion_offset: at,
++      injection_sha256: sha(injection),
++      compiled_script_sha256: sha(script),
++      instrumented_script_sha256: sha(instrumented),
++      transformation:
++        'one insertion before AST-located setup return; all original bytes preserved in order'
++    }
++  }
++}
++function environment(type = 'line') {
++  const h = {
++    events: [],
++    logs: [],
++    instances: new Map(),
++    drawPlans: [],
++    apiResponses: [],
++    drawInputs: [],
++    updatePlans: [],
++    mounts: [],
++    unmounts: [],
++    observers: [],
++    timers: new Map(),
++    queue: new Map(),
++    now: 0,
++    nextTimer: 0,
++    unmounted: false,
++    cleanupsThrow: new Set(),
++    savedUpdateCallbacks: []
++  }
++  const event = (name, id, extra = {}) =>
++    h.events.push({ name, id, post_unmount: h.unmounted, ...extra })
++  const cleanup = (key, instance) => {
++    event('install', `${key}:${instance.id}`)
++    return () => {
++      event('cleanup', `${key}:${instance.id}`)
++      if (h.cleanupsThrow.has(`${key}:${instance.id}`))
++        throw Object.assign(new Error(`cleanup-${key}-${instance.id}`), {
++          testErrorId: `cleanup-${key}-${instance.id}`
++        })
++    }
++  }
++  const container = {
++    offsetWidth: 800,
++    offsetHeight: 400,
++    clientWidth: 800,
++    clientHeight: 400,
++    closest: () => null
++  }
++  const view = {
++    id: 'v',
++    tableId: 'table',
++    render: 'antv',
++    type,
++    customAttr: { tooltip: { carousel: { enable: true } } },
++    customStyle: { legend: { displayMode: 'tile' } },
++    drillFields: [],
++    linkageActive: true,
++    chartExtRequest: {},
++    fontFamily: 'inherit'
++  }
++  h.view = view
++  const store = {
++    nowPanelTrackInfo: vue.ref({ 'v#f': true }),
++    nowPanelJumpInfo: vue.ref({}),
++    mobileInPc: false,
++    embeddedCallBack: 'no',
++    inMobile: false,
++    canvasStyleData: { dashboard: { themeColor: 'light' }, tScale: 1 },
++    setViewDataDetails: (id, response) =>
++      event('store:details', id, { response_data: response.data }),
++    setViewOriginData: (id, data) => event('store:origin', id, { data }),
++    addViewTrackFilter: () => event('store:track', 'v')
++  }
++  const chartView = {
++    library: 'G2',
++    drawChart: async options => {
++      h.drawInputs.push(options.chart.data)
++      const plan = h.drawPlans.shift()
++      if (!plan) throw new Error('HARNESS_DRAW_PLAN_MISSING')
++      event('draw', plan.id ?? 'undefined', { type: options.chart.type })
++      h.lastAction = options.action
++      if (plan.create) await plan.create.promise
++      return plan.instance
++    },
++    updateData: async (options, callback) => {
++      const plan = h.updatePlans.shift()
++      if (!plan) throw new Error('HARNESS_UPDATE_PLAN_MISSING')
++      h.savedUpdateCallbacks.push(callback)
++      event('updateData', options.chartObj?.id)
++      return await plan.promise
++    },
++    applyThemeFont: instance => event('theme', instance.id),
++    optimizeLargeData: instance => event('optimize', instance.id),
++    afterRender: async instance => {
++      event('afterRender:start', instance.id)
++      const p = h.instances.get(instance.id)
++      if (p.after) await p.after.promise
++      event('afterRender:end', instance.id)
++    }
++  }
++  h.instance = (id, gates = {}) => {
++    const instance = {
++      id,
++      destroy: () => event('destroy', id),
++      render: async () => {
++        event('render:start', id)
++        if (gates.render) await gates.render.promise
++        event('render:end', id)
++      },
++      forceFit: async () => {
++        event('forceFit:start', id)
++        if (gates.forceFit) await gates.forceFit.promise
++        event('forceFit:end', id)
++      },
++      options: (...args) => {
++        event('options', id, { write: !!args.length })
++        return { children: [] }
++      },
++      emit: (name, payload) => event(`emit:${name}`, id, { payload }),
++      getContext: () => ({
++        canvas: {
++          document: { getElementsByClassName: () => [] },
++          render: () => event('canvas:render', id)
++        },
++        views: []
++      })
++    }
++    const plan = { id, instance, ...gates }
++    h.instances.set(id, plan)
++    return plan
++  }
++  const no = () => undefined
++  const named = new Map([
++    [
++      'vue',
++      { ...vue, onMounted: fn => h.mounts.push(fn), onBeforeUnmount: fn => h.unmounts.push(fn) }
++    ],
++    ['lodash-es', lodash],
++    [
++      '@/views/chart/components/js/panel/types/impl/g2-assist-line',
++      { installG2AssistLineVisibility: instance => cleanup('assist', instance) }
++    ],
++    [
++      '@/views/chart/components/js/panel/types/impl/g2-legend-tile',
++      {
++        applyG2TiledLegend: options => options,
++        installG2TiledLegendStateAdapter: instance => cleanup('tiled', instance),
++        replayG2TiledLegendSelection: (_options, emit) => emit('harness:legend-replay')
++      }
++    ],
++    [
++      '@/api/chart',
++      {
++        getData: request => {
++          event('getData', request.id)
++          if (!h.apiResponses.length) throw new Error('HARNESS_API_RESPONSE_MISSING')
++          return Promise.resolve(h.apiResponses.shift())
++        }
++      }
++    ],
++    [
++      '@/views/chart/components/js/panel/types',
++      { ChartLibraryType: { G2: 'G2', L7: 'L7', L7_PLOT: 'L7_PLOT' } }
++    ],
++    ['@/views/chart/components/js/panel/types/impl/g2', { isLargeDataLabelMark: () => false }],
++    ['@/views/chart/components/js/panel', { default: { getChartView: () => chartView } }],
++    ['@/store/modules/app', { useAppStoreWithOut: () => ({}) }],
++    ['@/store/modules/data-visualization/dvMain', { dvMainStoreWithOut: () => store }],
++    [
++      'pinia',
++      {
++        storeToRefs: target =>
++          Object.fromEntries(
++            Object.entries(target).map(([k, v]) => [k, vue.isRef(v) ? v : vue.toRef(target, k)])
++          )
++      }
++    ],
++    [
++      '@/views/chart/components/js/util',
++      {
++        getColorFormAlphaColor: x => x,
++        hexColorToRGBA: x => x,
++        parseJson: x => (typeof x === 'string' ? JSON.parse(x) : x)
++      }
++    ],
++    ['../../editor/util/chart', { BASE_VIEW_CONFIG: {} }],
++    ['@/utils/canvasStyle', { customAttrTrans: {}, customStyleTrans: {}, recursionTransObj: no }],
++    ['@/utils/utils', { deepCopy: lodash.cloneDeep, isMobile: () => false }],
++    ['@/utils/canvasUtils', { isDashboard: () => true, trackBarStyleCheck: no }],
++    [
++      '@/hooks/web/useEmitt',
++      { useEmitt: () => ({ emitter: { emit: name => event(`emitter:${name}`, 'v') } }) }
++    ],
++    ['@/hooks/web/useI18n', { useI18n: () => ({ t: x => x }) }],
++    ['@antv/l7', { ExportImage: class ExportImage {} }],
++    [
++      '@/views/chart/components/js/panel/common/common_antv',
++      {
++        configAxisTitleOverflowTooltip: no,
++        configEmptyDataStyle: () => event('empty-style', 'v'),
++        installG2SliderAdapter: instance => cleanup('slider', instance)
++      }
++    ],
++    [
++      '@/views/chart/components/js/panel/types/impl/g2-legend-pagination',
++      { installG2SideLegendPaginationAdapter: instance => cleanup('pagination', instance) }
++    ],
++    ['element-plus-secondary', { ElMessage: { error: value => event('message:error', value) } }],
++    [
++      '@/views/chart/components/js/G2TooltipCarousel',
++      {
++        default: {
++          getInstanceByContainerId: () => undefined,
++          destroyByContainer: id => event('carousel:destroy', id),
++          enqueueResize: (id, fn) => {
++            event('resize:enqueue', id)
++            h.queue.set(id, fn)
++          },
++          dequeueResize: id => {
++            event('resize:dequeue', id)
++            h.queue.delete(id)
++          }
++        }
++      }
++    ],
++    ['@/views/chart/components/js/panel/charts/g2/bar/barUtil', { listenerTooltipShow: no }],
++    [
++      './chart-refresh-mock',
++      {
++        createChartRefreshMock: () => {
++          throw new Error('DEV_MOCK_MUST_NOT_RUN')
++        }
++      }
++    ],
++    ['@/components/visualization/ViewTrackBar.vue', { default: {} }],
++    ['@/views/chart/components/views/components/ChartError.vue', { default: {} }]
++  ])
++  const helperModule = { exports: {} }
++  new vm.Script(helperCode, { filename: 'actual-g2-render-attempt.compiled.cjs' }).runInNewContext({
++    module: helperModule,
++    exports: helperModule.exports,
++    Error
++  })
++  named.set('./g2-render-attempt', helperModule.exports)
++  const module = { exports: {} }
++  const context = vm.createContext({
++    module,
++    exports: module.exports,
++    require: name => {
++      if (!named.has(name)) throw new Error(`UNDECLARED_MODULE_DOUBLE: ${name}`)
++      return { __esModule: true, ...named.get(name) }
++    },
++    console: {
++      error: (...args) => h.logs.push({ channel: 'error', args }),
++      warn: (...args) => h.logs.push({ channel: 'warn', args })
++    },
++    document: { getElementById: () => container },
++    SVGSVGElement: class SVGSVGElement {},
++    ResizeObserver: class ResizeObserver {
++      constructor(fn) {
++        this.fn = fn
++        this.kind = 'resize'
++        this.disconnected = 0
++        h.observers.push(this)
++      }
++      observe() {
++        event('observer:observe', this.kind)
++      }
++      disconnect() {
++        this.disconnected++
++        event('observer:disconnect', this.kind)
++      }
++    },
++    IntersectionObserver: class IntersectionObserver {
++      constructor(fn) {
++        this.fn = fn
++        this.kind = 'intersection'
++        this.disconnected = 0
++        h.observers.push(this)
++      }
++      observe() {
++        event('observer:observe', this.kind)
++      }
++      disconnect() {
++        this.disconnected++
++        event('observer:disconnect', this.kind)
++      }
++    },
++    setTimeout: (fn, delay = 0) => {
++      const id = ++h.nextTimer
++      h.timers.set(id, { fn, at: h.now + delay })
++      return id
++    },
++    clearTimeout: id => {
++      h.timers.delete(id)
++      event('timer:clear', String(id))
++    },
++    requestAnimationFrame: fn => {
++      event('replay:scheduled', h.snapshot?.().myChart?.id)
++      fn()
++      return 1
++    },
++    cancelAnimationFrame: no
++  })
++  new vm.Script(compiledCode, {
++    filename: 'actual-ChartComponentG2Plot.compiled.cjs'
++  }).runInContext(context)
++  let exposed
++  h.setup = module.exports.default.setup(
++    vue.reactive({
++      element: { dashboardHidden: false, actionSelection: { linkageActive: 'manual' } },
++      view,
++      showPosition: 'canvas',
++      scale: 1,
++      terminal: 'pc',
++      suffixId: 'common',
++      fontFamily: 'inherit',
++      active: true
++    }),
++    {
++      expose: value => {
++        exposed = value
++      },
++      emit: name => event(`vue:${name}`, 'v')
++    }
++  )
++  h.public = exposed
++  h.snapshot = () => h.setup.__g2OwnershipSnapshot
++  const descriptor = Object.getOwnPropertyDescriptor(h.setup, '__g2OwnershipSnapshot')
++  if (!descriptor?.get || descriptor.set || !Object.isFrozen(h.snapshot()))
++    throw new Error('SNAPSHOT_NOT_READ_ONLY')
++  h.mounts.forEach(fn => fn())
++  h.advance = async (ms = 300) => {
++    h.now += ms
++    const due = [...h.timers].filter(([, t]) => t.at <= h.now)
++    for (const [id, timer] of due) if (h.timers.delete(id)) timer.fn()
++    await tick()
++  }
++  h.request = async (
++    data = { fields: [{ id: 'f' }], data: [{ field: 'a', value: 1 }] },
++    auto = false
++  ) => {
++    h.apiResponses.push({ ...lodash.cloneDeep(view), code: 0, data, drillFilters: [] })
++    let complete = false
++    await h.public.calcData(
++      view,
++      () => {
++        complete = true
++        event('request:callback', 'v')
++      },
++      auto
++    )
++    await tick()
++    return () => complete
++  }
++  h.ready = async (id = 'O') => {
++    const p = h.instance(id)
++    h.drawPlans.push(p)
++    const done = await h.request()
++    await h.advance()
++    if (!done() || h.snapshot().myChart !== p.instance)
++      throw new Error(`HARNESS_INITIAL_OWNER_NOT_ESTABLISHED: ${id}`)
++    return p
++  }
++  h.activateLinkage = async () => {
++    h.lastAction({
++      data: {
++        data: {
++          field: 'a',
++          name: 'f',
++          value: 1,
++          dimensionList: [{ id: 'f', value: 'a' }],
++          quotaList: [{ id: 'q', value: 1 }]
++        }
++      }
++    })
++    await tick()
++    if (!h.events.some(e => e.name === 'store:track'))
++      throw new Error('HARNESS_LINKAGE_NOT_ESTABLISHED')
++  }
++  h.resize = async () => {
++    h.observers
++      .find(o => o.kind === 'resize')
++      .fn([{ borderBoxSize: [{ inlineSize: 900, blockSize: 500 }] }])
++    await h.advance()
++    const callbacks = [...h.queue.values()]
++    if (callbacks.length !== 1) throw new Error('HARNESS_RESIZE_NOT_ENQUEUED')
++    return callbacks[0]
++  }
++  h.unmount = () => {
++    h.unmounted = true
++    h.unmounts.forEach(fn => fn())
++  }
++  h.count = (name, id) =>
++    h.events.filter(e => e.name === name && (id === undefined || e.id === id)).length
++  h.errorIds = () =>
++    h.logs.flatMap(x =>
++      x.args.flatMap(value =>
++        value?.testErrorId
++          ? [value.testErrorId]
++          : value?.cleanupErrors?.map(e => e.testErrorId).filter(Boolean) ??
++            (Array.isArray(value) ? value.map(e => e.testErrorId).filter(Boolean) : [])
++      )
++    )
++  h.errorCodes = () =>
++    h.logs.flatMap(x =>
++      x.args.flatMap(value =>
++        [value?.code, value?.originalError?.code, value?.cause?.code].filter(Boolean)
++      )
++    )
++  h.cleanupStatus = () => ({
++    resize_observer_disconnect_count: h.observers.find(o => o.kind === 'resize').disconnected,
++    intersection_observer_disconnect_count: h.observers.find(o => o.kind === 'intersection')
++      .disconnected,
++    timers_cancelled: h.timers.size === 0,
++    queued_resize_dequeued: h.queue.size === 0
++  })
++  h.checkExecution = () => {
++    const unexpected = value => {
++      if (Array.isArray(value)) return value.map(unexpected).find(Boolean)
++      if (!value || typeof value !== 'object' || !value.message) return null
++      if (value.testErrorId?.startsWith('cleanup-')) return null
++      if (value.code === 'G2_RENDER_INSTANCE_MISSING') return null
++      if (value.originalError?.code === 'G2_RENDER_INSTANCE_MISSING') return null
++      return value
++    }
++    const error = h.logs
++      .flatMap(x => x.args)
++      .map(unexpected)
++      .find(Boolean)
++    if (error) throw new Error(`SFC_EXECUTION_ERROR: ${error.message}`)
++  }
++  return h
++}
++const handlers = {
++  async 'G2OWN-C01'(check, o) {
++    const h = environment()
++    await h.ready()
++    const create = deferred(),
++      render = deferred(),
++      after = deferred(),
++      next = h.instance('N', { create, render, after })
++    h.drawPlans.push(next)
++    await h.request()
++    await h.advance()
++    check('O destroyed before N create completes', h.count('destroy', 'O') === 1)
++    create.resolve()
++    await tick()
++    if (h.count('render:start', 'N') !== 1) throw new Error('HARNESS_N_RENDER_GATE_NOT_REACHED')
++    const pending = h.snapshot()
++    o.after_create_before_ready = {
++      myChart: pending.myChart?.id ?? null,
++      N_published: pending.myChart === next.instance,
++      O_destroy_count: h.count('destroy', 'O'),
++      render_started: h.count('render:start', 'N'),
++      after_started: h.count('afterRender:start', 'N')
++    }
++    check('myChart null while N render pending', pending.myChart === null)
++    check('N not published before ready', pending.myChart !== next.instance)
++    render.resolve()
++    await tick()
++    check(
++      'afterRender N really deferred',
++      h.count('afterRender:start', 'N') === 1 && h.count('afterRender:end', 'N') === 0
++    )
++    check('N not published while afterRender pending', h.snapshot().myChart === null)
++    after.resolve()
++    await tick()
++    const ready = h.snapshot()
++    o.after_ready = {
++      myChart: ready.myChart?.id ?? null,
++      active_scope_instance: ready.activeG2Scope?.instance?.id ?? null,
++      O_destroy_count: h.count('destroy', 'O')
++    }
++    check('N published after ready', ready.myChart === next.instance)
++    check('active scope owns N', ready.activeG2Scope?.instance === next.instance)
++    check('O destroy exactly once', h.count('destroy', 'O') === 1)
++    h.checkExecution()
++    o.events = h.events
++  },
++  async 'G2OWN-C02'(check, o) {
++    const h = environment()
++    await h.ready()
++    await h.activateLinkage()
++    const update = deferred()
++    h.updatePlans.push(update)
++    await h.request(undefined, true)
++    await h.advance()
++    if (h.savedUpdateCallbacks.length !== 1) throw new Error('HARNESS_UPDATE_NOT_STARTED')
++    const callback = h.savedUpdateCallbacks[0],
++      n = h.instance('N')
++    h.drawPlans.push(n)
++    await h.request()
++    const before = h.events.length
++    callback()
++    await tick()
++    const staleInstallBefore = h.events
++      .slice(before)
++      .filter(e => e.name === 'install' && e.id === 'assist:O').length
++    update.resolve(true)
++    await tick()
++    const staleReplay = h.events
++      .slice(before)
++      .filter(e => e.name === 'replay:scheduled' && e.id === 'O').length
++    await h.advance()
++    check('N full render reaches ready', h.snapshot().myChart === n.instance)
++    const after = h.events.length
++    callback()
++    await tick()
++    const touchedN = h.events
++        .slice(after)
++        .some(e => ['cleanup', 'install'].includes(e.name) && e.id.endsWith(':N')),
++      staleInstallAfter = h.events.slice(after).filter(e => e.name === 'install').length
++    Object.assign(o, {
++      stale_O_assist_install_count: staleInstallBefore + staleInstallAfter,
++      stale_O_replay_count: staleReplay,
++      N_cleanup_untouched: !touchedN,
++      events: h.events
++    })
++    check(
++      'old callback never installs assist after generation switch',
++      o.stale_O_assist_install_count === 0
++    )
++    check('old update never replays after generation switch', staleReplay === 0)
++    check('old callback leaves N cleanup untouched', !touchedN)
++    h.checkExecution()
++  },
++  async 'G2OWN-C03'(check, o) {
++    o.subcases = []
++    for (const stage of ['queued', 'forceFit_pending']) {
++      const h = environment(),
++        forceFit = deferred(),
++        p = h.instance('O', { forceFit })
++      h.drawPlans.push(p)
++      await h.request()
++      await h.advance()
++      await h.activateLinkage()
++      const callback = await h.resize()
++      let pending
++      if (stage === 'forceFit_pending') {
++        pending = callback()
++        await tick()
++        if (h.count('forceFit:start', 'O') !== 1) throw new Error('HARNESS_FORCEFIT_NOT_STARTED')
++      }
++      h.unmount()
++      const marker = h.events.length
++      if (stage === 'queued') pending = callback()
++      forceFit.resolve()
++      await pending
++      await tick()
++      const post = h.events.slice(marker),
++        counts = {
++          options: post.filter(e => e.name === 'options').length,
++          forceFit: post.filter(e => e.name === 'forceFit:start').length,
++          replay: post.filter(
++            e => e.name === 'replay:scheduled' || e.name === 'emit:harness:legend-replay'
++          ).length
++        }
++      o.subcases.push({
++        stage,
++        post_unmount_application_calls: counts,
++        O_destroy_count: h.count('destroy', 'O'),
++        cleanup: h.cleanupStatus(),
++        events: h.events
++      })
++      check(
++        `${stage}: no post-unmount application calls`,
++        Object.values(counts).every(x => x === 0)
++      )
++      check(`${stage}: O destroyed once`, h.count('destroy', 'O') === 1)
++      h.checkExecution()
++    }
++  },
++  async 'G2OWN-C04'(check, o) {
++    o.subcases = []
++    for (const stage of ['ready_owner', 'pending_N']) {
++      const h = environment()
++      await h.ready()
++      let render
++      await h.resize()
++      if (stage === 'ready_owner') {
++        h.cleanupsThrow.add('assist:O')
++        h.observers
++          .find(o => o.kind === 'resize')
++          .fn([{ borderBoxSize: [{ inlineSize: 1000, blockSize: 600 }] }])
++      } else {
++        render = deferred()
++        h.drawPlans.push(h.instance('N', { render }))
++        await h.request()
++        await h.advance()
++        if (h.count('render:start', 'N') !== 1) throw new Error('HARNESS_PENDING_N_NOT_STARTED')
++      }
++      const beforeUnmountInstance = h.snapshot().myChart
++      h.unmount()
++      const marker = h.events.length
++      if (render) {
++        render.resolve()
++        await tick()
++      }
++      const status = h.cleanupStatus(),
++        observed = {
++          stage,
++          error_observed_ids: h.errorIds(),
++          O_destroy_count: h.count('destroy', 'O'),
++          N_destroy_count: h.count('destroy', 'N'),
++          remaining_cleanups_executed: ['slider', 'tiled', 'pagination'].every(
++            key => h.count('cleanup', `${key}:O`) === 1
++          ),
++          post_unmount_publish_count:
++            h.snapshot().myChart === h.instances.get('N')?.instance &&
++            beforeUnmountInstance !== h.instances.get('N')?.instance
++              ? 1
++              : 0,
++          cleanup: status,
++          post_unmount_events: h.events.slice(marker),
++          events: h.events
++        }
++      o.subcases.push(observed)
++      check(`${stage}: O destroyed once`, observed.O_destroy_count === 1)
++      for (const [key, expected] of Object.entries({
++        resize_observer_disconnect_count: 1,
++        intersection_observer_disconnect_count: 1,
++        timers_cancelled: true,
++        queued_resize_dequeued: true
++      }))
++        check(`${stage}: ${key}`, status[key] === expected)
++      if (stage === 'ready_owner') {
++        check(
++          'cleanup assist error observed',
++          observed.error_observed_ids.includes('cleanup-assist-O')
++        )
++        check('other registered cleanups continue', observed.remaining_cleanups_executed)
++      } else {
++        check('pending N destroyed once', observed.N_destroy_count === 1)
++        check('unmounted N not published', observed.post_unmount_publish_count === 0)
++      }
++      h.checkExecution()
++    }
++  },
++  async 'G2OWN-C05'(check, o) {
++    const h = environment()
++    await h.ready()
++    h.cleanupsThrow.add('assist:O')
++    const n = h.instance('N')
++    h.drawPlans.push(n)
++    const done = await h.request()
++    await h.advance()
++    Object.assign(o, {
++      error_observed_ids: h.errorIds(),
++      error_observation_count: h.errorIds().filter(x => x === 'cleanup-assist-O').length,
++      O_destroy_count: h.count('destroy', 'O'),
++      N_ready: h.snapshot().myChart === n.instance && h.count('afterRender:end', 'N') === 1,
++      observer_disconnect_count: h.count('observer:disconnect'),
++      remaining_O_cleanups_executed: ['slider', 'tiled', 'pagination'].every(
++        key => h.count('cleanup', `${key}:O`) === 1
++      ),
++      request_settled: done(),
++      events: h.events
++    })
++    check('cleanup error observed exactly once', o.error_observation_count === 1)
++    check('O destroyed once despite cleanup failure', o.O_destroy_count === 1)
++    check('N ready despite old cleanup failure', o.N_ready)
++    check('replacement keeps observers connected', o.observer_disconnect_count === 0)
++    check('remaining O cleanups continue', o.remaining_O_cleanups_executed)
++    h.checkExecution()
++  },
++  async 'G2OWN-C06'(check, o) {
++    o.subcases = []
++    for (const c of contract.component_cases.find(c => c.id === 'G2OWN-C06').arrange.subcases) {
++      const h = environment(c.type)
++      h.drawPlans.push({ instance: undefined })
++      const rows = c.rows ?? [],
++        done = await h.request({ fields: [], data: rows })
++      await h.advance()
++      if ((c.path === 'legacy' || rows.length > 0) && h.count('draw') !== 1)
++        throw new Error(`HARNESS_EXPECTED_RENDERER_NOT_REACHED: ${c.type}`)
++      const observed = {
++        type: c.type,
++        path: c.path,
++        rows,
++        draw_calls: h.count('draw'),
++        error_codes: h.errorCodes(),
++        myChart: h.snapshot().myChart?.id ?? null,
++        active_scope: !!h.snapshot().activeG2Scope,
++        callback_settled: done(),
++        events: h.events
++      }
++      o.subcases.push(observed)
++      if (c.path === 'legacy') {
++        check(
++          `${c.type}: actual legacy draw invoked and settled`,
++          observed.draw_calls === 1 && observed.callback_settled
++        )
++        check(
++          `${c.type}: no new missing instance error`,
++          !observed.error_codes.includes('G2_RENDER_INSTANCE_MISSING')
++        )
++      } else if (rows.length === 0) {
++        check('line explicit empty skips drawChart', observed.draw_calls === c.draw_calls)
++        check(
++          'line empty ends without instance/scope/errors',
++          observed.myChart === null &&
++            !observed.active_scope &&
++            observed.error_codes.length === 0 &&
++            observed.callback_settled
++        )
++      } else {
++        check(
++          'nonempty line actual draw invoked and settled',
++          observed.draw_calls === 1 && observed.callback_settled
++        )
++        check(
++          'nonempty line undefined reports missing instance',
++          observed.error_codes.includes('G2_RENDER_INSTANCE_MISSING')
++        )
++        check(
++          'nonempty line undefined not published',
++          observed.myChart === null && !observed.active_scope
++        )
++      }
++      h.checkExecution()
++    }
++  }
++}
++async function supplementalR013() {
++  const variants = [
++    ['missing_response_data', undefined],
++    ['null_response_data', null],
++    ['missing_rows', { fields: [] }],
++    ['null_rows', { fields: [], data: null }],
++    ['object_rows', { fields: [], data: {} }],
++    ['zero_rows', { fields: [], data: 0 }],
++    ['explicit_empty', { fields: [], data: [] }],
++    ['nonempty_rows', { fields: [], data: [{ value: 1 }] }]
++  ]
++  for (const [id, input] of variants) {
++    const h = environment()
++    h.drawPlans.push({ instance: undefined })
++    h.apiResponses.push({ ...lodash.cloneDeep(h.view), code: 0, data: input, drillFilters: [] })
++    let done = false
++    await h.public.calcData(h.view, () => {
++      done = true
++    })
++    await tick()
++    await h.advance()
++    const actual = h.drawInputs[0]
++    const drawCalls = h.count('draw')
++    const explicitEmpty = Array.isArray(input?.data) && input.data.length === 0
++    if (
++      !done ||
++      drawCalls > 1 ||
++      (!explicitEmpty && drawCalls !== 1) ||
++      (drawCalls === 1 && canonical(actual) !== canonical(input))
++    )
++      throw new Error(`R013_REACHABILITY_EXECUTION_ERROR: ${id}`)
++    const errorCodes = h.errorCodes()
++    const violations = []
++    if (explicitEmpty) {
++      if (drawCalls !== 0) violations.push('explicit empty must skip drawChart')
++      if (errorCodes.length) violations.push('explicit empty must not report missing instance')
++    } else {
++      if (drawCalls !== 1) violations.push('non-explicit-empty must call original renderer')
++      if (!errorCodes.includes('G2_RENDER_INSTANCE_MISSING'))
++        violations.push('undefined renderer outcome must report missing instance')
++    }
++    if (h.snapshot().myChart !== null || h.snapshot().activeG2Scope !== null)
++      violations.push('no undefined outcome may publish an instance')
++    report.supplemental_r013.push({
++      id,
++      input: input === undefined ? '[undefined]' : input,
++      actual_draw_chart_data: drawCalls
++        ? actual === undefined
++          ? '[undefined]'
++          : actual
++        : '[drawChart not called]',
++      draw_calls: drawCalls,
++      structurally_equal_to_response: drawCalls ? canonical(actual) === canonical(input) : null,
++      callback_settled: done,
++      line_legacy_length_guard_returns_undefined: !input?.data?.length,
++      explicit_empty_design_predicate: explicitEmpty,
++      expected_path: explicitEmpty
++        ? 'empty; no draw; no missing-instance error'
++        : 'original renderer; undefined must be missing-instance error',
++      error_codes: errorCodes,
++      status: violations.length ? 'assertion_failure' : 'pass',
++      violations
++    })
++    h.checkExecution()
++  }
++}
++try {
++  if (!['red', 'green'].includes(mode)) throw new Error('MODE_MUST_BE_RED_OR_GREEN')
++  await compileActualSfc()
++  for (const c of contract.component_cases) {
++    const result = {
++      id: c.id,
++      scenario: c.scenario,
++      frozen_case_sha256: sha(canonical(c)),
++      observations: {},
++      assertions: [],
++      violations: []
++    }
++    const check = (label, pass) => {
++      result.assertions.push({ label, pass: !!pass })
++      if (!pass) result.violations.push(label)
++    }
++    try {
++      await bounded(c.id, () => handlers[c.id](check, result.observations))
++      result.status = result.violations.length ? 'assertion_failure' : 'pass'
++      if (result.violations.length) {
++        result.fingerprint =
++          c.id === 'G2OWN-C01' && result.observations.after_create_before_ready?.N_published
++            ? c.oracle.baseline_failure
++            : `${c.id}: CONTRACT_ASSERTION_FAILED`
++        report.assertion_failures++
++      } else report.passed++
++    } catch (error) {
++      result.status = 'execution_error'
++      result.error = { name: error.name, message: error.message, stack: error.stack }
++      report.execution_errors++
++    }
++    report.component_cases_executed++
++    report.cases.push(result)
++  }
++  await bounded('R013', supplementalR013)
++  report.identity.source_sha256_after = sha(await fs.readFile(sourcePath))
++  if (report.identity.source_sha256_before !== report.identity.source_sha256_after)
++    throw new Error('SOURCE_CHANGED_DURING_EXECUTION')
++  report.first_fingerprint = report.cases.find(c => c.fingerprint)?.fingerprint ?? null
++  report.red_rule_satisfied =
++    report.contract_valid &&
++    report.actual_sfc_compiled &&
++    report.component_cases_executed === 6 &&
++    report.execution_errors === 0 &&
++    report.first_fingerprint === 'G2OWN-C01: HELPER_NOT_CONNECTED'
++  report.supplemental_r013_passed = report.supplemental_r013.filter(c => c.status === 'pass').length
++  report.supplemental_r013_assertion_failures = report.supplemental_r013.filter(
++    c => c.status === 'assertion_failure'
++  ).length
++  report.green_rule_satisfied =
++    report.contract_valid &&
++    report.actual_sfc_compiled &&
++    report.component_cases_executed === 6 &&
++    report.execution_errors === 0 &&
++    report.passed === 6 &&
++    report.supplemental_r013_passed === 8
++} catch (error) {
++  report.execution_errors++
++  report.fatal_error = { name: error.name, message: error.message, stack: error.stack }
++}
++console.log(JSON.stringify(report, null, 2))
++process.exitCode = report.execution_errors
++  ? 2
++  : report.assertion_failures || report.supplemental_r013_assertion_failures
++  ? 1
++  : 0
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/reentrant-replace-check.mjs
+@@ -0,0 +1,142 @@
++import assert from 'node:assert/strict'
++import { createHash } from 'node:crypto'
++import { readFile } from 'node:fs/promises'
++import { fileURLToPath } from 'node:url'
++import path from 'node:path'
++import { build } from 'esbuild'
++
++const root = fileURLToPath(new URL('../../', import.meta.url))
++const sourcePath = path.join(root, 'src/views/chart/components/views/components/g2-render-attempt.ts')
++const hash = bytes => createHash('sha256').update(bytes).digest('hex')
++const fixtures = [
++  { id: 'HV001-001', scenario: 'nested_replace', expect: ['old', 'inner', 'outer', 'destroy'], errors: [] },
++  { id: 'HV001-002', scenario: 'inner_throws', expect: ['old', 'inner', 'outer', 'destroy'], errors: ['inner'] },
++  { id: 'HV001-003', scenario: 'two_levels_and_errors', expect: ['old', 'inner', 'deep', 'outer', 'destroy'], errors: ['old', 'inner', 'deep'] },
++  { id: 'HV001-004', scenario: 'inner_disposes', expect: ['old', 'inner', 'sibling', 'destroy', 'outer'], errors: [] },
++  { id: 'HV001-005', scenario: 'old_disposes_control', expect: ['old', 'inner', 'sibling', 'destroy', 'outer'], errors: [] },
++  { id: 'HV001-006', scenario: 'remove_control', expect: ['old', 'inner', 'destroy'], errors: [] },
++  { id: 'HV001-007', scenario: 'other_key_order', expect: ['old', 'inner', 'outer', 'b', 'a', 'destroy'], errors: [] },
++  { id: 'HV001-008', scenario: 'inner_and_notify_throw', expect: ['old', 'inner', 'outer', 'destroy'], errors: ['inner', 'notify'] },
++  { id: 'HV001-009', scenario: 'same_function_new_registration', expect: ['old', 'inner', 'inner', 'outer', 'destroy'], errors: [] },
++  { id: 'HV001-010', scenario: 'setup_nested_replace', expect: ['old', 'inner', 'outer', 'destroy'], errors: ['inner'] }
++]
++
++function sameErrors(actual, expected, label) {
++  assert.ok(Array.isArray(actual), `${label}: array required`)
++  assert.equal(actual.length, expected.length, `${label}: length`)
++  expected.forEach((error, index) => assert.equal(actual[index], error, `${label}: reference/order ${index}`))
++}
++
++async function execute(fixture, createAttempt) {
++  const events = []
++  const counts = new Map()
++  const errors = Object.fromEntries(['old', 'inner', 'deep', 'notify'].map(id => [id, new Error(id)]))
++  const batches = []
++  const nestedReturns = []
++  let scope
++  let replacementErrors
++  const record = name => {
++    events.push(name)
++    counts.set(name, (counts.get(name) ?? 0) + 1)
++  }
++  const nestedRegister = (key, cleanup) => {
++    const returned = scope.replaceCleanup(key, cleanup)
++    nestedReturns.push(returned)
++    sameErrors(returned, [], 'nested registration')
++  }
++  const inner = () => {
++    record('inner')
++    if (fixture.scenario === 'two_levels_and_errors') {
++      nestedRegister('key', () => { record('deep'); throw errors.deep })
++    }
++    if (fixture.scenario === 'same_function_new_registration' && counts.get('inner') === 1) {
++      nestedRegister('key', inner)
++    }
++    if (fixture.scenario === 'inner_disposes') sameErrors(scope.dispose(), [], 'reentrant dispose')
++    if (fixture.errors.includes('inner')) throw errors.inner
++  }
++  const old = () => {
++    record('old')
++    nestedRegister('key', inner)
++    if (fixture.scenario === 'old_disposes_control') sameErrors(scope.dispose(), [], 'old reentrant dispose')
++    if (fixture.errors.includes('old')) throw errors.old
++  }
++  const outer = () => record('outer')
++  const installAndReplace = currentScope => {
++    scope = currentScope
++    if (fixture.scenario.includes('disposes')) nestedRegister('sibling', () => record('sibling'))
++    if (fixture.scenario === 'other_key_order') nestedRegister('a', () => record('a'))
++    nestedRegister('key', old)
++    if (fixture.scenario === 'other_key_order') nestedRegister('b', () => record('b'))
++    replacementErrors = fixture.scenario === 'remove_control'
++      ? scope.removeCleanup('key')
++      : scope.replaceCleanup('key', outer)
++  }
++  const result = await createAttempt({
++    create: () => ({ kind: 'instance', instance: { destroy: () => record('destroy') } }),
++    isCurrent: () => true,
++    setup(currentScope) {
++      if (fixture.scenario === 'setup_nested_replace') installAndReplace(currentScope)
++    },
++    render() {},
++    afterRender() {},
++    onCleanupErrors(cleanupErrors) {
++      batches.push([...cleanupErrors])
++      if (fixture.errors.includes('notify')) throw errors.notify
++    }
++  })
++  assert.equal(result.status, 'ready')
++  if (fixture.scenario !== 'setup_nested_replace') installAndReplace(result.scope)
++  const expectedErrors = fixture.errors.map(id => errors[id])
++  sameErrors(replacementErrors, expectedErrors, 'outer replace/remove return')
++  sameErrors(result.cleanupErrors, fixture.scenario === 'setup_nested_replace' ? expectedErrors : [], 'attempt result return')
++  const notified = fixture.errors.filter(id => id !== 'notify').map(id => errors[id])
++  assert.equal(batches.length, notified.length ? 1 : 0, 'notification count')
++  if (notified.length) sameErrors(batches[0], notified, 'notification error identity/order')
++  sameErrors(result.scope.dispose(), [], 'final dispose')
++  sameErrors(result.scope.dispose(), [], 'repeat dispose')
++  assert.equal(result.scope.closed, true)
++  assert.deepEqual(events, fixture.expect, 'no registered cleanup may be silently overwritten')
++  assert.equal(counts.get('inner'), fixture.scenario === 'same_function_new_registration' ? 2 : 1, 'inner cleanup count')
++  if (fixture.scenario !== 'remove_control') assert.equal(counts.get('outer'), 1, 'outer cleanup count')
++  assert.equal(counts.get('destroy'), 1, 'destroy count')
++  if (fixture.scenario === 'two_levels_and_errors') assert.equal(counts.get('deep'), 1)
++  return { events, nested_calls: nestedReturns.length, replacement_error_ids: fixture.errors }
++}
++
++const summary = { scenarios: fixtures.length, executed: 0, passed: 0, assertion_failures: 0, execution_errors: 0, production_module_imported: false }
++try {
++  const bundle = await build({ entryPoints: [sourcePath], bundle: true, write: false, platform: 'node', format: 'esm', target: 'node18', logLevel: 'silent' })
++  const module = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`)
++  assert.equal(typeof module.createG2RenderAttempt, 'function')
++  summary.production_module_imported = true
++  summary.source_sha256 = hash(await readFile(sourcePath))
++  summary.runner_sha256 = hash(await readFile(fileURLToPath(import.meta.url)))
++  summary.fixture_identity_sha256 = hash(JSON.stringify(fixtures))
++  for (const fixture of fixtures) {
++    summary.executed++
++    const row = { id: fixture.id, scenario: fixture.scenario, fixture_sha256: hash(JSON.stringify(fixture)) }
++    try {
++      row.observed = await execute(fixture, module.createG2RenderAttempt)
++      row.status = 'PASS'
++      summary.passed++
++    } catch (error) {
++      if (error?.code === 'ERR_ASSERTION') {
++        row.status = 'ASSERTION_FAILURE'
++        row.fingerprint = `${fixture.id}: REENTRANT_CLEANUP_CONTRACT`
++        row.message = error.message
++        summary.assertion_failures++
++      } else {
++        row.status = 'EXECUTION_ERROR'
++        row.message = String(error?.stack ?? error)
++        summary.execution_errors++
++      }
++    }
++    console.log(JSON.stringify({ case: row }))
++  }
++} catch (error) {
++  summary.execution_errors++
++  console.error(error?.stack ?? error)
++}
++console.log(JSON.stringify({ summary }))
++process.exitCode = summary.execution_errors ? 2 : summary.assertion_failures ? 1 : 0
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/browser/index.html
+@@ -0,0 +1,42 @@
++<!doctype html>
++<html lang="zh-CN">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <title>G2 返回实例所有权浏览器夹具</title>
++    <style>
++      body { margin: 24px; font: 15px/1.6 system-ui, sans-serif; color: #182230; background: #f5f7fa; }
++      h1 { font-size: 23px; margin-bottom: 8px; }
++      p { max-width: 1000px; }
++      .controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
++      button { padding: 9px 16px; border: 1px solid #9aa9bc; border-radius: 5px; background: white; cursor: pointer; font: inherit; }
++      button:disabled { opacity: .45; cursor: default; }
++      button:focus-visible { outline: 3px solid #2d74da; }
++      #chart-host { width: 760px; min-height: 340px; background: white; border: 1px solid #ccd5e0; }
++      .chart-slot { height: 340px; }
++      pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px; background: #fff; border: 1px solid #ccd5e0; }
++      #runtime-errors { color: #9e1b1b; min-height: 24px; }
++    </style>
++  </head>
++  <body>
++    <h1>G2 返回实例所有权浏览器夹具</h1>
++    <p>仅测试生产 createG2RenderAttempt 与真实 AntV G2 普通折线。静态虚构数据；此页不是 DataEase 完整 renderer 或过滤复制粘贴界面 MVP。</p>
++    <div class="controls" aria-label="夹具操作">
++      <button id="render-o">渲染 O</button>
++      <button id="render-n">延迟渲染 N</button>
++      <button id="release-n" disabled>释放 N</button>
++      <button id="render-empty">空数据</button>
++      <button id="resize">调整宽度</button>
++      <button id="unmount">卸载</button>
++      <button id="repeat">重复渲染 5 次</button>
++    </div>
++    <p id="notice" role="status">夹具已加载。请点击“渲染 O”。</p>
++    <p>点击图内原生图例“系列甲 / 系列乙”可筛选；移动鼠标到折线数据点可查看原生 tooltip。延迟 N 在真实 render 后暂停于 afterRender，释放后才允许 ready 发布。</p>
++    <div id="chart-host" aria-label="真实 G2 图表容器"></div>
++    <h2>运行错误</h2>
++    <pre id="runtime-errors" role="alert">无</pre>
++    <h2>实时 JSON 观察值</h2>
++    <pre id="snapshot" aria-label="实时 JSON"></pre>
++    <script type="module" src="./main.ts"></script>
++  </body>
++</html>
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/browser/main.ts
+@@ -0,0 +1,273 @@
++import { Chart } from '@antv/g2'
++import {
++  createG2RenderAttempt,
++  G2RenderAttemptFailure,
++  type G2RenderScope
++} from '../../../src/views/chart/components/views/components/g2-render-attempt'
++
++interface AttemptRecord {
++  id: string
++  version: number
++  status: string
++  created: number
++  destroyed: number
++  cleanupErrors: string[]
++  events: string[]
++}
++
++function element<T extends HTMLElement>(id: string): T {
++  const found = document.getElementById(id)
++  if (!found) throw new Error(`缺少页面元素 ${id}`)
++  return found as T
++}
++
++const host = element<HTMLDivElement>('chart-host')
++const snapshot = element<HTMLPreElement>('snapshot')
++const notice = element<HTMLParagraphElement>('notice')
++const errorsView = element<HTMLPreElement>('runtime-errors')
++const releaseButton = element<HTMLButtonElement>('release-n')
++const attempts: AttemptRecord[] = []
++const errors: string[] = []
++const pending = new Map<string, () => void>()
++let generation = 0
++let mounted = true
++let width = 760
++const height = 340
++let active: { record: AttemptRecord; scope: G2RenderScope<Chart> } | null = null
++
++function describe(error: unknown): string {
++  return error instanceof Error ? `${error.name}: ${error.message}` : String(error)
++}
++
++function refresh() {
++  const bounds = host.getBoundingClientRect()
++  snapshot.textContent = JSON.stringify(
++    {
++      mounted,
++      generation,
++      activeId: active?.record.id ?? null,
++      activeCurrent: active ? active.scope.isCurrent() && !active.scope.closed : false,
++      created: attempts.reduce((sum, record) => sum + record.created, 0),
++      destroyed: attempts.reduce((sum, record) => sum + record.destroyed, 0),
++      cleanupErrors: attempts.flatMap(record => record.cleanupErrors),
++      domCanvasCount: host.querySelectorAll('canvas').length,
++      domSlotCount: host.querySelectorAll('.chart-slot').length,
++      dimensions: {
++        requestedWidth: width,
++        requestedHeight: height,
++        hostWidth: bounds.width,
++        hostHeight: bounds.height,
++        canvases: Array.from(host.querySelectorAll('canvas')).map(canvas => ({
++          width: canvas.width,
++          height: canvas.height,
++          cssWidth: canvas.getBoundingClientRect().width,
++          cssHeight: canvas.getBoundingClientRect().height
++        }))
++      },
++      pendingN: [...pending.keys()],
++      attempts,
++      runtimeErrors: errors
++    },
++    null,
++    2
++  )
++  errorsView.textContent = errors.length ? errors.join('\n') : '无'
++  releaseButton.disabled = pending.size === 0
++}
++
++function showError(error: unknown, source: string) {
++  errors.push(`${source}: ${describe(error)}`)
++  if (error instanceof G2RenderAttemptFailure) {
++    errors.push(`原始错误: ${describe(error.originalError)}`)
++  }
++  notice.textContent = `${source} 失败，详情见运行错误。`
++  refresh()
++}
++
++function observeCleanup(record: AttemptRecord, cleanupErrors: Error[]) {
++  for (const error of cleanupErrors) record.cleanupErrors.push(describe(error))
++  if (cleanupErrors.length) notice.textContent = '观察到清理错误，详情见 JSON。'
++}
++
++function disposeActive(reason: string) {
++  const previous = active
++  active = null
++  if (!previous) return
++  previous.record.events.push(reason)
++  observeCleanup(previous.record, previous.scope.dispose())
++  previous.record.status = 'disposed'
++}
++
++function releasePending() {
++  for (const [id, resolve] of pending) {
++    pending.delete(id)
++    attempts.find(record => record.id === id)?.events.push('release:N')
++    resolve()
++  }
++  notice.textContent = '已释放所有待定 N；等待 helper 返回 ready 或 stale。'
++  refresh()
++}
++
++async function renderAttempt(label: string, delayed = false, empty = false) {
++  const version = ++generation
++  mounted = true
++  disposeActive('replace:dispose')
++  const record: AttemptRecord = {
++    id: `${label}-${attempts.length + 1}`,
++    version,
++    status: 'creating',
++    created: 0,
++    destroyed: 0,
++    cleanupErrors: [],
++    events: []
++  }
++  attempts.push(record)
++  const current = () => mounted && generation === version
++  const slot = document.createElement('div')
++  slot.className = 'chart-slot'
++  slot.dataset.attemptId = record.id
++  host.append(slot)
++  notice.textContent = `${record.id} 开始；activeId 在 ready 前为 null。`
++  refresh()
++  try {
++    const result = await createG2RenderAttempt<Chart>({
++      isCurrent: current,
++      initialCleanups: [{ key: 'initial', cleanup: () => record.events.push('cleanup:initial') }],
++      create: () => {
++        record.events.push('create')
++        if (empty) return { kind: 'empty' }
++        const chart = new Chart({ container: slot, width, height, autoFit: false })
++        record.created++
++        const realDestroy = chart.destroy.bind(chart)
++        chart.destroy = () => {
++          record.destroyed++
++          record.events.push('destroy:realG2')
++          try {
++            realDestroy()
++          } finally {
++            slot.remove()
++            refresh()
++          }
++        }
++        return { kind: 'instance', instance: chart }
++      },
++      setup: scope => {
++        record.events.push('setup')
++        const listener = () => record.events.push('fixture:ping')
++        window.addEventListener('g2-fixture-ping', listener)
++        scope.replaceCleanup('fixture-listener', () => {
++          window.removeEventListener('g2-fixture-ping', listener)
++          record.events.push('cleanup:fixture-listener')
++        })
++        scope.instance.options({
++          type: 'line',
++          animate: false,
++          data: ['系列甲', '系列乙'].flatMap((series, index) =>
++            [1, 2, 3, 4, 5, 6].map(month => ({
++              month: `${month}月`,
++              value: 15 + index * 9 + ((month * (index + 2)) % 13),
++              series
++            }))
++          ),
++          encode: { x: 'month', y: 'value', color: 'series' },
++          scale: { color: { range: ['#1677ff', '#d56b13'] } },
++          legend: { color: { position: 'top' } },
++          interaction: { tooltip: { shared: true }, legendFilter: true },
++          axis: { x: { title: '月份（虚构）' }, y: { title: '数值（虚构）' } }
++        })
++      },
++      render: async scope => {
++        record.status = 'rendering'
++        record.events.push('render:start')
++        refresh()
++        await scope.instance.render()
++        record.events.push('render:done')
++        refresh()
++      },
++      afterRender: async scope => {
++        record.events.push('afterRender:start')
++        scope.replaceCleanup('after-render', () => record.events.push('cleanup:after-render'))
++        if (delayed) {
++          record.status = 'waiting:N'
++          await new Promise<void>(resolve => {
++            pending.set(record.id, resolve)
++            notice.textContent = `${record.id} 已完成真实 G2 render，等待“释放 N”；尚未发布。`
++            refresh()
++          })
++        }
++        record.events.push('afterRender:done')
++      },
++      onCleanupErrors: cleanupErrors => {
++        record.events.push(`cleanup:notify:${cleanupErrors.length}`)
++        observeCleanup(record, cleanupErrors)
++      }
++    })
++    record.status = result.status
++    // 自动清理已由通知记录；结果通道单独保留，避免同一错误重复计数。
++    record.events.push(`result:${result.status}:cleanupErrors=${result.cleanupErrors.length}`)
++    if (result.status === 'ready' && current() && !result.scope.closed) {
++      active = { record, scope: result.scope }
++      record.events.push('publish:ready')
++    }
++    if (empty) slot.remove()
++    notice.textContent = `${record.id} 返回 ${result.status}；活动实例 ${
++      active?.record.id ?? '无'
++    }。`
++  } catch (error) {
++    record.status = 'failed'
++    slot.remove()
++    showError(error, record.id)
++  } finally {
++    refresh()
++  }
++}
++
++async function resize() {
++  const captured = active
++  if (!captured || captured.scope.closed || !captured.scope.isCurrent()) {
++    notice.textContent = '没有当前 ready scope；未调用 G2 changeSize。'
++    refresh()
++    return
++  }
++  width = width === 760 ? 520 : 760
++  host.style.width = `${width}px`
++  if (active !== captured || captured.scope.closed || !captured.scope.isCurrent()) return
++  captured.record.events.push(`changeSize:start:${width}`)
++  await captured.scope.instance.changeSize(width, height)
++  if (active !== captured || captured.scope.closed || !captured.scope.isCurrent()) {
++    captured.record.events.push('changeSize:stale-no-replay')
++  } else {
++    captured.record.events.push('changeSize:done')
++    notice.textContent = `${captured.record.id} 已调用真实 changeSize，宽度 ${width}。`
++  }
++  refresh()
++}
++
++function bind(id: string, action: () => void | Promise<void>) {
++  element<HTMLButtonElement>(id).addEventListener('click', () => {
++    Promise.resolve()
++      .then(action)
++      .catch(error => showError(error, id))
++  })
++}
++
++bind('render-o', () => renderAttempt('O'))
++bind('render-n', () => renderAttempt('N', true))
++bind('release-n', releasePending)
++bind('render-empty', () => renderAttempt('EMPTY', false, true))
++bind('resize', resize)
++bind('unmount', () => {
++  mounted = false
++  generation++
++  disposeActive('unmount:dispose')
++  notice.textContent = '已卸载并使待定 attempt 失效；如有 N，请释放 N 观察 stale 清理。'
++  refresh()
++})
++bind('repeat', async () => {
++  for (let index = 0; index < 5; index++) await renderAttempt('R')
++})
++window.addEventListener('error', event => showError(event.error ?? event.message, 'window.error'))
++window.addEventListener('unhandledrejection', event =>
++  showError(event.reason, 'unhandledrejection')
++)
++refresh()
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/browser/vite.config.ts
+@@ -0,0 +1,13 @@
++import { defineConfig } from 'vite'
++import { fileURLToPath } from 'node:url'
++
++export default defineConfig({
++  root: fileURLToPath(new URL('.', import.meta.url)),
++  server: {
++    host: '127.0.0.1',
++    port: 7093,
++    strictPort: true,
++    fs: { allow: [fileURLToPath(new URL('../../..', import.meta.url))] }
++  },
++  build: { outDir: '/tmp/dataease-g2-ownership-browser-r001', emptyOutDir: true }
++})
+--- /dev/null
++++ b/core/core-frontend/tests/g2-render-ownership/browser/README.md
+@@ -0,0 +1,32 @@
++# G2 所有权浏览器夹具
++
++本页真实导入生产 `createG2RenderAttempt` 与已安装 `@antv/g2.Chart`，以静态虚构双系列普通 line 数据展示原生 legend、tooltip、changeSize 和 destroy。无后端、无新依赖。它只提供 helper + 真实 G2 的浏览器观察面，不代表 DataEase line renderer、ChartComponentG2Plot 接线、产品过滤 Copy/Paste 界面 MVP、权限或完整 Goal 验收。
++
++在 `core/core-frontend` 执行（由主代理启动，本 Builder 不启动服务）：
++
++```sh
++./node_modules/.bin/vite --config tests/g2-render-ownership/browser/vite.config.ts
++```
++
++访问 `http://127.0.0.1:7093/`。配置限定本机 7093，strictPort 为 true，不回退到其他端口。
++
++## 浏览器检查步骤
++
++1. 点击“渲染 O”：等待 ready，观察 activeId、created=1、destroyed=0、一个 canvas。点击原生“系列甲 / 系列乙”图例，再悬停折线数据点观察 tooltip。
++2. 点击“延迟渲染 N”：旧 ready scope 先 dispose；真实 N 完成 G2 render 后停在 afterRender，status=waiting:N，activeId=null。点击“释放 N”后才发布 ready。
++3. 在 N 等待时点击“渲染 O”，待 O ready 再“释放 N”：N 应返回 stale 并只销毁自己的真实 Chart；O 仍为活动实例。
++4. 点击“空数据”：helper create 返回显式 empty，不构造 Chart，旧活动实例释放，canvas 数归零。
++5. ready 后点击“调整宽度”：真实 changeSize 在 760/520 间切换；应用调用前后检查 scope 身份。无活动 scope 时显示跳过提示。
++6. ready 后点击“卸载”：scope dispose，canvas 数归零。N 待定时卸载，再释放 N，观察 stale、destroy 和不发布。卸载后点击“渲染 O”可重新挂载夹具。
++7. 点击“重复渲染 5 次”：顺序执行五次真实渲染，最终仅一个活动 Chart。created/destroyed 为页面累计值；每个 attempt 独立记录事件、清理错误和销毁次数。
++
++“释放 N”释放当前所有待定 afterRender gate，以便重复竞争可恢复；卸载不会伪造库内 Promise 物理取消。JSON 直接显示 DOM canvas 数及实际尺寸。destroy 包装器只增加计数，始终调用该 Chart 原始 destroy；窗口运行错误、Promise rejection 和异步按钮错误在页面可见。该夹具没有覆盖 helper 未返回资源之前的 partial allocation，也没有覆盖 assist、其他 G2 类型或产品 Store 提交。
++
++## 有界静态检查
++
++```sh
++./node_modules/.bin/eslint tests/g2-render-ownership/browser/main.ts tests/g2-render-ownership/browser/vite.config.ts
++./node_modules/.bin/vite build --config tests/g2-render-ownership/browser/vite.config.ts
++```
++
++构建输出固定为 `/tmp/dataease-g2-ownership-browser-r001`。构建/lint 不能代替真实浏览器交互或独立 Validation，实际浏览器行为由后续 CUA 检查并记录。

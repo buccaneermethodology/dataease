@@ -1,0 +1,66 @@
+{
+  "schema_version": "s02_saved_canvas_owner_implementation_contract_r001",
+  "contract_id": "S02-SAVED-CANVAS-OWNER-001",
+  "revision": "r001",
+  "status": "CANDIDATE_FOR_INDEPENDENT_REVIEW",
+  "goal": {
+    "id": "DE-S02-F01",
+    "goal_ac": 10,
+    "must_have": 26,
+    "product_obligations": 16,
+    "scope_delta": "none"
+  },
+  "design_ref": "QuerySingleSelectSavedCanvasOwnerDesign-r004.md",
+  "cases_ref": "QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+  "exact_targets": {
+    "source": "core/core-frontend/src/custom-component/filter-copy/query-single-select-saved-canvas-owner.ts",
+    "runner": "core/core-frontend/tests/filter-copy-query-saved-canvas-owner/saved-canvas-owner.test.mjs",
+    "case_fixture": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectSavedCanvasOwnerCases-r004.json",
+    "creation_regression": "core/core-frontend/tests/filter-copy-query-reference/query-single-select-session.test.ts"
+  },
+  "export_contract": {
+    "factory": "createSavedCanvasOwnerLifecycle",
+    "factory_methods": [
+      "beginLoadedResourceSession",
+      "registerTarget",
+      "validate",
+      "validateRegistration",
+      "invalidate"
+    ],
+    "factory_input": "getCurrentContext: () => SavedCanvasContext | null",
+    "owner_handle": "opaque object minted only by this factory; never serialized or reconstructed",
+    "registration_token": "opaque object minted by this factory and bound to one owner generation, target id, and raw target object"
+  },
+  "acceptance": {
+    "identity_cases": "Run every case id in QuerySingleSelectSavedCanvasOwnerCases-r004.json unchanged and in declared order.",
+    "identity_assertions": [
+      "exact API success/error shape and error precedence",
+      "owner state, reason/error, generation, and registration ids as declared",
+      "raw canvas/root/target reference identity according to resolved object references",
+      "duplicate same-id/same-raw registration returns the exact first opaque token object",
+      "validateRegistration checks captured returned tokens, not equal labels",
+      "owner invalidation is one-shot, increments generation once, and invalidates all old tokens",
+      "source_read remains false and paste_commit remains false for every case"
+    ],
+    "creation_regression": "Run the existing query-single-select-session.test.ts with its normal implementation path and assert its current creation-owner cases pass; this helper must not be called by or replace createQuerySingleSelectLifecycleOwner.",
+    "excluded_behavior": [
+      "no product UI, Pinia/Store, saved-canvas producer, or Vue adapter",
+      "no readDesign, source configuration access, copy/paste, target commit, preview, query, history, or save",
+      "no authorization/authentication claim and no mock/standalone permission substitution",
+      "no cached restore/create/copy/template owner creation",
+      "no modifications to existing created-resource lifecycle implementation"
+    ]
+  },
+  "trusted_red": {
+    "required": true,
+    "identity": "same runner SHA-256 + same fixture SHA-256 + same case ID order + source absent",
+    "validity": "runner setup must succeed; expected behavior assertions must fail with UNIMPLEMENTED for the frozen cases; import/preflight/tool failure is not RED",
+    "evidence": "persist exact stdout, stderr, exit code, and source/runner/fixture identity manifest before implementation"
+  },
+  "green": {
+    "identity": "reuse byte-identical runner and r004 fixture with source present",
+    "expected": "all 40 frozen identity cases pass and creation regression passes"
+  },
+  "claim_ceiling": "仅 detached saved-canvas owner helper 与同身份 fixture runner 及既有创建型 owner 回归；不代表 Store/UI 接线、真实身份/权限、复制粘贴、保存重开或任何 Goal AC/产品义务已通过。",
+  "implementation_entry": "No repository source or test write until a fresh execution_admission_v1 with action=builder, exact source|runner target, current Goal/contract/Context/design-review/Topology digests validates."
+}

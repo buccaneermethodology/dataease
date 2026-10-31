@@ -1,0 +1,62 @@
+{
+  "schema_version": "qobs_async_pure_model_contract_v1",
+  "contract_id": "S02-QSSDH-OBS-ASYNC-PUREMODEL",
+  "revision": "r001",
+  "status": "FROZEN_FOR_BOUNDED_PURE_MODEL_IMPLEMENTATION",
+  "authority_boundary": "基于用户对QOBS-ASYNC-01的裁定和独立审查r003通过的Design/Fixtures r004。仅准入离线纯状态转换模块；不授权Vue/Store/产品接线、真实权限、保存/撤权验证或Goal完成。",
+  "api": {
+    "module": "core/core-frontend/src/custom-component/filter-copy/query-single-select-observation-async.ts",
+    "exports": [
+      "handleInitialEnumResponse",
+      "handleVerificationEnumResponse"
+    ],
+    "input": "纯JSON兼容状态与事件；raw identity为调用侧对象引用，只允许严格引用相等；不接收case id或加载fixture。",
+    "output": "新状态与至多一个verificationRequest；不修改输入对象。",
+    "sync": true,
+    "io": "同步纯函数，不导入Vue、Pinia、Store、网络、时钟、随机ID、磁盘或权限模块。"
+  },
+  "identity_contract": {
+    "initial_response": "检查documentEpoch、componentRaw引用、conditionRaw引用、designRevision、tokenGeneration、requestId；允许runtimeGeneration和selectedValue因用户在原枚举飞行中操作而变化。",
+    "verification_response": "严格检查初次核对请求捕获的documentEpoch、raw引用、designRevision、tokenGeneration、runtimeGeneration、requestId和selectedValue。任一不符时响应为无副作用。",
+    "loading": "首次缺少当前选择时保留loading并最多增加一次枚举请求；核对成功/失败后结束loading。过期验证响应不得写loading。"
+  },
+  "state_contract": {
+    "required": "identity fields; selectedValue; validity(valid|invalid|unverified|pending); options; loading; design; effects(enumRequestsStarted,enumResponsesSettled,queryRefreshes,runtimeWrites)",
+    "immutability": "状态、identity、design与options输入均不得被修改；成功返回新结构。",
+    "design": "始终透传原design值，不因枚举响应更新。",
+    "enumeration": "首次成功但缺当前selectedValue时不接受响应options，发出唯一核对请求并捕获最新runtimeGeneration与selectedValue；核对成功时接受核对options并按是否包含当前值标valid/invalid；失败保留旧options并标unverified；两分支保留选值。",
+    "effects": "一次first响应settled计数+1；一次核对请求started+1；一次核对结算settled+1；不增加filter queryRefreshes或runtimeWrites；不自动重试。"
+  },
+  "cases": {
+    "fixture_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySingleSelectObservationResolutionFixtures-r004.json",
+    "case_ids": [
+      "TC-QOBS-012A",
+      "TC-QOBS-012B",
+      "TC-QOBS-012C",
+      "TC-QOBS-012D",
+      "TC-QOBS-013",
+      "TC-QOBS-014"
+    ],
+    "implementation_tests": [
+      "first_success_missing_selected_retries_once_and_preserves_selection_design_options",
+      "verification_contains_selected_marks_valid",
+      "verification_missing_selected_marks_invalid_without_clearing",
+      "verification_failure_preserves_options_and_marks_unverified",
+      "runtime_generation_mismatch_with_same_request_id_is_noop",
+      "stale_request_id_does_not_close_new_loading",
+      "raw_identity_uses_reference_equality",
+      "inputs_are_not_mutated"
+    ]
+  },
+  "forbidden_collapses": [
+    "把standalone/admin/mock当真实权限",
+    "把纯模型GREEN当Vue或产品运行时GREEN",
+    "把requestId单独当完整身份",
+    "把runtimeGeneration单独当完整身份",
+    "缺C时清除用户选值或改写design",
+    "核对失败标记invalid",
+    "自动发出第二次核对",
+    "增加过滤刷新或部分runtime写入"
+  ],
+  "claim_ceiling": "仅Query Single Select异步观察状态转换离线纯模型候选；不声明产品接线、权限、保存、用户UI或S02 Goal通过。"
+}

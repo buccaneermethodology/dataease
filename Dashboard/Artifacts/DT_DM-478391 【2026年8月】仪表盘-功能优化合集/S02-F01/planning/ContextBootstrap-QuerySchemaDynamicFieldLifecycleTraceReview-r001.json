@@ -1,0 +1,57 @@
+{
+  "schema_version": "context_bootstrap_v1",
+  "task_id": "S02-F01-QUERY-SCHEMA-DYNAMIC-LIFECYCLE-TRACE-REVIEW-r001",
+  "task_profile": "read_only",
+  "raw_user_intent": {
+    "text": "用户要求评审S02权威材料包并继续后续设计和build直至Goal达成；每个交付物最多三轮，reviewer/validator每轮尽可能穷尽问题再返回。当前具体切片是对动态字段生命周期来源追踪r001做完整首轮设计审查，检查源码事实、字段分层、边界与后续设计可用性。",
+    "authority_role": "authority"
+  },
+  "intake_projection": {
+    "summary": "独立审查一个新的源码派生设计输入；不修改追踪、Goal或实现，不将追踪升级为完整schema/准入。",
+    "authority_role": "projection",
+    "assumptions": []
+  },
+  "boundaries": {
+    "write_scope": [
+      "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySchemaDynamicFieldLifecycleTraceReview-r001.md"
+    ],
+    "forbidden_actions": [
+      "修改候选追踪或源码",
+      "将工作树静态观察表述为HEAD/全版本/运行时证据",
+      "关闭QSLR-02或其他历史finding",
+      "准入产品Builder或关闭任何Goal AC/义务",
+      "改变10项Goal AC、26项must-have、16项产品义务或Scope Delta none"
+    ],
+    "maximum_claim": "仅评审当前checkout源码派生追踪r001的准确性、完整性、边界和后续用途；不认可完整schema、产品行为、权限、存储重开或Goal完成。"
+  },
+  "required_read_set": [
+    {"path":"AGENTS.md","revision":"270940a30f462f2fb0c9a8cf2bbc1dd11750513d8f063ffc376e0e0a2640466e","domains":["authority","scope","design","validation","claim_ceiling"],"reason":"确认项目源码和证据边界。","applicability":"S02-F01"},
+    {"path":".codex/skills/sge-governed-checkpoints-sp010/SKILL.md","revision":"b3e5d00193f88608e8deb3214071444ce89fa66431daf115b35f72fedbecbe3f","domains":["authority","scope","design","validation","claim_ceiling"],"reason":"确认SP-010评审、证据和准入要求。","applicability":"S02-F01"},
+    {"path":"Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json","revision":"f562da2eb14b84dc8083e138dd2eb8718a58041f01d08163eddf5fb2c71daef0","domains":["authority","scope","acceptance","claim_ceiling"],"reason":"绑定原始Goal分母和完成谓词。","applicability":"DE-S02-F01"},
+    {"path":"Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaLifecycleMatrix-r003.md","revision":"current","domains":["design","scope","claim_ceiling"],"reason":"核对动态追踪与既有QSLR-02边界。","applicability":"QSLR-02"},
+    {"path":"Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/reviews/QuerySchemaLifecycleMatrixDesignReview-r003.md","revision":"current","domains":["design","validation","claim_ceiling"],"reason":"核对矩阵既有finding与本候选切片关系。","applicability":"QSLR-02"},
+    {"path":"Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/QuerySchemaDynamicFieldLifecycleTrace-r001.md","revision":"current","domains":["design","claim_ceiling"],"reason":"本轮唯一被评审交付物。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/custom-component/v-query/options.ts","revision":"4be7d37dd75cf8a3759e807e1fd996194be2f35a829ad2f1306dc3a8ec061fc4","domains":["design"],"reason":"复核新建字段来源。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/custom-component/v-query/Component.vue","revision":"152703881a926e747e4e42f7c593a1558708efa73a3138cdb823cc519b01d081","domains":["design"],"reason":"复核组件映射生产路径。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/custom-component/v-query/QueryConditionConfiguration.vue","revision":"0b88bcdf92d15aceae52ca2992e7a8b4165e3f5cfc3f9cb7435296d7c7e9e047","domains":["design"],"reason":"复核动态映射、tree、校验和确认分支。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/custom-component/v-query/Select.vue","revision":"30efd4a571a8146a68c8a57e64dfee93208670db4155b8f9257a4553efcfcac8","domains":["design"],"reason":"复核配置值与运行值消费。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/utils/canvasUtils.ts","revision":"f9c68f5c96a716ed451206ef6efcbda27158cc828b578920ed5a15167bbc8282","domains":["design"],"reason":"复核保存capture边界。","applicability":"dynamic-field-lifecycle-trace-r001"},
+    {"path":"core/core-frontend/src/store/modules/data-visualization/dvMain.ts","revision":"2ca7f626c2c31f3c6e5db547cae600cfcf30cf26ed64d8f183a33943751752a2","domains":["design"],"reason":"复核外部参数对默认值及运行态的改写。","applicability":"dynamic-field-lifecycle-trace-r001"}
+  ],
+  "conditional_read_set": [
+    {"trigger_id":"fixed-source-mismatch","condition":"候选行号、字段名或摘要与绑定源码不一致","mode":"deterministic","action":"报告精确差异并停止对相应断言背书","can_suppress_deterministic":false},
+    {"trigger_id":"claim_exceeds_source","condition":"追踪提出与当前精确行范围冲突的源码事实","mode":"evidence_backed_agent_evaluated","action":"扩读真实调用方并在报告中精确定位","can_suppress_deterministic":false},
+    {"trigger_id":"new_schema_or_copy_path","condition":"候选依赖历史schema、产品复制入口或重开链路结论","mode":"evidence_backed_agent_evaluated","action":"核实该authority是否已绑定；缺证保留UNKNOWN","can_suppress_deterministic":false}
+  ],
+  "semantic_refresh": {"required_when_digest_unchanged":true,"anchors":["objective","authority","claim_ceiling","critical_dependencies"]},
+  "epistemic_search_space": {
+    "required_domains":["authority","scope","acceptance","design","validation","claim_ceiling"],
+    "preservation_statement":"仅审当前checkout静态来源；Goal 10/26/16分母与Scope Delta none不变；真实权限BLOCKED/NOT_RUN；S01 F01 CONDITIONAL。",
+    "missing_evidence_action":"expand_or_report_evidence_gap"
+  },
+  "change_impact": {"kb_truth":false,"dashboard_state":false,"contract_or_acceptance":false,"runtime_or_schema":false,"external_side_effect":false,"semantic_risk":"high","write_conflict":false},
+  "topology": {"basis":"change_impact","route":"independent_semantic_review","reason":"新设计输入的行级来源归属与状态分类需要完整审查。"},
+  "skipped_reads": [],
+  "validation_evidence_surfaces":["original objective","acceptance criteria","actual diff","final state","追踪中每一条来源声明与精确代码行","六个绑定源码摘要","QSLR-02既有边界","字段分类与候选用途","未知项和禁止外推声明","原始Goal分母/Scope Delta与权限/S01上限"],
+  "acceptance_criteria_ids":["TRACE-SOURCE-ACCURACY","TRACE-LIFECYCLE-COVERAGE","TRACE-STATE-SEPARATION","TRACE-PERSISTENCE-BOUNDARY","TRACE-UNKNOWN-PRESERVATION","TRACE-CLAIM-CEILING"]
+}

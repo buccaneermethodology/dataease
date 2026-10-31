@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-30T19:40:11.252211+00:00",
+  "driver": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/runtime-state-tools/observe-stock-line-missing-columns-r001.js",
+    "sha256": "30f9dc2824546abc5ab9ed8453192ce07004df8cc19bca30e224e45f43768e96"
+  },
+  "baseline": "quadrant200",
+  "incoming": "stock-line500",
+  "configuration": {
+    "axes": [
+      {
+        "axis": "xAxis",
+        "ui_name": "日期 / 维度",
+        "fields": [
+          {
+            "name": "date",
+            "id": "1793083721147",
+            "dataeaseName": "f_e7365583a5389143",
+            "deType": 1
+          }
+        ]
+      },
+      {
+        "axis": "yAxis",
+        "ui_name": "开盘价-收盘价-最低价-最高价 / 指标",
+        "fields": [
+          {
+            "name": "open",
+            "id": "1793083721158",
+            "dataeaseName": "f_e898a398ee087348",
+            "deType": 2,
+            "summary": "sum"
+          },
+          {
+            "name": "close",
+            "id": "1793083721159",
+            "dataeaseName": "f_443a573d1caa2756",
+            "deType": 2,
+            "summary": "sum"
+          },
+          {
+            "name": "low",
+            "id": "1793083721161",
+            "dataeaseName": "f_f77a5b042f6ebc49",
+            "deType": 2,
+            "summary": "sum"
+          },
+          {
+            "name": "high",
+            "id": "1793083721160",
+            "dataeaseName": "f_bb89d8e0fe324551",
+            "deType": 2,
+            "summary": "sum"
+          }
+        ],
+        "note": "最终读取请求yAxis id顺序须open/close/low/high；旧drag修正序列不等最终数组次序"
+      }
+    ],
+    "clear_optional_axes": []
+  },
+  "protocol": "normal DOM-based empty placeholder/last existing field HTML drag; read actual IDs; at most one clear+inverse-permutation redrag calibration; never direct Store/forced pointer",
+  "guards": [
+    "exact final yAxis open/close/low/high",
+    "actual day/date_sub HTTP",
+    "API stock sort desc"
+  ],
+  "date_menu_executed": false
+}

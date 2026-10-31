@@ -1,0 +1,90 @@
+{
+  "schema_version": "lane_task_card_v1",
+  "card_id": "S02-MVP-UI-SLICE-A-BUILDER-r001",
+  "session_id": "DE-S02-F01",
+  "lane": "builder",
+  "role": "builder",
+  "source_goal": {
+    "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "sha256": "9368cbbd96fd81b44006d72ec9bcdd94b60fbb69812c3f31c65e366bf1956e53"
+  },
+  "base_context_refs": [
+    {
+      "path": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/ContextBootstrap-S02-MVP-UI-SLICE-A-BUILDER-r001.json",
+      "sha256": "999dad844ea146c09c94e8375ce182c8414db747fff902756e6a3df642d496c2"
+    }
+  ],
+  "mode": "full_baseline",
+  "snapshot": {
+    "snapshot_id": "S02-MVP-UI-SLICE-A-BUILDER-r001",
+    "parent_snapshot_ref": null
+  },
+  "acceptance_criteria_ids": [
+    "AC-S02-03",
+    "AC-S02-08",
+    "AC-MVP-F01-02",
+    "AC-MVP-F01-03",
+    "AC-MVP-F01-04",
+    "AC-MVP-F01-05",
+    "AC-MVP-F01-10",
+    "AC-MVP-F01-11"
+  ],
+  "write_scope": [
+    "core/core-frontend/src/views/chart/components/editor/index.vue",
+    "core/core-frontend/src/store/modules/user.ts",
+    "core/core-frontend/src/utils/cacheUtil.ts",
+    "core/core-frontend/src/custom-component/filter-copy/mvp-chart-filter-copy.ts",
+    "core/core-frontend/src/views/chart/components/editor/filter/useChartFilterCopyMvp.ts",
+    "core/core-frontend/src/locales/zh-CN.ts",
+    "core/core-frontend/src/locales/en.ts",
+    "core/core-frontend/src/locales/tw.ts",
+    "core/core-frontend/tests/filter-copy-mvp/check.mjs",
+    "core/core-frontend/tests/filter-copy-mvp/README.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceAImplementation-r001.md"
+  ],
+  "required_outputs": [
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/SliceAImplementation-r001.md"
+  ],
+  "maximum_claim_ref": {
+    "summary": "权限测试桩下真实UI Slice A实现候选，copy/拒绝分支可验证；不是粘贴链或MVP完成",
+    "authority_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json"
+  },
+  "forbidden_claims_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r001.md",
+  "topology": {
+    "fork_context": false,
+    "user_visible_required": false,
+    "user_visible": false,
+    "task_id": "S02-MVP-UI-SLICE-A-BUILDER-r001",
+    "worktree": "."
+  },
+  "rebaseline_ref": "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/Topology-actual-r425.json",
+  "working_directory": ".",
+  "execution_command": "先复验Card/Context所有readSHA和每个精确target admission，再实现，不继续旧通用工程。必须消费独立UI Review分Slice结论和全部发现；A被允许独立起步。立即在真实Editor现过滤区接两个ElButton(data-testid chart-filter-copy/chart-filter-paste)，开关未启/dev权限unknown有可见禁用原因；保留既有FilterTree/clear行为，不能交离线helper替代UI。仅DEV且显式VITE_FILTER_COPY_DEV_VALIDATION=true加载三态桩，可见权限测试桩label与allow/deny/unknown控件，默认unknown拒绝，prod不启桩/不默认allow。identity实际uid/oid/session/token只内部比较，clip不储存token或proxySecret，不以admin推断真实权。copy已有customFilter完整clone含root AND/group OR、field:null/valueType:null、六null dynamic占位；空target logic/items null视为空而非非法源；未知动态结构整拒绝，copy失败保上次；不要按一套精简leaf协议重建。source和target按原始tableId、实际完整field目录fieldId/deType校验，不按名字/已选轴。字段目录异步未加载拒绝，必要可复用getFieldByDQ，picture-group显式加载只用copy兼容不改变旧skip逻辑。不写49类型pair白名单，不把pluginflag永久排除；未核实能力时unknown拒绝，真实应支持分母留S037。纯内存同资源editSession、performance.now [0,1800000)有效，paste/普通数据刷新不清不续期；换资源/离开编辑/登出/user.clear/cache.clear/identity变化立即清。特别选择源→目标chart不应清clip！先核父Editor是否key重挂，选图只invalidate pending，不当资源session变化。user.clear/cacheUtil沿纯service轻通知，避免循环依赖；所有订阅卸载。实际A不发paste query，paste未接准备端时明确显示准备接口未就绪/禁用，不改树或成功提示；为B/C留小型类型化port/方法，尽早落稳定模块接口并消息root，勿建通用框架。DEV允许只读可见诊断seam展示immutable tree ownkeys/undefined、clip/session摘要用于真实browser验证，不能展示凭据/结果数据或读window Vue internals。仅必要测试：真实产品模块/SFC focused guard和tree/TTL/identity/prodflag，不能mirror实现，测试用mock只算组件分支不当真实query/save验收。复用已冻结MVP-UI-01真实AX RED，按Review边界，不编造14例RED。定向ESLint不fix及必要类型检查区分基线；可用现已装Node依赖不安装，不启动新业务/改7070运行参数。保留15源码snapshot基线所有已有修改。尽快完成真实UI A并运行focused checks，输出实际diff/测试结果/未验/接口handoff到唯一Evidence文件；勿自称独立验收。若Scope内有轻微未列辅助文件必要改动先消息root补精确准入，其他不依赖工作继续。",
+  "delta_read_set": [
+    "AGENTS.md",
+    ".codex/skills/sge-governed-checkpoints/SKILL.md",
+    ".codex/skills/sge-governed-checkpoints-sp010/SKILL.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/Goal.final.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/planning/MvpScopeAuthority-20261027.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationDesign-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiIntegrationCases-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/SupportedCharts.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionPersisted-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/ExistingTwoConditionSample-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/UiContractFreeze-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/evidence/MVP-UI-01-red-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/reviews/UiIntegrationDesignReview-r001.md",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/CanonicalAdoption-r001.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/baseline-source-r001/manifest.json",
+    "Dashboard/Artifacts/DT_DM-478391 【2026年8月】仪表盘-功能优化合集/S02-F01/MVP-20261027/authority-root-r001.json",
+    "core/core-frontend/src/views/chart/components/editor/index.vue",
+    "core/core-frontend/src/store/modules/user.ts",
+    "core/core-frontend/src/utils/cacheUtil.ts",
+    "core/core-frontend/src/api/chart.ts",
+    "core/core-frontend/src/views/chart/components/editor/filter/FilterTree.vue",
+    "core/core-frontend/src/views/dashboard/index.vue",
+    "core/core-frontend/src/locales/zh-CN.ts",
+    "core/core-frontend/src/locales/en.ts",
+    "core/core-frontend/src/locales/tw.ts"
+  ]
+}
